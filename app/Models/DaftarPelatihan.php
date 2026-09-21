@@ -10,6 +10,11 @@ class DaftarPelatihan extends Model
     protected $primaryKey = 'id_pelatihan';
     protected $fillable = ['id_admin', 'nama_pelatihan', 'deskripsi_pelatihan', 'durasi_lp', 'kuota'];
     protected $casts = ['kuota' => 'integer'];
+
+    public function getIdAttribute()
+    {
+        return $this->getKey();
+    }
     public function admin()
     {
         return $this->belongsTo(AdminBlk::class, 'id_admin');

@@ -9,6 +9,11 @@ class KelasPelatihan extends Model
     protected $table = 'kelas_pelatihan';
     protected $primaryKey = 'id_kelas';
     protected $fillable = ['id_peserta', 'id_jadwal', 'status'];
+
+    public function getIdAttribute()
+    {
+        return $this->getKey();
+    }
     public function peserta()
     {
         return $this->belongsTo(Peserta::class, 'id_peserta');
