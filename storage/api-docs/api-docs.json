@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "SIKARIR API",
-        "description": "Dokumentasi REST API SIKARIR",
+        "description": "Dokumentasi API untuk aplikasi Sikarir — Sistem Informasi Karir & Pelatihan BLK",
         "version": "1.0.0"
     },
     "servers": [
@@ -12,6 +12,1865 @@
         }
     ],
     "paths": {
+        "/api/absen": {
+            "get": {
+                "tags": [
+                    "Absen"
+                ],
+                "summary": "Ambil semua data absensi (paginate 15)",
+                "operationId": "d24746008258127b8cd6b84ebe4af2b6",
+                "responses": {
+                    "200": {
+                        "description": "Daftar absensi berhasil diambil"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Absen"
+                ],
+                "summary": "Catat data absensi baru",
+                "operationId": "27842b41c6341d31bbd1c5aa62e43c0d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "peserta_id",
+                                    "jadwal_id",
+                                    "tanggal",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "peserta_id": {
+                                        "type": "integer"
+                                    },
+                                    "jadwal_id": {
+                                        "type": "integer"
+                                    },
+                                    "tanggal": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "hadir",
+                                            "izin",
+                                            "alpha"
+                                        ]
+                                    },
+                                    "keterangan": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Absensi berhasil dicatat"
+                    },
+                    "422": {
+                        "description": "Validasi gagal"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/absen/{id}": {
+            "get": {
+                "tags": [
+                    "Absen"
+                ],
+                "summary": "Ambil detail absensi berdasarkan ID",
+                "operationId": "e803cbfdd012b9f8b0f3266b19b693d3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detail absensi"
+                    },
+                    "404": {
+                        "description": "Absensi tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Absen"
+                ],
+                "summary": "Update data absensi",
+                "operationId": "fbc4f0160422e263e3e5289d6a224375",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "tanggal": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "hadir",
+                                            "izin",
+                                            "alpha"
+                                        ]
+                                    },
+                                    "keterangan": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Absensi berhasil diupdate"
+                    },
+                    "404": {
+                        "description": "Absensi tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Absen"
+                ],
+                "summary": "Hapus data absensi",
+                "operationId": "ec483eaafbaf8bd48906c70acae7dfaa",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Absensi berhasil dihapus"
+                    },
+                    "404": {
+                        "description": "Absensi tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin-blk": {
+            "get": {
+                "tags": [
+                    "Admin BLK"
+                ],
+                "summary": "Ambil semua data admin BLK (paginate 15)",
+                "operationId": "6d020d237b4b020aaf7f71bb11e987fb",
+                "responses": {
+                    "200": {
+                        "description": "Daftar admin BLK berhasil diambil"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin BLK"
+                ],
+                "summary": "Buat data admin BLK baru",
+                "operationId": "ec2bc6505c923b85871781b7320e695c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer"
+                                    },
+                                    "jabatan": {
+                                        "type": "string"
+                                    },
+                                    "nip": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Admin BLK berhasil dibuat"
+                    },
+                    "422": {
+                        "description": "Validasi gagal"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin-blk/{id}": {
+            "get": {
+                "tags": [
+                    "Admin BLK"
+                ],
+                "summary": "Ambil detail admin BLK berdasarkan ID",
+                "operationId": "1fd65404550e9b41d1349084d1ced034",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detail admin BLK"
+                    },
+                    "404": {
+                        "description": "Admin BLK tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Admin BLK"
+                ],
+                "summary": "Update data admin BLK",
+                "operationId": "3e2334f81fba6867715c084b26f9af4a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "jabatan": {
+                                        "type": "string"
+                                    },
+                                    "nip": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Admin BLK berhasil diupdate"
+                    },
+                    "404": {
+                        "description": "Admin BLK tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin BLK"
+                ],
+                "summary": "Hapus data admin BLK",
+                "operationId": "7ba31b0e241bf6d9892f3d88714da02f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Admin BLK berhasil dihapus"
+                    },
+                    "404": {
+                        "description": "Admin BLK tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Registrasi pengguna baru",
+                "operationId": "c7bb21a0d87049e161b8e4c9b0d909f2",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "minLength": 8
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Registrasi berhasil, token diberikan"
+                    },
+                    "422": {
+                        "description": "Validasi gagal"
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login dan dapatkan token",
+                "operationId": "dd51a484b7fa0f97c7680fdbde14cf5f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login berhasil, token diberikan"
+                    },
+                    "422": {
+                        "description": "Email atau password salah"
+                    }
+                }
+            }
+        },
+        "/api/auth/me": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Ambil data user yang sedang login",
+                "operationId": "b5de204f5e452ef51327c691aa99e77c",
+                "responses": {
+                    "200": {
+                        "description": "Data user berhasil diambil"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout dan hapus token saat ini",
+                "operationId": "df9bdc6c7a6d9f20b983526b2ec0f698",
+                "responses": {
+                    "200": {
+                        "description": "Logout berhasil"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/lowongan": {
+            "get": {
+                "tags": [
+                    "Lowongan"
+                ],
+                "summary": "Ambil semua data daftar lowongan (paginate 15)",
+                "operationId": "bfcbe9e605e81f4e86cd74a2cf06f56c",
+                "responses": {
+                    "200": {
+                        "description": "Daftar lowongan berhasil diambil"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Lowongan"
+                ],
+                "summary": "Buat data lowongan baru",
+                "operationId": "007bce9a1dbc0125441ab80d94fc29b7",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "mitra_id",
+                                    "judul"
+                                ],
+                                "properties": {
+                                    "mitra_id": {
+                                        "type": "integer"
+                                    },
+                                    "admin_id": {
+                                        "type": "integer"
+                                    },
+                                    "judul": {
+                                        "type": "string"
+                                    },
+                                    "deskripsi": {
+                                        "type": "string"
+                                    },
+                                    "gaji": {
+                                        "type": "number"
+                                    },
+                                    "lokasi": {
+                                        "type": "string"
+                                    },
+                                    "deadline": {
+                                        "type": "string",
+                                        "format": "date"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Lowongan berhasil dibuat"
+                    },
+                    "422": {
+                        "description": "Validasi gagal"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/lowongan/{id}": {
+            "get": {
+                "tags": [
+                    "Lowongan"
+                ],
+                "summary": "Ambil detail lowongan berdasarkan ID",
+                "operationId": "a71b50c8f2519cdb72d8cbc180e116b8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detail lowongan"
+                    },
+                    "404": {
+                        "description": "Lowongan tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Lowongan"
+                ],
+                "summary": "Update data lowongan",
+                "operationId": "16799d15a95059b1858162bde736ba0c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "judul": {
+                                        "type": "string"
+                                    },
+                                    "deskripsi": {
+                                        "type": "string"
+                                    },
+                                    "gaji": {
+                                        "type": "number"
+                                    },
+                                    "lokasi": {
+                                        "type": "string"
+                                    },
+                                    "deadline": {
+                                        "type": "string",
+                                        "format": "date"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Lowongan berhasil diupdate"
+                    },
+                    "404": {
+                        "description": "Lowongan tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Lowongan"
+                ],
+                "summary": "Hapus data lowongan",
+                "operationId": "6c79bb0f331e5b1dc825e82e1bde295a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lowongan berhasil dihapus"
+                    },
+                    "404": {
+                        "description": "Lowongan tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/pelatihan": {
+            "get": {
+                "tags": [
+                    "Pelatihan"
+                ],
+                "summary": "Ambil semua data pelatihan (paginate 15)",
+                "operationId": "56e85149134f90ce195fd085bb87ec71",
+                "responses": {
+                    "200": {
+                        "description": "Daftar pelatihan berhasil diambil"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Pelatihan"
+                ],
+                "summary": "Buat data pelatihan baru",
+                "operationId": "eda9a9815b85ad1c81376309d86bf0a4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nama_pelatihan",
+                                    "kuota"
+                                ],
+                                "properties": {
+                                    "admin_id": {
+                                        "type": "integer"
+                                    },
+                                    "nama_pelatihan": {
+                                        "type": "string"
+                                    },
+                                    "deskripsi": {
+                                        "type": "string"
+                                    },
+                                    "kuota": {
+                                        "type": "integer"
+                                    },
+                                    "durasi": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Pelatihan berhasil dibuat"
+                    },
+                    "422": {
+                        "description": "Validasi gagal"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/pelatihan/{id}": {
+            "get": {
+                "tags": [
+                    "Pelatihan"
+                ],
+                "summary": "Ambil detail pelatihan berdasarkan ID",
+                "operationId": "45b91c50c2ad18297c11e10b7074583e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detail pelatihan"
+                    },
+                    "404": {
+                        "description": "Pelatihan tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Pelatihan"
+                ],
+                "summary": "Update data pelatihan",
+                "operationId": "14ae4a8bbbf181e5b78155d2b19bc1b4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nama_pelatihan": {
+                                        "type": "string"
+                                    },
+                                    "deskripsi": {
+                                        "type": "string"
+                                    },
+                                    "kuota": {
+                                        "type": "integer"
+                                    },
+                                    "durasi": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Pelatihan berhasil diupdate"
+                    },
+                    "404": {
+                        "description": "Pelatihan tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Pelatihan"
+                ],
+                "summary": "Hapus data pelatihan",
+                "operationId": "dfa6ecedce2db0a394e9bbb3845edf32",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pelatihan berhasil dihapus"
+                    },
+                    "404": {
+                        "description": "Pelatihan tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/jadwal-pelatihan": {
+            "get": {
+                "tags": [
+                    "Jadwal Pelatihan"
+                ],
+                "summary": "Ambil semua jadwal pelatihan (paginate 15)",
+                "operationId": "b438ccf7abf43622e1f83fb2bff22dbf",
+                "responses": {
+                    "200": {
+                        "description": "Daftar jadwal pelatihan berhasil diambil"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Jadwal Pelatihan"
+                ],
+                "summary": "Buat jadwal pelatihan baru",
+                "operationId": "d7eb78fdcdecd1c492c086ce30ec5ff3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "pelatihan_id",
+                                    "tanggal_mulai",
+                                    "tanggal_selesai"
+                                ],
+                                "properties": {
+                                    "pelatihan_id": {
+                                        "type": "integer"
+                                    },
+                                    "tanggal_mulai": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "tanggal_selesai": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "lokasi": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "tersedia",
+                                            "penuh",
+                                            "selesai"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Jadwal pelatihan berhasil dibuat"
+                    },
+                    "422": {
+                        "description": "Validasi gagal"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/jadwal-pelatihan/{id}": {
+            "get": {
+                "tags": [
+                    "Jadwal Pelatihan"
+                ],
+                "summary": "Ambil detail jadwal pelatihan berdasarkan ID",
+                "operationId": "a6fdccbf149ebbb1fb223746e08c5584",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detail jadwal pelatihan"
+                    },
+                    "404": {
+                        "description": "Jadwal tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Jadwal Pelatihan"
+                ],
+                "summary": "Update jadwal pelatihan",
+                "operationId": "aa2d317b9c1e89db6d533960f41a917a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "tanggal_mulai": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "tanggal_selesai": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "lokasi": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "tersedia",
+                                            "penuh",
+                                            "selesai"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Jadwal berhasil diupdate"
+                    },
+                    "404": {
+                        "description": "Jadwal tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Jadwal Pelatihan"
+                ],
+                "summary": "Hapus jadwal pelatihan",
+                "operationId": "d9116f3ace7b3563f4c3793363882e30",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Jadwal berhasil dihapus"
+                    },
+                    "404": {
+                        "description": "Jadwal tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/kelas-pelatihan": {
+            "get": {
+                "tags": [
+                    "Kelas Pelatihan"
+                ],
+                "summary": "Ambil semua data kelas pelatihan (paginate 15)",
+                "operationId": "9a0966e7b40dfc1117ad16ebef88bddc",
+                "responses": {
+                    "200": {
+                        "description": "Daftar kelas pelatihan berhasil diambil"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Kelas Pelatihan"
+                ],
+                "summary": "Daftarkan peserta ke kelas pelatihan",
+                "operationId": "a510dd498e0e89fa5d4b83deb526628b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id_peserta",
+                                    "id_jadwal"
+                                ],
+                                "properties": {
+                                    "id_peserta": {
+                                        "description": "ID peserta yang akan didaftarkan",
+                                        "type": "integer"
+                                    },
+                                    "id_jadwal": {
+                                        "description": "ID jadwal pelatihan yang dituju",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Peserta berhasil didaftarkan ke kelas"
+                    },
+                    "422": {
+                        "description": "Jadwal tidak tersedia / kuota penuh / peserta sudah terdaftar"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/kelas-pelatihan/{id}": {
+            "get": {
+                "tags": [
+                    "Kelas Pelatihan"
+                ],
+                "summary": "Ambil detail kelas pelatihan berdasarkan ID",
+                "operationId": "858da82f0cce434b673b3003b485e1db",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detail kelas pelatihan"
+                    },
+                    "404": {
+                        "description": "Kelas tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Kelas Pelatihan"
+                ],
+                "summary": "Update data kelas pelatihan",
+                "operationId": "ca85a06e32362c451a7ed41049144eef",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id_peserta": {
+                                        "type": "integer"
+                                    },
+                                    "id_jadwal": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Kelas berhasil diupdate"
+                    },
+                    "404": {
+                        "description": "Kelas tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Kelas Pelatihan"
+                ],
+                "summary": "Hapus data kelas pelatihan",
+                "operationId": "5ded9978ab21e94d161821ff3bef435a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Kelas berhasil dihapus"
+                    },
+                    "404": {
+                        "description": "Kelas tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/mitras": {
+            "get": {
+                "tags": [
+                    "Mitra"
+                ],
+                "summary": "Ambil semua data mitra (paginate 15)",
+                "operationId": "a6bcb3112db319f995a22b59d25e20bf",
+                "responses": {
+                    "200": {
+                        "description": "Daftar mitra berhasil diambil"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Mitra"
+                ],
+                "summary": "Buat data mitra baru",
+                "operationId": "0bf82fab47727ecb0206740ffb735630",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "nama_perusahaan"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer"
+                                    },
+                                    "nama_perusahaan": {
+                                        "type": "string"
+                                    },
+                                    "bidang_usaha": {
+                                        "type": "string"
+                                    },
+                                    "alamat": {
+                                        "type": "string"
+                                    },
+                                    "telepon": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Mitra berhasil dibuat"
+                    },
+                    "422": {
+                        "description": "Validasi gagal"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/mitras/{id}": {
+            "get": {
+                "tags": [
+                    "Mitra"
+                ],
+                "summary": "Ambil detail mitra berdasarkan ID",
+                "operationId": "54e5da9cb70dafb1719017642b6539eb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detail mitra"
+                    },
+                    "404": {
+                        "description": "Mitra tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Mitra"
+                ],
+                "summary": "Update data mitra",
+                "operationId": "304cd880e82f1374e0e42c03ac5f797f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nama_perusahaan": {
+                                        "type": "string"
+                                    },
+                                    "bidang_usaha": {
+                                        "type": "string"
+                                    },
+                                    "alamat": {
+                                        "type": "string"
+                                    },
+                                    "telepon": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Mitra berhasil diupdate"
+                    },
+                    "404": {
+                        "description": "Mitra tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Mitra"
+                ],
+                "summary": "Hapus data mitra",
+                "operationId": "0cdc250b8c19e3b213a6a897f6088816",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Mitra berhasil dihapus"
+                    },
+                    "404": {
+                        "description": "Mitra tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/pesertas": {
+            "get": {
+                "tags": [
+                    "Peserta"
+                ],
+                "summary": "Ambil semua data peserta (paginate 15)",
+                "operationId": "e71a2435f0a1b0d3a1197ad2cf790761",
+                "responses": {
+                    "200": {
+                        "description": "Daftar peserta berhasil diambil"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Peserta"
+                ],
+                "summary": "Buat data peserta baru",
+                "operationId": "1023f7c747758ffcf8731469edead521",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer"
+                                    },
+                                    "nik": {
+                                        "type": "string"
+                                    },
+                                    "alamat": {
+                                        "type": "string"
+                                    },
+                                    "pendidikan_terakhir": {
+                                        "type": "string"
+                                    },
+                                    "keahlian": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Peserta berhasil dibuat"
+                    },
+                    "422": {
+                        "description": "Validasi gagal"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/pesertas/{id}": {
+            "get": {
+                "tags": [
+                    "Peserta"
+                ],
+                "summary": "Ambil detail peserta berdasarkan ID",
+                "operationId": "014d49ed89149ae44077b50936f3cd11",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detail peserta"
+                    },
+                    "404": {
+                        "description": "Peserta tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Peserta"
+                ],
+                "summary": "Update data peserta",
+                "operationId": "e10bcbce8d356d13a74d5ebab6a1b269",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nik": {
+                                        "type": "string"
+                                    },
+                                    "alamat": {
+                                        "type": "string"
+                                    },
+                                    "pendidikan_terakhir": {
+                                        "type": "string"
+                                    },
+                                    "keahlian": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Peserta berhasil diupdate"
+                    },
+                    "404": {
+                        "description": "Peserta tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Peserta"
+                ],
+                "summary": "Hapus data peserta",
+                "operationId": "805dd79a5278bff0329ea704940b5973",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Peserta berhasil dihapus"
+                    },
+                    "404": {
+                        "description": "Peserta tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/sertifikat": {
+            "get": {
+                "tags": [
+                    "Sertifikat"
+                ],
+                "summary": "Ambil semua data sertifikat (paginate 15)",
+                "operationId": "66af7636ad36139e8c8104818bcfff1d",
+                "responses": {
+                    "200": {
+                        "description": "Daftar sertifikat berhasil diambil"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Sertifikat"
+                ],
+                "summary": "Upload sertifikat baru untuk peserta",
+                "operationId": "1399d8ea58dd9ba616f295f7c1ad264b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "peserta_id",
+                                    "jadwal_id"
+                                ],
+                                "properties": {
+                                    "peserta_id": {
+                                        "type": "integer"
+                                    },
+                                    "jadwal_id": {
+                                        "type": "integer"
+                                    },
+                                    "admin_id": {
+                                        "type": "integer"
+                                    },
+                                    "nomor_sertifikat": {
+                                        "type": "string"
+                                    },
+                                    "tanggal_terbit": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "file_sertifikat": {
+                                        "description": "File sertifikat (PDF/gambar)",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Sertifikat berhasil diupload"
+                    },
+                    "422": {
+                        "description": "Validasi gagal"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/sertifikat/{id}": {
+            "get": {
+                "tags": [
+                    "Sertifikat"
+                ],
+                "summary": "Ambil detail sertifikat berdasarkan ID",
+                "operationId": "fe7104f3a1afcd3c5d9bc6212bcda5d5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detail sertifikat"
+                    },
+                    "404": {
+                        "description": "Sertifikat tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Sertifikat"
+                ],
+                "summary": "Update data sertifikat (gunakan POST dengan _method=PUT untuk upload file)",
+                "operationId": "d598b5b78634b0b1faa1388bca767ffa",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "nomor_sertifikat": {
+                                        "type": "string"
+                                    },
+                                    "tanggal_terbit": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "file_sertifikat": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "_method": {
+                                        "type": "string",
+                                        "default": "PUT"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sertifikat berhasil diupdate"
+                    },
+                    "404": {
+                        "description": "Sertifikat tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Sertifikat"
+                ],
+                "summary": "Hapus data sertifikat beserta filenya",
+                "operationId": "c791989f656615261d59529065d9f6eb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sertifikat berhasil dihapus"
+                    },
+                    "404": {
+                        "description": "Sertifikat tidak ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/swagger-test": {
             "get": {
                 "tags": [
@@ -27,7 +1886,57 @@
             }
         }
     },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "description": "Masukkan token yang diperoleh dari endpoint /api/auth/login",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
     "tags": [
+        {
+            "name": "Absen",
+            "description": "Absen"
+        },
+        {
+            "name": "Admin BLK",
+            "description": "Admin BLK"
+        },
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Lowongan",
+            "description": "Lowongan"
+        },
+        {
+            "name": "Pelatihan",
+            "description": "Pelatihan"
+        },
+        {
+            "name": "Jadwal Pelatihan",
+            "description": "Jadwal Pelatihan"
+        },
+        {
+            "name": "Kelas Pelatihan",
+            "description": "Kelas Pelatihan"
+        },
+        {
+            "name": "Mitra",
+            "description": "Mitra"
+        },
+        {
+            "name": "Peserta",
+            "description": "Peserta"
+        },
+        {
+            "name": "Sertifikat",
+            "description": "Sertifikat"
+        },
         {
             "name": "Testing",
             "description": "Testing"

@@ -2,41 +2,68 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreJadwalPelatihanRequest;
-use App\Http\Requests\UpdateJadwalPelatihanRequest;
-use App\Http\Resources\JadwalPelatihanResource;
 use App\Models\JadwalPelatihan;
+use App\Models\DaftarPelatihan;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class JadwalPelatihanController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        return JadwalPelatihanResource::collection(JadwalPelatihan::with($this->relations())->latest()->paginate(15));
+        $jadwals = JadwalPelatihan::with('pelatihan')->latest()->paginate(15);
+        return view('jadwal-pelatihan.index', compact('jadwals'));
     }
-    public function store(StoreJadwalPelatihanRequest $request)
+
+    public function create(): View
     {
-        $jadwal = JadwalPelatihan::create($request->validated());
-        return (new JadwalPelatihanResource($jadwal))->response()->setStatusCode(201);
+        $pelatihans = DaftarPelatihan::all();
+        return view('jadwal-pelatihan.create', compact('pelatihans'));
     }
-    public function show(int $id)
+
+    public function store(Request $request): RedirectResponse
     {
-        $jadwal = JadwalPelatihan::with($this->relations())->findOrFail($id);
-        return new JadwalPelatihanResource($jadwal);
+        $request->validate([
+            'pelatihan_id'    => 'required|exists:daftar_pelatihans,id',
+            'tanggal_mulai'   => 'required|date',
+            'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
+            'lokasi'          => 'nullable|string|max:255',
+            'status'          => 'nullable|in:tersedia,penuh,selesai',
+        ]);
+        JadwalPelatihan::create($request->all());
+        return redirect()->route('jadwal-pelatihan.index')->with('success', 'Jadwal pelatihan berhasil ditambahkan.');
     }
-    public function update(UpdateJadwalPelatihanRequest $request, int $id)
+
+    public function show(int $id): View
+    {
+        $jadwal = JadwalPelatihan::with('pelatihan')->findOrFail($id);
+        return view('jadwal-pelatihan.show', compact('jadwal'));
+    }
+
+    public function edit(int $id): View
     {
         $jadwal = JadwalPelatihan::findOrFail($id);
-        $jadwal->update($request->validated());
-        return new JadwalPelatihanResource($jadwal->fresh()->load($this->relations()));
+        $pelatihans = DaftarPelatihan::all();
+        return view('jadwal-pelatihan.edit', compact('jadwal', 'pelatihans'));
     }
-    public function destroy(int $id)
+
+    public function update(Request $request, int $id): RedirectResponse
     {
+        $request->validate([
+            'tanggal_mulai'   => 'required|date',
+            'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
+            'lokasi'          => 'nullable|string|max:255',
+            'status'          => 'nullable|in:tersedia,penuh,selesai',
+        ]);
         $jadwal = JadwalPelatihan::findOrFail($id);
-        $jadwal->delete();
-        return response()->json(['message' => 'Data berhasil dihapus']);
+        $jadwal->update($request->all());
+        return redirect()->route('jadwal-pelatihan.index')->with('success', 'Jadwal pelatihan berhasil diperbarui.');
     }
-    protected function relations(): array
+
+    public function destroy(int $id): RedirectResponse
     {
-        return ['pelatihan'];
+        JadwalPelatihan::findOrFail($id)->delete();
+        return redirect()->route('jadwal-pelatihan.index')->with('success', 'Jadwal pelatihan berhasil dihapus.');
     }
 }

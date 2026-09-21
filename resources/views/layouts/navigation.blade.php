@@ -11,10 +11,40 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="hidden space-x-4 sm:-my-px sm:ms-6 sm:flex flex-wrap items-center">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('mitras.index')" :active="request()->routeIs('mitras.*')">
+                        {{ __('Mitra') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('pesertas.index')" :active="request()->routeIs('pesertas.*')">
+                        {{ __('Peserta') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('admin-blk.index')" :active="request()->routeIs('admin-blk.*')">
+                        {{ __('Admin BLK') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('lowongan.index')" :active="request()->routeIs('lowongan.*')">
+                        {{ __('Lowongan') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('pelatihan.index')" :active="request()->routeIs('pelatihan.*')">
+                        {{ __('Pelatihan') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('jadwal-pelatihan.index')" :active="request()->routeIs('jadwal-pelatihan.*')">
+                        {{ __('Jadwal') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('kelas-pelatihan.index')" :active="request()->routeIs('kelas-pelatihan.*')">
+                        {{ __('Kelas') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('absen.index')" :active="request()->routeIs('absen.*')">
+                        {{ __('Absensi') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('sertifikat.index')" :active="request()->routeIs('sertifikat.*')">
+                        {{ __('Sertifikat') }}
+                    </x-nav-link>
+                    <a href="{{ url('/docs') }}" target="_blank" class="inline-flex items-center px-2 py-1 text-xs font-semibold text-indigo-600 bg-indigo-50 rounded hover:bg-indigo-100 transition">
+                        API Docs ↗
+                    </a>
                 </div>
             </div>
 
@@ -69,6 +99,36 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('mitras.index')" :active="request()->routeIs('mitras.*')">
+                {{ __('Mitra') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('pesertas.index')" :active="request()->routeIs('pesertas.*')">
+                {{ __('Peserta') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin-blk.index')" :active="request()->routeIs('admin-blk.*')">
+                {{ __('Admin BLK') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('lowongan.index')" :active="request()->routeIs('lowongan.*')">
+                {{ __('Lowongan') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('pelatihan.index')" :active="request()->routeIs('pelatihan.*')">
+                {{ __('Pelatihan') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('jadwal-pelatihan.index')" :active="request()->routeIs('jadwal-pelatihan.*')">
+                {{ __('Jadwal Pelatihan') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('kelas-pelatihan.index')" :active="request()->routeIs('kelas-pelatihan.*')">
+                {{ __('Kelas Pelatihan') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('absen.index')" :active="request()->routeIs('absen.*')">
+                {{ __('Absensi') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('sertifikat.index')" :active="request()->routeIs('sertifikat.*')">
+                {{ __('Sertifikat') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="url('/docs')">
+                {{ __('API Docs (Swagger)') }}
             </x-responsive-nav-link>
         </div>
 

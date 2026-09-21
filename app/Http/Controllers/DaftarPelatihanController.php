@@ -2,41 +2,65 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreDaftarPelatihanRequest;
-use App\Http\Requests\UpdateDaftarPelatihanRequest;
-use App\Http\Resources\DaftarPelatihanResource;
 use App\Models\DaftarPelatihan;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class DaftarPelatihanController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        return DaftarPelatihanResource::collection(DaftarPelatihan::with($this->relations())->latest()->paginate(15));
+        $pelatihans = DaftarPelatihan::with('admin')->latest()->paginate(15);
+        return view('pelatihan.index', compact('pelatihans'));
     }
-    public function store(StoreDaftarPelatihanRequest $request)
+
+    public function create(): View
     {
-        $pelatihan = DaftarPelatihan::create($request->validated());
-        return (new DaftarPelatihanResource($pelatihan))->response()->setStatusCode(201);
+        return view('pelatihan.create');
     }
-    public function show(int $id)
+
+    public function store(Request $request): RedirectResponse
     {
-        $pelatihan = DaftarPelatihan::with($this->relations())->findOrFail($id);
-        return new DaftarPelatihanResource($pelatihan);
+        $request->validate([
+            'admin_id'        => 'nullable|exists:admin_blks,id',
+            'nama_pelatihan'  => 'required|string|max:255',
+            'deskripsi'       => 'nullable|string',
+            'kuota'           => 'required|integer|min:1',
+            'durasi'          => 'nullable|string|max:100',
+        ]);
+        DaftarPelatihan::create($request->all());
+        return redirect()->route('pelatihan.index')->with('success', 'Pelatihan berhasil ditambahkan.');
     }
-    public function update(UpdateDaftarPelatihanRequest $request, int $id)
+
+    public function show(int $id): View
+    {
+        $pelatihan = DaftarPelatihan::with('admin')->findOrFail($id);
+        return view('pelatihan.show', compact('pelatihan'));
+    }
+
+    public function edit(int $id): View
     {
         $pelatihan = DaftarPelatihan::findOrFail($id);
-        $pelatihan->update($request->validated());
-        return new DaftarPelatihanResource($pelatihan->fresh()->load($this->relations()));
+        return view('pelatihan.edit', compact('pelatihan'));
     }
-    public function destroy(int $id)
+
+    public function update(Request $request, int $id): RedirectResponse
     {
+        $request->validate([
+            'nama_pelatihan' => 'required|string|max:255',
+            'deskripsi'      => 'nullable|string',
+            'kuota'          => 'required|integer|min:1',
+            'durasi'         => 'nullable|string|max:100',
+        ]);
         $pelatihan = DaftarPelatihan::findOrFail($id);
-        $pelatihan->delete();
-        return response()->json(['message' => 'Data berhasil dihapus']);
+        $pelatihan->update($request->all());
+        return redirect()->route('pelatihan.index')->with('success', 'Pelatihan berhasil diperbarui.');
     }
-    protected function relations(): array
+
+    public function destroy(int $id): RedirectResponse
     {
-        return ['admin'];
+        DaftarPelatihan::findOrFail($id)->delete();
+        return redirect()->route('pelatihan.index')->with('success', 'Pelatihan berhasil dihapus.');
     }
 }

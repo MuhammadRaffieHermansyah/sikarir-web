@@ -2,41 +2,65 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StorePesertaRequest;
-use App\Http\Requests\UpdatePesertaRequest;
-use App\Http\Resources\PesertaResource;
 use App\Models\Peserta;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class PesertaController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        return PesertaResource::collection(Peserta::with($this->relations())->latest()->paginate(15));
+        $pesertas = Peserta::with(['user', 'admin'])->latest()->paginate(15);
+        return view('pesertas.index', compact('pesertas'));
     }
-    public function store(StorePesertaRequest $request)
+
+    public function create(): View
     {
-        $peserta = Peserta::create($request->validated());
-        return (new PesertaResource($peserta))->response()->setStatusCode(201);
+        return view('pesertas.create');
     }
-    public function show(int $id)
+
+    public function store(Request $request): RedirectResponse
     {
-        $peserta = Peserta::with($this->relations())->findOrFail($id);
-        return new PesertaResource($peserta);
+        $request->validate([
+            'user_id'              => 'required|exists:users,id',
+            'nik'                  => 'nullable|string|max:20',
+            'alamat'               => 'nullable|string',
+            'pendidikan_terakhir'  => 'nullable|string|max:100',
+            'keahlian'             => 'nullable|string',
+        ]);
+        Peserta::create($request->all());
+        return redirect()->route('pesertas.index')->with('success', 'Data peserta berhasil ditambahkan.');
     }
-    public function update(UpdatePesertaRequest $request, int $id)
+
+    public function show(int $id): View
+    {
+        $peserta = Peserta::with(['user', 'admin'])->findOrFail($id);
+        return view('pesertas.show', compact('peserta'));
+    }
+
+    public function edit(int $id): View
     {
         $peserta = Peserta::findOrFail($id);
-        $peserta->update($request->validated());
-        return new PesertaResource($peserta->fresh()->load($this->relations()));
+        return view('pesertas.edit', compact('peserta'));
     }
-    public function destroy(int $id)
+
+    public function update(Request $request, int $id): RedirectResponse
     {
+        $request->validate([
+            'nik'                  => 'nullable|string|max:20',
+            'alamat'               => 'nullable|string',
+            'pendidikan_terakhir'  => 'nullable|string|max:100',
+            'keahlian'             => 'nullable|string',
+        ]);
         $peserta = Peserta::findOrFail($id);
-        $peserta->delete();
-        return response()->json(['message' => 'Data berhasil dihapus']);
+        $peserta->update($request->all());
+        return redirect()->route('pesertas.index')->with('success', 'Data peserta berhasil diperbarui.');
     }
-    protected function relations(): array
+
+    public function destroy(int $id): RedirectResponse
     {
-        return ['user', 'admin'];
+        Peserta::findOrFail($id)->delete();
+        return redirect()->route('pesertas.index')->with('success', 'Data peserta berhasil dihapus.');
     }
 }

@@ -2,41 +2,70 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreAbsenRequest;
-use App\Http\Requests\UpdateAbsenRequest;
-use App\Http\Resources\AbsenResource;
 use App\Models\Absen;
+use App\Models\Peserta;
+use App\Models\JadwalPelatihan;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class AbsenController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        return AbsenResource::collection(Absen::with($this->relations())->latest()->paginate(15));
+        $absens = Absen::with(['peserta.user', 'jadwal.pelatihan'])->latest()->paginate(15);
+        return view('absen.index', compact('absens'));
     }
-    public function store(StoreAbsenRequest $request)
+
+    public function create(): View
     {
-        $absen = Absen::create($request->validated());
-        return (new AbsenResource($absen))->response()->setStatusCode(201);
+        $pesertas = Peserta::with('user')->get();
+        $jadwals  = JadwalPelatihan::with('pelatihan')->get();
+        return view('absen.create', compact('pesertas', 'jadwals'));
     }
-    public function show(int $id)
+
+    public function store(Request $request): RedirectResponse
     {
-        $absen = Absen::with($this->relations())->findOrFail($id);
-        return new AbsenResource($absen);
+        $request->validate([
+            'peserta_id'  => 'required|exists:pesertas,id',
+            'jadwal_id'   => 'required|exists:jadwal_pelatihans,id',
+            'tanggal'     => 'required|date',
+            'status'      => 'required|in:hadir,izin,alpha',
+            'keterangan'  => 'nullable|string',
+        ]);
+        Absen::create($request->all());
+        return redirect()->route('absen.index')->with('success', 'Data absensi berhasil dicatat.');
     }
-    public function update(UpdateAbsenRequest $request, int $id)
+
+    public function show(int $id): View
     {
+        $absen = Absen::with(['peserta.user', 'jadwal.pelatihan'])->findOrFail($id);
+        return view('absen.show', compact('absen'));
+    }
+
+    public function edit(int $id): View
+    {
+        $absen    = Absen::findOrFail($id);
+        $pesertas = Peserta::with('user')->get();
+        $jadwals  = JadwalPelatihan::with('pelatihan')->get();
+        return view('absen.edit', compact('absen', 'pesertas', 'jadwals'));
+    }
+
+    public function update(Request $request, int $id): RedirectResponse
+    {
+        $request->validate([
+            'tanggal'    => 'required|date',
+            'status'     => 'required|in:hadir,izin,alpha',
+            'keterangan' => 'nullable|string',
+        ]);
         $absen = Absen::findOrFail($id);
-        $absen->update($request->validated());
-        return new AbsenResource($absen->fresh()->load($this->relations()));
+        $absen->update($request->all());
+        return redirect()->route('absen.index')->with('success', 'Data absensi berhasil diperbarui.');
     }
-    public function destroy(int $id)
+
+    public function destroy(int $id): RedirectResponse
     {
-        $absen = Absen::findOrFail($id);
-        $absen->delete();
-        return response()->json(['message' => 'Data berhasil dihapus']);
-    }
-    protected function relations(): array
-    {
-        return ['peserta', 'jadwal'];
+        Absen::findOrFail($id)->delete();
+        return redirect()->route('absen.index')->with('success', 'Data absensi berhasil dihapus.');
     }
 }

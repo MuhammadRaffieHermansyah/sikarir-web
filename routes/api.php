@@ -1,26 +1,30 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\MitraController;
-use App\Http\Controllers\PesertaController;
-use App\Http\Controllers\AdminBlkController;
-use App\Http\Controllers\DaftarLowonganController;
-use App\Http\Controllers\DaftarPelatihanController;
-use App\Http\Controllers\JadwalPelatihanController;
-use App\Http\Controllers\KelasPelatihanController;
-use App\Http\Controllers\AbsenController;
-use App\Http\Controllers\SertifikatController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\MitraController;
+use App\Http\Controllers\Api\PesertaController;
+use App\Http\Controllers\Api\AdminBlkController;
+use App\Http\Controllers\Api\DaftarLowonganController;
+use App\Http\Controllers\Api\DaftarPelatihanController;
+use App\Http\Controllers\Api\JadwalPelatihanController;
+use App\Http\Controllers\Api\KelasPelatihanController;
+use App\Http\Controllers\Api\AbsenController;
+use App\Http\Controllers\Api\SertifikatController;
+use App\Http\Controllers\Api\SwaggerTestController;
 use Illuminate\Support\Facades\Route;
 
+// Auth routes (public)
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
+
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('me', [AuthController::class, 'me']);
         Route::post('logout', [AuthController::class, 'logout']);
     });
 });
 
+// Protected API resource routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('mitras', MitraController::class);
     Route::apiResource('pesertas', PesertaController::class);
@@ -33,9 +37,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('sertifikat', SertifikatController::class);
 });
 
-use App\Http\Controllers\Api\SwaggerTestController;
-
-Route::get('/swagger-test', [
-    SwaggerTestController::class,
-    'index'
-]);
+// Swagger test (public)
+Route::get('/swagger-test', [SwaggerTestController::class, 'index']);

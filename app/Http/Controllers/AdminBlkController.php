@@ -2,41 +2,61 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreAdminBlkRequest;
-use App\Http\Requests\UpdateAdminBlkRequest;
-use App\Http\Resources\AdminBlkResource;
 use App\Models\AdminBlk;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class AdminBlkController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        return AdminBlkResource::collection(AdminBlk::with($this->relations())->latest()->paginate(15));
+        $admins = AdminBlk::with('user')->latest()->paginate(15);
+        return view('admin-blk.index', compact('admins'));
     }
-    public function store(StoreAdminBlkRequest $request)
+
+    public function create(): View
     {
-        $admin = AdminBlk::create($request->validated());
-        return (new AdminBlkResource($admin))->response()->setStatusCode(201);
+        return view('admin-blk.create');
     }
-    public function show(int $id)
+
+    public function store(Request $request): RedirectResponse
     {
-        $admin = AdminBlk::with($this->relations())->findOrFail($id);
-        return new AdminBlkResource($admin);
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'jabatan' => 'nullable|string|max:100',
+            'nip'     => 'nullable|string|max:30',
+        ]);
+        AdminBlk::create($request->all());
+        return redirect()->route('admin-blk.index')->with('success', 'Data admin BLK berhasil ditambahkan.');
     }
-    public function update(UpdateAdminBlkRequest $request, int $id)
+
+    public function show(int $id): View
+    {
+        $admin = AdminBlk::with('user')->findOrFail($id);
+        return view('admin-blk.show', compact('admin'));
+    }
+
+    public function edit(int $id): View
     {
         $admin = AdminBlk::findOrFail($id);
-        $admin->update($request->validated());
-        return new AdminBlkResource($admin->fresh()->load($this->relations()));
+        return view('admin-blk.edit', compact('admin'));
     }
-    public function destroy(int $id)
+
+    public function update(Request $request, int $id): RedirectResponse
     {
+        $request->validate([
+            'jabatan' => 'nullable|string|max:100',
+            'nip'     => 'nullable|string|max:30',
+        ]);
         $admin = AdminBlk::findOrFail($id);
-        $admin->delete();
-        return response()->json(['message' => 'Data berhasil dihapus']);
+        $admin->update($request->all());
+        return redirect()->route('admin-blk.index')->with('success', 'Data admin BLK berhasil diperbarui.');
     }
-    protected function relations(): array
+
+    public function destroy(int $id): RedirectResponse
     {
-        return ['user'];
+        AdminBlk::findOrFail($id)->delete();
+        return redirect()->route('admin-blk.index')->with('success', 'Data admin BLK berhasil dihapus.');
     }
 }

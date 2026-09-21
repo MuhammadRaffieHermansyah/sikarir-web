@@ -2,41 +2,64 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreMitraRequest;
-use App\Http\Requests\UpdateMitraRequest;
-use App\Http\Resources\MitraResource;
 use App\Models\Mitra;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class MitraController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        return MitraResource::collection(Mitra::with($this->relations())->latest()->paginate(15));
+        $mitras = Mitra::with('user')->latest()->paginate(15);
+        return view('mitras.index', compact('mitras'));
     }
-    public function store(StoreMitraRequest $request)
+
+    public function create(): View
     {
-        $mitra = Mitra::create($request->validated());
-        return (new MitraResource($mitra))->response()->setStatusCode(201);
+        return view('mitras.create');
     }
-    public function show(int $id)
+
+    public function store(Request $request): RedirectResponse
     {
-        $mitra = Mitra::with($this->relations())->findOrFail($id);
-        return new MitraResource($mitra);
+        $request->validate([
+            'nama_perusahaan' => 'required|string|max:255',
+            'bidang_usaha'    => 'nullable|string|max:255',
+            'alamat'          => 'nullable|string',
+            'telepon'         => 'nullable|string|max:20',
+        ]);
+        Mitra::create($request->all());
+        return redirect()->route('mitras.index')->with('success', 'Data mitra berhasil ditambahkan.');
     }
-    public function update(UpdateMitraRequest $request, int $id)
+
+    public function show(int $id): View
+    {
+        $mitra = Mitra::with('user')->findOrFail($id);
+        return view('mitras.show', compact('mitra'));
+    }
+
+    public function edit(int $id): View
     {
         $mitra = Mitra::findOrFail($id);
-        $mitra->update($request->validated());
-        return new MitraResource($mitra->fresh()->load($this->relations()));
+        return view('mitras.edit', compact('mitra'));
     }
-    public function destroy(int $id)
+
+    public function update(Request $request, int $id): RedirectResponse
     {
+        $request->validate([
+            'nama_perusahaan' => 'required|string|max:255',
+            'bidang_usaha'    => 'nullable|string|max:255',
+            'alamat'          => 'nullable|string',
+            'telepon'         => 'nullable|string|max:20',
+        ]);
         $mitra = Mitra::findOrFail($id);
-        $mitra->delete();
-        return response()->json(['message' => 'Data berhasil dihapus']);
+        $mitra->update($request->all());
+        return redirect()->route('mitras.index')->with('success', 'Data mitra berhasil diperbarui.');
     }
-    protected function relations(): array
+
+    public function destroy(int $id): RedirectResponse
     {
-        return ['user'];
+        Mitra::findOrFail($id)->delete();
+        return redirect()->route('mitras.index')->with('success', 'Data mitra berhasil dihapus.');
     }
 }

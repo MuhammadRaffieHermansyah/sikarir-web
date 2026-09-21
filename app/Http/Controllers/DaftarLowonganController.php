@@ -2,41 +2,68 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreDaftarLowonganRequest;
-use App\Http\Requests\UpdateDaftarLowonganRequest;
-use App\Http\Resources\DaftarLowonganResource;
 use App\Models\DaftarLowongan;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class DaftarLowonganController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        return DaftarLowonganResource::collection(DaftarLowongan::with($this->relations())->latest()->paginate(15));
+        $lowongans = DaftarLowongan::with(['mitra', 'admin'])->latest()->paginate(15);
+        return view('lowongan.index', compact('lowongans'));
     }
-    public function store(StoreDaftarLowonganRequest $request)
+
+    public function create(): View
     {
-        $lowongan = DaftarLowongan::create($request->validated());
-        return (new DaftarLowonganResource($lowongan))->response()->setStatusCode(201);
+        return view('lowongan.create');
     }
-    public function show(int $id)
+
+    public function store(Request $request): RedirectResponse
     {
-        $lowongan = DaftarLowongan::with($this->relations())->findOrFail($id);
-        return new DaftarLowonganResource($lowongan);
+        $request->validate([
+            'mitra_id'  => 'required|exists:mitras,id',
+            'admin_id'  => 'nullable|exists:admin_blks,id',
+            'judul'     => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'gaji'      => 'nullable|numeric',
+            'lokasi'    => 'nullable|string|max:255',
+            'deadline'  => 'nullable|date',
+        ]);
+        DaftarLowongan::create($request->all());
+        return redirect()->route('lowongan.index')->with('success', 'Lowongan berhasil ditambahkan.');
     }
-    public function update(UpdateDaftarLowonganRequest $request, int $id)
+
+    public function show(int $id): View
+    {
+        $lowongan = DaftarLowongan::with(['mitra', 'admin'])->findOrFail($id);
+        return view('lowongan.show', compact('lowongan'));
+    }
+
+    public function edit(int $id): View
     {
         $lowongan = DaftarLowongan::findOrFail($id);
-        $lowongan->update($request->validated());
-        return new DaftarLowonganResource($lowongan->fresh()->load($this->relations()));
+        return view('lowongan.edit', compact('lowongan'));
     }
-    public function destroy(int $id)
+
+    public function update(Request $request, int $id): RedirectResponse
     {
+        $request->validate([
+            'judul'     => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'gaji'      => 'nullable|numeric',
+            'lokasi'    => 'nullable|string|max:255',
+            'deadline'  => 'nullable|date',
+        ]);
         $lowongan = DaftarLowongan::findOrFail($id);
-        $lowongan->delete();
-        return response()->json(['message' => 'Data berhasil dihapus']);
+        $lowongan->update($request->all());
+        return redirect()->route('lowongan.index')->with('success', 'Lowongan berhasil diperbarui.');
     }
-    protected function relations(): array
+
+    public function destroy(int $id): RedirectResponse
     {
-        return ['mitra', 'admin'];
+        DaftarLowongan::findOrFail($id)->delete();
+        return redirect()->route('lowongan.index')->with('success', 'Lowongan berhasil dihapus.');
     }
 }

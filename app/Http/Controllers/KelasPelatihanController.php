@@ -2,45 +2,79 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreKelasPelatihanRequest;
-use App\Http\Requests\UpdateKelasPelatihanRequest;
-use App\Http\Resources\KelasPelatihanResource;
 use App\Models\KelasPelatihan;
+use App\Models\Peserta;
 use App\Models\JadwalPelatihan;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class KelasPelatihanController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        return KelasPelatihanResource::collection(KelasPelatihan::with(['peserta.user', 'jadwal.pelatihan'])->latest()->paginate(15));
+        $kelas = KelasPelatihan::with(['peserta.user', 'jadwal.pelatihan'])->latest()->paginate(15);
+        return view('kelas-pelatihan.index', compact('kelas'));
     }
-    public function store(StoreKelasPelatihanRequest $request)
+
+    public function create(): View
     {
-        $data = $request->validated();
-        $item = DB::transaction(function () use ($data) {
-            $jadwal = JadwalPelatihan::with('pelatihan')->lockForUpdate()->findOrFail($data['id_jadwal']);
-            if ($jadwal->status !== 'tersedia') abort(422, 'Jadwal pelatihan tidak tersedia.');
-            if (KelasPelatihan::where('id_peserta', $data['id_peserta'])->where('id_jadwal', $data['id_jadwal'])->exists()) abort(422, 'Peserta sudah terdaftar pada jadwal ini.');
-            $count = KelasPelatihan::where('id_jadwal', $data['id_jadwal'])->count();
-            if ($count >= $jadwal->pelatihan->kuota) abort(422, 'Kuota pelatihan sudah penuh.');
-            return KelasPelatihan::create($data);
-        });
-        return (new KelasPelatihanResource($item->load(['peserta.user', 'jadwal.pelatihan'])))->response()->setStatusCode(201);
+        $pesertas = Peserta::with('user')->get();
+        $jadwals  = JadwalPelatihan::with('pelatihan')->where('status', 'tersedia')->get();
+        return view('kelas-pelatihan.create', compact('pesertas', 'jadwals'));
     }
-    public function show(int $id)
+
+    public function store(Request $request): RedirectResponse
     {
-        return new KelasPelatihanResource(KelasPelatihan::with(['peserta.user', 'jadwal.pelatihan'])->findOrFail($id));
+        $request->validate([
+            'id_peserta' => 'required|exists:pesertas,id',
+            'id_jadwal'  => 'required|exists:jadwal_pelatihans,id',
+        ]);
+        $data = $request->only(['id_peserta', 'id_jadwal']);
+        try {
+            DB::transaction(function () use ($data) {
+                $jadwal = JadwalPelatihan::with('pelatihan')->lockForUpdate()->findOrFail($data['id_jadwal']);
+                if ($jadwal->status !== 'tersedia') abort(422, 'Jadwal pelatihan tidak tersedia.');
+                if (KelasPelatihan::where('id_peserta', $data['id_peserta'])->where('id_jadwal', $data['id_jadwal'])->exists()) abort(422, 'Peserta sudah terdaftar pada jadwal ini.');
+                $count = KelasPelatihan::where('id_jadwal', $data['id_jadwal'])->count();
+                if ($count >= $jadwal->pelatihan->kuota) abort(422, 'Kuota pelatihan sudah penuh.');
+                KelasPelatihan::create($data);
+            });
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => $e->getMessage()]);
+        }
+        return redirect()->route('kelas-pelatihan.index')->with('success', 'Peserta berhasil didaftarkan ke kelas pelatihan.');
     }
-    public function update(UpdateKelasPelatihanRequest $request, int $id)
+
+    public function show(int $id): View
     {
-        $item = KelasPelatihan::findOrFail($id);
-        $item->update($request->validated());
-        return new KelasPelatihanResource($item->fresh()->load(['peserta.user', 'jadwal.pelatihan']));
+        $kelas = KelasPelatihan::with(['peserta.user', 'jadwal.pelatihan'])->findOrFail($id);
+        return view('kelas-pelatihan.show', compact('kelas'));
     }
-    public function destroy(int $id)
+
+    public function edit(int $id): View
+    {
+        $kelas    = KelasPelatihan::findOrFail($id);
+        $pesertas = Peserta::with('user')->get();
+        $jadwals  = JadwalPelatihan::with('pelatihan')->get();
+        return view('kelas-pelatihan.edit', compact('kelas', 'pesertas', 'jadwals'));
+    }
+
+    public function update(Request $request, int $id): RedirectResponse
+    {
+        $request->validate([
+            'id_peserta' => 'required|exists:pesertas,id',
+            'id_jadwal'  => 'required|exists:jadwal_pelatihans,id',
+        ]);
+        $kelas = KelasPelatihan::findOrFail($id);
+        $kelas->update($request->only(['id_peserta', 'id_jadwal']));
+        return redirect()->route('kelas-pelatihan.index')->with('success', 'Data kelas pelatihan berhasil diperbarui.');
+    }
+
+    public function destroy(int $id): RedirectResponse
     {
         KelasPelatihan::findOrFail($id)->delete();
-        return response()->json(['message' => 'Data berhasil dihapus']);
+        return redirect()->route('kelas-pelatihan.index')->with('success', 'Data kelas pelatihan berhasil dihapus.');
     }
 }
