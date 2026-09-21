@@ -13,6 +13,4 @@ use OpenApi\Attributes as OA;
     url: 'http://127.0.0.1:8000',
     description: 'Local Development Server'
 )]
-class OpenApiSpec
-{
-}
+class OpenApiSpec {}
