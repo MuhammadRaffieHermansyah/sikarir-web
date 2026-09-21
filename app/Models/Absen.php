@@ -10,6 +10,11 @@ class Absen extends Model
     protected $primaryKey = 'id_absen';
     protected $fillable = ['id_jadwal', 'id_peserta', 'tanggal', 'jam_hadir', 'status_kehadiran', 'keterangan'];
     protected $casts = ['tanggal' => 'date'];
+
+    public function getIdAttribute()
+    {
+        return $this->getKey();
+    }
     public function jadwal()
     {
         return $this->belongsTo(JadwalPelatihan::class, 'id_jadwal');

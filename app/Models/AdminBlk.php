@@ -8,6 +8,11 @@ class AdminBlk extends Model
 {
     protected $primaryKey = 'id_admin';
     protected $fillable = ['id_user'];
+
+    public function getIdAttribute()
+    {
+        return $this->getKey();
+    }
     public function user()
     {
         return $this->belongsTo(User::class, 'id_user');

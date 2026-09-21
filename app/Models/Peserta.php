@@ -9,6 +9,11 @@ class Peserta extends Model
     protected $primaryKey = 'id_peserta';
     protected $fillable = ['id_user', 'id_admin', 'nomor_peserta', 'jenis_kelamin', 'nomor_kk', 'nomor_wa', 'tanggal_lahir', 'tempat_lahir', 'alamat_lengkap', 'pendidikan_terakhir', 'pendidikan_sekarang', 'pas_foto', 'jurusan'];
     protected $casts = ['tanggal_lahir' => 'date'];
+
+    public function getIdAttribute()
+    {
+        return $this->getKey();
+    }
     public function user()
     {
         return $this->belongsTo(User::class, 'id_user');

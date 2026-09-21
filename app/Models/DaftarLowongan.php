@@ -10,6 +10,11 @@ class DaftarLowongan extends Model
     protected $primaryKey = 'id_lowongan';
     protected $fillable = ['id_mitra', 'id_admin', 'judul_lowongan', 'lokasi', 'deskripsi', 'kualifikasi', 'tanggal_posting', 'status'];
     protected $casts = ['tanggal_posting' => 'date'];
+
+    public function getIdAttribute()
+    {
+        return $this->getKey();
+    }
     public function mitra()
     {
         return $this->belongsTo(Mitra::class, 'id_mitra');
