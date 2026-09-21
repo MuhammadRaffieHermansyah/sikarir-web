@@ -14,18 +14,18 @@ use App\Http\Controllers\Api\SwaggerTestController;
 use Illuminate\Support\Facades\Route;
 
 // Auth routes (public)
-Route::prefix('auth')->group(function () {
-    Route::post('register', [AuthController::class, 'register']);
-    Route::post('login', [AuthController::class, 'login']);
+Route::name('api.')->prefix('auth')->group(function () {
+    Route::post('register', [AuthController::class, 'register'])->name('register');
+    Route::post('login', [AuthController::class, 'login'])->name('login');
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::get('me', [AuthController::class, 'me']);
-        Route::post('logout', [AuthController::class, 'logout']);
+        Route::get('me', [AuthController::class, 'me'])->name('me');
+        Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     });
 });
 
 // Protected API resource routes
-Route::middleware('auth:sanctum')->group(function () {
+Route::name('api.')->middleware('auth:sanctum')->group(function () {
     Route::apiResource('mitras', MitraController::class);
     Route::apiResource('pesertas', PesertaController::class);
     Route::apiResource('admin-blk', AdminBlkController::class);
@@ -38,4 +38,5 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 // Swagger test (public)
-Route::get('/swagger-test', [SwaggerTestController::class, 'index']);
+Route::get('/swagger-test', [SwaggerTestController::class, 'index'])->name('api.swagger-test');
+

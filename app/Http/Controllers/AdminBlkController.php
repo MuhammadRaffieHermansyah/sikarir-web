@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AdminBlk;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -11,52 +12,73 @@ class AdminBlkController extends Controller
 {
     public function index(): View
     {
-        $admins = AdminBlk::with('user')->latest()->paginate(15);
+        $admins = AdminBlk::with(['user', 'pelatihan', 'lowongan', 'peserta', 'sertifikat'])
+            ->latest('id_admin')
+            ->paginate(10);
+
         return view('admin-blk.index', compact('admins'));
     }
 
     public function create(): View
     {
-        return view('admin-blk.create');
+        $users = User::orderBy('name')->get();
+        return view('admin-blk.create', compact('users'));
     }
 
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'jabatan' => 'nullable|string|max:100',
-            'nip'     => 'nullable|string|max:30',
+            'id_user' => 'required|exists:users,id|unique:admin_blks,id_user',
+        ], [
+            'id_user.required' => 'Pengguna wajib dipilih.',
+            'id_user.exists'   => 'Pengguna tidak ditemukan.',
+            'id_user.unique'   => 'Pengguna ini sudah terdaftar sebagai Administrator BLK.',
         ]);
-        AdminBlk::create($request->all());
-        return redirect()->route('admin-blk.index')->with('success', 'Data admin BLK berhasil ditambahkan.');
+
+        AdminBlk::create([
+            'id_user' => $request->id_user,
+        ]);
+
+        return redirect()->route('admin-blk.index')->with('success', 'Data administrator BLK berhasil ditambahkan.');
     }
 
     public function show(int $id): View
     {
-        $admin = AdminBlk::with('user')->findOrFail($id);
+        $admin = AdminBlk::with(['user', 'peserta', 'lowongan', 'pelatihan', 'sertifikat'])->findOrFail($id);
         return view('admin-blk.show', compact('admin'));
     }
 
     public function edit(int $id): View
     {
-        $admin = AdminBlk::findOrFail($id);
-        return view('admin-blk.edit', compact('admin'));
+        $admin = AdminBlk::with('user')->findOrFail($id);
+        $users = User::orderBy('name')->get();
+        return view('admin-blk.edit', compact('admin', 'users'));
     }
 
     public function update(Request $request, int $id): RedirectResponse
     {
-        $request->validate([
-            'jabatan' => 'nullable|string|max:100',
-            'nip'     => 'nullable|string|max:30',
-        ]);
         $admin = AdminBlk::findOrFail($id);
-        $admin->update($request->all());
-        return redirect()->route('admin-blk.index')->with('success', 'Data admin BLK berhasil diperbarui.');
+
+        $request->validate([
+            'id_user' => 'required|exists:users,id|unique:admin_blks,id_user,' . $admin->id_admin . ',id_admin',
+        ], [
+            'id_user.required' => 'Pengguna wajib dipilih.',
+            'id_user.exists'   => 'Pengguna tidak ditemukan.',
+            'id_user.unique'   => 'Pengguna ini sudah terdaftar sebagai Administrator BLK lain.',
+        ]);
+
+        $admin->update([
+            'id_user' => $request->id_user,
+        ]);
+
+        return redirect()->route('admin-blk.index')->with('success', 'Data administrator BLK berhasil diperbarui.');
     }
 
     public function destroy(int $id): RedirectResponse
     {
-        AdminBlk::findOrFail($id)->delete();
-        return redirect()->route('admin-blk.index')->with('success', 'Data admin BLK berhasil dihapus.');
+        $admin = AdminBlk::findOrFail($id);
+        $admin->delete();
+        return redirect()->route('admin-blk.index')->with('success', 'Data administrator BLK berhasil dihapus.');
     }
 }
+
