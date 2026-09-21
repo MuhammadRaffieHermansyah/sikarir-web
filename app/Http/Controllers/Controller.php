@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-abstract class Controller
-{
-    //
-}
+use OpenApi\Attributes as OA;
+
+abstract class Controller {}

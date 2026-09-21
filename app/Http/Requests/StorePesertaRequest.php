@@ -1,0 +1,4 @@
+<?php
+namespace App\Http\Requests;
+use Illuminate\Foundation\Http\FormRequest;
+class StorePesertaRequest extends FormRequest { public function authorize():bool{return true;} public function rules():array{return ['id_user'=>'required|exists:users,id|unique:pesertas,id_user','id_admin'=>'nullable|exists:admin_blks,id_admin','nomor_peserta'=>'required|string|max:100|unique:pesertas,nomor_peserta','jenis_kelamin'=>'required|string|max:20','nomor_kk'=>'nullable|string|max:30','nomor_wa'=>'nullable|string|max:30','tanggal_lahir'=>'nullable|date','tempat_lahir'=>'nullable|string|max:100','alamat_lengkap'=>'nullable|string','pendidikan_terakhir'=>'nullable|string|max:100','pendidikan_sekarang'=>'nullable|string|max:100','pas_foto'=>'nullable|string|max:255','jurusan'=>'nullable|string|max:150'];} }
