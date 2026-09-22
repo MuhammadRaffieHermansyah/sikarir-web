@@ -15,7 +15,7 @@ class DaftarPelatihanController extends Controller
         $pelatihans = DaftarPelatihan::with(['admin.user', 'jadwal'])
             ->latest('id_pelatihan')
             ->paginate(10);
-        dd($pelatihans);
+            
         return view('pelatihan.index', compact('pelatihans'));
     }
 
