@@ -35,13 +35,13 @@ class DaftarPelatihanController extends Controller
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ['nama_pelatihan', 'kuota'],
+                required: ['id_admin', 'nama_pelatihan', 'kuota'],
                 properties: [
-                    new OA\Property(property: 'admin_id', type: 'integer'),
+                    new OA\Property(property: 'id_admin', type: 'integer'),
                     new OA\Property(property: 'nama_pelatihan', type: 'string'),
-                    new OA\Property(property: 'deskripsi', type: 'string'),
+                    new OA\Property(property: 'deskripsi_pelatihan', type: 'string'),
+                    new OA\Property(property: 'durasi_lp', type: 'string'),
                     new OA\Property(property: 'kuota', type: 'integer'),
-                    new OA\Property(property: 'durasi', type: 'string'),
                 ]
             )
         ),
@@ -87,10 +87,11 @@ class DaftarPelatihanController extends Controller
             required: true,
             content: new OA\JsonContent(
                 properties: [
+                    new OA\Property(property: 'id_admin', type: 'integer'),
                     new OA\Property(property: 'nama_pelatihan', type: 'string'),
-                    new OA\Property(property: 'deskripsi', type: 'string'),
+                    new OA\Property(property: 'deskripsi_pelatihan', type: 'string'),
+                    new OA\Property(property: 'durasi_lp', type: 'string'),
                     new OA\Property(property: 'kuota', type: 'integer'),
-                    new OA\Property(property: 'durasi', type: 'string'),
                 ]
             )
         ),

@@ -29,7 +29,7 @@ class PesertaController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'id_user'             => 'required|exists:users,id|unique:pesertas,id_user',
             'id_admin'            => 'nullable|exists:admin_blks,id_admin',
             'nomor_peserta'       => 'required|string|max:50|unique:pesertas,nomor_peserta',
@@ -48,7 +48,7 @@ class PesertaController extends Controller
             'nomor_peserta.unique'   => 'Nomor peserta (NIS) sudah digunakan.',
         ]);
 
-        Peserta::create($request->all());
+        Peserta::create($validated);
         return redirect()->route('pesertas.index')->with('success', 'Data peserta vokasi berhasil ditambahkan.');
     }
 
@@ -70,7 +70,7 @@ class PesertaController extends Controller
     {
         $peserta = Peserta::findOrFail($id);
 
-        $request->validate([
+        $validated = $request->validate([
             'id_user'             => 'required|exists:users,id|unique:pesertas,id_user,' . $peserta->id_peserta . ',id_peserta',
             'id_admin'            => 'nullable|exists:admin_blks,id_admin',
             'nomor_peserta'       => 'required|string|max:50|unique:pesertas,nomor_peserta,' . $peserta->id_peserta . ',id_peserta',
@@ -84,7 +84,7 @@ class PesertaController extends Controller
             'alamat_lengkap'      => 'nullable|string',
         ]);
 
-        $peserta->update($request->all());
+        $peserta->update($validated);
         return redirect()->route('pesertas.index')->with('success', 'Data peserta vokasi berhasil diperbarui.');
     }
 

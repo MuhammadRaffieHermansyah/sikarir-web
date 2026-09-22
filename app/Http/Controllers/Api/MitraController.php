@@ -35,13 +35,18 @@ class MitraController extends Controller
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ['user_id', 'nama_perusahaan'],
+                required: ['nama_perusahaan'],
                 properties: [
-                    new OA\Property(property: 'user_id', type: 'integer'),
+                    new OA\Property(property: 'id_user', type: 'integer'),
                     new OA\Property(property: 'nama_perusahaan', type: 'string'),
+                    new OA\Property(property: 'jenis_mitra', type: 'string'),
                     new OA\Property(property: 'bidang_usaha', type: 'string'),
+                    new OA\Property(property: 'no_telp', type: 'string'),
+                    new OA\Property(property: 'no_izin', type: 'string'),
+                    new OA\Property(property: 'jabatan_pic', type: 'string'),
+                    new OA\Property(property: 'provinsi', type: 'string'),
+                    new OA\Property(property: 'kota', type: 'string'),
                     new OA\Property(property: 'alamat', type: 'string'),
-                    new OA\Property(property: 'telepon', type: 'string'),
                 ]
             )
         ),
@@ -87,10 +92,16 @@ class MitraController extends Controller
             required: true,
             content: new OA\JsonContent(
                 properties: [
+                    new OA\Property(property: 'id_user', type: 'integer'),
                     new OA\Property(property: 'nama_perusahaan', type: 'string'),
+                    new OA\Property(property: 'jenis_mitra', type: 'string'),
                     new OA\Property(property: 'bidang_usaha', type: 'string'),
+                    new OA\Property(property: 'no_telp', type: 'string'),
+                    new OA\Property(property: 'no_izin', type: 'string'),
+                    new OA\Property(property: 'jabatan_pic', type: 'string'),
+                    new OA\Property(property: 'provinsi', type: 'string'),
+                    new OA\Property(property: 'kota', type: 'string'),
                     new OA\Property(property: 'alamat', type: 'string'),
-                    new OA\Property(property: 'telepon', type: 'string'),
                 ]
             )
         ),

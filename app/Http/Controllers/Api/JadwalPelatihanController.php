@@ -35,13 +35,16 @@ class JadwalPelatihanController extends Controller
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ['pelatihan_id', 'tanggal_mulai', 'tanggal_selesai'],
+                required: ['id_pelatihan', 'tanggal_mulai', 'tanggal_selesai'],
                 properties: [
-                    new OA\Property(property: 'pelatihan_id', type: 'integer'),
+                    new OA\Property(property: 'id_pelatihan', type: 'integer'),
                     new OA\Property(property: 'tanggal_mulai', type: 'string', format: 'date'),
                     new OA\Property(property: 'tanggal_selesai', type: 'string', format: 'date'),
-                    new OA\Property(property: 'lokasi', type: 'string'),
-                    new OA\Property(property: 'status', type: 'string', enum: ['tersedia', 'penuh', 'selesai']),
+                    new OA\Property(property: 'jam_mulai', type: 'string', example: '08:00'),
+                    new OA\Property(property: 'jam_selesai', type: 'string', example: '15:30'),
+                    new OA\Property(property: 'instruktur', type: 'string'),
+                    new OA\Property(property: 'tempat', type: 'string'),
+                    new OA\Property(property: 'status', type: 'string', enum: ['tersedia', 'berlangsung', 'selesai']),
                 ]
             )
         ),
@@ -87,10 +90,14 @@ class JadwalPelatihanController extends Controller
             required: true,
             content: new OA\JsonContent(
                 properties: [
+                    new OA\Property(property: 'id_pelatihan', type: 'integer'),
                     new OA\Property(property: 'tanggal_mulai', type: 'string', format: 'date'),
                     new OA\Property(property: 'tanggal_selesai', type: 'string', format: 'date'),
-                    new OA\Property(property: 'lokasi', type: 'string'),
-                    new OA\Property(property: 'status', type: 'string', enum: ['tersedia', 'penuh', 'selesai']),
+                    new OA\Property(property: 'jam_mulai', type: 'string', example: '08:00'),
+                    new OA\Property(property: 'jam_selesai', type: 'string', example: '15:30'),
+                    new OA\Property(property: 'instruktur', type: 'string'),
+                    new OA\Property(property: 'tempat', type: 'string'),
+                    new OA\Property(property: 'status', type: 'string', enum: ['tersedia', 'berlangsung', 'selesai']),
                 ]
             )
         ),

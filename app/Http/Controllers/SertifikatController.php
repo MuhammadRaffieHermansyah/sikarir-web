@@ -32,7 +32,7 @@ class SertifikatController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'id_peserta'      => 'required|exists:pesertas,id_peserta',
             'id_jadwal'       => 'required|exists:jadwal_pelatihan,id_jadwal',
             'id_admin'        => 'required|exists:admin_blks,id_admin',
@@ -49,16 +49,15 @@ class SertifikatController extends Controller
         ]);
 
         // Check if peserta already has sertifikat for this jadwal
-        if (Sertifikat::where('id_peserta', $request->id_peserta)->where('id_jadwal', $request->id_jadwal)->exists()) {
+        if (Sertifikat::where('id_peserta', $validated['id_peserta'])->where('id_jadwal', $validated['id_jadwal'])->exists()) {
             return back()->withInput()->withErrors(['error' => 'Siswa ini sudah memiliki sertifikat untuk program pelatihan tersebut.']);
         }
 
-        $data = $request->except('file_sertifikat');
         if ($request->hasFile('file_sertifikat')) {
-            $data['file_sertifikat'] = $request->file('file_sertifikat')->store('sertifikat', 'public');
+            $validated['file_sertifikat'] = $request->file('file_sertifikat')->store('sertifikat', 'public');
         }
 
-        Sertifikat::create($data);
+        Sertifikat::create($validated);
         return redirect()->route('sertifikat.index')->with('success', 'Sertifikat kompetensi vokasi berhasil diterbitkan.');
     }
 
@@ -81,7 +80,7 @@ class SertifikatController extends Controller
     {
         $sertifikat = Sertifikat::findOrFail($id);
 
-        $request->validate([
+        $validated = $request->validate([
             'id_peserta'      => 'required|exists:pesertas,id_peserta',
             'id_jadwal'       => 'required|exists:jadwal_pelatihan,id_jadwal',
             'id_admin'        => 'required|exists:admin_blks,id_admin',
@@ -90,13 +89,22 @@ class SertifikatController extends Controller
             'file_sertifikat' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ]);
 
-        $data = $request->except('file_sertifikat');
-        if ($request->hasFile('file_sertifikat')) {
-            if ($sertifikat->file_sertifikat) Storage::disk('public')->delete($sertifikat->file_sertifikat);
-            $data['file_sertifikat'] = $request->file('file_sertifikat')->store('sertifikat', 'public');
+        // Prevent moving to a (peserta, jadwal) combination that already has a sertifikat
+        $comboExists = Sertifikat::where('id_peserta', $validated['id_peserta'])
+            ->where('id_jadwal', $validated['id_jadwal'])
+            ->where('id_sertifikat', '!=', $sertifikat->id_sertifikat)
+            ->exists();
+
+        if ($comboExists) {
+            return back()->withInput()->withErrors(['error' => 'Siswa ini sudah memiliki sertifikat untuk program pelatihan tersebut.']);
         }
 
-        $sertifikat->update($data);
+        if ($request->hasFile('file_sertifikat')) {
+            if ($sertifikat->file_sertifikat) Storage::disk('public')->delete($sertifikat->file_sertifikat);
+            $validated['file_sertifikat'] = $request->file('file_sertifikat')->store('sertifikat', 'public');
+        }
+
+        $sertifikat->update($validated);
         return redirect()->route('sertifikat.index')->with('success', 'Data sertifikat kompetensi berhasil diperbarui.');
     }
 

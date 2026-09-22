@@ -31,6 +31,15 @@
       <form method="POST" action="{{ route('admin-blk.store') }}" class="space-y-6">
         @csrf
 
+        @if($errors->any())
+          <div class="bg-rose-50 border border-rose-200 text-rose-800 px-4 py-3 rounded-xl text-xs space-y-1 shadow-sm">
+            <div class="font-bold">Mohon perbaiki kesalahan berikut:</div>
+            <ul class="list-disc list-inside space-y-0.5 text-rose-700 pl-4">
+              @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
+            </ul>
+          </div>
+        @endif
+
         <!-- Card 1: Informasi Akun Pengguna -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-5">
           <div class="flex items-center gap-2.5 pb-4 border-b border-slate-100">

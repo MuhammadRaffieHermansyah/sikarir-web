@@ -99,9 +99,9 @@
 
           <div>
             <label for="id_admin" class="block text-xs font-semibold text-slate-700 mb-1.5">
-              Penanggung Jawab / Instruktur Pembina
+              Penanggung Jawab / Instruktur Pembina <span class="text-rose-500">*</span>
             </label>
-            <select name="id_admin" id="id_admin" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('id_admin') border-rose-400 bg-rose-50/50 @enderror">
+            <select name="id_admin" id="id_admin" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('id_admin') border-rose-400 bg-rose-50/50 @enderror">
               <option value="">-- Pilih Instruktur / Admin BLK --</option>
               @foreach($admins as $admin)
                 <option value="{{ $admin->id_admin }}" {{ old('id_admin', $pelatihan->id_admin) == $admin->id_admin ? 'selected' : '' }}>

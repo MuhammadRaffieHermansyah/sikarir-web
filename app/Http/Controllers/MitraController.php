@@ -24,9 +24,9 @@ class MitraController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'nama_perusahaan' => 'required|string|max:255',
-            'id_user'         => 'nullable|exists:users,id',
+            'id_user'         => 'nullable|exists:users,id|unique:mitras,id_user',
             'jenis_mitra'     => 'nullable|string|max:100',
             'bidang_usaha'    => 'nullable|string|max:255',
             'no_telp'         => 'nullable|string|max:30',
@@ -35,9 +35,12 @@ class MitraController extends Controller
             'provinsi'        => 'nullable|string|max:100',
             'kota'            => 'nullable|string|max:100',
             'alamat'          => 'nullable|string',
+        ], [
+            'nama_perusahaan.required' => 'Nama perusahaan wajib diisi.',
+            'id_user.unique'           => 'Akun pengguna ini sudah ditautkan ke mitra lain.',
         ]);
 
-        Mitra::create($request->all());
+        Mitra::create($validated);
         return redirect()->route('mitras.index')->with('success', 'Data mitra DU/DI berhasil ditambahkan.');
     }
 
@@ -56,9 +59,11 @@ class MitraController extends Controller
 
     public function update(Request $request, int $id): RedirectResponse
     {
-        $request->validate([
+        $mitra = Mitra::findOrFail($id);
+
+        $validated = $request->validate([
             'nama_perusahaan' => 'required|string|max:255',
-            'id_user'         => 'nullable|exists:users,id',
+            'id_user'         => 'nullable|exists:users,id|unique:mitras,id_user,' . $mitra->id_mitra . ',id_mitra',
             'jenis_mitra'     => 'nullable|string|max:100',
             'bidang_usaha'    => 'nullable|string|max:255',
             'no_telp'         => 'nullable|string|max:30',
@@ -67,10 +72,12 @@ class MitraController extends Controller
             'provinsi'        => 'nullable|string|max:100',
             'kota'            => 'nullable|string|max:100',
             'alamat'          => 'nullable|string',
+        ], [
+            'nama_perusahaan.required' => 'Nama perusahaan wajib diisi.',
+            'id_user.unique'           => 'Akun pengguna ini sudah ditautkan ke mitra lain.',
         ]);
 
-        $mitra = Mitra::findOrFail($id);
-        $mitra->update($request->all());
+        $mitra->update($validated);
         return redirect()->route('mitras.index')->with('success', 'Data mitra DU/DI berhasil diperbarui.');
     }
 

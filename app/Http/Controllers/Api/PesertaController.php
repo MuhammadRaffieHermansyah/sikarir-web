@@ -35,13 +35,20 @@ class PesertaController extends Controller
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ['user_id'],
+                required: ['id_user', 'nomor_peserta', 'jenis_kelamin'],
                 properties: [
-                    new OA\Property(property: 'user_id', type: 'integer'),
-                    new OA\Property(property: 'nik', type: 'string'),
-                    new OA\Property(property: 'alamat', type: 'string'),
+                    new OA\Property(property: 'id_user', type: 'integer'),
+                    new OA\Property(property: 'id_admin', type: 'integer'),
+                    new OA\Property(property: 'nomor_peserta', type: 'string'),
+                    new OA\Property(property: 'jenis_kelamin', type: 'string', enum: ['Laki-laki', 'Perempuan']),
+                    new OA\Property(property: 'nomor_kk', type: 'string'),
+                    new OA\Property(property: 'nomor_wa', type: 'string'),
+                    new OA\Property(property: 'tanggal_lahir', type: 'string', format: 'date'),
+                    new OA\Property(property: 'tempat_lahir', type: 'string'),
+                    new OA\Property(property: 'alamat_lengkap', type: 'string'),
                     new OA\Property(property: 'pendidikan_terakhir', type: 'string'),
-                    new OA\Property(property: 'keahlian', type: 'string'),
+                    new OA\Property(property: 'pendidikan_sekarang', type: 'string'),
+                    new OA\Property(property: 'jurusan', type: 'string'),
                 ]
             )
         ),
@@ -87,10 +94,18 @@ class PesertaController extends Controller
             required: true,
             content: new OA\JsonContent(
                 properties: [
-                    new OA\Property(property: 'nik', type: 'string'),
-                    new OA\Property(property: 'alamat', type: 'string'),
+                    new OA\Property(property: 'id_user', type: 'integer'),
+                    new OA\Property(property: 'id_admin', type: 'integer'),
+                    new OA\Property(property: 'nomor_peserta', type: 'string'),
+                    new OA\Property(property: 'jenis_kelamin', type: 'string', enum: ['Laki-laki', 'Perempuan']),
+                    new OA\Property(property: 'nomor_kk', type: 'string'),
+                    new OA\Property(property: 'nomor_wa', type: 'string'),
+                    new OA\Property(property: 'tanggal_lahir', type: 'string', format: 'date'),
+                    new OA\Property(property: 'tempat_lahir', type: 'string'),
+                    new OA\Property(property: 'alamat_lengkap', type: 'string'),
                     new OA\Property(property: 'pendidikan_terakhir', type: 'string'),
-                    new OA\Property(property: 'keahlian', type: 'string'),
+                    new OA\Property(property: 'pendidikan_sekarang', type: 'string'),
+                    new OA\Property(property: 'jurusan', type: 'string'),
                 ]
             )
         ),

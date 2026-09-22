@@ -7,6 +7,7 @@ use App\Models\Peserta;
 use App\Models\JadwalPelatihan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class AbsenController extends Controller
@@ -29,31 +30,30 @@ class AbsenController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'id_peserta'       => 'required|exists:pesertas,id_peserta',
             'id_jadwal'        => 'required|exists:jadwal_pelatihan,id_jadwal',
-            'tanggal'          => 'required|date',
-            'jam_hadir'        => 'nullable|string',
-            'status_kehadiran' => 'required|in:hadir,izin,alpha,sakit',
-            'keterangan'       => 'nullable|string',
+            'tanggal'          => [
+                'required',
+                'date',
+                Rule::unique('absens')->where(fn ($query) => $query
+                    ->where('id_peserta', $request->input('id_peserta'))
+                    ->where('id_jadwal', $request->input('id_jadwal'))),
+            ],
+            'jam_hadir'        => 'nullable|date_format:H:i',
+            'status_kehadiran' => 'required|in:hadir,izin,sakit,alpha',
+            'keterangan'       => 'nullable|string|max:255',
         ], [
             'id_peserta.required'       => 'Siswa peserta wajib dipilih.',
             'id_jadwal.required'        => 'Batch jadwal kelas wajib dipilih.',
             'tanggal.required'          => 'Tanggal presensi wajib diisi.',
+            'tanggal.unique'            => 'Data presensi untuk siswa ini pada tanggal tersebut sudah tercatat.',
+            'jam_hadir.date_format'     => 'Format jam hadir tidak valid (contoh: 08:00).',
             'status_kehadiran.required' => 'Status kehadiran wajib ditentukan.',
+            'status_kehadiran.in'       => 'Status kehadiran tidak valid.',
         ]);
 
-        // Prevent duplicate attendance per day
-        $exists = Absen::where('id_peserta', $request->id_peserta)
-            ->where('id_jadwal', $request->id_jadwal)
-            ->where('tanggal', $request->tanggal)
-            ->exists();
-
-        if ($exists) {
-            return back()->withInput()->withErrors(['error' => 'Data presensi untuk siswa ini pada tanggal tersebut sudah tercatat.']);
-        }
-
-        Absen::create($request->all());
+        Absen::create($validated);
         return redirect()->route('absen.index')->with('success', 'Catatan presensi harian berhasil disimpan.');
     }
 
@@ -75,16 +75,27 @@ class AbsenController extends Controller
     {
         $absen = Absen::findOrFail($id);
 
-        $request->validate([
+        $validated = $request->validate([
             'id_peserta'       => 'required|exists:pesertas,id_peserta',
             'id_jadwal'        => 'required|exists:jadwal_pelatihan,id_jadwal',
-            'tanggal'          => 'required|date',
-            'jam_hadir'        => 'nullable|string',
-            'status_kehadiran' => 'required|in:hadir,izin,alpha,sakit',
-            'keterangan'       => 'nullable|string',
+            'tanggal'          => [
+                'required',
+                'date',
+                Rule::unique('absens')->where(fn ($query) => $query
+                    ->where('id_peserta', $request->input('id_peserta'))
+                    ->where('id_jadwal', $request->input('id_jadwal'))
+                )->ignore($absen->id_absen, 'id_absen'),
+            ],
+            'jam_hadir'        => 'nullable|date_format:H:i',
+            'status_kehadiran' => 'required|in:hadir,izin,sakit,alpha',
+            'keterangan'       => 'nullable|string|max:255',
+        ], [
+            'tanggal.unique'        => 'Data presensi untuk siswa ini pada tanggal tersebut sudah tercatat.',
+            'jam_hadir.date_format' => 'Format jam hadir tidak valid (contoh: 08:00).',
+            'status_kehadiran.in'   => 'Status kehadiran tidak valid.',
         ]);
 
-        $absen->update($request->all());
+        $absen->update($validated);
         return redirect()->route('absen.index')->with('success', 'Catatan presensi harian berhasil diperbarui.');
     }
 

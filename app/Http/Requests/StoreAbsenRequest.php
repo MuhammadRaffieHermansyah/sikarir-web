@@ -12,6 +12,6 @@ class StoreAbsenRequest extends FormRequest
     }
     public function rules(): array
     {
-        return ['id_jadwal' => 'required|exists:jadwal_pelatihan,id_jadwal', 'id_peserta' => 'required|exists:pesertas,id_peserta', 'tanggal' => 'required|date', 'jam_hadir' => 'nullable|date_format:H:i', 'status_kehadiran' => 'required|string|max:30', 'keterangan' => 'nullable|string|max:255'];
+        return ['id_jadwal' => 'required|exists:jadwal_pelatihan,id_jadwal', 'id_peserta' => 'required|exists:pesertas,id_peserta', 'tanggal' => 'required|date', 'jam_hadir' => 'nullable|date_format:H:i', 'status_kehadiran' => 'required|in:hadir,izin,sakit,alpha', 'keterangan' => 'nullable|string|max:255'];
     }
 }

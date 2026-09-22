@@ -35,11 +35,9 @@ class AdminBlkController extends Controller
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ['user_id'],
+                required: ['id_user'],
                 properties: [
-                    new OA\Property(property: 'user_id', type: 'integer'),
-                    new OA\Property(property: 'jabatan', type: 'string'),
-                    new OA\Property(property: 'nip', type: 'string'),
+                    new OA\Property(property: 'id_user', type: 'integer'),
                 ]
             )
         ),
@@ -85,8 +83,7 @@ class AdminBlkController extends Controller
             required: true,
             content: new OA\JsonContent(
                 properties: [
-                    new OA\Property(property: 'jabatan', type: 'string'),
-                    new OA\Property(property: 'nip', type: 'string'),
+                    new OA\Property(property: 'id_user', type: 'integer'),
                 ]
             )
         ),

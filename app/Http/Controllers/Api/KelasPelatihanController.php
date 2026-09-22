@@ -106,7 +106,24 @@ class KelasPelatihanController extends Controller
     public function update(UpdateKelasPelatihanRequest $request, int $id): JsonResponse
     {
         $item = KelasPelatihan::findOrFail($id);
-        $item->update($request->validated());
+        $data = $request->validated();
+
+        $idPeserta = $data['id_peserta'] ?? $item->id_peserta;
+        $idJadwal = $data['id_jadwal'] ?? $item->id_jadwal;
+
+        if (($idPeserta != $item->id_peserta || $idJadwal != $item->id_jadwal) &&
+            KelasPelatihan::where('id_peserta', $idPeserta)->where('id_jadwal', $idJadwal)->where('id_kelas', '!=', $item->id_kelas)->exists()) {
+            abort(422, 'Peserta sudah terdaftar pada jadwal ini.');
+        }
+
+        if ($idJadwal != $item->id_jadwal) {
+            $jadwal = JadwalPelatihan::with('pelatihan')->findOrFail($idJadwal);
+            if ($jadwal->status !== 'tersedia') abort(422, 'Jadwal pelatihan tujuan tidak tersedia.');
+            $count = KelasPelatihan::where('id_jadwal', $idJadwal)->count();
+            if ($jadwal->pelatihan && $count >= $jadwal->pelatihan->kuota) abort(422, 'Kuota pelatihan tujuan sudah penuh.');
+        }
+
+        $item->update($data);
         return (new KelasPelatihanResource($item->fresh()->load(['peserta.user', 'jadwal.pelatihan'])))->response();
     }
 

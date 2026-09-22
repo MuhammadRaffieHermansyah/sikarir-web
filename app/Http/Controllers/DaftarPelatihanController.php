@@ -27,19 +27,20 @@ class DaftarPelatihanController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'id_admin'            => 'nullable|exists:admin_blks,id_admin',
+        $validated = $request->validate([
+            'id_admin'            => 'required|exists:admin_blks,id_admin',
             'nama_pelatihan'      => 'required|string|max:255',
             'deskripsi_pelatihan' => 'nullable|string',
             'kuota'               => 'required|integer|min:1',
             'durasi_lp'           => 'nullable|string|max:100',
         ], [
+            'id_admin.required'       => 'Admin BLK penanggung jawab wajib dipilih.',
             'nama_pelatihan.required' => 'Nama kejuruan / program pelatihan wajib diisi.',
             'kuota.required'          => 'Kapasitas kuota peserta wajib ditentukan.',
             'kuota.min'               => 'Kuota minimal 1 orang peserta.',
         ]);
 
-        DaftarPelatihan::create($request->all());
+        DaftarPelatihan::create($validated);
         return redirect()->route('pelatihan.index')->with('success', 'Program kejuruan pelatihan vokasi berhasil ditambahkan.');
     }
 
@@ -60,19 +61,20 @@ class DaftarPelatihanController extends Controller
     {
         $pelatihan = DaftarPelatihan::findOrFail($id);
 
-        $request->validate([
-            'id_admin'            => 'nullable|exists:admin_blks,id_admin',
+        $validated = $request->validate([
+            'id_admin'            => 'required|exists:admin_blks,id_admin',
             'nama_pelatihan'      => 'required|string|max:255',
             'deskripsi_pelatihan' => 'nullable|string',
             'kuota'               => 'required|integer|min:1',
             'durasi_lp'           => 'nullable|string|max:100',
         ], [
+            'id_admin.required'       => 'Admin BLK penanggung jawab wajib dipilih.',
             'nama_pelatihan.required' => 'Nama kejuruan / program pelatihan wajib diisi.',
             'kuota.required'          => 'Kapasitas kuota peserta wajib ditentukan.',
             'kuota.min'               => 'Kuota minimal 1 orang peserta.',
         ]);
 
-        $pelatihan->update($request->all());
+        $pelatihan->update($validated);
         return redirect()->route('pelatihan.index')->with('success', 'Program kejuruan pelatihan vokasi berhasil diperbarui.');
     }
 
