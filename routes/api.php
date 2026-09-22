@@ -1,14 +1,14 @@
 <?php
 
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\MitraController;
-use App\Http\Controllers\Api\PesertaController;
 use App\Http\Controllers\Api\AdminBlkController;
+use App\Http\Controllers\Api\AbsenController;
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DaftarLowonganController;
 use App\Http\Controllers\Api\DaftarPelatihanController;
 use App\Http\Controllers\Api\JadwalPelatihanController;
 use App\Http\Controllers\Api\KelasPelatihanController;
-use App\Http\Controllers\Api\AbsenController;
+use App\Http\Controllers\Api\MitraController;
+use App\Http\Controllers\Api\PesertaController;
 use App\Http\Controllers\Api\SertifikatController;
 use App\Http\Controllers\Api\SwaggerTestController;
 use Illuminate\Support\Facades\Route;
