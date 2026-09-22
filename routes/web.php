@@ -10,12 +10,16 @@ use App\Http\Controllers\MitraController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicLowonganController;
+use App\Models\DaftarLowongan;
+use App\Models\DaftarPelatihan;
 use App\Http\Controllers\PublicPelatihanController;
 use App\Http\Controllers\SertifikatController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    $pelatihans = DaftarPelatihan::all()->take(8);
+    $lowongans = DaftarLowongan::all()->take(6);
+    return view('welcome', compact('pelatihans', 'lowongans'));
 });
 Route::get('/program-pelatihan', [PublicPelatihanController::class, 'index'])->name('pelatihan.katalog');
 Route::get('/lowongan-kerja', [PublicLowonganController::class, 'index'])->name('lowongan.katalog');
@@ -54,4 +58,4 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
