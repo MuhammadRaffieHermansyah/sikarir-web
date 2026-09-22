@@ -19,7 +19,7 @@
         </p>
       </div>
 
-      <a href="{{ url('/docs') }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white text-emerald-900 font-bold text-xs rounded-xl shadow-md hover:bg-emerald-50 transition shrink-0 group">
+      <a href="{{ url('/api/documentation') }}" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white text-emerald-900 font-bold text-xs rounded-xl shadow-md hover:bg-emerald-50 transition shrink-0 group">
         <i data-lucide="file-code" class="w-4 h-4 text-emerald-700"></i>
         <span>Swagger API Docs</span>
         <i data-lucide="external-link" class="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform"></i>

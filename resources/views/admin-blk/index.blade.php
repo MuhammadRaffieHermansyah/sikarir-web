@@ -23,9 +23,9 @@
         <option>BLK Pusat Vokasi</option>
       </select>
 
-      <a href="{{ route('admin-blk.create') }}" class="bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+      <!-- <a href="{{ route('admin-blk.create') }}" class="bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
         <i data-lucide="user-plus" class="w-4 h-4"></i> Tambah Admin BLK
-      </a>
+      </a> -->
     </div>
   </div>
 
@@ -51,7 +51,7 @@
   <x-chart-section />
 
   <!-- Management Section: Admin BLK Personnel Table -->
-  <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+  <!-- <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
     <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
       <div>
         <div class="flex items-center gap-2">
@@ -74,7 +74,6 @@
       </div>
     </div>
 
-    <!-- Table Content -->
     <div class="overflow-x-auto">
       <table class="w-full text-left text-xs">
         <thead>
@@ -179,21 +178,7 @@
         {{ $admins->links() }}
       </div>
     @endif
-  </div>
+  </div> -->
 
-  <!-- Grid Section: Table & Side Widgets -->
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <div class="lg:col-span-2">
-      <!-- Component: Approval Table -->
-      <x-approval-table />
-    </div>
-
-    <div class="space-y-6">
-      <!-- Component: Quick Actions -->
-      <x-quick-actions />
-
-      <!-- Component: Agenda Section -->
-      <x-agenda-section />
-    </div>
-  </div>
+  
 @endsection
