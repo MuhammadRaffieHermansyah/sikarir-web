@@ -1,15 +1,13 @@
 <aside class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between hidden md:flex shrink-0">
     <div>
-        <!-- Logo -->
-        <div class="p-4 flex items-center gap-3 border-b border-slate-100">
-            <div class="bg-emerald-900 text-white font-bold p-2 rounded text-xs leading-none">
-                BLK<br />CONNECT
-            </div>
-            <div>
-                <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded">SIKARIR</span>
-                <p class="text-[10px] text-slate-500 mt-0.5">Sistem Informasi Karir</p>
-            </div>
-        </div>
+        <div class="p-4 flex items-center gap-3 border-b border-slate-100 bg-white">
+    <!-- Gambar Logo -->
+    <a href="{{ url('/') }}" class="flex items-center gap-3 group">
+        <img src="{{ asset('images/logo-sikarir.png') }}" 
+             alt="Logo siKarir BLK Jember" 
+             class="h-10 w-auto object-contain">
+    </a>
+</div>
 
         <!-- Menu Navigation -->
         <nav class="p-3 text-xs font-medium space-y-6">
