@@ -15,19 +15,15 @@
     <nav class="p-3 text-xs font-medium space-y-6">
       <div>
         <div class="text-[10px] uppercase font-bold text-slate-400 mb-2 px-3">Utama</div>
-        <a href="{{ route('admin-blk.index') }}" class="flex items-center gap-2.5 px-3 py-2 {{ request()->routeIs('admin-blk.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
+        <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5 px-3 py-2 {{ request()->routeIs('dashboard') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
           <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
           Dashboard Ringkasan
-        </a>
-        <a href="{{ route('admin-blk.index') }}" class="flex items-center gap-2.5 px-3 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition">
-          <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
-          Laporan & Statistik
         </a>
       </div>
 
       <div>
         <div class="text-[10px] uppercase font-bold text-slate-400 mb-2 px-3">Manajemen Data</div>
-        <a href="{{ route('admin-blk.index') }}" class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('admin-blk.*') ? 'text-emerald-700 font-medium' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
+        <a href="{{ route('admin-blk.index') }}" class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('admin-blk.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
           <span class="flex items-center gap-2.5">
             <i data-lucide="shield-check" class="w-4 h-4"></i>
             Admin BLK
@@ -56,14 +52,7 @@
           <i data-lucide="briefcase" class="w-4 h-4"></i>
           Data Magang
         </a>
-        <a href="{{ route('absen.index') }}" class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('absen.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
-          <span class="flex items-center gap-2.5">
-            <i data-lucide="file-text" class="w-4 h-4"></i>
-            Jurnal & Verifikasi
-          </span>
-          <span class="bg-emerald-500 text-white font-semibold text-[10px] px-1.5 py-0.5 rounded-full">12 Baru</span>
-        </a>
-        <a href="{{ route('absen.index') }}" class="flex items-center gap-2.5 px-3 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition">
+        <a href="{{ route('absen.index') }}" class="flex items-center gap-2.5 px-3 py-2 {{ request()->routeIs('absen.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
           <i data-lucide="check-square" class="w-4 h-4"></i>
           Presensi Peserta
         </a>
@@ -74,10 +63,6 @@
         <a href="{{ route('sertifikat.index') }}" class="flex items-center gap-2.5 px-3 py-2 {{ request()->routeIs('sertifikat.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
           <i data-lucide="award" class="w-4 h-4"></i>
           Penerbitan Sertifikat
-        </a>
-        <a href="{{ route('sertifikat.index') }}" class="flex items-center gap-2.5 px-3 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition">
-          <i data-lucide="file-check-2" class="w-4 h-4"></i>
-          Nilai & Rekomendasi
         </a>
       </div>
     </nav>
@@ -97,9 +82,12 @@
       <a href="#" class="flex items-center gap-2 hover:text-slate-900">
         <i data-lucide="settings" class="w-4 h-4"></i> Pengaturan
       </a>
-      <a href="#" class="flex items-center gap-1.5 text-rose-600 font-medium hover:text-rose-700">
-        <i data-lucide="log-out" class="w-4 h-4"></i> Keluar
-      </a>
+      <form method="POST" action="{{ route('logout') }}" class="inline">
+        @csrf
+        <button type="submit" class="flex items-center gap-1.5 text-rose-600 font-medium hover:text-rose-700">
+          <i data-lucide="log-out" class="w-4 h-4"></i> Keluar
+        </button>
+      </form>
     </div>
   </div>
 </aside>
