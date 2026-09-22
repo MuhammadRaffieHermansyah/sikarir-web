@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Absen extends Model
 {
+    use HasFactory;
+
     protected $table = 'absens';
     protected $primaryKey = 'id_absen';
     protected $fillable = ['id_jadwal', 'id_peserta', 'tanggal', 'jam_hadir', 'status_kehadiran', 'keterangan'];
