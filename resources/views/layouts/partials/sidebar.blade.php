@@ -6,8 +6,8 @@
         BLK<br/>CONNECT
       </div>
       <div>
-        <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded">SIMAGANG</span>
-        <p class="text-[10px] text-slate-500 mt-0.5">Sistem Informasi Magang</p>
+        <span class="text-xs font-bold text-emerald-800 bg-emerald-100 px-1.5 py-0.5 rounded">SIKARIR</span>
+        <p class="text-[10px] text-slate-500 mt-0.5">Sistem Informasi Karir</p>
       </div>
     </div>
 
@@ -32,21 +32,21 @@
         </a>
         <a href="{{ route('pelatihan.index') }}" class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('pelatihan.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
           <span class="flex items-center gap-2.5">
-            <i data-lucide="award" class="w-4 h-4"></i>
+            <i data-lucide="book" class="w-4 h-4"></i>
             Program Pelatihan
           </span>
           <span class="bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">18 Aktif</span>
         </a>
         <a href="{{ route('jadwal-pelatihan.index') }}" class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('jadwal-pelatihan.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
           <span class="flex items-center gap-2.5">
-            <i data-lucide="award" class="w-4 h-4"></i>
+            <i data-lucide="calendar-fold" class="w-4 h-4"></i>
             Jadwal Pelatihan
           </span>
           <span class="bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">18 Aktif</span>
         </a>
         <a href="{{ route('lowongan.index') }}" class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('lowongan.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
           <span class="flex items-center gap-2.5">
-            <i data-lucide="award" class="w-4 h-4"></i>
+            <i data-lucide="briefcase-business" class="w-4 h-4"></i>
             Lowongan
           </span>
           <span class="bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">18 Aktif</span>
@@ -63,7 +63,7 @@
       <div>
         <div class="text-[10px] uppercase font-bold text-slate-400 mb-2 px-3">Monitoring Magang</div>
         <a href="{{ route('pesertas.index') }}" class="flex items-center gap-2.5 px-3 py-2 {{ request()->routeIs('pesertas.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
-          <i data-lucide="briefcase" class="w-4 h-4"></i>
+          <i data-lucide="users-round" class="w-4 h-4"></i>
           Data Peserta
         </a>
         <a href="{{ route('absen.index') }}" class="flex items-center gap-2.5 px-3 py-2 {{ request()->routeIs('absen.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
