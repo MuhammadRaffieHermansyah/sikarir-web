@@ -35,12 +35,13 @@ class AbsenController extends Controller
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ['peserta_id', 'jadwal_id', 'tanggal', 'status'],
+                required: ['id_peserta', 'id_jadwal', 'tanggal', 'status_kehadiran'],
                 properties: [
-                    new OA\Property(property: 'peserta_id', type: 'integer'),
-                    new OA\Property(property: 'jadwal_id', type: 'integer'),
+                    new OA\Property(property: 'id_peserta', type: 'integer'),
+                    new OA\Property(property: 'id_jadwal', type: 'integer'),
                     new OA\Property(property: 'tanggal', type: 'string', format: 'date'),
-                    new OA\Property(property: 'status', type: 'string', enum: ['hadir', 'izin', 'alpha']),
+                    new OA\Property(property: 'jam_hadir', type: 'string', example: '08:00'),
+                    new OA\Property(property: 'status_kehadiran', type: 'string', enum: ['hadir', 'izin', 'sakit', 'alpha']),
                     new OA\Property(property: 'keterangan', type: 'string'),
                 ]
             )
@@ -52,7 +53,18 @@ class AbsenController extends Controller
     )]
     public function store(StoreAbsenRequest $request): JsonResponse
     {
-        $absen = Absen::create($request->validated());
+        $data = $request->validated();
+
+        $exists = Absen::where('id_peserta', $data['id_peserta'])
+            ->where('id_jadwal', $data['id_jadwal'])
+            ->where('tanggal', $data['tanggal'])
+            ->exists();
+
+        if ($exists) {
+            abort(422, 'Data presensi untuk peserta ini pada tanggal tersebut sudah tercatat.');
+        }
+
+        $absen = Absen::create($data);
         return (new AbsenResource($absen))->response()->setStatusCode(201);
     }
 
@@ -87,8 +99,11 @@ class AbsenController extends Controller
             required: true,
             content: new OA\JsonContent(
                 properties: [
+                    new OA\Property(property: 'id_peserta', type: 'integer'),
+                    new OA\Property(property: 'id_jadwal', type: 'integer'),
                     new OA\Property(property: 'tanggal', type: 'string', format: 'date'),
-                    new OA\Property(property: 'status', type: 'string', enum: ['hadir', 'izin', 'alpha']),
+                    new OA\Property(property: 'jam_hadir', type: 'string', example: '08:00'),
+                    new OA\Property(property: 'status_kehadiran', type: 'string', enum: ['hadir', 'izin', 'sakit', 'alpha']),
                     new OA\Property(property: 'keterangan', type: 'string'),
                 ]
             )
@@ -101,7 +116,23 @@ class AbsenController extends Controller
     public function update(UpdateAbsenRequest $request, int $id): JsonResponse
     {
         $absen = Absen::findOrFail($id);
-        $absen->update($request->validated());
+        $data = $request->validated();
+
+        $idPeserta = $data['id_peserta'] ?? $absen->id_peserta;
+        $idJadwal = $data['id_jadwal'] ?? $absen->id_jadwal;
+        $tanggal = $data['tanggal'] ?? $absen->tanggal->format('Y-m-d');
+
+        $exists = Absen::where('id_peserta', $idPeserta)
+            ->where('id_jadwal', $idJadwal)
+            ->where('tanggal', $tanggal)
+            ->where('id_absen', '!=', $absen->id_absen)
+            ->exists();
+
+        if ($exists) {
+            abort(422, 'Data presensi untuk peserta ini pada tanggal tersebut sudah tercatat.');
+        }
+
+        $absen->update($data);
         return (new AbsenResource($absen->fresh()->load($this->relations())))->response();
     }
 

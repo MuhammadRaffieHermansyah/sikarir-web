@@ -29,7 +29,7 @@ class DaftarLowonganController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'id_mitra'        => 'required|exists:mitras,id_mitra',
             'id_admin'        => 'required|exists:admin_blks,id_admin',
             'judul_lowongan'  => 'required|string|max:255',
@@ -44,7 +44,7 @@ class DaftarLowonganController extends Controller
             'judul_lowongan.required' => 'Judul posisi lowongan wajib diisi.',
         ]);
 
-        DaftarLowongan::create($request->all());
+        DaftarLowongan::create($validated);
         return redirect()->route('lowongan.index')->with('success', 'Lowongan magang industri berhasil dipublikasikan.');
     }
 
@@ -66,7 +66,7 @@ class DaftarLowonganController extends Controller
     {
         $lowongan = DaftarLowongan::findOrFail($id);
 
-        $request->validate([
+        $validated = $request->validate([
             'id_mitra'        => 'required|exists:mitras,id_mitra',
             'id_admin'        => 'required|exists:admin_blks,id_admin',
             'judul_lowongan'  => 'required|string|max:255',
@@ -81,7 +81,7 @@ class DaftarLowonganController extends Controller
             'judul_lowongan.required' => 'Judul posisi lowongan wajib diisi.',
         ]);
 
-        $lowongan->update($request->all());
+        $lowongan->update($validated);
         return redirect()->route('lowongan.index')->with('success', 'Lowongan magang industri berhasil diperbarui.');
     }
 

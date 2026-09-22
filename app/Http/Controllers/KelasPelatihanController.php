@@ -45,7 +45,11 @@ class KelasPelatihanController extends Controller
         try {
             DB::transaction(function () use ($data) {
                 $jadwal = JadwalPelatihan::with('pelatihan')->lockForUpdate()->findOrFail($data['id_jadwal']);
-                
+
+                if ($jadwal->status !== 'tersedia') {
+                    throw new \Exception('Jadwal pelatihan yang dipilih sudah tidak tersedia untuk pendaftaran.');
+                }
+
                 if (KelasPelatihan::where('id_peserta', $data['id_peserta'])->where('id_jadwal', $data['id_jadwal'])->exists()) {
                     throw new \Exception('Peserta ini sudah terdaftar pada batch jadwal kelas yang dipilih.');
                 }
@@ -95,6 +99,20 @@ class KelasPelatihanController extends Controller
         if (($kelas->id_peserta != $request->id_peserta || $kelas->id_jadwal != $request->id_jadwal) &&
             KelasPelatihan::where('id_peserta', $request->id_peserta)->where('id_jadwal', $request->id_jadwal)->where('id_kelas', '!=', $id)->exists()) {
             return back()->withInput()->withErrors(['error' => 'Peserta sudah terdaftar pada batch jadwal kelas ini.']);
+        }
+
+        // If moved to another jadwal, re-check availability and quota
+        if ($kelas->id_jadwal != $request->id_jadwal) {
+            $jadwalBaru = JadwalPelatihan::with('pelatihan')->findOrFail($request->id_jadwal);
+
+            if ($jadwalBaru->status !== 'tersedia') {
+                return back()->withInput()->withErrors(['error' => 'Jadwal pelatihan tujuan sudah tidak tersedia untuk pendaftaran.']);
+            }
+
+            $count = KelasPelatihan::where('id_jadwal', $request->id_jadwal)->count();
+            if ($jadwalBaru->pelatihan && $count >= $jadwalBaru->pelatihan->kuota) {
+                return back()->withInput()->withErrors(['error' => 'Kapasitas kuota untuk kelas pelatihan tujuan sudah penuh (Maks: ' . $jadwalBaru->pelatihan->kuota . ' siswa).']);
+            }
         }
 
         $kelas->update($request->only(['id_peserta', 'id_jadwal', 'status']));

@@ -38,14 +38,14 @@ class SertifikatController extends Controller
             content: new OA\MediaType(
                 mediaType: 'multipart/form-data',
                 schema: new OA\Schema(
-                    required: ['peserta_id', 'jadwal_id'],
+                    required: ['id_peserta', 'id_jadwal', 'id_admin', 'no_sertifikat', 'tanggal_terbit'],
                     properties: [
-                        new OA\Property(property: 'peserta_id', type: 'integer'),
-                        new OA\Property(property: 'jadwal_id', type: 'integer'),
-                        new OA\Property(property: 'admin_id', type: 'integer'),
-                        new OA\Property(property: 'nomor_sertifikat', type: 'string'),
+                        new OA\Property(property: 'id_peserta', type: 'integer'),
+                        new OA\Property(property: 'id_jadwal', type: 'integer'),
+                        new OA\Property(property: 'id_admin', type: 'integer'),
+                        new OA\Property(property: 'no_sertifikat', type: 'string'),
                         new OA\Property(property: 'tanggal_terbit', type: 'string', format: 'date'),
-                        new OA\Property(property: 'file_sertifikat', type: 'string', format: 'binary', description: 'File sertifikat (PDF/gambar)'),
+                        new OA\Property(property: 'file_sertifikat', type: 'string', format: 'binary', description: 'File sertifikat (PDF, maks 5MB)'),
                     ]
                 )
             )
@@ -58,6 +58,11 @@ class SertifikatController extends Controller
     public function store(StoreSertifikatRequest $request): JsonResponse
     {
         $data = $request->validated();
+
+        if (Sertifikat::where('id_peserta', $data['id_peserta'])->where('id_jadwal', $data['id_jadwal'])->exists()) {
+            abort(422, 'Peserta ini sudah memiliki sertifikat untuk jadwal pelatihan tersebut.');
+        }
+
         if ($request->hasFile('file_sertifikat')) {
             $data['file_sertifikat'] = $request->file('file_sertifikat')->store('sertifikat', 'public');
         }
@@ -97,7 +102,10 @@ class SertifikatController extends Controller
                 mediaType: 'multipart/form-data',
                 schema: new OA\Schema(
                     properties: [
-                        new OA\Property(property: 'nomor_sertifikat', type: 'string'),
+                        new OA\Property(property: 'id_peserta', type: 'integer'),
+                        new OA\Property(property: 'id_jadwal', type: 'integer'),
+                        new OA\Property(property: 'id_admin', type: 'integer'),
+                        new OA\Property(property: 'no_sertifikat', type: 'string'),
                         new OA\Property(property: 'tanggal_terbit', type: 'string', format: 'date'),
                         new OA\Property(property: 'file_sertifikat', type: 'string', format: 'binary'),
                         new OA\Property(property: '_method', type: 'string', default: 'PUT'),
@@ -114,6 +122,14 @@ class SertifikatController extends Controller
     {
         $item = Sertifikat::findOrFail($id);
         $data = $request->validated();
+
+        $idPeserta = $data['id_peserta'] ?? $item->id_peserta;
+        $idJadwal = $data['id_jadwal'] ?? $item->id_jadwal;
+
+        if (Sertifikat::where('id_peserta', $idPeserta)->where('id_jadwal', $idJadwal)->where('id_sertifikat', '!=', $item->id_sertifikat)->exists()) {
+            abort(422, 'Peserta ini sudah memiliki sertifikat untuk jadwal pelatihan tersebut.');
+        }
+
         if ($request->hasFile('file_sertifikat')) {
             if ($item->file_sertifikat) Storage::disk('public')->delete($item->file_sertifikat);
             $data['file_sertifikat'] = $request->file('file_sertifikat')->store('sertifikat', 'public');

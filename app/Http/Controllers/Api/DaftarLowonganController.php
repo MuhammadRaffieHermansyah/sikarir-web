@@ -35,15 +35,16 @@ class DaftarLowonganController extends Controller
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ['mitra_id', 'judul'],
+                required: ['id_mitra', 'id_admin', 'judul_lowongan'],
                 properties: [
-                    new OA\Property(property: 'mitra_id', type: 'integer'),
-                    new OA\Property(property: 'admin_id', type: 'integer'),
-                    new OA\Property(property: 'judul', type: 'string'),
-                    new OA\Property(property: 'deskripsi', type: 'string'),
-                    new OA\Property(property: 'gaji', type: 'number'),
+                    new OA\Property(property: 'id_mitra', type: 'integer'),
+                    new OA\Property(property: 'id_admin', type: 'integer'),
+                    new OA\Property(property: 'judul_lowongan', type: 'string'),
                     new OA\Property(property: 'lokasi', type: 'string'),
-                    new OA\Property(property: 'deadline', type: 'string', format: 'date'),
+                    new OA\Property(property: 'deskripsi', type: 'string'),
+                    new OA\Property(property: 'kualifikasi', type: 'string'),
+                    new OA\Property(property: 'tanggal_posting', type: 'string', format: 'date'),
+                    new OA\Property(property: 'status', type: 'string', enum: ['aktif', 'ditutup', 'draft']),
                 ]
             )
         ),
@@ -89,11 +90,14 @@ class DaftarLowonganController extends Controller
             required: true,
             content: new OA\JsonContent(
                 properties: [
-                    new OA\Property(property: 'judul', type: 'string'),
-                    new OA\Property(property: 'deskripsi', type: 'string'),
-                    new OA\Property(property: 'gaji', type: 'number'),
+                    new OA\Property(property: 'id_mitra', type: 'integer'),
+                    new OA\Property(property: 'id_admin', type: 'integer'),
+                    new OA\Property(property: 'judul_lowongan', type: 'string'),
                     new OA\Property(property: 'lokasi', type: 'string'),
-                    new OA\Property(property: 'deadline', type: 'string', format: 'date'),
+                    new OA\Property(property: 'deskripsi', type: 'string'),
+                    new OA\Property(property: 'kualifikasi', type: 'string'),
+                    new OA\Property(property: 'tanggal_posting', type: 'string', format: 'date'),
+                    new OA\Property(property: 'status', type: 'string', enum: ['aktif', 'ditutup', 'draft']),
                 ]
             )
         ),

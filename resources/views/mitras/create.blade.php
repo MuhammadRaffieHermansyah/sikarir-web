@@ -31,6 +31,15 @@
       <form method="POST" action="{{ route('mitras.store') }}" class="space-y-6">
         @csrf
 
+        @if($errors->any())
+          <div class="bg-rose-50 border border-rose-200 text-rose-800 px-4 py-3 rounded-xl text-xs space-y-1 shadow-sm">
+            <div class="font-bold">Mohon perbaiki kesalahan berikut:</div>
+            <ul class="list-disc list-inside space-y-0.5 text-rose-700 pl-4">
+              @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
+            </ul>
+          </div>
+        @endif
+
         <!-- Card 1: Data Identitas Perusahaan -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-4">
           <div class="flex items-center gap-2.5 pb-4 border-b border-slate-100">
@@ -53,6 +62,7 @@
             <div>
               <label class="block text-xs font-semibold text-slate-700 mb-1.5">Bidang Usaha / Sektor</label>
               <input type="text" name="bidang_usaha" value="{{ old('bidang_usaha') }}" placeholder="Contoh: Otomotif & Manufaktur" class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
+              @error('bidang_usaha')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
@@ -64,11 +74,13 @@
                 <option value="Instansi Pemerintah / Lembaga">Instansi Pemerintah / Lembaga</option>
                 <option value="UMKM / Startup">UMKM / Startup</option>
               </select>
+              @error('jenis_mitra')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
               <label class="block text-xs font-semibold text-slate-700 mb-1.5">Nomor Izin Usaha / NIB</label>
               <input type="text" name="no_izin" value="{{ old('no_izin') }}" placeholder="Nomor NIB / Legalitas" class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
+              @error('no_izin')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
@@ -79,6 +91,7 @@
                   <option value="{{ $user->id }}" {{ old('id_user') == $user->id ? 'selected' : '' }}>{{ $user->name }} ({{ $user->email }})</option>
                 @endforeach
               </select>
+              @error('id_user')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
           </div>
         </div>
@@ -99,26 +112,31 @@
             <div>
               <label class="block text-xs font-semibold text-slate-700 mb-1.5">Kota / Kabupaten</label>
               <input type="text" name="kota" value="{{ old('kota') }}" placeholder="Contoh: Jakarta Pusat" class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
+              @error('kota')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
               <label class="block text-xs font-semibold text-slate-700 mb-1.5">Provinsi</label>
               <input type="text" name="provinsi" value="{{ old('provinsi') }}" placeholder="Contoh: DKI Jakarta" class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
+              @error('provinsi')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
               <label class="block text-xs font-semibold text-slate-700 mb-1.5">Nomor Telepon / WhatsApp Kantor</label>
               <input type="text" name="no_telp" value="{{ old('no_telp') }}" placeholder="Contoh: 021-5551234 atau 08123456789" class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
+              @error('no_telp')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
               <label class="block text-xs font-semibold text-slate-700 mb-1.5">Jabatan PIC / HRD</label>
               <input type="text" name="jabatan_pic" value="{{ old('jabatan_pic') }}" placeholder="Contoh: HR & People Development Head" class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
+              @error('jabatan_pic')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div class="sm:col-span-2">
               <label class="block text-xs font-semibold text-slate-700 mb-1.5">Alamat Lengkap Perusahaan</label>
               <textarea name="alamat" rows="3" placeholder="Jl. Jendral Sudirman Kav. XX, Gedung..." class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">{{ old('alamat') }}</textarea>
+              @error('alamat')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
           </div>
         </div>

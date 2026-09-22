@@ -45,27 +45,32 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "peserta_id",
-                                    "jadwal_id",
+                                    "id_peserta",
+                                    "id_jadwal",
                                     "tanggal",
-                                    "status"
+                                    "status_kehadiran"
                                 ],
                                 "properties": {
-                                    "peserta_id": {
+                                    "id_peserta": {
                                         "type": "integer"
                                     },
-                                    "jadwal_id": {
+                                    "id_jadwal": {
                                         "type": "integer"
                                     },
                                     "tanggal": {
                                         "type": "string",
                                         "format": "date"
                                     },
-                                    "status": {
+                                    "jam_hadir": {
+                                        "type": "string",
+                                        "example": "08:00"
+                                    },
+                                    "status_kehadiran": {
                                         "type": "string",
                                         "enum": [
                                             "hadir",
                                             "izin",
+                                            "sakit",
                                             "alpha"
                                         ]
                                     },
@@ -146,15 +151,26 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
+                                    "id_peserta": {
+                                        "type": "integer"
+                                    },
+                                    "id_jadwal": {
+                                        "type": "integer"
+                                    },
                                     "tanggal": {
                                         "type": "string",
                                         "format": "date"
                                     },
-                                    "status": {
+                                    "jam_hadir": {
+                                        "type": "string",
+                                        "example": "08:00"
+                                    },
+                                    "status_kehadiran": {
                                         "type": "string",
                                         "enum": [
                                             "hadir",
                                             "izin",
+                                            "sakit",
                                             "alpha"
                                         ]
                                     },
@@ -245,17 +261,11 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "user_id"
+                                    "id_user"
                                 ],
                                 "properties": {
-                                    "user_id": {
+                                    "id_user": {
                                         "type": "integer"
-                                    },
-                                    "jabatan": {
-                                        "type": "string"
-                                    },
-                                    "nip": {
-                                        "type": "string"
                                     }
                                 },
                                 "type": "object"
@@ -331,11 +341,8 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "jabatan": {
-                                        "type": "string"
-                                    },
-                                    "nip": {
-                                        "type": "string"
+                                    "id_user": {
+                                        "type": "integer"
                                     }
                                 },
                                 "type": "object"
@@ -404,7 +411,8 @@
                                     "name",
                                     "email",
                                     "password",
-                                    "password_confirmation"
+                                    "password_confirmation",
+                                    "role"
                                 ],
                                 "properties": {
                                     "name": {
@@ -424,6 +432,13 @@
                                     "password_confirmation": {
                                         "type": "string",
                                         "format": "password"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "enum": [
+                                            "peserta",
+                                            "mitra"
+                                        ]
                                     }
                                 },
                                 "type": "object"
@@ -560,31 +575,40 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "mitra_id",
-                                    "judul"
+                                    "id_mitra",
+                                    "id_admin",
+                                    "judul_lowongan"
                                 ],
                                 "properties": {
-                                    "mitra_id": {
+                                    "id_mitra": {
                                         "type": "integer"
                                     },
-                                    "admin_id": {
+                                    "id_admin": {
                                         "type": "integer"
                                     },
-                                    "judul": {
+                                    "judul_lowongan": {
+                                        "type": "string"
+                                    },
+                                    "lokasi": {
                                         "type": "string"
                                     },
                                     "deskripsi": {
                                         "type": "string"
                                     },
-                                    "gaji": {
-                                        "type": "number"
-                                    },
-                                    "lokasi": {
+                                    "kualifikasi": {
                                         "type": "string"
                                     },
-                                    "deadline": {
+                                    "tanggal_posting": {
                                         "type": "string",
                                         "format": "date"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "aktif",
+                                            "ditutup",
+                                            "draft"
+                                        ]
                                     }
                                 },
                                 "type": "object"
@@ -660,21 +684,35 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "judul": {
+                                    "id_mitra": {
+                                        "type": "integer"
+                                    },
+                                    "id_admin": {
+                                        "type": "integer"
+                                    },
+                                    "judul_lowongan": {
+                                        "type": "string"
+                                    },
+                                    "lokasi": {
                                         "type": "string"
                                     },
                                     "deskripsi": {
                                         "type": "string"
                                     },
-                                    "gaji": {
-                                        "type": "number"
-                                    },
-                                    "lokasi": {
+                                    "kualifikasi": {
                                         "type": "string"
                                     },
-                                    "deadline": {
+                                    "tanggal_posting": {
                                         "type": "string",
                                         "format": "date"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "aktif",
+                                            "ditutup",
+                                            "draft"
+                                        ]
                                     }
                                 },
                                 "type": "object"
@@ -760,24 +798,25 @@
                         "application/json": {
                             "schema": {
                                 "required": [
+                                    "id_admin",
                                     "nama_pelatihan",
                                     "kuota"
                                 ],
                                 "properties": {
-                                    "admin_id": {
+                                    "id_admin": {
                                         "type": "integer"
                                     },
                                     "nama_pelatihan": {
                                         "type": "string"
                                     },
-                                    "deskripsi": {
+                                    "deskripsi_pelatihan": {
+                                        "type": "string"
+                                    },
+                                    "durasi_lp": {
                                         "type": "string"
                                     },
                                     "kuota": {
                                         "type": "integer"
-                                    },
-                                    "durasi": {
-                                        "type": "string"
                                     }
                                 },
                                 "type": "object"
@@ -853,17 +892,20 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
+                                    "id_admin": {
+                                        "type": "integer"
+                                    },
                                     "nama_pelatihan": {
                                         "type": "string"
                                     },
-                                    "deskripsi": {
+                                    "deskripsi_pelatihan": {
+                                        "type": "string"
+                                    },
+                                    "durasi_lp": {
                                         "type": "string"
                                     },
                                     "kuota": {
                                         "type": "integer"
-                                    },
-                                    "durasi": {
-                                        "type": "string"
                                     }
                                 },
                                 "type": "object"
@@ -949,12 +991,12 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "pelatihan_id",
+                                    "id_pelatihan",
                                     "tanggal_mulai",
                                     "tanggal_selesai"
                                 ],
                                 "properties": {
-                                    "pelatihan_id": {
+                                    "id_pelatihan": {
                                         "type": "integer"
                                     },
                                     "tanggal_mulai": {
@@ -965,14 +1007,25 @@
                                         "type": "string",
                                         "format": "date"
                                     },
-                                    "lokasi": {
+                                    "jam_mulai": {
+                                        "type": "string",
+                                        "example": "08:00"
+                                    },
+                                    "jam_selesai": {
+                                        "type": "string",
+                                        "example": "15:30"
+                                    },
+                                    "instruktur": {
+                                        "type": "string"
+                                    },
+                                    "tempat": {
                                         "type": "string"
                                     },
                                     "status": {
                                         "type": "string",
                                         "enum": [
                                             "tersedia",
-                                            "penuh",
+                                            "berlangsung",
                                             "selesai"
                                         ]
                                     }
@@ -1050,6 +1103,9 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
+                                    "id_pelatihan": {
+                                        "type": "integer"
+                                    },
                                     "tanggal_mulai": {
                                         "type": "string",
                                         "format": "date"
@@ -1058,14 +1114,25 @@
                                         "type": "string",
                                         "format": "date"
                                     },
-                                    "lokasi": {
+                                    "jam_mulai": {
+                                        "type": "string",
+                                        "example": "08:00"
+                                    },
+                                    "jam_selesai": {
+                                        "type": "string",
+                                        "example": "15:30"
+                                    },
+                                    "instruktur": {
+                                        "type": "string"
+                                    },
+                                    "tempat": {
                                         "type": "string"
                                     },
                                     "status": {
                                         "type": "string",
                                         "enum": [
                                             "tersedia",
-                                            "penuh",
+                                            "berlangsung",
                                             "selesai"
                                         ]
                                     }
@@ -1329,23 +1396,37 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "user_id",
                                     "nama_perusahaan"
                                 ],
                                 "properties": {
-                                    "user_id": {
+                                    "id_user": {
                                         "type": "integer"
                                     },
                                     "nama_perusahaan": {
                                         "type": "string"
                                     },
+                                    "jenis_mitra": {
+                                        "type": "string"
+                                    },
                                     "bidang_usaha": {
                                         "type": "string"
                                     },
-                                    "alamat": {
+                                    "no_telp": {
                                         "type": "string"
                                     },
-                                    "telepon": {
+                                    "no_izin": {
+                                        "type": "string"
+                                    },
+                                    "jabatan_pic": {
+                                        "type": "string"
+                                    },
+                                    "provinsi": {
+                                        "type": "string"
+                                    },
+                                    "kota": {
+                                        "type": "string"
+                                    },
+                                    "alamat": {
                                         "type": "string"
                                     }
                                 },
@@ -1422,16 +1503,34 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
+                                    "id_user": {
+                                        "type": "integer"
+                                    },
                                     "nama_perusahaan": {
+                                        "type": "string"
+                                    },
+                                    "jenis_mitra": {
                                         "type": "string"
                                     },
                                     "bidang_usaha": {
                                         "type": "string"
                                     },
-                                    "alamat": {
+                                    "no_telp": {
                                         "type": "string"
                                     },
-                                    "telepon": {
+                                    "no_izin": {
+                                        "type": "string"
+                                    },
+                                    "jabatan_pic": {
+                                        "type": "string"
+                                    },
+                                    "provinsi": {
+                                        "type": "string"
+                                    },
+                                    "kota": {
+                                        "type": "string"
+                                    },
+                                    "alamat": {
                                         "type": "string"
                                     }
                                 },
@@ -1518,22 +1617,50 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "user_id"
+                                    "id_user",
+                                    "nomor_peserta",
+                                    "jenis_kelamin"
                                 ],
                                 "properties": {
-                                    "user_id": {
+                                    "id_user": {
                                         "type": "integer"
                                     },
-                                    "nik": {
+                                    "id_admin": {
+                                        "type": "integer"
+                                    },
+                                    "nomor_peserta": {
                                         "type": "string"
                                     },
-                                    "alamat": {
+                                    "jenis_kelamin": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Laki-laki",
+                                            "Perempuan"
+                                        ]
+                                    },
+                                    "nomor_kk": {
+                                        "type": "string"
+                                    },
+                                    "nomor_wa": {
+                                        "type": "string"
+                                    },
+                                    "tanggal_lahir": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "tempat_lahir": {
+                                        "type": "string"
+                                    },
+                                    "alamat_lengkap": {
                                         "type": "string"
                                     },
                                     "pendidikan_terakhir": {
                                         "type": "string"
                                     },
-                                    "keahlian": {
+                                    "pendidikan_sekarang": {
+                                        "type": "string"
+                                    },
+                                    "jurusan": {
                                         "type": "string"
                                     }
                                 },
@@ -1610,16 +1737,45 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "nik": {
+                                    "id_user": {
+                                        "type": "integer"
+                                    },
+                                    "id_admin": {
+                                        "type": "integer"
+                                    },
+                                    "nomor_peserta": {
                                         "type": "string"
                                     },
-                                    "alamat": {
+                                    "jenis_kelamin": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Laki-laki",
+                                            "Perempuan"
+                                        ]
+                                    },
+                                    "nomor_kk": {
+                                        "type": "string"
+                                    },
+                                    "nomor_wa": {
+                                        "type": "string"
+                                    },
+                                    "tanggal_lahir": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "tempat_lahir": {
+                                        "type": "string"
+                                    },
+                                    "alamat_lengkap": {
                                         "type": "string"
                                     },
                                     "pendidikan_terakhir": {
                                         "type": "string"
                                     },
-                                    "keahlian": {
+                                    "pendidikan_sekarang": {
+                                        "type": "string"
+                                    },
+                                    "jurusan": {
                                         "type": "string"
                                     }
                                 },
@@ -1706,20 +1862,23 @@
                         "multipart/form-data": {
                             "schema": {
                                 "required": [
-                                    "peserta_id",
-                                    "jadwal_id"
+                                    "id_peserta",
+                                    "id_jadwal",
+                                    "id_admin",
+                                    "no_sertifikat",
+                                    "tanggal_terbit"
                                 ],
                                 "properties": {
-                                    "peserta_id": {
+                                    "id_peserta": {
                                         "type": "integer"
                                     },
-                                    "jadwal_id": {
+                                    "id_jadwal": {
                                         "type": "integer"
                                     },
-                                    "admin_id": {
+                                    "id_admin": {
                                         "type": "integer"
                                     },
-                                    "nomor_sertifikat": {
+                                    "no_sertifikat": {
                                         "type": "string"
                                     },
                                     "tanggal_terbit": {
@@ -1727,7 +1886,7 @@
                                         "format": "date"
                                     },
                                     "file_sertifikat": {
-                                        "description": "File sertifikat (PDF/gambar)",
+                                        "description": "File sertifikat (PDF, maks 5MB)",
                                         "type": "string",
                                         "format": "binary"
                                     }
@@ -1805,7 +1964,16 @@
                         "multipart/form-data": {
                             "schema": {
                                 "properties": {
-                                    "nomor_sertifikat": {
+                                    "id_peserta": {
+                                        "type": "integer"
+                                    },
+                                    "id_jadwal": {
+                                        "type": "integer"
+                                    },
+                                    "id_admin": {
+                                        "type": "integer"
+                                    },
+                                    "no_sertifikat": {
                                         "type": "string"
                                     },
                                     "tanggal_terbit": {

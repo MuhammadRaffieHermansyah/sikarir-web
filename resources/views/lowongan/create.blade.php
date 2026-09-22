@@ -86,32 +86,37 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label for="lokasi" class="block text-xs font-semibold text-slate-700 mb-1.5">Lokasi Penempatan</label>
-              <input type="text" name="lokasi" id="lokasi" value="{{ old('lokasi') }}" placeholder="Contoh: Bandung, Jawa Barat" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700" />
+              <input type="text" name="lokasi" id="lokasi" value="{{ old('lokasi') }}" placeholder="Contoh: Bandung, Jawa Barat" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('lokasi') border-rose-400 bg-rose-50/50 @enderror" />
+              @error('lokasi')<p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
               <label for="tanggal_posting" class="block text-xs font-semibold text-slate-700 mb-1.5">Tanggal Posting</label>
-              <input type="date" name="tanggal_posting" id="tanggal_posting" value="{{ old('tanggal_posting', date('Y-m-d')) }}" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700" />
+              <input type="date" name="tanggal_posting" id="tanggal_posting" value="{{ old('tanggal_posting', date('Y-m-d')) }}" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('tanggal_posting') border-rose-400 bg-rose-50/50 @enderror" />
+              @error('tanggal_posting')<p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>@enderror
             </div>
           </div>
 
           <div>
             <label for="status" class="block text-xs font-semibold text-slate-700 mb-1.5">Status Publikasi <span class="text-rose-500">*</span></label>
-            <select name="status" id="status" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700">
+            <select name="status" id="status" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('status') border-rose-400 bg-rose-50/50 @enderror">
               <option value="aktif" {{ old('status', 'aktif') == 'aktif' ? 'selected' : '' }}>Aktif (Langsung Dipublikasikan)</option>
               <option value="draft" {{ old('status') == 'draft' ? 'selected' : '' }}>Draft (Belum Dipublikasikan)</option>
               <option value="ditutup" {{ old('status') == 'ditutup' ? 'selected' : '' }}>Ditutup (Tidak Menerima Pendaftar)</option>
             </select>
+            @error('status')<p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>@enderror
           </div>
 
           <div>
             <label for="deskripsi" class="block text-xs font-semibold text-slate-700 mb-1.5">Deskripsi Pekerjaan & Tanggung Jawab</label>
-            <textarea name="deskripsi" id="deskripsi" rows="4" placeholder="Jelaskan peran, tanggung jawab, dan manfaat magang di perusahaan ini..." class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700">{{ old('deskripsi') }}</textarea>
+            <textarea name="deskripsi" id="deskripsi" rows="4" placeholder="Jelaskan peran, tanggung jawab, dan manfaat magang di perusahaan ini..." class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('deskripsi') border-rose-400 bg-rose-50/50 @enderror">{{ old('deskripsi') }}</textarea>
+            @error('deskripsi')<p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>@enderror
           </div>
 
           <div>
             <label for="kualifikasi" class="block text-xs font-semibold text-slate-700 mb-1.5">Kualifikasi & Persyaratan Peserta</label>
-            <textarea name="kualifikasi" id="kualifikasi" rows="4" placeholder="Contoh: Minimal lulus program las, mampu membaca gambar teknik, sehat jasmani/rohani..." class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700">{{ old('kualifikasi') }}</textarea>
+            <textarea name="kualifikasi" id="kualifikasi" rows="4" placeholder="Contoh: Minimal lulus program las, mampu membaca gambar teknik, sehat jasmani/rohani..." class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('kualifikasi') border-rose-400 bg-rose-50/50 @enderror">{{ old('kualifikasi') }}</textarea>
+            @error('kualifikasi')<p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>@enderror
           </div>
         </div>
       </div>

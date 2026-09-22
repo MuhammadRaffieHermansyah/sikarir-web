@@ -27,12 +27,12 @@ class JadwalPelatihanController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'id_pelatihan'    => 'required|exists:daftar_pelatihan,id_pelatihan',
             'tanggal_mulai'   => 'required|date',
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
-            'jam_mulai'       => 'nullable|string',
-            'jam_selesai'     => 'nullable|string',
+            'jam_mulai'       => 'nullable|date_format:H:i',
+            'jam_selesai'     => 'nullable|date_format:H:i',
             'instruktur'      => 'nullable|string|max:150',
             'tempat'          => 'nullable|string|max:255',
             'status'          => 'required|in:tersedia,berlangsung,selesai',
@@ -41,9 +41,11 @@ class JadwalPelatihanController extends Controller
             'tanggal_mulai.required'          => 'Tanggal mulai pelatihan wajib diisi.',
             'tanggal_selesai.required'        => 'Tanggal selesai pelatihan wajib diisi.',
             'tanggal_selesai.after_or_equal'  => 'Tanggal selesai harus sama atau setelah tanggal mulai.',
+            'jam_mulai.date_format'           => 'Format jam mulai tidak valid (contoh: 08:00).',
+            'jam_selesai.date_format'         => 'Format jam selesai tidak valid (contoh: 15:30).',
         ]);
 
-        JadwalPelatihan::create($request->all());
+        JadwalPelatihan::create($validated);
         return redirect()->route('jadwal-pelatihan.index')->with('success', 'Batch jadwal pelatihan berhasil ditambahkan.');
     }
 
@@ -64,12 +66,12 @@ class JadwalPelatihanController extends Controller
     {
         $jadwal = JadwalPelatihan::findOrFail($id);
 
-        $request->validate([
+        $validated = $request->validate([
             'id_pelatihan'    => 'required|exists:daftar_pelatihan,id_pelatihan',
             'tanggal_mulai'   => 'required|date',
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
-            'jam_mulai'       => 'nullable|string',
-            'jam_selesai'     => 'nullable|string',
+            'jam_mulai'       => 'nullable|date_format:H:i',
+            'jam_selesai'     => 'nullable|date_format:H:i',
             'instruktur'      => 'nullable|string|max:150',
             'tempat'          => 'nullable|string|max:255',
             'status'          => 'required|in:tersedia,berlangsung,selesai',
@@ -78,9 +80,11 @@ class JadwalPelatihanController extends Controller
             'tanggal_mulai.required'          => 'Tanggal mulai pelatihan wajib diisi.',
             'tanggal_selesai.required'        => 'Tanggal selesai pelatihan wajib diisi.',
             'tanggal_selesai.after_or_equal'  => 'Tanggal selesai harus sama atau setelah tanggal mulai.',
+            'jam_mulai.date_format'           => 'Format jam mulai tidak valid (contoh: 08:00).',
+            'jam_selesai.date_format'         => 'Format jam selesai tidak valid (contoh: 15:30).',
         ]);
 
-        $jadwal->update($request->all());
+        $jadwal->update($validated);
         return redirect()->route('jadwal-pelatihan.index')->with('success', 'Batch jadwal pelatihan berhasil diperbarui.');
     }
 
