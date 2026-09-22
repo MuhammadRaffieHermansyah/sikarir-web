@@ -47,7 +47,7 @@
             <label for="judul_lowongan" class="block text-xs font-semibold text-slate-700 mb-1.5">
               Judul Posisi Lowongan <span class="text-rose-500">*</span>
             </label>
-            <input type="text" name="judul_lowongan" id="judul_lowongan" value="{{ old('judul_lowongan') }}" required placeholder="Contoh: Teknisi Mesin CNC / Staff Administrasi Gudang" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('judul_lowongan') border-rose-400 bg-rose-50/50 @enderror" />
+            <input type="text" name="judul_lowongan" id="judul_lowongan" value="{{ old('judul_lowongan') }}" placeholder="Contoh: Teknisi Mesin CNC / Staff Administrasi Gudang" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('judul_lowongan') border-rose-400 bg-rose-50/50 @enderror" />
             @error('judul_lowongan')<p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>@enderror
           </div>
 
@@ -56,7 +56,7 @@
               <label for="id_mitra" class="block text-xs font-semibold text-slate-700 mb-1.5">
                 Mitra Industri DU/DI <span class="text-rose-500">*</span>
               </label>
-              <select name="id_mitra" id="id_mitra" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('id_mitra') border-rose-400 bg-rose-50/50 @enderror">
+              <select name="id_mitra" id="id_mitra"  class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('id_mitra') border-rose-400 bg-rose-50/50 @enderror">
                 <option value="">-- Pilih Mitra Perusahaan --</option>
                 @foreach($mitras as $mitra)
                   <option value="{{ $mitra->id_mitra }}" {{ old('id_mitra') == $mitra->id_mitra ? 'selected' : '' }}>
@@ -71,7 +71,7 @@
               <label for="id_admin" class="block text-xs font-semibold text-slate-700 mb-1.5">
                 Admin BLK Penanggung Jawab <span class="text-rose-500">*</span>
               </label>
-              <select name="id_admin" id="id_admin" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('id_admin') border-rose-400 bg-rose-50/50 @enderror">
+              <select name="id_admin" id="id_admin"  class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('id_admin') border-rose-400 bg-rose-50/50 @enderror">
                 <option value="">-- Pilih Admin BLK --</option>
                 @foreach($admins as $admin)
                   <option value="{{ $admin->id_admin }}" {{ old('id_admin') == $admin->id_admin ? 'selected' : '' }}>
