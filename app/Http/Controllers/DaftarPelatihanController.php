@@ -32,7 +32,7 @@ class DaftarPelatihanController extends Controller
             'nama_pelatihan'      => 'required|unique:daftar_pelatihan,nama_pelatihan|string|max:70',
             'deskripsi_pelatihan' => 'nullable|string',
             'kuota'               => 'required|integer|min:1',
-            'durasi_lp'           => 'nullable|string|max:100',
+            'durasi_lp'           => 'string|max:100',
         ], [
             'id_admin.required'       => 'Admin BLK penanggung jawab wajib dipilih.',
             'nama_pelatihan.required' => 'Nama kejuruan / program pelatihan wajib diisi.',
