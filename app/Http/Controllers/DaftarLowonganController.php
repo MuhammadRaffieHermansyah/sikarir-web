@@ -33,15 +33,18 @@ class DaftarLowonganController extends Controller
             'id_mitra'        => 'required|exists:mitras,id_mitra',
             'id_admin'        => 'required|exists:admin_blks,id_admin',
             'judul_lowongan'  => 'required|string|max:255',
-            'lokasi'          => 'nullable|string|max:255',
-            'deskripsi'       => 'nullable|string',
-            'kualifikasi'     => 'nullable|string',
+            'lokasi'          => 'required|string|max:255',
+            'deskripsi'       => 'required|string',
+            'kualifikasi'     => 'required|string',
             'tanggal_posting' => 'nullable|date',
             'status'          => 'required|in:aktif,ditutup,draft',
         ], [
             'id_mitra.required'       => 'Mitra DU/DI wajib dipilih.',
             'id_admin.required'       => 'Admin BLK penanggung jawab wajib dipilih.',
             'judul_lowongan.required' => 'Judul posisi lowongan wajib diisi.',
+            'lokasi.required'         => 'Lokasi wajib diisi',
+            'deskripsi.required'      => 'Deskripsi wajib diisi',
+            'kualifikasi.required'    => 'Kualifikasi wajib diisi',
         ]);
 
         DaftarLowongan::create($validated);
@@ -70,15 +73,18 @@ class DaftarLowonganController extends Controller
             'id_mitra'        => 'required|exists:mitras,id_mitra',
             'id_admin'        => 'required|exists:admin_blks,id_admin',
             'judul_lowongan'  => 'required|string|max:255',
-            'lokasi'          => 'nullable|string|max:255',
-            'deskripsi'       => 'nullable|string',
-            'kualifikasi'     => 'nullable|string',
+            'lokasi'          => 'required|string|max:255',
+            'deskripsi'       => 'required|string',
+            'kualifikasi'     => 'required|string',
             'tanggal_posting' => 'nullable|date',
             'status'          => 'required|in:aktif,ditutup,draft',
         ], [
             'id_mitra.required'       => 'Mitra DU/DI wajib dipilih.',
             'id_admin.required'       => 'Admin BLK penanggung jawab wajib dipilih.',
             'judul_lowongan.required' => 'Judul posisi lowongan wajib diisi.',
+            'lokasi.required'         => 'Lokasi wajib diisi',
+            'deskripsi.required'      => 'Deskripsi wajib diisi',
+            'kualifikasi.required'    => 'Kualifikasi wajib diisi',
         ]);
 
         $lowongan->update($validated);

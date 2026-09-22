@@ -1,5 +1,4 @@
 @extends('layouts.public')
-@extends('layouts.navbar')
 
 
 @section('title', 'siKarir - UPT BLK Jember | Beranda Portal Pelatihan & Karir')
@@ -33,19 +32,7 @@
                     </p>
                 </div>
 
-                <div
-                    class="md:col-span-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 text-xs text-emerald-100 space-y-2 shadow-xl">
-                    <div class="flex items-center gap-2 font-bold text-white text-sm">
-                        <div class="p-1.5 bg-emerald-500/20 rounded-lg text-emerald-400">
-                            <i data-lucide="shield-check" class="w-5 h-5"></i>
-                        </div>
-                        LSP-P1 BLK JEMBER
-                    </div>
-                    <p class="text-[11px] leading-relaxed text-emerald-100/80">
-                        Terakreditasi BNSP RI & terintegrasi SIAPkerja Kemnaker RI untuk penyaluran tenaga kerja siap pakai
-                        berstandar industri nasional.
-                    </p>
-                </div>
+                
             </div>
 
             {{-- Search Bar: 3 kolom + tombol submit --}}
