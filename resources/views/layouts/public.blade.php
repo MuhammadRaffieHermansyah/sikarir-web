@@ -9,19 +9,20 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800,900&display=swap" rel="stylesheet" />
 
-    <!-- CDN Lucide Icons (WAJIB ADA) -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-
+    <!-- Scripts & Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="font-sans antialiased text-slate-800 bg-white">
+<body class="font-sans antialiased text-slate-800 bg-white min-h-screen flex flex-col justify-between">
+
+    {{-- INCLUDE NAVBAR LANGSUNG DI SINI --}}
+    @include('layouts.navbar')
 
     {{-- Content --}}
-    <main>
+    <main class="flex-grow">
         @yield('content')
     </main>
 
-    <!-- Init Lucide Icons (WAJIB ADA BIAR ICON MUNCUL) -->
     <script>
         lucide.createIcons();
     </script>

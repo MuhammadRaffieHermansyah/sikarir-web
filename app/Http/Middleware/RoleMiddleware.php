@@ -11,9 +11,12 @@ class RoleMiddleware
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
         $user = $request->user();
-        if (!$user || !in_array($user->role, $roles, true)) {
-            return response()->json(['message' => 'Akses ditolak.'], 403);
+        if (! $user || ! in_array($user->role, $roles, true)) {
+            return $request->expectsJson() || $request->is('api/*')
+                ? response()->json(['message' => 'Akses ditolak.'], 403)
+                : redirect()->route('dashboard')->with('error', 'Anda tidak memiliki akses ke halaman ini.');
         }
+
         return $next($request);
     }
 }
