@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class DaftarPelatihan extends Model
 {
+    use HasFactory;
+
     protected $table = 'daftar_pelatihan';
     protected $primaryKey = 'id_pelatihan';
     protected $fillable = ['id_admin', 'nama_pelatihan', 'deskripsi_pelatihan', 'durasi_lp', 'kuota'];
