@@ -37,6 +37,20 @@
           </span>
           <span class="bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">18 Aktif</span>
         </a>
+        <a href="{{ route('jadwal-pelatihan.index') }}" class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('jadwal-pelatihan.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
+          <span class="flex items-center gap-2.5">
+            <i data-lucide="award" class="w-4 h-4"></i>
+            Jadwal Pelatihan
+          </span>
+          <span class="bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">18 Aktif</span>
+        </a>
+        <a href="{{ route('lowongan.index') }}" class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('lowongan.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
+          <span class="flex items-center gap-2.5">
+            <i data-lucide="award" class="w-4 h-4"></i>
+            Lowongan
+          </span>
+          <span class="bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">18 Aktif</span>
+        </a>
         <a href="{{ route('mitras.index') }}" class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('mitras.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
           <span class="flex items-center gap-2.5">
             <i data-lucide="building-2" class="w-4 h-4"></i>
@@ -50,7 +64,7 @@
         <div class="text-[10px] uppercase font-bold text-slate-400 mb-2 px-3">Monitoring Magang</div>
         <a href="{{ route('pesertas.index') }}" class="flex items-center gap-2.5 px-3 py-2 {{ request()->routeIs('pesertas.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
           <i data-lucide="briefcase" class="w-4 h-4"></i>
-          Data Magang
+          Data Peserta
         </a>
         <a href="{{ route('absen.index') }}" class="flex items-center gap-2.5 px-3 py-2 {{ request()->routeIs('absen.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
           <i data-lucide="check-square" class="w-4 h-4"></i>
