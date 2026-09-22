@@ -10,11 +10,16 @@ use App\Http\Controllers\JadwalPelatihanController;
 use App\Http\Controllers\KelasPelatihanController;
 use App\Http\Controllers\AbsenController;
 use App\Http\Controllers\SertifikatController;
+use App\Http\Controllers\PublicPelatihanController;
+use App\Http\Controllers\PublicLowonganController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/program-pelatihan', [PublicPelatihanController::class, 'index'])->name('pelatihan.katalog');
+Route::get('/lowongan-kerja', [PublicLowonganController::class, 'index'])->name('lowongan.katalog');
+Route::view('/tentang-blk', 'public.tentang-blk')->name('tentang.index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

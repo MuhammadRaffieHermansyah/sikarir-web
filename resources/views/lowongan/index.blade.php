@@ -114,7 +114,7 @@
               <td class="px-5 py-4 font-mono font-bold text-slate-500">
                 #LWG-{{ str_pad((string)$lowongan->id_lowongan, 3, '0', STR_PAD_LEFT) }}
               </td>
-
+p
               <td class="px-5 py-4">
                 <div class="flex items-center gap-3">
                   <div class="w-9 h-9 rounded-lg bg-slate-100 text-slate-700 font-black flex items-center justify-center text-xs shrink-0">
