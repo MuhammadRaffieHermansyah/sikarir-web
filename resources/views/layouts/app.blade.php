@@ -6,7 +6,8 @@
   <title>@yield('title', 'Dashboard Admin BLK CONNECT')</title>
 
   <!-- Tailwind CSS & Lucide Icons -->
-  <script src="https://cdn.tailwindcss.com"></script>
+    @fonts
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="bg-slate-100 font-sans text-slate-800 flex h-screen overflow-hidden">
