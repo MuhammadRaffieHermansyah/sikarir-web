@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class DaftarLowongan extends Model
 {
+    use HasFactory;
+
     protected $table = 'daftar_lowongan';
     protected $primaryKey = 'id_lowongan';
     protected $fillable = ['id_mitra', 'id_admin', 'judul_lowongan', 'lokasi', 'deskripsi', 'kualifikasi', 'tanggal_posting', 'status'];

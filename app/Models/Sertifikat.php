@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Sertifikat extends Model
 {
+    use HasFactory;
+
     protected $primaryKey = 'id_sertifikat';
     protected $fillable = ['id_jadwal', 'id_peserta', 'no_sertifikat', 'tanggal_terbit', 'file_sertifikat', 'id_admin'];
     protected $casts = ['tanggal_terbit' => 'date'];

@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class JadwalPelatihan extends Model
 {
+    use HasFactory;
+
     protected $table = 'jadwal_pelatihan';
     protected $primaryKey = 'id_jadwal';
     protected $fillable = ['id_pelatihan', 'tanggal_mulai', 'tanggal_selesai', 'jam_mulai', 'jam_selesai', 'instruktur', 'tempat', 'status'];
