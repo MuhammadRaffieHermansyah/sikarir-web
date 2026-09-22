@@ -15,7 +15,7 @@ class DaftarPelatihanController extends Controller
         $pelatihans = DaftarPelatihan::with(['admin.user', 'jadwal'])
             ->latest('id_pelatihan')
             ->paginate(10);
-            
+
         return view('pelatihan.index', compact('pelatihans'));
     }
 
@@ -29,13 +29,15 @@ class DaftarPelatihanController extends Controller
     {
         $validated = $request->validate([
             'id_admin'            => 'required|exists:admin_blks,id_admin',
-            'nama_pelatihan'      => 'required|string|max:255',
+            'nama_pelatihan'      => 'required|unique:daftar_pelatihan,nama_pelatihan|string|max:70',
             'deskripsi_pelatihan' => 'nullable|string',
             'kuota'               => 'required|integer|min:1',
             'durasi_lp'           => 'nullable|string|max:100',
         ], [
             'id_admin.required'       => 'Admin BLK penanggung jawab wajib dipilih.',
             'nama_pelatihan.required' => 'Nama kejuruan / program pelatihan wajib diisi.',
+            'nama_pelatihan.unique'   => 'Nama kejuruan / program pelatihan sudah ada.',
+            'nama_pelatihan.max'      => 'Nama kejuruan / program pelatihan maksimal 40 karakter.',
             'kuota.required'          => 'Kapasitas kuota peserta wajib ditentukan.',
             'kuota.min'               => 'Kuota minimal 1 orang peserta.',
         ]);
