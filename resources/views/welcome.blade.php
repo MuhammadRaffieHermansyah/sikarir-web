@@ -1,4 +1,6 @@
 @extends('layouts.public')
+@extends('layouts.navbar')
+
 
 @section('title', 'siKarir - UPT BLK Jember | Beranda Portal Pelatihan & Karir')
 
