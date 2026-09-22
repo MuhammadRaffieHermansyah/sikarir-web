@@ -68,7 +68,7 @@
 
             <div>
               <label class="block text-xs font-semibold text-slate-700 mb-1.5">Nomor Izin Usaha / NIB</label>
-              <input type="text" name="no_izin" value="{{ old('no_izin') }}" placeholder="Nomor NIB / Legalitas" class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
+              <input type="number" name="no_izin" value="{{ old('no_izin') }}" placeholder="Nomor NIB / Legalitas" class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
             </div>
 
             <div>
