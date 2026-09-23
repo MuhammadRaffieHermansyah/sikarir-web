@@ -55,7 +55,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="sm:col-span-2">
               <label class="block text-xs font-semibold text-slate-700 mb-1.5">Nama Perusahaan / PT / CV <span class="text-rose-500">*</span></label>
-              <input type="text" name="nama_perusahaan" value="{{ old('nama_perusahaan') }}" required placeholder="Contoh: PT Astra Honda Motor" class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
+              <input type="text" name="nama_perusahaan" value="{{ old('nama_perusahaan') }}"  placeholder="Contoh: PT Astra Honda Motor" class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
               @error('nama_perusahaan')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 

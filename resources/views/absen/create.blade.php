@@ -55,7 +55,7 @@
             <label class="block text-xs font-semibold text-slate-700">
               Peserta <span class="text-rose-500">*</span>
             </label>
-            <select name="id_peserta" required class="w-full bg-white border @error('id_peserta') border-rose-500 @else border-slate-200 @enderror rounded-lg px-3 py-2 text-xs font-medium text-slate-700 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 shadow-sm">
+            <select name="id_peserta"  class="w-full bg-white border @error('id_peserta') border-rose-500 @else border-slate-200 @enderror rounded-lg px-3 py-2 text-xs font-medium text-slate-700 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 shadow-sm">
               <option value="">-- Pilih Peserta --</option>
               @foreach($pesertas as $p)
                 <option value="{{ $p->id_peserta }}" {{ old('id_peserta') == $p->id_peserta ? 'selected' : '' }}>
@@ -73,7 +73,7 @@
             <label class="block text-xs font-semibold text-slate-700">
               Jadwal Pelatihan <span class="text-rose-500">*</span>
             </label>
-            <select name="id_jadwal" required class="w-full bg-white border @error('id_jadwal') border-rose-500 @else border-slate-200 @enderror rounded-lg px-3 py-2 text-xs font-medium text-slate-700 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 shadow-sm">
+            <select name="id_jadwal"  class="w-full bg-white border @error('id_jadwal') border-rose-500 @else border-slate-200 @enderror rounded-lg px-3 py-2 text-xs font-medium text-slate-700 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 shadow-sm">
               <option value="">-- Pilih Jadwal --</option>
               @foreach($jadwals as $j)
                 <option value="{{ $j->id_jadwal }}" {{ old('id_jadwal') == $j->id_jadwal ? 'selected' : '' }}>
@@ -93,7 +93,7 @@
             <label class="block text-xs font-semibold text-slate-700">
               Tanggal Presensi <span class="text-rose-500">*</span>
             </label>
-            <input type="date" name="tanggal" value="{{ old('tanggal', date('Y-m-d')) }}" required class="w-full bg-white border @error('tanggal') border-rose-500 @else border-slate-200 @enderror rounded-lg px-3 py-2 text-xs font-medium text-slate-700 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 shadow-sm">
+            <input type="date" name="tanggal" value="{{ old('tanggal', date('Y-m-d')) }}"  class="w-full bg-white border @error('tanggal') border-rose-500 @else border-slate-200 @enderror rounded-lg px-3 py-2 text-xs font-medium text-slate-700 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 shadow-sm">
             @error('tanggal')
               <p class="text-[10px] text-rose-500 font-medium">{{ $message }}</p>
             @enderror
@@ -113,7 +113,7 @@
             <label class="block text-xs font-semibold text-slate-700">
               Status <span class="text-rose-500">*</span>
             </label>
-            <select name="status_kehadiran" required class="w-full bg-white border @error('status_kehadiran') border-rose-500 @else border-slate-200 @enderror rounded-lg px-3 py-2 text-xs font-medium text-slate-700 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 shadow-sm">
+            <select name="status_kehadiran"  class="w-full bg-white border @error('status_kehadiran') border-rose-500 @else border-slate-200 @enderror rounded-lg px-3 py-2 text-xs font-medium text-slate-700 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 shadow-sm">
               @foreach(['hadir' => 'Hadir', 'izin' => 'Izin', 'sakit' => 'Sakit', 'alpha' => 'Alpha'] as $key => $label)
                 <option value="{{ $key }}" {{ old('status_kehadiran') === $key ? 'selected' : '' }}>{{ $label }}</option>
               @endforeach
