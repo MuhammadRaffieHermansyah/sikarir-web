@@ -7,7 +7,7 @@
 
     {{-- HERO SECTION --}}
     <section
-        class="relative overflow-hidden bg-gradient-to-br from-emerald-900 via-teal-950 to-slate-900 text-white border-b border-emerald-800/40">
+        class="relative overflow-hidden bg-linear-to-br from-emerald-900 via-teal-950 to-slate-900 text-white border-b border-emerald-800/40">
         <!-- Background Accent Blur -->
         <div class="absolute -top-24 -left-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -32,7 +32,7 @@
                     </p>
                 </div>
 
-                
+
             </div>
 
             {{-- Search Bar: 3 kolom + tombol submit --}}
@@ -225,9 +225,9 @@
                             </h3>
 
                             <span
-                                class="text-[10px] font-bold 
-                    bg-emerald-50 text-emerald-800 
-                    border border-emerald-200/80 
+                                class="text-[10px] font-bold
+                    bg-emerald-50 text-emerald-800
+                    border border-emerald-200/80
                     px-2 py-0.5 rounded-full shrink-0">
                                 {{ ucfirst($job->status) }}
                             </span>
