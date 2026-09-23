@@ -209,4 +209,31 @@
       }
     });
   });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const jamMulai = document.getElementById('jam_mulai');
+    const jamSelesai = document.getElementById('jam_selesai');
+
+    function validateJamSelesai() {
+      if (jamMulai.value && jamSelesai.value) {
+        // Jika jam selesai kurang dari atau sama dengan jam mulai
+        if (jamSelesai.value <= jamMulai.value) {
+          alert('Jam selesai harus lebih dari jam mulai!');
+          jamSelesai.value = ''; // Reset nilainya biar kosong lagi
+        }
+      }
+    }
+
+    // Pas jam mulai diubah, langsung pasang atribut min & cek jam selesai
+    jamMulai.addEventListener('change', function () {
+      if (this.value) {
+        jamSelesai.min = this.value;
+      }
+      validateJamSelesai();
+    });
+
+    // Pas jam selesai diisi/diubah, langsung validasi saat itu juga
+    jamSelesai.addEventListener('change', validateJamSelesai);
+    jamSelesai.addEventListener('input', validateJamSelesai);
+  });
 </script>

@@ -32,7 +32,7 @@ class JadwalPelatihanController extends Controller
             'tanggal_mulai'   => 'required|date|after_or_equal:today',
             'tanggal_selesai' => 'required|date|after:tanggal_mulai',
             'jam_mulai'       => 'nullable|date_format:H:i',
-            'jam_selesai'     => 'nullable|date_format:H:i',
+            'jam_selesai'     => 'nullable|date_format:H:i|after:jam_mulai',
             'instruktur'      => 'nullable|string|max:150',
             'tempat'          => 'nullable|string|max:255',
             'status'          => 'required|in:tersedia,berlangsung,selesai',
