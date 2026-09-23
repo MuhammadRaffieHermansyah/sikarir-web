@@ -132,11 +132,11 @@
               </td>
 
               <td class="px-5 py-4">
-                <div class="flex items-center gap-1.5 text-slate-800 font-semibold">
+                <div class="text-slate-800 font-bold flex items-center gap-1.5">
                   <i data-lucide="calendar" class="w-3.5 h-3.5 text-emerald-600"></i>
                   {{ $jadwal->tanggal_mulai ? $jadwal->tanggal_mulai->translatedFormat('d M Y') : '-' }}
                 </div>
-                <div class="text-[11px] text-slate-400 mt-0.5">
+                <div class="flex items-center gap-1.5 text-slate-600 font-bold mt-0.5">
                   s/d {{ $jadwal->tanggal_selesai ? $jadwal->tanggal_selesai->translatedFormat('d M Y') : '-' }}
                 </div>
               </td>

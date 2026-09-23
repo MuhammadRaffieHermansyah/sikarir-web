@@ -202,3 +202,64 @@
     </div>
   </form>
 @endsection
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // ----------------------------------------------------
+    // 1. LOGIKA TANGGAL (EDIT)
+    // ----------------------------------------------------
+    const tglMulai = document.getElementById('tanggal_mulai');
+    const tglSelesai = document.getElementById('tanggal_selesai');
+
+    function updateMinTglSelesai() {
+      if (tglMulai.value) {
+        // Hitung H+1 dari tanggal mulai buat nilai min tanggal selesai
+        let nextDay = new Date(tglMulai.value);
+        nextDay.setDate(nextDay.getDate() + 1);
+        
+        let minSelesai = nextDay.toISOString().split('T')[0];
+        tglSelesai.min = minSelesai;
+
+        // Kalo tgl selesai lebih kecil atau sama dengan tgl mulai
+        if (tglSelesai.value && tglSelesai.value <= tglMulai.value) {
+          alert('Tanggal selesai harus setelah tanggal mulai!');
+          tglSelesai.value = '';
+        }
+      }
+    }
+
+    // PENTING UNTUK EDIT: Jalankan langsung pas halaman baru ke-load
+    updateMinTglSelesai();
+
+    // Jalankan tiap ada perubahan pada input tanggal
+    tglMulai.addEventListener('change', updateMinTglSelesai);
+    tglSelesai.addEventListener('change', updateMinTglSelesai);
+
+
+    // ----------------------------------------------------
+    // 2. LOGIKA JAM (EDIT)
+    // ----------------------------------------------------
+    const jamMulai = document.getElementById('jam_mulai');
+    const jamSelesai = document.getElementById('jam_selesai');
+
+    function validateJamSelesai() {
+      if (jamMulai.value) {
+        jamSelesai.min = jamMulai.value;
+
+        if (jamSelesai.value && jamSelesai.value <= jamMulai.value) {
+          alert('Jam selesai harus lebih dari jam mulai!');
+          jamSelesai.value = '';
+        }
+      }
+    }
+
+    // PENTING UNTUK EDIT: Jalankan langsung pas halaman baru ke-load
+    validateJamSelesai();
+
+    // Jalankan tiap ada perubahan pada input jam
+    jamMulai.addEventListener('change', function() {
+      validateJamSelesai();
+    });
+    jamSelesai.addEventListener('change', validateJamSelesai);
+  });
+</script>

@@ -7,16 +7,20 @@ use App\Models\Mitra;
 use App\Models\AdminBlk;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class DaftarLowonganController extends Controller
 {
     public function index(): View
     {
-        $lowongans = DaftarLowongan::with(['mitra', 'admin.user'])
-            ->latest('id_lowongan')
-            ->paginate(10);
+        $query = DaftarLowongan::with(['mitra', 'admin.user'])->latest('id_lowongan');
 
+        if (Auth::user()->role === "mitra") {
+            $query->where('id_mitra', Auth::user()->id_mitra);
+        }
+
+        $lowongans = $query->paginate(10);
         return view('lowongan.index', compact('lowongans'));
     }
 
