@@ -25,19 +25,28 @@ class MitraController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'nama_perusahaan' => 'required|string|max:255',
-            'id_user'         => 'nullable|exists:users,id|unique:mitras,id_user',
-            'jenis_mitra'     => 'nullable|string|max:100',
-            'bidang_usaha'    => 'nullable|string|max:255',
-            'no_telp'         => 'nullable|string|max:30',
-            'no_izin'         => 'nullable|string|max:100',
-            'jabatan_pic'     => 'nullable|string|max:100',
-            'provinsi'        => 'nullable|string|max:100',
-            'kota'            => 'nullable|string|max:100',
-            'alamat'          => 'nullable|string',
+            'nama_perusahaan' => 'required|unique:mitras,nama_perusahaan|string|max:255',
+            'id_user'         => 'required|exists:users,id|unique:mitras,id_user',
+            'jenis_mitra'     => 'required|string|max:100',
+            'bidang_usaha'    => 'required|string|max:255',
+            'no_telp'         => 'required|string|max:30',
+            'no_izin'         => 'required|string|max:100',
+            'jabatan_pic'     => 'required|string|max:100',
+            'provinsi'        => 'required|string|max:100',
+            'kota'            => 'required|string|max:100',
+            'alamat'          => 'required|string',
         ], [
             'nama_perusahaan.required' => 'Nama perusahaan wajib diisi.',
+            'nama_perusahaan.unique'   => 'Nama perusahaan sudah terdaftar.',
             'id_user.unique'           => 'Akun pengguna ini sudah ditautkan ke mitra lain.',
+            'jenis_mitra.required' => 'Jenis mitra wajib diisi.',
+            'bidang_usaha.required' => 'Bidang usaha wajib diisi.',
+            'no_telp.required' => 'Nomor telepon wajib diisi.',
+            'no_izin.required' => 'Nomor izin wajib diisi.',
+            'jabatan_pic.required' => 'Jabatan PIC wajib diisi.',
+            'provinsi.required' => 'Provinsi wajib diisi.',
+            'kota.required' => 'Kota wajib diisi.',
+            'alamat.required' => 'Alamat wajib diisi.',
         ]);
 
         Mitra::create($validated);
