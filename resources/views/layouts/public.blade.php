@@ -13,13 +13,16 @@
 </head>
 <body class="font-sans antialiased text-slate-800 bg-white min-h-screen flex flex-col justify-between">
 
-    {{-- INCLUDE NAVBAR LANGSUNG DI SINI --}}
+    {{-- NAVBAR --}}
     @include('layouts.navbar')
 
-    {{-- Content --}}
-    <main class="flex-grow">
+    {{-- KONTEN HALAMAN --}}
+    <main class="grow">
         @yield('content')
     </main>
+
+    {{-- FOOTER --}}
+    @include('layouts.footer')
 
     <script>
         lucide.createIcons();
