@@ -66,7 +66,7 @@
             <label for="id_peserta" class="block text-xs font-semibold text-slate-700 mb-1.5">
               Siswa Peserta <span class="text-rose-500">*</span>
             </label>
-            <select name="id_peserta" id="id_peserta" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('id_peserta') border-rose-400 bg-rose-50/50 @enderror">
+            <select name="id_peserta" id="id_peserta"  class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('id_peserta') border-rose-400 bg-rose-50/50 @enderror">
               @foreach($pesertas as $peserta)
                 <option value="{{ $peserta->id_peserta }}" {{ old('id_peserta', $kelas->id_peserta) == $peserta->id_peserta ? 'selected' : '' }}>
                   {{ $peserta->user->name ?? 'Peserta' }} (NIS: {{ $peserta->nomor_peserta }})
@@ -82,7 +82,7 @@
             <label for="id_jadwal" class="block text-xs font-semibold text-slate-700 mb-1.5">
               Batch Jadwal Pelatihan <span class="text-rose-500">*</span>
             </label>
-            <select name="id_jadwal" id="id_jadwal" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('id_jadwal') border-rose-400 bg-rose-50/50 @enderror">
+            <select name="id_jadwal" id="id_jadwal"  class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('id_jadwal') border-rose-400 bg-rose-50/50 @enderror">
               @foreach($jadwals as $jadwal)
                 <option value="{{ $jadwal->id_jadwal }}" {{ old('id_jadwal', $kelas->id_jadwal) == $jadwal->id_jadwal ? 'selected' : '' }}>
                   {{ $jadwal->pelatihan->nama_pelatihan ?? 'Pelatihan' }} - [Batch: #JDW-{{ str_pad((string)$jadwal->id_jadwal, 3, '0', STR_PAD_LEFT) }}]
@@ -98,7 +98,7 @@
             <label for="status" class="block text-xs font-semibold text-slate-700 mb-1.5">
               Status Kelulusan / Keaktifan Siswa <span class="text-rose-500">*</span>
             </label>
-            <select name="status" id="status" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('status') border-rose-400 bg-rose-50/50 @enderror">
+            <select name="status" id="status"  class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('status') border-rose-400 bg-rose-50/50 @enderror">
               <option value="terdaftar" {{ old('status', $kelas->status) == 'terdaftar' ? 'selected' : '' }}>Terdaftar (Menunggu Mulai)</option>
               <option value="aktif" {{ old('status', $kelas->status) == 'aktif' ? 'selected' : '' }}>Aktif (Sedang Mengikuti)</option>
               <option value="lulus" {{ old('status', $kelas->status) == 'lulus' ? 'selected' : '' }}>Lulus (Telah Menyelesaikan)</option>

@@ -90,7 +90,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="sm:col-span-2">
               <label class="block text-xs font-semibold text-slate-700 mb-1.5">Akun Pengguna Terkait <span class="text-rose-500">*</span></label>
-              <select name="id_user" required class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
+              <select name="id_user"  class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
                 @foreach($users ?? [] as $user)
                   <option value="{{ $user->id }}" {{ old('id_user', $peserta->id_user) == $user->id ? 'selected' : '' }}>
                     {{ $user->name }} ({{ $user->email }})
@@ -102,13 +102,13 @@
 
             <div>
               <label class="block text-xs font-semibold text-slate-700 mb-1.5">Nomor Peserta (NIS) <span class="text-rose-500">*</span></label>
-              <input type="text" name="nomor_peserta" value="{{ old('nomor_peserta', $peserta->nomor_peserta) }}" required class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
+              <input type="text" name="nomor_peserta" value="{{ old('nomor_peserta', $peserta->nomor_peserta) }}"  class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
               @error('nomor_peserta')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
 
             <div>
               <label class="block text-xs font-semibold text-slate-700 mb-1.5">Jenis Kelamin <span class="text-rose-500">*</span></label>
-              <select name="jenis_kelamin" required class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
+              <select name="jenis_kelamin"  class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
                 <option value="Laki-laki" {{ old('jenis_kelamin', $peserta->jenis_kelamin) == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
                 <option value="Perempuan" {{ old('jenis_kelamin', $peserta->jenis_kelamin) == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
               </select>

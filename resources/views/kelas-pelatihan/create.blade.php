@@ -57,7 +57,7 @@
             <label for="id_peserta" class="block text-xs font-semibold text-slate-700 mb-1.5">
               Pilih Siswa Peserta <span class="text-rose-500">*</span>
             </label>
-            <select name="id_peserta" id="id_peserta" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('id_peserta') border-rose-400 bg-rose-50/50 @enderror">
+            <select name="id_peserta" id="id_peserta"  class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('id_peserta') border-rose-400 bg-rose-50/50 @enderror">
               <option value="">-- Pilih Siswa Vokasi Terdaftar --</option>
               @foreach($pesertas as $peserta)
                 <option value="{{ $peserta->id_peserta }}" {{ old('id_peserta') == $peserta->id_peserta ? 'selected' : '' }}>
@@ -74,7 +74,7 @@
             <label for="id_jadwal" class="block text-xs font-semibold text-slate-700 mb-1.5">
               Pilih Batch Jadwal Pelatihan <span class="text-rose-500">*</span>
             </label>
-            <select name="id_jadwal" id="id_jadwal" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('id_jadwal') border-rose-400 bg-rose-50/50 @enderror">
+            <select name="id_jadwal" id="id_jadwal"  class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('id_jadwal') border-rose-400 bg-rose-50/50 @enderror">
               <option value="">-- Pilih Batch Jadwal Aktif --</option>
               @foreach($jadwals as $jadwal)
                 <option value="{{ $jadwal->id_jadwal }}" {{ old('id_jadwal') == $jadwal->id_jadwal ? 'selected' : '' }}>
