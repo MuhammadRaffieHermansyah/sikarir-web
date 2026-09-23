@@ -182,3 +182,31 @@
     </div>
   </form>
 @endsection
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const tglMulai = document.getElementById('tanggal_mulai');
+    const tglSelesai = document.getElementById('tanggal_selesai');
+
+    // 1. Tanggal mulai gak boleh milih hari kemarin/yang udah lewat
+    const today = new Date().toISOString().split('T')[0];
+    tglMulai.min = today;
+
+    // 2. Pas tanggal mulai diubah, atur 'min' tanggal selesai
+    tglMulai.addEventListener('change', function () {
+      if (this.value) {
+        // Biar tgl selesai gak bisa dihari yg sama, tambahin 1 hari
+        let nextDay = new Date(this.value);
+        nextDay.setDate(nextDay.getDate() + 1);
+        
+        let minSelesai = nextDay.toISOString().split('T')[0];
+        tglSelesai.min = minSelesai;
+
+        // Kalo user terlanjur milih tgl selesai yg gak valid, reset nilainya
+        if (tglSelesai.value && tglSelesai.value <= this.value) {
+          tglSelesai.value = '';
+        }
+      }
+    });
+  });
+</script>

@@ -29,8 +29,8 @@ class JadwalPelatihanController extends Controller
     {
         $validated = $request->validate([
             'id_pelatihan'    => 'required|exists:daftar_pelatihan,id_pelatihan',
-            'tanggal_mulai'   => 'required|date',
-            'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
+            'tanggal_mulai'   => 'required|date|after_or_equal:today',
+            'tanggal_selesai' => 'required|date|after:tanggal_mulai',
             'jam_mulai'       => 'nullable|date_format:H:i',
             'jam_selesai'     => 'nullable|date_format:H:i',
             'instruktur'      => 'nullable|string|max:150',
