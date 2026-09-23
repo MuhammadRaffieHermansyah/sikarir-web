@@ -66,7 +66,7 @@
             <label for="nama_pelatihan" class="block text-xs font-semibold text-slate-700 mb-1.5">
               Nama Program Kejuruan <span class="text-rose-500">*</span>
             </label>
-            <input type="text" name="nama_pelatihan" id="nama_pelatihan" value="{{ old('nama_pelatihan', $pelatihan->nama_pelatihan) }}" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('nama_pelatihan') border-rose-400 bg-rose-50/50 @enderror" />
+            <input type="text" name="nama_pelatihan" id="nama_pelatihan" value="{{ old('nama_pelatihan', $pelatihan->nama_pelatihan) }}"  class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('nama_pelatihan') border-rose-400 bg-rose-50/50 @enderror" />
             @error('nama_pelatihan')
               <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
             @enderror
@@ -78,7 +78,7 @@
                 Kapasitas Kuota Peserta <span class="text-rose-500">*</span>
               </label>
               <div class="relative">
-                <input type="number" name="kuota" id="kuota" value="{{ old('kuota', $pelatihan->kuota) }}" min="1" required class="w-full pl-3 pr-12 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('kuota') border-rose-400 bg-rose-50/50 @enderror" />
+                <input type="number" name="kuota" id="kuota" value="{{ old('kuota', $pelatihan->kuota) }}" min="1"  class="w-full pl-3 pr-12 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('kuota') border-rose-400 bg-rose-50/50 @enderror" />
                 <span class="absolute right-3 top-2 text-xs text-slate-400 font-medium">Siswa</span>
               </div>
               @error('kuota')
@@ -101,7 +101,7 @@
             <label for="id_admin" class="block text-xs font-semibold text-slate-700 mb-1.5">
               Penanggung Jawab / Instruktur Pembina <span class="text-rose-500">*</span>
             </label>
-            <select name="id_admin" id="id_admin" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('id_admin') border-rose-400 bg-rose-50/50 @enderror">
+            <select name="id_admin" id="id_admin"  class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('id_admin') border-rose-400 bg-rose-50/50 @enderror">
               <option value="">-- Pilih Instruktur / Admin BLK --</option>
               @foreach($admins as $admin)
                 <option value="{{ $admin->id_admin }}" {{ old('id_admin', $pelatihan->id_admin) == $admin->id_admin ? 'selected' : '' }}>
