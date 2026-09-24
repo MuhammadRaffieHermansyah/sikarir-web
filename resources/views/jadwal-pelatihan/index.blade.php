@@ -16,9 +16,6 @@
     </div>
 
     <div class="flex items-center gap-2">
-      <a href="{{ route('pelatihan.index') }}" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="book-open" class="w-4 h-4"></i> Katalog Program
-      </a>
       <a href="{{ route('jadwal-pelatihan.create') }}" class="bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold px-3.5 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
         <i data-lucide="plus" class="w-4 h-4"></i> Buat Batch Jadwal
       </a>
