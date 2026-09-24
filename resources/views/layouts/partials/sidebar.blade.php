@@ -1,13 +1,13 @@
 <aside class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between hidden md:flex shrink-0">
     <div>
         <div class="p-4 flex items-center gap-3 border-b border-slate-100 bg-white">
-    <!-- Gambar Logo -->
-    <a href="{{ url('/') }}" class="flex items-center gap-3 group">
-        <img src="{{ asset('images/logo-sikarir.png') }}" 
-             alt="Logo siKarir BLK Jember" 
-             class="h-10 w-auto object-contain">
-    </a>
-</div>
+            <!-- Gambar Logo -->
+            <a href="{{ url('/') }}" class="flex items-center gap-3 group">
+                <img src="{{ asset('images/logo-sikarir.png') }}" 
+                     alt="Logo siKarir BLK Jember" 
+                     class="h-10 w-auto object-contain">
+            </a>
+        </div>
 
         <!-- Menu Navigation -->
         <nav class="p-3 text-xs font-medium space-y-6">
@@ -29,8 +29,9 @@
                             <i data-lucide="shield-check" class="w-4 h-4"></i>
                             Admin BLK
                         </span>
-                        <span
-                            class="bg-emerald-100 text-emerald-800 text-[10px] font-semibold px-1.5 py-0.5 rounded">Kelola</span>
+                        <span class="bg-emerald-100 text-emerald-800 text-[10px] font-semibold px-1.5 py-0.5 rounded">
+                            {{ \App\Models\AdminBlk::count() }} Admin
+                        </span>
                     </a>
                     <a href="{{ route('pelatihan.index') }}"
                         class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('pelatihan.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
@@ -38,8 +39,9 @@
                             <i data-lucide="book" class="w-4 h-4"></i>
                             Program Pelatihan
                         </span>
-                        <span class="bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">18
-                            Aktif</span>
+                        <span class="bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">
+                            {{ \App\Models\DaftarPelatihan::count() }} Aktif
+                        </span>
                     </a>
                     <a href="{{ route('jadwal-pelatihan.index') }}"
                         class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('jadwal-pelatihan.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
@@ -47,8 +49,9 @@
                             <i data-lucide="calendar-fold" class="w-4 h-4"></i>
                             Jadwal Pelatihan
                         </span>
-                        <span class="bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">18
-                            Aktif</span>
+                        <span class="bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">
+                            {{ \App\Models\JadwalPelatihan::count() }} Aktif
+                        </span>
                     </a>
                     <a href="{{ route('lowongan.index') }}"
                         class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('lowongan.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
@@ -56,8 +59,9 @@
                             <i data-lucide="briefcase-business" class="w-4 h-4"></i>
                             Lowongan
                         </span>
-                        <span class="bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">18
-                            Aktif</span>
+                        <span class="bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">
+                            {{ \App\Models\DaftarLowongan::count() }} Aktif
+                        </span>
                     </a>
                     <a href="{{ route('mitras.index') }}"
                         class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('mitras.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
@@ -65,16 +69,23 @@
                             <i data-lucide="building-2" class="w-4 h-4"></i>
                             Mitra DU/DI
                         </span>
-                        <span class="bg-slate-100 text-slate-600 text-[10px] px-1.5 py-0.5 rounded">64 Mitra</span>
+                        <span class="bg-slate-100 text-slate-600 text-[10px] px-1.5 py-0.5 rounded">
+                            {{ \App\Models\Mitra::count() }} Mitra
+                        </span>
                     </a>
                 </div>
 
                 <div>
                     <div class="text-[10px] uppercase font-bold text-slate-400 mb-2 px-3">Monitoring Magang</div>
                     <a href="{{ route('pesertas.index') }}"
-                        class="flex items-center gap-2.5 px-3 py-2 {{ request()->routeIs('pesertas.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
-                        <i data-lucide="users-round" class="w-4 h-4"></i>
-                        Data Peserta
+                        class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('pesertas.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
+                        <span class="flex items-center gap-2.5">
+                            <i data-lucide="users-round" class="w-4 h-4"></i>
+                            Data Peserta
+                        </span>
+                        <span class="bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">
+                            {{ \App\Models\Peserta::count() }} Peserta
+                        </span>
                     </a>
                     <a href="{{ route('absen.index') }}"
                         class="flex items-center gap-2.5 px-3 py-2 {{ request()->routeIs('absen.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
@@ -86,9 +97,14 @@
                 <div>
                     <div class="text-[10px] uppercase font-bold text-slate-400 mb-2 px-3">Kelulusan & Evaluasi</div>
                     <a href="{{ route('sertifikat.index') }}"
-                        class="flex items-center gap-2.5 px-3 py-2 {{ request()->routeIs('sertifikat.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
-                        <i data-lucide="award" class="w-4 h-4"></i>
-                        Penerbitan Sertifikat
+                        class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('sertifikat.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
+                        <span class="flex items-center gap-2.5">
+                            <i data-lucide="award" class="w-4 h-4"></i>
+                            Penerbitan Sertifikat
+                        </span>
+                        <span class="bg-slate-100 text-slate-600 text-[10px] px-1.5 py-0.5 rounded">
+                            {{ \App\Models\Sertifikat::count() }}
+                        </span>
                     </a>
                 </div>
             @elseif(auth()->user()->role === 'mitra')
@@ -98,10 +114,11 @@
                         class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('lowongan.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
                         <span class="flex items-center gap-2.5">
                             <i data-lucide="briefcase-business" class="w-4 h-4"></i>
-                            Lowongan
+                            Lowongan Saya
                         </span>
-                        <span class="bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">18
-                            Aktif</span>
+                        <span class="bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">
+                            {{ \App\Models\Lowongan::where('id_mitra', auth()->user()->mitra->id_mitra ?? null)->count() }} Aktif
+                        </span>
                     </a>
                 </div>
             @endif
