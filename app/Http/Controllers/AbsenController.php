@@ -12,13 +12,34 @@ use Illuminate\View\View;
 
 class AbsenController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $absens = Absen::with(['peserta.user', 'jadwal.pelatihan'])
-            ->latest('id_absen')
-            ->paginate(10);
+    $query = Absen::with(['peserta.user', 'jadwal.pelatihan']);
 
-        return view('absen.index', compact('absens'));
+    // Filter Pencarian (Nama Peserta, Email, atau Nama Pelatihan)
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->whereHas('peserta.user', function ($sub) use ($search) {
+                $sub->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            })->orWhereHas('jadwal.pelatihan', function ($sub) use ($search) {
+                $sub->where('nama_pelatihan', 'like', "%{$search}%");
+            });
+        });
+    }
+
+    // Filter Status Kehadiran (Hadir, Izin, Sakit, Alfa)
+    if ($request->filled('status')) {
+        $query->where('status_kehadiran', $request->status);
+    }
+
+    // Ambil data terbaru berdasarkan id_absen dengan pagination & pertahankan query string URL
+    $absens = $query->latest('id_absen')
+                    ->paginate(10)
+                    ->withQueryString();
+
+    return view('absen.index', compact('absens'));
     }
 
     public function create(): View

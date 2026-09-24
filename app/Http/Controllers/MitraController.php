@@ -10,10 +10,37 @@ use Illuminate\View\View;
 
 class MitraController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $mitras = Mitra::with(['user', 'lowongan'])->latest('id_mitra')->paginate(10);
-        return view('mitras.index', compact('mitras'));
+        $query = Mitra::with(['user', 'lowongan']);
+
+        // Filter Pencarian (Nama Perusahaan, Bidang Usaha, Kota, Provinsi, No Telp)
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_perusahaan', 'like', "%{$search}%")
+                  ->orWhere('bidang_usaha', 'like', "%{$search}%")
+                  ->orWhere('kota', 'like', "%{$search}%")
+                  ->orWhere('provinsi', 'like', "%{$search}%")
+                  ->orWhere('no_telp', 'like', "%{$search}%")
+                  ->orWhere('jabatan_pic', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter Berdasarkan Jenis Mitra
+        if ($request->filled('jenis_mitra')) {
+            $query->where('jenis_mitra', $request->jenis_mitra);
+        }
+
+        // Ambil daftar jenis mitra unik untuk opsi dropdown filter
+        $jenisMitraList = Mitra::distinct()->whereNotNull('jenis_mitra')->pluck('jenis_mitra');
+
+        // Ambil data terbaru dengan pagination & pertahankan query string URL
+        $mitras = $query->latest('id_mitra')
+                        ->paginate(10)
+                        ->withQueryString();
+
+        return view('mitras.index', compact('mitras', 'jenisMitraList'));
     }
 
     public function create(): View
@@ -39,14 +66,14 @@ class MitraController extends Controller
             'nama_perusahaan.required' => 'Nama perusahaan wajib diisi.',
             'nama_perusahaan.unique'   => 'Nama perusahaan sudah terdaftar.',
             'id_user.unique'           => 'Akun pengguna ini sudah ditautkan ke mitra lain.',
-            'jenis_mitra.required' => 'Jenis mitra wajib diisi.',
-            'bidang_usaha.required' => 'Bidang usaha wajib diisi.',
-            'no_telp.required' => 'Nomor telepon wajib diisi.',
-            'no_izin.required' => 'Nomor izin wajib diisi.',
-            'jabatan_pic.required' => 'Jabatan PIC wajib diisi.',
-            'provinsi.required' => 'Provinsi wajib diisi.',
-            'kota.required' => 'Kota wajib diisi.',
-            'alamat.required' => 'Alamat wajib diisi.',
+            'jenis_mitra.required'     => 'Jenis mitra wajib diisi.',
+            'bidang_usaha.required'    => 'Bidang usaha wajib diisi.',
+            'no_telp.required'         => 'Nomor telepon wajib diisi.',
+            'no_izin.required'         => 'Nomor izin wajib diisi.',
+            'jabatan_pic.required'     => 'Jabatan PIC wajib diisi.',
+            'provinsi.required'        => 'Provinsi wajib diisi.',
+            'kota.required'            => 'Kota wajib diisi.',
+            'alamat.required'          => 'Alamat wajib diisi.',
         ]);
 
         Mitra::create($validated);
@@ -97,4 +124,3 @@ class MitraController extends Controller
         return redirect()->route('mitras.index')->with('success', 'Data mitra DU/DI berhasil dihapus.');
     }
 }
-
