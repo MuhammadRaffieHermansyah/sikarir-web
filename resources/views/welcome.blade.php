@@ -7,7 +7,9 @@
 
     {{-- HERO SECTION --}}
     <section
-        class="relative overflow-hidden bg-linear-to-br from-emerald-900 via-teal-950 to-slate-900 text-white border-b border-emerald-800/40">
+        class="relative overflow-hidden min-h-[600px] text-white border-b border-emerald-800/40
+           bg-emerald-950 bg-cover bg-center"
+    style="background-image: url('{{ asset('images/hero-image.png') }}');">
         <!-- Background Accent Blur -->
         <div class="absolute -top-24 -left-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -15,7 +17,7 @@
         <div class="max-w-7xl mx-auto px-6 py-12 md:py-16 relative z-10">
             <!-- Top Announcement Badge -->
             <div
-                class="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 rounded-full border border-emerald-400/30 text-emerald-300 text-xs font-semibold backdrop-blur-sm mb-4">
+                class="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 rounded-full border border-emerald-400/30 text-emerald-200 text-xs font-semibold backdrop-blur-sm mb-4">
                 <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                 PORTAL RESMI UPT BLK JEMBER DISNAKERTRANS JATIM
             </div>
@@ -37,7 +39,7 @@
 
             {{-- Search Bar: 3 kolom + tombol submit --}}
             <form method="GET" action="{{ route('pelatihan.katalog') }}"
-                class="bg-white rounded-2xl shadow-xl mt-10 p-3 md:p-4 grid md:grid-cols-12 gap-3 items-center text-slate-800 border border-slate-200/80">
+                class="bg-white rounded-2xl shadow-xl mt-50 p-3 md:p-4 grid md:grid-cols-12 gap-3 items-center text-slate-800 border border-slate-200/80">
                 <div class="md:col-span-4 space-y-1">
                     <label class="block text-[10px] uppercase font-bold text-slate-400 tracking-wider">Cari Pelatihan /
                         Kejuruan</label>
