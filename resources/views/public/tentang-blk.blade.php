@@ -20,9 +20,9 @@
             </div>
         </div>
     </div> -->
-    
+
     {{-- HERO SECTION --}}
-    <section class="relative overflow-hidden bg-gradient-to-br from-emerald-900 via-teal-950 to-slate-900 text-white border-b border-emerald-800/40">
+    <section class="relative overflow-hidden bg-linear-to-br from-emerald-900 via-teal-950 to-slate-900 text-white border-b border-emerald-800/40">
         <!-- Background Accent Blur -->
         <div class="absolute -top-24 -left-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -59,9 +59,9 @@
                 <!-- Hero Media Preview -->
                 <div class="md:col-span-5 relative">
                     <div class="relative h-72 md:h-80 rounded-2xl overflow-hidden border border-white/20 shadow-2xl bg-slate-800">
-                        <img src="{{ asset('images/lab-terpadu-vokasi.jpg') }}" class="w-full h-full object-cover" alt="Laboratorium Terpadu Vokasi">
+                        <img src="{{ asset('images/pembukaanblk2.jpeg') }}" class="w-full h-full object-cover" alt="Rapat Sosialisasi BLK Jember">
                         <span class="absolute top-3 left-3 bg-slate-900/80 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg backdrop-blur-sm flex items-center gap-1">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Laboratorium Terpadu Vokasi
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Rapat Sosialisasi BLK Jember
                         </span>
                     </div>
 
@@ -145,7 +145,7 @@
 
             <div class="grid md:grid-cols-12 gap-8 items-stretch">
                 <!-- Visi Box -->
-                <div class="md:col-span-5 bg-gradient-to-br from-emerald-900 via-teal-900 to-slate-900 text-white rounded-3xl p-6 md:p-8 shadow-xl flex flex-col justify-between border border-emerald-800/40">
+                <div class="md:col-span-5 bg-linear-to-br from-emerald-900 via-teal-900 to-slate-900 text-white rounded-3xl p-6 md:p-8 shadow-xl flex flex-col justify-between border border-emerald-800/40">
                     <div class="space-y-4">
                         <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-emerald-300 uppercase tracking-wider bg-emerald-500/20 px-2.5 py-1 rounded-full border border-emerald-400/30">
                             <i data-lucide="compass" class="w-3.5 h-3.5"></i> VISI UPT BLK JEMBER
@@ -203,17 +203,17 @@
 
         <div class="grid md:grid-cols-3 gap-6">
             @foreach ([
-                ['img' => 'workshop-otomotif.jpg', 'tag' => 'TEKNIK OTOMOTIF', 'title' => 'Gedung Workshop Otomotif', 'desc' => 'Dilengkapi scanner EFI multiport mutakhir, 4 unit engine stand bensin & diesel, mesin spooring-balancing digital, dan sepeda motor 4 tak terkini.', 'stats' => ['16 Workstation', 'Skema Teknisi R4/R2']],
-                ['img' => 'lab-komputer.jpg', 'tag' => 'TIK & MULTIMEDIA', 'title' => 'Lab Komputer & Multimedia', 'desc' => 'Infrastruktur jaringan fiber optik gigabit independen, workstation berspesifikasi grafis kuat, lisensi software desain industri, serta studio podcast dan live streaming.', 'stats' => ['32 PC Unit', 'Junior Web & Desainer']],
-                ['img' => 'workshop-garmen.jpg', 'tag' => 'GARMEN APPAREL', 'title' => 'Workshop Garmen Apparel', 'desc' => '30+ mesin jahit industri high-speed servo, mesin bordir otomatis komputer 12 kepala, mesin cutting kain vertikal, serta mesin obras standar pabrik garmen ekspor.', 'stats' => ['30+ Sewing Machines', 'Operator Garmen']],
-                ['img' => 'workshop-las.jpg', 'tag' => 'MANUFAKTUR LOGAM', 'title' => 'Workshop Las & Fabrikasi', 'desc' => 'Bilik las tertutup dengan sistem blower exhaust asap K3, unit mesin SMAW, GMAW / MIG-MAG, mesin las Argon TIG pipa, dan mesin pemotong plasma CNC.', 'stats' => ['18 Bilik Las K3', 'Plate Welder 3G/4G']],
-                ['img' => 'asrama-blk.jpg', 'tag' => 'FASILITAS TINGGAL', 'title' => 'Asrama Peserta Pelatihan (Boarding)', 'desc' => 'Kapasitas 120 orang khusus peserta asal luar kecamatan atau luar kabupaten, mencakup kamar ber-AC/kipas higienis, makan 3x sehari bersubsidi, musholla, serta sarana olahraga.', 'stats' => ['Kapasitas 120 Siswa', 'Gratis Biaya Asrama']],
-                ['img' => 'lsp-blk.jpg', 'tag' => 'SERTIFIKASI NASIONAL', 'title' => 'LSP-P1 UPT BLK Jember', 'desc' => 'Badan sertifikasi internal terlisensi resmi oleh BNSP RI dengan 24 asesor kompetensi bersertifikat Master Assessor di berbagai bidang keahlian.', 'stats' => ['Lisensi BNSP RI', 'Sertifikat Garuda Emas']],
+                ['img' => 'https://images.unsplash.com/photo-1727893141025-35d62b3f4a03?q=80&w=1911&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'tag' => 'TEKNIK OTOMOTIF', 'title' => 'Gedung Workshop Otomotif', 'desc' => 'Dilengkapi scanner EFI multiport mutakhir, 4 unit engine stand bensin & diesel, mesin spooring-balancing digital, dan sepeda motor 4 tak terkini.', 'stats' => ['16 Workstation', 'Skema Teknisi R4/R2']],
+                ['img' => 'https://images.unsplash.com/photo-1625745750125-5a072e15d1f5?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'tag' => 'TIK & MULTIMEDIA', 'title' => 'Lab TIK', 'desc' => 'Infrastruktur jaringan fiber optik gigabit independen, workstation berspesifikasi grafis kuat, lisensi software desain industri, serta studio podcast dan live streaming.', 'stats' => ['32 PC Unit', 'Junior Web & Desainer']],
+                ['img' => 'https://plus.unsplash.com/premium_photo-1677695581626-2a75bdece138?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'tag' => 'GARMEN APPAREL', 'title' => 'Workshop Garmen Apparel', 'desc' => '30+ mesin jahit industri high-speed servo, mesin bordir otomatis komputer 12 kepala, mesin cutting kain vertikal, serta mesin obras standar pabrik garmen ekspor.', 'stats' => ['30+ Sewing Machines', 'Operator Garmen']],
+                ['img' => 'https://images.unsplash.com/photo-1748348812466-8e29e1348f73?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'tag' => 'MANUFAKTUR LOGAM', 'title' => 'Workshop Las & CNC', 'desc' => 'Bilik las tertutup dengan sistem blower exhaust asap K3, unit mesin SMAW, GMAW / MIG-MAG, mesin las Argon TIG pipa, dan mesin pemotong plasma CNC.', 'stats' => ['18 Bilik Las K3', 'Plate Welder 3G/4G']],
+                ['img' => 'https://images.unsplash.com/photo-1571474039046-42bc4e7f4b98?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'tag' => 'FASILITAS TINGGAL', 'title' => 'Asrama Peserta Pelatihan', 'desc' => 'Kapasitas 120 orang khusus peserta asal luar kecamatan atau luar kabupaten, mencakup kamar ber-AC/kipas higienis, makan 3x sehari bersubsidi, musholla, serta sarana olahraga.', 'stats' => ['Kapasitas 120 Siswa', 'Gratis Biaya Asrama']],
+                ['img' => 'https://plus.unsplash.com/premium_photo-1663011474132-42003dd76fe0?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'tag' => 'WORKSHOP BAKERY', 'title' => 'Workshop Bakery', 'desc' => 'program pelatihan vokasi tata boga gratis yang dirancang untuk membekali masyarakat keterampilan praktis di bidang pengolahan makanan.', 'stats' => ['Kapasitas 50 Peserta', 'Junior Baker & Pastry Chef']],
             ] as $f)
                 <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-300 transition flex flex-col justify-between">
                     <div>
                         <div class="relative h-40 bg-slate-100">
-                            <img src="{{ asset('images/'.$f['img']) }}" class="w-full h-full object-cover" alt="{{ $f['title'] }}">
+                            <img src="{{ $f['img'] }}" class="w-full h-full object-cover" alt="{{ $f['title'] }}">
                             <span class="absolute top-2.5 left-2.5 bg-slate-900/80 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg backdrop-blur-sm shadow-sm">
                                 {{ $f['tag'] }}
                             </span>
@@ -285,7 +285,7 @@
                             AMANAT PIMPINAN UPT
                         </span>
                         <div class="flex items-center gap-3">
-                            <img src="{{ asset('images/kepala-blk.jpg') }}" class="w-12 h-12 rounded-full object-cover border border-emerald-200 shrink-0" alt="Kepala UPT BLK Jember">
+                            <img src="{{ asset('images/kepala.jpg') }}" class="w-12 h-12 rounded-full object-cover border border-emerald-200 shrink-0" alt="Kepala UPT BLK Jember">
                             <div>
                                 <h4 class="font-bold text-slate-900 text-xs">Kepala UPT BLK Jember</h4>
                                 <p class="text-[10px] text-slate-400 font-medium">Disnakertrans Provinsi Jawa Timur</p>
@@ -305,7 +305,7 @@
 
     {{-- PROGRAM MTU --}}
     <div class="max-w-7xl mx-auto px-6 py-12">
-        <div class="bg-gradient-to-br from-emerald-900 to-teal-950 text-white rounded-3xl p-6 md:p-8 shadow-xl border border-emerald-800/40 grid md:grid-cols-12 gap-8 items-center">
+        <div class="bg-linear-to-br from-emerald-900 to-teal-950 text-white rounded-3xl p-6 md:p-8 shadow-xl border border-emerald-800/40 grid md:grid-cols-12 gap-8 items-center">
             <div class="md:col-span-7 space-y-4">
                 <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-emerald-300 uppercase tracking-wider bg-emerald-500/20 px-2.5 py-1 rounded-full border border-emerald-400/30">
                     <i data-lucide="truck" class="w-3.5 h-3.5"></i> JEMPUT BOLA VOKASI DESA
@@ -335,7 +335,7 @@
 
             <div class="md:col-span-5 relative">
                 <div class="relative h-56 rounded-2xl overflow-hidden border border-white/20 shadow-xl bg-slate-800">
-                    <img src="{{ asset('images/mtu-blk.jpg') }}" class="w-full h-full object-cover" alt="Mobile Training Unit BLK Jember">
+                    <img src="{{ asset('images/MTU.jpg') }}" class="w-full h-full object-cover" alt="Mobile Training Unit BLK Jember">
                     <div class="absolute bottom-3 left-3 right-3 bg-white text-slate-800 rounded-xl p-3 shadow-lg flex justify-between items-center gap-2">
                         <div>
                             <h4 class="font-bold text-xs text-slate-900">Pengajuan Pelatihan MTU Desa</h4>
@@ -412,16 +412,28 @@
                 </div>
 
                 <!-- Peta Lokasi Container -->
-                <div class="rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm relative min-h-[300px] bg-slate-100">
-                    <img src="{{ asset('images/peta-lokasi-blk.jpg') }}" class="w-full h-full object-cover" alt="Peta Lokasi UPT BLK Jember">
-                    <div class="absolute bottom-3 left-3 bg-white/95 backdrop-blur-md rounded-xl p-3 text-xs shadow-md border border-slate-200/80 flex items-center gap-2.5">
-                        <div class="p-2 bg-emerald-100 text-emerald-800 rounded-lg">
-                            <i data-lucide="map-pin" class="w-5 h-5"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-slate-900">Kampus UPT BLK Jember</h4>
-                            <p class="text-[10px] text-slate-500 font-medium">Dekat Bundaran Bangsal & Univ. Jember</p>
-                        </div>
+                <div class="rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm relative min-h-75 bg-slate-100">
+
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.9712984336184!2d113.69429570941301!3d-8.205640491792323!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd696eb9d058681%3A0x84fe5d132cd1947!2sUPT%20Balai%20Latihan%20Kerja%20Jember!5e0!3m2!1sid!2sid!4v1790125884843!5m2!1sid!2sid"
+                        class="w-full h-75 border-0"
+                        allowfullscreen
+                        loading="lazy"
+                        referrerpolicy="strict-origin-when-cross-origin">
+                    </iframe>
+
+                <div class="absolute bottom-3 left-3 bg-white/95 backdrop-blur-md rounded-xl p-3 text-xs shadow-md border border-slate-200/80 flex items-center gap-2.5">
+                    <div class="p-2 bg-emerald-100 text-emerald-800 rounded-lg">
+                        <i data-lucide="map-pin" class="w-5 h-5"></i>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold text-slate-900">
+                            Kampus UPT BLK Jember
+                        </h4>
+                        <p class="text-[10px] text-slate-500 font-medium">
+                            Dekat Bundaran Bangsal & Univ. Jember
+                        </p>
                     </div>
                 </div>
             </div>

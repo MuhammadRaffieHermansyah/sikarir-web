@@ -11,13 +11,38 @@ use Illuminate\View\View;
 
 class PesertaController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $pesertas = Peserta::with(['user', 'admin.user', 'kelas.jadwal.pelatihan', 'sertifikat'])
-            ->latest('id_peserta')
-            ->paginate(10);
+        $query = Peserta::with(['user', 'admin.user', 'kelas.jadwal.pelatihan', 'sertifikat']);
 
-        return view('pesertas.index', compact('pesertas'));
+        // Filter Pencarian (Nama, Email, NIS / Nomor Peserta, Jurusan, Nomor WA)
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nomor_peserta', 'like', "%{$search}%")
+                  ->orWhere('jurusan', 'like', "%{$search}%")
+                  ->orWhere('nomor_wa', 'like', "%{$search}%")
+                  ->orWhereHas('user', function ($sub) use ($search) {
+                      $sub->where('name', 'like', "%{$search}%")
+                          ->orWhere('email', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        // Filter Spesifik Berdasarkan Jurusan
+        if ($request->filled('jurusan')) {
+            $query->where('jurusan', $request->jurusan);
+        }
+
+        // Ambil daftar jurusan unik untuk opsi dropdown filter
+        $jurusanList = Peserta::distinct()->whereNotNull('jurusan')->pluck('jurusan');
+
+        // Ambil data terbaru dengan pagination & pertahankan query string URL
+        $pesertas = $query->latest('id_peserta')
+                          ->paginate(10)
+                          ->withQueryString();
+
+        return view('pesertas.index', compact('pesertas', 'jurusanList'));
     }
 
     public function create(): View
@@ -47,13 +72,13 @@ class PesertaController extends Controller
             'nomor_peserta.required' => 'Nomor peserta (NIS) wajib diisi.',
             'nomor_peserta.unique'   => 'Nomor peserta (NIS) sudah digunakan.',
             'jenis_kelamin.required' => 'Jenis kelamin wajib diisi.',
-            'jurusan.required' => 'Jurusan wajib diisi.',
-            'nomor_wa.required' => 'Nomor WA wajib diisi.',
-            'nomor_kk.required' => 'Nomor KK wajib diisi.',
+            'jurusan.required'       => 'Jurusan wajib diisi.',
+            'nomor_wa.required'      => 'Nomor WA wajib diisi.',
+            'nomor_kk.required'      => 'Nomor KK wajib diisi.',
             'tanggal_lahir.required' => 'Tanggal lahir wajib diisi.',
-            'tempat_lahir.required' => 'Tempat lahir wajib diisi.',
+            'tempat_lahir.required'  => 'Tempat lahir wajib diisi.',
             'pendidikan_terakhir.required' => 'Pendidikan terakhir wajib diisi.',
-            'alamat_lengkap.required' => 'Alamat lengkap wajib diisi.',
+            'alamat_lengkap.required'      => 'Alamat lengkap wajib diisi.',
         ]);
 
         Peserta::create($validated);
@@ -91,7 +116,7 @@ class PesertaController extends Controller
             'pendidikan_terakhir' => 'nullable|string|max:100',
             'alamat_lengkap'      => 'nullable|string',
         ], [
-            'id_user.unique' => 'Akun pengguna ini sudah terdaftar sebagai Peserta.',
+            'id_user.unique'       => 'Akun pengguna ini sudah terdaftar sebagai Peserta.',
             'nomor_peserta.unique' => 'Nomor peserta (NIS) sudah digunakan.',
         ]);
 
@@ -106,4 +131,3 @@ class PesertaController extends Controller
         return redirect()->route('pesertas.index')->with('success', 'Data peserta vokasi berhasil dihapus.');
     }
 }
-

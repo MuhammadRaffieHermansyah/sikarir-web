@@ -37,7 +37,9 @@
 
   <!-- Management Section: Table Absensi -->
   <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-    <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    
+    <!-- Table Header & Search Filter Bar -->
+    <div class="p-5 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
       <div>
         <div class="flex items-center gap-2">
           <div class="p-1.5 bg-emerald-50 text-emerald-700 rounded-lg">
@@ -51,12 +53,43 @@
         <p class="text-xs text-slate-500 mt-1">Daftar rekaman absensi harian peserta pelatihan yang terdaftar.</p>
       </div>
 
-      <div class="flex items-center gap-2">
-        <a href="{{ route('absen.create') }}" class="inline-flex items-center gap-1.5 px-3 py-2 bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold rounded-lg shadow-sm transition">
-          <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-          <span>Catat Absen</span>
-        </a>
-      </div>
+      <!-- FORM PENCARIAN & FILTER -->
+      <form method="GET" action="{{ route('absen.index') }}" class="flex flex-col sm:flex-row items-center gap-2 w-full lg:w-auto">
+        <!-- Input Search -->
+        <div class="relative w-full sm:w-64">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+            <i data-lucide="search" class="w-4 h-4"></i>
+          </div>
+          <input type="text" 
+                 name="search" 
+                 value="{{ request('search') }}" 
+                 placeholder="Cari peserta / pelatihan..." 
+                 class="w-full bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-3 py-2 text-xs font-medium text-slate-700 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition">
+        </div>
+
+        <!-- Filter Status -->
+        <select name="status" class="w-full sm:w-auto bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium text-slate-700 focus:bg-white focus:outline-none focus:border-emerald-600 transition">
+          <option value="">Semua Status</option>
+          <option value="hadir" @selected(request('status') === 'hadir')>Hadir</option>
+          <option value="izin" @selected(request('status') === 'izin')>Izin</option>
+          <option value="sakit" @selected(request('status') === 'sakit')>Sakit</option>
+          <option value="alfa" @selected(request('status') === 'alfa')>Alfa</option>
+        </select>
+
+        <!-- Submit & Reset Buttons -->
+        <div class="flex items-center gap-1.5 w-full sm:w-auto">
+          <button type="submit" class="flex-1 sm:flex-none px-3 py-2 bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold rounded-lg shadow-sm transition flex items-center justify-center gap-1">
+            <i data-lucide="search" class="w-3.5 h-3.5"></i>
+            <span>Cari</span>
+          </button>
+
+          @if(request('search') || request('status'))
+            <a href="{{ route('absen.index') }}" class="p-2 border border-slate-200 hover:bg-slate-50 text-slate-500 rounded-lg transition" title="Reset Filter">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+            </a>
+          @endif
+        </div>
+      </form>
     </div>
 
     <!-- Table Content -->
@@ -149,10 +182,16 @@
                   <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
                     <i data-lucide="clipboard-x" class="w-6 h-6"></i>
                   </div>
-                  <p class="text-xs font-medium text-slate-600">Belum ada data absensi</p>
-                  <a href="{{ route('absen.create') }}" class="text-xs text-emerald-700 hover:underline font-semibold flex items-center gap-1">
-                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> Catat Absensi Pertama
-                  </a>
+                  <p class="text-xs font-medium text-slate-600">Belum ada data absensi yang ditemukan</p>
+                  @if(request('search') || request('status'))
+                    <a href="{{ route('absen.index') }}" class="text-xs text-emerald-700 hover:underline font-semibold flex items-center gap-1">
+                      <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset Filter Pencarian
+                    </a>
+                  @else
+                    <a href="{{ route('absen.create') }}" class="text-xs text-emerald-700 hover:underline font-semibold flex items-center gap-1">
+                      <i data-lucide="plus" class="w-3.5 h-3.5"></i> Catat Absensi Pertama
+                    </a>
+                  @endif
                 </div>
               </td>
             </tr>
@@ -163,7 +202,7 @@
 
     @if(isset($absens) && $absens->hasPages())
       <div class="p-4 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between">
-        {{ $absens->links() }}
+        {{ $absens->withQueryString()->links('components.pagination') }}
       </div>
     @endif
   </div>

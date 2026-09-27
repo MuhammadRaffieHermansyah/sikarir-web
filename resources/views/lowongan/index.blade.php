@@ -16,9 +16,6 @@
     </div>
 
     <div class="flex items-center gap-2">
-      <a href="{{ route('mitras.index') }}" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="building-2" class="w-4 h-4"></i> Data Mitra
-      </a>
       <a href="{{ route('lowongan.create') }}" class="bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold px-3.5 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
         <i data-lucide="plus" class="w-4 h-4"></i> Buka Lowongan Baru
       </a>

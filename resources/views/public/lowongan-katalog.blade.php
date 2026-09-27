@@ -5,7 +5,7 @@
 @section('content')
 
     {{-- HERO SECTION --}}
-    <section class="relative overflow-hidden bg-gradient-to-br from-emerald-900 via-teal-950 to-slate-900 text-white border-b border-emerald-800/40">
+    <section class="relative overflow-hidden bg-linear-to-br from-emerald-900 via-teal-950 to-slate-900 text-white border-b border-emerald-800/40">
         <!-- Background Accent Blur -->
         <div class="absolute -top-24 -left-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -105,7 +105,7 @@
         </div>
 
         <div class="grid lg:grid-cols-12 gap-8">
-            
+
             {{-- KOLOM KIRI: DAFTAR LOWONGAN (8 cols) --}}
             <div class="lg:col-span-8 space-y-5">
                 <div class="flex justify-between items-center text-xs text-slate-500 font-medium px-1">
@@ -201,11 +201,11 @@
 
             {{-- KOLOM KANAN: SIDEBAR (4 cols) --}}
             <div class="lg:col-span-4 space-y-6">
-                
+
                 {{-- Foto Workshop --}}
                 <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm">
                     <div class="relative h-40 bg-slate-100">
-                        <img src="{{ asset('images/workshop-blk.jpg') }}" class="w-full h-full object-cover" alt="Workshop Praktik Industri BLK Jember">
+                        <img src="https://images.unsplash.com/photo-1654703680007-d5d9699cddfd?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D}}" class="w-full h-full object-cover" alt="Workshop Praktik Industri BLK Jember">
                         <span class="absolute bottom-2 left-2 bg-slate-900/80 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg backdrop-blur-sm flex items-center gap-1">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Workshop Praktik BLK Jember
                         </span>
@@ -253,7 +253,7 @@
                 </div>
 
                 {{-- CTA Mitra --}}
-                <div class="relative overflow-hidden bg-gradient-to-br from-emerald-900 to-teal-950 text-white rounded-2xl p-6 shadow-md space-y-3 border border-emerald-800/40">
+                <div class="relative overflow-hidden bg-linear-to-br from-emerald-900 to-teal-950 text-white rounded-2xl p-6 shadow-md space-y-3 border border-emerald-800/40">
                     <span class="text-[10px] font-bold text-emerald-300 uppercase tracking-wider bg-emerald-500/20 px-2.5 py-1 rounded-md border border-emerald-400/30">
                         KEMITRAAN INDUSTRI
                     </span>
