@@ -149,7 +149,7 @@
               <td class="px-5 py-4">
                 <div class="text-slate-800 font-medium flex items-center gap-1.5">
                   <i data-lucide="user" class="w-3.5 h-3.5 text-slate-400"></i>
-                  {{ $jadwal->instruktur ?? 'Instruktur Belum Ditunjuk' }}
+                  {{ $jadwal->instruktur?->nama ?? 'Instruktur Belum Ditunjuk' }}
                 </div>
                 <div class="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5">
                   <i data-lucide="map-pin" class="w-3 h-3 text-slate-400"></i>
