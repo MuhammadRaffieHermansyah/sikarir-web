@@ -125,11 +125,19 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label for="instruktur" class="block text-xs font-semibold text-slate-700 mb-1.5">
-                Nama Instruktur / Pengajar
+              <label for="id_instruktur" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                Instruktur / Pengajar <span class="text-rose-500">*</span>
               </label>
-              <input type="text" name="instruktur" id="instruktur" value="{{ old('instruktur', $jadwal->instruktur) }}" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('instruktur') border-rose-400 bg-rose-50/50 @enderror" />
-              @error('instruktur')
+              <select name="id_instruktur" id="id_instruktur" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('id_instruktur') border-rose-400 bg-rose-50/50 @enderror">
+                <option value="">-- Pilih Instruktur --</option>
+                @foreach($instrukturs ?? [] as $instruktur)
+                  <option value="{{ $instruktur->id }}" {{ old('id_instruktur', $jadwal->id_instruktur) == $instruktur->id ? 'selected' : '' }}>{{ $instruktur->nama }} ({{ $instruktur->bidang_keahlian }})</option>
+                @endforeach
+              </select>
+              <p class="text-[11px] text-slate-400 mt-1">
+                Belum ada data? <a href="{{ route('instruktur.create') }}" class="text-emerald-700 hover:underline font-semibold">Tambah instruktur baru</a>
+              </p>
+              @error('id_instruktur')
                 <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
               @enderror
             </div>
