@@ -53,6 +53,7 @@ class MitraController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
+            'logo_perusahaan' => 'required|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
             'nama_perusahaan' => 'required|unique:mitras,nama_perusahaan|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'id_user'         => 'required|exists:users,id|unique:mitras,id_user',
             'jenis_mitra'     => 'required|string|max:100',
@@ -63,8 +64,8 @@ class MitraController extends Controller
             'provinsi'        => 'required|string|max:100|regex:/^[a-zA-Z\s]+$/',
             'kota'            => 'required|string|max:100|regex:/^[a-zA-Z\s]+$/',
             'alamat'          => 'required|string|regex:/^[a-zA-Z\s]+$/',
-            'logo_perusahaan' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
         ], [
+            'logo_perusahaan.required' => 'Logo perusahaan wajib diunggah.',
             'nama_perusahaan.required' => 'Nama perusahaan wajib diisi.',
             'nama_perusahaan.unique'   => 'Nama perusahaan sudah terdaftar.',
             'id_user.unique'           => 'Akun pengguna ini sudah ditautkan ke mitra lain.',
