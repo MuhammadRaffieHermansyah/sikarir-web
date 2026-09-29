@@ -209,7 +209,7 @@
               @forelse($admin->pelatihan ?? [] as $pelatihan)
                 <tr class="hover:bg-slate-50/80">
                   <td class="px-5 py-3 font-bold text-slate-800">{{ $pelatihan->nama_pelatihan }}</td>
-                  <td class="px-5 py-3 text-slate-600">{{ $pelatihan->durasi_lp ?? '-' }}</td>
+                  <td class="px-5 py-3 text-slate-600">{{ $pelatihan->durasi_label ?? '-' }}</td>
                   <td class="px-5 py-3 font-semibold text-emerald-700">{{ $pelatihan->kuota }} Kuota</td>
                   <td class="px-5 py-3 text-right">
                     <a href="{{ route('pelatihan.show', $pelatihan->id_pelatihan) }}" class="text-emerald-700 hover:underline font-semibold">Detail</a>

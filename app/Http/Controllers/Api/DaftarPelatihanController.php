@@ -40,7 +40,7 @@ class DaftarPelatihanController extends Controller
                     new OA\Property(property: 'id_admin', type: 'integer'),
                     new OA\Property(property: 'nama_pelatihan', type: 'string'),
                     new OA\Property(property: 'deskripsi_pelatihan', type: 'string'),
-                    new OA\Property(property: 'durasi_lp', type: 'string'),
+                    new OA\Property(property: 'id_durasi', type: 'integer'),
                     new OA\Property(property: 'kuota', type: 'integer'),
                 ]
             )
@@ -90,7 +90,7 @@ class DaftarPelatihanController extends Controller
                     new OA\Property(property: 'id_admin', type: 'integer'),
                     new OA\Property(property: 'nama_pelatihan', type: 'string'),
                     new OA\Property(property: 'deskripsi_pelatihan', type: 'string'),
-                    new OA\Property(property: 'durasi_lp', type: 'string'),
+                    new OA\Property(property: 'id_durasi', type: 'integer'),
                     new OA\Property(property: 'kuota', type: 'integer'),
                 ]
             )
@@ -129,6 +129,6 @@ class DaftarPelatihanController extends Controller
 
     protected function relations(): array
     {
-        return ['admin'];
+        return ['admin', 'durasi'];
     }
 }

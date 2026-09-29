@@ -70,7 +70,7 @@
               <option value="">-- Pilih Program Kejuruan --</option>
               @foreach($pelatihans as $p)
                 <option value="{{ $p->id_pelatihan }}" {{ old('id_pelatihan', $jadwal->id_pelatihan) == $p->id_pelatihan ? 'selected' : '' }}>
-                  {{ $p->nama_pelatihan }} (Kuota: {{ $p->kuota }} Siswa | {{ $p->durasi_lp ?? '240 JP' }})
+                  {{ $p->nama_pelatihan }} (Kuota: {{ $p->kuota }} Siswa | {{ $p->durasi_label ?? '-' }})
                 </option>
               @endforeach
             </select>

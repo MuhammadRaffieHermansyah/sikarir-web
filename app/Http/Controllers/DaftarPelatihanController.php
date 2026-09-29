@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DaftarPelatihan;
 use App\Models\AdminBlk;
+use App\Models\DurasiPelatihan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -12,7 +13,7 @@ class DaftarPelatihanController extends Controller
 {
     public function index(): View
     {
-        $pelatihans = DaftarPelatihan::with(['admin.user', 'jadwal'])
+        $pelatihans = DaftarPelatihan::with(['admin.user', 'jadwal', 'durasi'])
             ->latest('id_pelatihan')
             ->paginate(10);
 
@@ -21,8 +22,9 @@ class DaftarPelatihanController extends Controller
 
     public function create(): View
     {
-        $admins = AdminBlk::with('user')->get();
-        return view('pelatihan.create', compact('admins'));
+        $admins   = AdminBlk::with('user')->get();
+        $durations = DurasiPelatihan::orderBy('hari')->get();
+        return view('pelatihan.create', compact('admins', 'durations'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -32,7 +34,7 @@ class DaftarPelatihanController extends Controller
             'nama_pelatihan'      => 'required|unique:daftar_pelatihan,nama_pelatihan|string|max:70',
             'deskripsi_pelatihan' => 'nullable|string',
             'kuota'               => 'required|integer|min:1',
-            'durasi_lp'           => 'string|max:100',
+            'id_durasi'           => 'nullable|exists:durasi_pelatihan,id_durasi',
         ], [
             'id_admin.required'       => 'Admin BLK penanggung jawab wajib dipilih.',
             'nama_pelatihan.required' => 'Nama kejuruan / program pelatihan wajib diisi.',
@@ -48,15 +50,16 @@ class DaftarPelatihanController extends Controller
 
     public function show(int $id): View
     {
-        $pelatihan = DaftarPelatihan::with(['admin.user', 'jadwal.kelas.peserta.user'])->findOrFail($id);
+        $pelatihan = DaftarPelatihan::with(['admin.user', 'durasi', 'jadwal.kelas.peserta.user'])->findOrFail($id);
         return view('pelatihan.show', compact('pelatihan'));
     }
 
     public function edit(int $id): View
     {
-        $pelatihan = DaftarPelatihan::findOrFail($id);
+        $pelatihan = DaftarPelatihan::with('durasi')->findOrFail($id);
         $admins    = AdminBlk::with('user')->get();
-        return view('pelatihan.edit', compact('pelatihan', 'admins'));
+        $durations = DurasiPelatihan::orderBy('hari')->get();
+        return view('pelatihan.edit', compact('pelatihan', 'admins', 'durations'));
     }
 
     public function update(Request $request, int $id): RedirectResponse
@@ -65,14 +68,13 @@ class DaftarPelatihanController extends Controller
 
         $validated = $request->validate([
             'id_admin'            => 'required|exists:admin_blks,id_admin',
-            'nama_pelatihan'      => 'required|unique:daftar_pelatihan,nama_pelatihan|string|max:70',
+            'nama_pelatihan'      => 'required|string|max:70',
             'deskripsi_pelatihan' => 'nullable|string',
             'kuota'               => 'required|integer|min:1',
-            'durasi_lp'           => 'string|max:100',
+            'id_durasi'           => 'nullable|exists:durasi_pelatihan,id_durasi',
         ], [
             'id_admin.required'       => 'Admin BLK penanggung jawab wajib dipilih.',
             'nama_pelatihan.required' => 'Nama kejuruan / program pelatihan wajib diisi.',
-            'nama_pelatihan.unique'   => 'Nama kejuruan / program pelatihan sudah ada.',
             'nama_pelatihan.max'      => 'Nama kejuruan / program pelatihan maksimal 40 karakter.',
             'kuota.required'          => 'Kapasitas kuota peserta wajib ditentukan.',
             'kuota.min'               => 'Kuota minimal 1 orang peserta.',

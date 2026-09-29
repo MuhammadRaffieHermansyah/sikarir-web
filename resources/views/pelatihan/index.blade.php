@@ -142,7 +142,7 @@
               <td class="px-5 py-4">
                 <span class="inline-flex items-center gap-1.5 text-slate-700 font-medium">
                   <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i>
-                  {{ $pelatihan->durasi_lp ?? '240 JP' }}
+                  {{ $pelatihan->durasi_label ?? '-' }}
                 </span>
               </td>
 

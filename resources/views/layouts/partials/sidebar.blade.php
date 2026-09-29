@@ -92,6 +92,30 @@
                     </a>
 
 
+                    <!-- Durasi Pelatihan -->
+                    <a href="{{ route('durasi-pelatihan.index') }}"
+                        class="group flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-200
+                        {{ request()->routeIs('durasi-pelatihan.*')
+                            ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-sm'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-emerald-700 hover:translate-x-0.5 hover:shadow-sm' }}">
+
+                        <span class="flex items-center gap-2.5">
+                            <i data-lucide="timer"
+                               class="w-4 h-4 transition-colors duration-200
+                               {{ request()->routeIs('durasi-pelatihan.*')
+                                   ? 'text-emerald-600'
+                                   : 'text-slate-400 group-hover:text-emerald-600' }}">
+                            </i>
+
+                            Durasi Pelatihan
+                        </span>
+
+                        <span class="bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">
+                            {{ \App\Models\DurasiPelatihan::count() }} Data
+                        </span>
+                    </a>
+
+
                     <!-- Jadwal Pelatihan -->
                     <a href="{{ route('jadwal-pelatihan.index') }}"
                         class="group flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-200

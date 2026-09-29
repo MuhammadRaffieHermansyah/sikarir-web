@@ -45,7 +45,7 @@
           </div>
           <div class="flex items-center gap-4 text-xs text-slate-500 mt-1.5 flex-wrap">
             <span class="flex items-center gap-1.5"><i data-lucide="user-check" class="w-3.5 h-3.5 text-slate-400"></i> Pembina: {{ $pelatihan->admin->user->name ?? 'Admin BLK Pusat' }}</span>
-            <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i> Durasi: {{ $pelatihan->durasi_lp ?? '240 JP' }}</span>
+            <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i> Durasi: {{ $pelatihan->durasi_label ?? '-' }}</span>
             <span class="flex items-center gap-1.5"><i data-lucide="users" class="w-3.5 h-3.5 text-slate-400"></i> Kuota: {{ $pelatihan->kuota }} Kursi / Batch</span>
           </div>
         </div>
@@ -176,7 +176,7 @@
         <div class="space-y-3 text-xs">
           <div class="flex items-center justify-between text-slate-700">
             <span class="text-slate-400">Durasi:</span>
-            <span class="font-semibold">{{ $pelatihan->durasi_lp ?? '240 JP' }}</span>
+            <span class="font-semibold">{{ $pelatihan->durasi_label ?? '-' }}</span>
           </div>
           <div class="flex items-center justify-between text-slate-700">
             <span class="text-slate-400">Kuota:</span>

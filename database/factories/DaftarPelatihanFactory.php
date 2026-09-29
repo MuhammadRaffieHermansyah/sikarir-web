@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\AdminBlk;
 use App\Models\DaftarPelatihan;
+use App\Models\DurasiPelatihan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class DaftarPelatihanFactory extends Factory
@@ -28,12 +29,7 @@ class DaftarPelatihanFactory extends Factory
 
             'deskripsi_pelatihan' => fake()->paragraph(3),
 
-            'durasi_lp' => fake()->randomElement([
-                '40 JP',
-                '80 JP',
-                '120 JP',
-                '160 JP',
-            ]),
+            'id_durasi' => DurasiPelatihan::factory(),
 
             'kuota' => fake()->numberBetween(10, 30),
         ];

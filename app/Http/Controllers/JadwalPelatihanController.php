@@ -21,7 +21,7 @@ class JadwalPelatihanController extends Controller
 
     public function create(): View
     {
-        $pelatihans = DaftarPelatihan::orderBy('nama_pelatihan')->get();
+        $pelatihans = DaftarPelatihan::with('durasi')->orderBy('nama_pelatihan')->get();
         return view('jadwal-pelatihan.create', compact('pelatihans'));
     }
 
@@ -58,7 +58,7 @@ class JadwalPelatihanController extends Controller
     public function edit(int $id): View
     {
         $jadwal     = JadwalPelatihan::findOrFail($id);
-        $pelatihans = DaftarPelatihan::orderBy('nama_pelatihan')->get();
+        $pelatihans = DaftarPelatihan::with('durasi')->orderBy('nama_pelatihan')->get();
         return view('jadwal-pelatihan.edit', compact('jadwal', 'pelatihans'));
     }
 
