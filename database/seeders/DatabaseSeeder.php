@@ -7,6 +7,7 @@ use App\Models\Absen;
 use App\Models\DaftarLowongan;
 use App\Models\DaftarPelatihan;
 use App\Models\DurasiPelatihan;
+use App\Models\Instruktur;
 use App\Models\JadwalPelatihan;
 use App\Models\KelasPelatihan;
 use App\Models\Mitra;
@@ -65,6 +66,16 @@ class DatabaseSeeder extends Seeder
         $this->call(DurasiPelatihanSeeder::class);
 
         $durations = DurasiPelatihan::all();
+
+        /*
+        |--------------------------------------------------------------------------
+        | INSTRUKTUR
+        |--------------------------------------------------------------------------
+        */
+
+        $this->call(InstrukturSeeder::class);
+
+        $instrukturs = Instruktur::all();
 
         /*
         |--------------------------------------------------------------------------
@@ -250,8 +261,8 @@ class DatabaseSeeder extends Seeder
 
                     'jam_selesai' => '16:00:00',
 
-                    'instruktur' =>
-                        fake()->name(),
+                    'id_instruktur' =>
+                        $instrukturs->random()->id,
 
                     'tempat' =>
                         fake()->randomElement([

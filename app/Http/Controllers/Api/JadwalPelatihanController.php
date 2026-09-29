@@ -135,6 +135,6 @@ class JadwalPelatihanController extends Controller
 
     protected function relations(): array
     {
-        return ['pelatihan'];
+        return ['pelatihan', 'instruktur'];
     }
 }
