@@ -35,7 +35,7 @@
   @endif
 
   <!-- Metrics / KPI Cards -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-3.5">
       <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
         <i data-lucide="briefcase" class="w-5 h-5"></i>
@@ -52,47 +52,45 @@
       </div>
       <div>
         <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Lowongan Aktif</div>
-        <div class="text-xl font-black text-slate-900 mt-0.5">{{ $lowongans->where('status', 'aktif')->count() }} Tersedia</div>
+        <div class="text-xl font-black text-slate-900 mt-0.5">{{ $countAktif ?? 0 }} Tersedia</div>
       </div>
     </div>
 
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-3.5">
-      <div class="w-11 h-11 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0">
+      <div class="w-11 h-11 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center shrink-0">
         <i data-lucide="door-closed" class="w-5 h-5"></i>
       </div>
       <div>
-        <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Sudah Ditutup</div>
-        <div class="text-xl font-black text-slate-900 mt-0.5">{{ $lowongans->where('status', 'ditutup')->count() }} Posisi</div>
-      </div>
-    </div>
-
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-3.5">
-      <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
-        <i data-lucide="file-edit" class="w-5 h-5"></i>
-      </div>
-      <div>
-        <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Draft / Belum Publik</div>
-        <div class="text-xl font-black text-slate-900 mt-0.5">{{ $lowongans->where('status', 'draft')->count() }} Draft</div>
+        <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Lowongan Non-Aktif</div>
+        <div class="text-xl font-black text-slate-900 mt-0.5">{{ $countNonaktif ?? 0 }} Posisi</div>
       </div>
     </div>
   </div>
 
   <!-- Table Card -->
   <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-    <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/50">
+    
+    <!-- Table Header & Search Filter Bar -->
+    <div class="p-5 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-slate-50/50">
       <div>
-        <h3 class="font-bold text-slate-800 text-sm">Daftar Lowongan Magang Industri</h3>
-        <p class="text-xs text-slate-500">Posisi magang yang diterima dari mitra DU/DI untuk penyaluran lulusan vokasi.</p>
+        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+          <span>Daftar Lowongan Magang Industri</span>
+          <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full">
+            {{ $lowongans->total() }} Posisi
+          </span>
+        </h3>
+        <p class="text-xs text-slate-500 mt-0.5">Posisi magang yang diterima dari mitra DU/DI untuk penyaluran lulusan vokasi.</p>
       </div>
 
-      <div class="flex items-center gap-2">
-        <div class="relative">
-          <input type="text" placeholder="Cari posisi / mitra..." class="bg-white border border-slate-200 text-slate-700 text-xs rounded-lg pl-8 pr-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-700 w-48 sm:w-60 shadow-sm" />
-          <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5"></i>
-        </div>
-      </div>
+      <!-- FORM PENCARIAN & FILTER (Component) -->
+      <x-search-filter 
+        :action="route('lowongan.index')" 
+        search-placeholder="Cari posisi, mitra, lokasi..." 
+        :status-options="['aktif' => 'Aktif', 'nonaktif' => 'Non-Aktif']" 
+      />
     </div>
 
+    <!-- Table Content -->
     <div class="overflow-x-auto">
       <table class="w-full text-left text-xs">
         <thead>
@@ -135,7 +133,7 @@
               </td>
 
               <td class="px-5 py-4 text-slate-600">
-                {{ $lowongan->tanggal_posting ? $lowongan->tanggal_posting->translatedFormat('d M Y') : '-' }}
+                {{ $lowongan->tanggal_posting ? \Illuminate\Support\Carbon::parse($lowongan->tanggal_posting)->translatedFormat('d M Y') : '-' }}
               </td>
 
               <td class="px-5 py-4">
@@ -144,15 +142,10 @@
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                     Aktif
                   </span>
-                @elseif($lowongan->status === 'ditutup')
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-600">
-                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-                    Ditutup
-                  </span>
                 @else
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                    Draft
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                    Non-Aktif
                   </span>
                 @endif
               </td>
@@ -181,11 +174,17 @@
                 <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
                   <i data-lucide="briefcase" class="w-6 h-6"></i>
                 </div>
-                <div class="font-bold text-slate-700 text-sm">Belum Ada Lowongan Magang</div>
-                <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">Publikasikan posisi magang dari mitra DU/DI untuk penyaluran siswa lulusan vokasi.</p>
-                <a href="{{ route('lowongan.create') }}" class="inline-flex items-center gap-1.5 mt-3 bg-emerald-900 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-sm">
-                  <i data-lucide="plus" class="w-3.5 h-3.5"></i> Buka Lowongan
-                </a>
+                <div class="font-bold text-slate-700 text-sm">Belum Ada Lowongan Magang Ditemukan</div>
+                <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">Coba ubah kata kunci pencarian atau reset filter status lowongan.</p>
+                @if(request('search') || request('status'))
+                  <a href="{{ route('lowongan.index') }}" class="inline-flex items-center gap-1.5 mt-3 text-emerald-700 hover:underline text-xs font-semibold">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset Filter Pencarian
+                  </a>
+                @else
+                  <a href="{{ route('lowongan.create') }}" class="inline-flex items-center gap-1.5 mt-3 bg-emerald-900 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-sm">
+                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> Buka Lowongan
+                  </a>
+                @endif
               </td>
             </tr>
           @endforelse
@@ -194,8 +193,8 @@
     </div>
 
     @if($lowongans->hasPages())
-      <div class="p-4 border-t border-slate-100">
-        {{ $lowongans->links() }}
+      <div class="p-4 border-t border-slate-100 bg-slate-50/50">
+        {{ $lowongans->withQueryString()->links('components.pagination') }}
       </div>
     @endif
   </div>

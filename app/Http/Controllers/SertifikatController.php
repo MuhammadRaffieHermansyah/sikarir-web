@@ -13,11 +13,26 @@ use Illuminate\View\View;
 
 class SertifikatController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $sertifikats = Sertifikat::with(['peserta.user', 'jadwal.pelatihan', 'admin.user'])
-            ->latest('id_sertifikat')
-            ->paginate(10);
+        $query = Sertifikat::with(['peserta.user', 'jadwal.pelatihan', 'admin.user']);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('no_sertifikat', 'like', "%{$search}%")
+                  ->orWhereHas('peserta.user', function ($sub) use ($search) {
+                      $sub->where('name', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('jadwal.pelatihan', function ($sub) use ($search) {
+                      $sub->where('nama_pelatihan', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $sertifikats = $query->latest('id_sertifikat')
+                             ->paginate(10)
+                             ->withQueryString();
 
         return view('sertifikat.index', compact('sertifikats'));
     }

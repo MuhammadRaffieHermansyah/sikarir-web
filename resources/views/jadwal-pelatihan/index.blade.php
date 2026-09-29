@@ -98,42 +98,12 @@
         <p class="text-xs text-slate-500 mt-0.5">Daftar periode waktu kelas dan instruktur pembimbing.</p>
       </div>
 
-      <!-- FORM PENCARIAN & FILTER -->
-      <form method="GET" action="{{ route('jadwal-pelatihan.index') }}" class="flex flex-col sm:flex-row items-center gap-2 w-full lg:w-auto">
-        <!-- Input Search -->
-        <div class="relative w-full sm:w-64">
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-            <i data-lucide="search" class="w-4 h-4"></i>
-          </div>
-          <input type="text" 
-                 name="search" 
-                 value="{{ request('search') }}" 
-                 placeholder="Cari kejuruan, instruktur, tempat..." 
-                 class="w-full bg-white border border-slate-200 rounded-lg pl-9 pr-3 py-2 text-xs font-medium text-slate-700 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition shadow-sm">
-        </div>
-
-        <!-- Filter Status Kelas -->
-        <select name="status" class="w-full sm:w-auto bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium text-slate-700 focus:bg-white focus:outline-none focus:border-emerald-600 transition shadow-sm">
-          <option value="">Semua Status</option>
-          <option value="tersedia" @selected(request('status') === 'tersedia')>Tersedia</option>
-          <option value="berlangsung" @selected(request('status') === 'berlangsung')>Berlangsung</option>
-          <option value="selesai" @selected(request('status') === 'selesai')>Selesai</option>
-        </select>
-
-        <!-- Submit & Reset Buttons -->
-        <div class="flex items-center gap-1.5 w-full sm:w-auto">
-          <button type="submit" class="flex-1 sm:flex-none px-3.5 py-2 bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold rounded-lg shadow-sm transition flex items-center justify-center gap-1">
-            <i data-lucide="search" class="w-3.5 h-3.5"></i>
-            <span>Cari</span>
-          </button>
-
-          @if(request('search') || request('status'))
-            <a href="{{ route('jadwal-pelatihan.index') }}" class="p-2 border border-slate-200 hover:bg-white bg-slate-50 text-slate-500 rounded-lg transition" title="Reset Filter">
-              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
-            </a>
-          @endif
-        </div>
-      </form>
+      <!-- FORM PENCARIAN & FILTER (Component) -->
+      <x-search-filter 
+        :action="route('jadwal-pelatihan.index')" 
+        search-placeholder="Cari kejuruan, instruktur..." 
+        :status-options="['tersedia' => 'Tersedia', 'berlangsung' => 'Berlangsung', 'selesai' => 'Selesai']" 
+      />
     </div>
 
     <!-- Table Content -->

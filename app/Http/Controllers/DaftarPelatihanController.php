@@ -11,18 +11,30 @@ use Illuminate\View\View;
 
 class DaftarPelatihanController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $pelatihans = DaftarPelatihan::with(['admin.user', 'jadwal', 'durasi'])
-            ->latest('id_pelatihan')
-            ->paginate(10);
+        $query = DaftarPelatihan::with(['admin.user', 'jadwal', 'durasi']);
+
+        // Filter Pencarian Keyword (Nama Pelatihan atau Deskripsi)
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_pelatihan', 'like', "%{$search}%")
+                  ->orWhere('deskripsi_pelatihan', 'like', "%{$search}%");
+            });
+        }
+
+        // Paginate data & tahan URL parameter
+        $pelatihans = $query->latest('id_pelatihan')
+                            ->paginate(10)
+                            ->withQueryString();
 
         return view('pelatihan.index', compact('pelatihans'));
     }
 
     public function create(): View
     {
-        $admins   = AdminBlk::with('user')->get();
+        $admins    = AdminBlk::with('user')->get();
         $durations = DurasiPelatihan::orderBy('hari')->get();
         return view('pelatihan.create', compact('admins', 'durations'));
     }
