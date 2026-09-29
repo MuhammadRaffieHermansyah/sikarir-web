@@ -3,148 +3,343 @@
         <div class="p-4 flex items-center gap-3 border-b border-slate-100 bg-white">
             <!-- Gambar Logo -->
             <a href="{{ url('/') }}" class="flex items-center gap-3 group">
-                <img src="{{ asset('images/logo-sikarir.png') }}" 
-                     alt="Logo siKarir BLK Jember" 
+                <img src="{{ asset('images/logo-sikarir.png') }}"
+                     alt="Logo siKarir BLK Jember"
                      class="h-10 w-auto object-contain">
             </a>
         </div>
 
         <!-- Menu Navigation -->
         <nav class="p-3 text-xs font-medium space-y-6">
+
             @if (auth()->user()->role === 'admin_blk')
+
+                <!-- UTAMA -->
                 <div>
-                    <div class="text-[10px] uppercase font-bold text-slate-400 mb-2 px-3">Utama</div>
+                    <div class="text-[10px] uppercase font-bold text-slate-400 mb-2 px-3">
+                        Utama
+                    </div>
+
                     <a href="{{ route('dashboard') }}"
-                        class="flex items-center gap-2.5 px-3 py-2 {{ request()->routeIs('dashboard') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
-                        <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                        class="group flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all duration-200
+                        {{ request()->routeIs('dashboard')
+                            ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-sm'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-emerald-700 hover:translate-x-0.5 hover:shadow-sm' }}">
+
+                        <i data-lucide="layout-dashboard"
+                           class="w-4 h-4 transition-colors duration-200
+                           {{ request()->routeIs('dashboard')
+                               ? 'text-emerald-600'
+                               : 'text-slate-400 group-hover:text-emerald-600' }}">
+                        </i>
+
                         Dashboard Ringkasan
                     </a>
                 </div>
 
+
+                <!-- MANAJEMEN DATA -->
                 <div>
-                    <div class="text-[10px] uppercase font-bold text-slate-400 mb-2 px-3">Manajemen Data</div>
+                    <div class="text-[10px] uppercase font-bold text-slate-400 mb-2 px-3">
+                        Manajemen Data
+                    </div>
+
+                    <!-- Admin BLK -->
                     <a href="{{ route('admin-blk.index') }}"
-                        class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('admin-blk.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
+                        class="group flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-200
+                        {{ request()->routeIs('admin-blk.*')
+                            ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-sm'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-emerald-700 hover:translate-x-0.5 hover:shadow-sm' }}">
+
                         <span class="flex items-center gap-2.5">
-                            <i data-lucide="shield-check" class="w-4 h-4"></i>
+                            <i data-lucide="shield-check"
+                               class="w-4 h-4 transition-colors duration-200
+                               {{ request()->routeIs('admin-blk.*')
+                                   ? 'text-emerald-600'
+                                   : 'text-slate-400 group-hover:text-emerald-600' }}">
+                            </i>
+
                             Admin BLK
                         </span>
+
                         <span class="bg-emerald-100 text-emerald-800 text-[10px] font-semibold px-1.5 py-0.5 rounded">
                             {{ \App\Models\AdminBlk::count() }} Admin
                         </span>
                     </a>
+
+
+                    <!-- Program Pelatihan -->
                     <a href="{{ route('pelatihan.index') }}"
-                        class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('pelatihan.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
+                        class="group flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-200
+                        {{ request()->routeIs('pelatihan.*')
+                            ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-sm'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-emerald-700 hover:translate-x-0.5 hover:shadow-sm' }}">
+
                         <span class="flex items-center gap-2.5">
-                            <i data-lucide="book" class="w-4 h-4"></i>
+                            <i data-lucide="book"
+                               class="w-4 h-4 transition-colors duration-200
+                               {{ request()->routeIs('pelatihan.*')
+                                   ? 'text-emerald-600'
+                                   : 'text-slate-400 group-hover:text-emerald-600' }}">
+                            </i>
+
                             Program Pelatihan
                         </span>
+
                         <span class="bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">
                             {{ \App\Models\DaftarPelatihan::count() }} Aktif
                         </span>
                     </a>
+
+
+                    <!-- Jadwal Pelatihan -->
                     <a href="{{ route('jadwal-pelatihan.index') }}"
-                        class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('jadwal-pelatihan.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
+                        class="group flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-200
+                        {{ request()->routeIs('jadwal-pelatihan.*')
+                            ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-sm'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-emerald-700 hover:translate-x-0.5 hover:shadow-sm' }}">
+
                         <span class="flex items-center gap-2.5">
-                            <i data-lucide="calendar-fold" class="w-4 h-4"></i>
+                            <i data-lucide="calendar-fold"
+                               class="w-4 h-4 transition-colors duration-200
+                               {{ request()->routeIs('jadwal-pelatihan.*')
+                                   ? 'text-emerald-600'
+                                   : 'text-slate-400 group-hover:text-emerald-600' }}">
+                            </i>
+
                             Jadwal Pelatihan
                         </span>
+
                         <span class="bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">
                             {{ \App\Models\JadwalPelatihan::count() }} Aktif
                         </span>
                     </a>
+
+
+                    <!-- Lowongan -->
                     <a href="{{ route('lowongan.index') }}"
-                        class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('lowongan.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
+                        class="group flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-200
+                        {{ request()->routeIs('lowongan.*')
+                            ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-sm'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-emerald-700 hover:translate-x-0.5 hover:shadow-sm' }}">
+
                         <span class="flex items-center gap-2.5">
-                            <i data-lucide="briefcase-business" class="w-4 h-4"></i>
+                            <i data-lucide="briefcase-business"
+                               class="w-4 h-4 transition-colors duration-200
+                               {{ request()->routeIs('lowongan.*')
+                                   ? 'text-emerald-600'
+                                   : 'text-slate-400 group-hover:text-emerald-600' }}">
+                            </i>
+
                             Lowongan
                         </span>
+
                         <span class="bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">
                             {{ \App\Models\DaftarLowongan::count() }} Aktif
                         </span>
                     </a>
+
+
+                    <!-- Mitra -->
                     <a href="{{ route('mitras.index') }}"
-                        class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('mitras.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
+                        class="group flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-200
+                        {{ request()->routeIs('mitras.*')
+                            ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-sm'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-emerald-700 hover:translate-x-0.5 hover:shadow-sm' }}">
+
                         <span class="flex items-center gap-2.5">
-                            <i data-lucide="building-2" class="w-4 h-4"></i>
+                            <i data-lucide="building-2"
+                               class="w-4 h-4 transition-colors duration-200
+                               {{ request()->routeIs('mitras.*')
+                                   ? 'text-emerald-600'
+                                   : 'text-slate-400 group-hover:text-emerald-600' }}">
+                            </i>
+
                             Mitra DU/DI
                         </span>
+
                         <span class="bg-slate-100 text-slate-600 text-[10px] px-1.5 py-0.5 rounded">
                             {{ \App\Models\Mitra::count() }} Mitra
                         </span>
                     </a>
                 </div>
 
+
+                <!-- MONITORING MAGANG -->
                 <div>
-                    <div class="text-[10px] uppercase font-bold text-slate-400 mb-2 px-3">Monitoring Magang</div>
+                    <div class="text-[10px] uppercase font-bold text-slate-400 mb-2 px-3">
+                        Monitoring Magang
+                    </div>
+
+                    <!-- Peserta -->
                     <a href="{{ route('pesertas.index') }}"
-                        class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('pesertas.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
+                        class="group flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-200
+                        {{ request()->routeIs('pesertas.*')
+                            ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-sm'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-emerald-700 hover:translate-x-0.5 hover:shadow-sm' }}">
+
                         <span class="flex items-center gap-2.5">
-                            <i data-lucide="users-round" class="w-4 h-4"></i>
+                            <i data-lucide="users-round"
+                               class="w-4 h-4 transition-colors duration-200
+                               {{ request()->routeIs('pesertas.*')
+                                   ? 'text-emerald-600'
+                                   : 'text-slate-400 group-hover:text-emerald-600' }}">
+                            </i>
+
                             Data Peserta
                         </span>
+
                         <span class="bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">
                             {{ \App\Models\Peserta::count() }} Peserta
                         </span>
                     </a>
+
+
+                    <!-- Presensi -->
                     <a href="{{ route('absen.index') }}"
-                        class="flex items-center gap-2.5 px-3 py-2 {{ request()->routeIs('absen.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
-                        <i data-lucide="check-square" class="w-4 h-4"></i>
+                        class="group flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all duration-200
+                        {{ request()->routeIs('absen.*')
+                            ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-sm'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-emerald-700 hover:translate-x-0.5 hover:shadow-sm' }}">
+
+                        <i data-lucide="check-square"
+                           class="w-4 h-4 transition-colors duration-200
+                           {{ request()->routeIs('absen.*')
+                               ? 'text-emerald-600'
+                               : 'text-slate-400 group-hover:text-emerald-600' }}">
+                        </i>
+
                         Presensi Peserta
                     </a>
                 </div>
 
+
+                <!-- KELULUSAN & EVALUASI -->
                 <div>
-                    <div class="text-[10px] uppercase font-bold text-slate-400 mb-2 px-3">Kelulusan & Evaluasi</div>
+                    <div class="text-[10px] uppercase font-bold text-slate-400 mb-2 px-3">
+                        Kelulusan & Evaluasi
+                    </div>
+
                     <a href="{{ route('sertifikat.index') }}"
-                        class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('sertifikat.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
+                        class="group flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-200
+                        {{ request()->routeIs('sertifikat.*')
+                            ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-sm'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-emerald-700 hover:translate-x-0.5 hover:shadow-sm' }}">
+
                         <span class="flex items-center gap-2.5">
-                            <i data-lucide="award" class="w-4 h-4"></i>
+                            <i data-lucide="award"
+                               class="w-4 h-4 transition-colors duration-200
+                               {{ request()->routeIs('sertifikat.*')
+                                   ? 'text-emerald-600'
+                                   : 'text-slate-400 group-hover:text-emerald-600' }}">
+                            </i>
+
                             Penerbitan Sertifikat
                         </span>
+
                         <span class="bg-slate-100 text-slate-600 text-[10px] px-1.5 py-0.5 rounded">
                             {{ \App\Models\Sertifikat::count() }}
                         </span>
                     </a>
                 </div>
+
+
             @elseif(auth()->user()->role === 'mitra')
-                <div class="text-[10px] uppercase font-bold text-slate-400 mb-2 px-3">Manajemen Data</div>
+
+                <!-- MITRA -->
                 <div>
+                    <div class="text-[10px] uppercase font-bold text-slate-400 mb-2 px-3">
+                        Manajemen Data
+                    </div>
+
                     <a href="{{ route('lowongan.index') }}"
-                        class="flex items-center justify-between px-3 py-2 {{ request()->routeIs('lowongan.*') ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:bg-slate-50' }} rounded-lg transition">
+                        class="group flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-200
+                        {{ request()->routeIs('lowongan.*')
+                            ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-sm'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-emerald-700 hover:translate-x-0.5 hover:shadow-sm' }}">
+
                         <span class="flex items-center gap-2.5">
-                            <i data-lucide="briefcase-business" class="w-4 h-4"></i>
+                            <i data-lucide="briefcase-business"
+                               class="w-4 h-4 transition-colors duration-200
+                               {{ request()->routeIs('lowongan.*')
+                                   ? 'text-emerald-600'
+                                   : 'text-slate-400 group-hover:text-emerald-600' }}">
+                            </i>
+
                             Lowongan Saya
                         </span>
+
                         <span class="bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">
                             {{ \App\Models\Lowongan::where('id_mitra', auth()->user()->mitra->id_mitra ?? null)->count() }} Aktif
                         </span>
                     </a>
                 </div>
+
             @endif
         </nav>
     </div>
 
+
     <!-- Footer Sidebar -->
     <div class="p-3 border-t border-slate-200">
+
         <div class="bg-indigo-50/80 p-2.5 rounded-lg mb-2 flex items-center justify-between">
             <div>
-                <div class="text-[10px] text-indigo-500 font-medium">UNIT PELAKSANA</div>
-                <div class="text-xs font-bold text-indigo-950">BLK Pusat Vokasi</div>
+                <div class="text-[10px] text-indigo-500 font-medium">
+                    UNIT PELAKSANA
+                </div>
+
+                <div class="text-xs font-bold text-indigo-950">
+                    BLK Pusat Vokasi
+                </div>
             </div>
+
             <i data-lucide="arrow-left-right" class="w-4 h-4 text-indigo-400"></i>
         </div>
 
+
         <div class="flex items-center justify-between pt-1 text-xs text-slate-600">
-            <a href="#" class="flex items-center gap-2 hover:text-slate-900">
-                <i data-lucide="settings" class="w-4 h-4"></i> Pengaturan
+
+            <!-- Pengaturan -->
+            <a href="#"
+                class="group flex items-center gap-2 px-2 py-1.5 rounded-md
+                transition-all duration-200
+                hover:bg-slate-50
+                hover:text-slate-900
+                hover:shadow-sm">
+
+                <i data-lucide="settings"
+                   class="w-4 h-4 text-slate-400
+                   group-hover:text-emerald-600
+                   transition-colors duration-200">
+                </i>
+
+                Pengaturan
             </a>
+
+
+            <!-- Logout -->
             <form method="POST" action="{{ route('logout') }}" class="inline">
                 @csrf
-                <button type="submit" class="flex items-center gap-1.5 text-rose-600 font-medium hover:text-rose-700">
-                    <i data-lucide="log-out" class="w-4 h-4"></i> Keluar
+
+                <button type="submit"
+                    class="group flex items-center gap-1.5 px-2 py-1.5 rounded-md
+                    text-rose-600 font-medium
+                    hover:bg-rose-50
+                    hover:text-rose-700
+                    hover:shadow-sm
+                    transition-all duration-200">
+
+                    <i data-lucide="log-out"
+                       class="w-4 h-4
+                       group-hover:translate-x-0.5
+                       transition-transform duration-200">
+                    </i>
+
+                    Keluar
                 </button>
             </form>
+
         </div>
     </div>
 </aside>

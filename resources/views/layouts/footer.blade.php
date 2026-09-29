@@ -10,9 +10,6 @@
                 </div>
             </div>
             <p class="text-xs text-slate-400 leading-relaxed mb-3">Unit Pelaksana Teknis Balai Latihan Kerja Jember di bawah naungan Dinas Tenaga Kerja dan Transmigrasi Provinsi Jawa Timur.</p>
-            <p class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-                <i data-lucide="badge-check" class="w-3.5 h-3.5"></i> LSP P1 BLK Jember Terlisensi BNSP
-            </p>
         </div>
 
         <div>
@@ -42,8 +39,6 @@
                 <p>Pelatihan Berbasis Kompetensi (PBK)</p>
                 <p>Uji Kompetensi & Sertifikasi BNSP</p>
                 <p>Bursa Kerja Khusus & Magang Industri</p>
-                <p>Layanan Pengaduan & Informasi SP4N LAPOR</p>
-                <p>Standar Pelayanan & Maklumat BLK</p>
             </div>
         </div>
     </div>
