@@ -33,9 +33,23 @@
 
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
       <div class="flex items-center gap-5">
-        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-950 text-white font-black text-2xl flex items-center justify-center shadow-md shrink-0">
-          {{ strtoupper(substr($mitra->nama_perusahaan, 0, 2)) }}
-        </div>
+        {{-- Logo / Initials Avatar --}}
+        @if($mitra->logo_perusahaan)
+          <div class="relative shrink-0">
+            <div class="w-20 h-20 rounded-xl bg-white border border-slate-200 shadow-md flex items-center justify-center shrink-0 overflow-hidden">
+              <img src="{{ Storage::url($mitra->logo_perusahaan) }}"
+                   alt="Logo {{ $mitra->nama_perusahaan }}"
+                   class="w-full h-full object-cover">
+            </div>
+            <span class="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full border-2 border-white flex items-center justify-center">
+              <i data-lucide="check" class="w-2.5 h-2.5 text-white"></i>
+            </span>
+          </div>
+        @else
+          <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-950 text-white font-black text-2xl flex items-center justify-center shadow-lg shrink-0 ring-4 ring-slate-100">
+            {{ strtoupper(substr($mitra->nama_perusahaan, 0, 2)) }}
+          </div>
+        @endif
         <div>
           <div class="flex items-center gap-2.5 flex-wrap">
             <h2 class="text-lg font-extrabold text-slate-900">{{ $mitra->nama_perusahaan }}</h2>
@@ -143,6 +157,31 @@
             <span class="text-slate-400 font-medium block mb-1">Alamat Kantor / Pabrik</span>
             <span class="text-slate-800 leading-relaxed font-medium">{{ $mitra->alamat ?? '-' }}</span>
           </div>
+
+          @if($mitra->logo_perusahaan)
+          <div class="sm:col-span-2">
+            <span class="text-slate-400 font-medium block mb-3">Logo Perusahaan</span>
+            <div class="flex items-center gap-5 p-4 bg-gradient-to-r from-slate-50 to-white border border-slate-200 rounded-xl shadow-sm">
+              {{-- Logo showcase box --}}
+              <div class="w-20 h-20 rounded-xl bg-white border border-slate-200 shadow-md flex items-center justify-center shrink-0 overflow-hidden">
+                <img src="{{ Storage::url($mitra->logo_perusahaan) }}"
+                     alt="Logo {{ $mitra->nama_perusahaan }}"
+                     class="w-full h-full object-cover">
+              </div>
+              {{-- Meta info --}}
+              <div class="flex-1 min-w-0">
+                <div class="font-semibold text-slate-800 text-sm truncate">{{ $mitra->nama_perusahaan }}</div>
+                <div class="text-xs text-slate-400 mt-0.5">Logo Resmi Perusahaan</div>
+                <a href="{{ Storage::url($mitra->logo_perusahaan) }}"
+                   target="_blank"
+                   class="mt-2.5 inline-flex items-center gap-1.5 text-[11px] font-semibold text-emerald-700 hover:text-emerald-900 hover:underline transition">
+                  <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                  Lihat ukuran penuh
+                </a>
+              </div>
+            </div>
+          </div>
+          @endif
         </div>
       </div>
 
