@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
         */
 
         // Admin BLK
-        $adminUsers = User::factory(3)->create();
+        $adminUsers = User::factory(3)->adminBlk()->create();
 
         $admins = collect();
 
@@ -44,7 +44,17 @@ class DatabaseSeeder extends Seeder
         |--------------------------------------------------------------------------
         */
 
-        $mitras = Mitra::factory(10)->create();
+        $mitraUsers = User::factory(10)->mitra()->create();
+
+        $mitras = collect();
+
+        foreach ($mitraUsers as $user) {
+            $mitras->push(
+                Mitra::factory()->create([
+                    'id_user' => $user->id,
+                ])
+            );
+        }
 
         /*
         |--------------------------------------------------------------------------
@@ -62,7 +72,7 @@ class DatabaseSeeder extends Seeder
         |--------------------------------------------------------------------------
         */
 
-        $pesertaUsers = User::factory(30)->create();
+        $pesertaUsers = User::factory(7)->peserta()->create();
 
         $pesertas = collect();
 
@@ -139,8 +149,6 @@ class DatabaseSeeder extends Seeder
             DaftarLowongan::create([
                 'id_mitra' => $mitras->random()->id_mitra,
 
-                'id_admin' => $admins->random()->id_admin,
-
                 'judul_lowongan' => fake()->randomElement([
                     'Web Developer',
                     'Frontend Developer',
@@ -166,7 +174,8 @@ class DatabaseSeeder extends Seeder
 
                 'status' => fake()->randomElement([
                     'aktif',
-                    'nonaktif',
+                    'draft',
+                    'ditutup',
                 ]),
             ]);
         }
@@ -311,14 +320,10 @@ class DatabaseSeeder extends Seeder
 
             foreach ($kelas as $dataKelas) {
 
-                // Buat 5 hari absensi
+                // Buat 5 hari absensi dengan tanggal berturut-turut
                 for ($i = 0; $i < 5; $i++) {
-
-                    $tanggal = fake()
-                        ->dateTimeBetween(
-                            $jadwal->tanggal_mulai,
-                            $jadwal->tanggal_selesai
-                        )
+                    $tanggal = \Carbon\Carbon::parse($jadwal->tanggal_mulai)
+                        ->addDays($i)
                         ->format('Y-m-d');
 
                     Absen::firstOrCreate(

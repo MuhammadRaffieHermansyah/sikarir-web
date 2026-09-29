@@ -35,10 +35,9 @@ class DaftarLowonganController extends Controller
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ['id_mitra', 'id_admin', 'judul_lowongan'],
+                required: ['judul_lowongan'],
                 properties: [
                     new OA\Property(property: 'id_mitra', type: 'integer'),
-                    new OA\Property(property: 'id_admin', type: 'integer'),
                     new OA\Property(property: 'judul_lowongan', type: 'string'),
                     new OA\Property(property: 'lokasi', type: 'string'),
                     new OA\Property(property: 'deskripsi', type: 'string'),
@@ -55,7 +54,12 @@ class DaftarLowonganController extends Controller
     )]
     public function store(StoreDaftarLowonganRequest $request): JsonResponse
     {
-        $lowongan = DaftarLowongan::create($request->validated());
+        $data = $request->validated();
+        if (empty($data['id_mitra']) && auth()->user()?->mitra) {
+            $data['id_mitra'] = auth()->user()->mitra->id_mitra;
+        }
+
+        $lowongan = DaftarLowongan::create($data);
         return (new DaftarLowonganResource($lowongan))->response()->setStatusCode(201);
     }
 
@@ -91,7 +95,6 @@ class DaftarLowonganController extends Controller
             content: new OA\JsonContent(
                 properties: [
                     new OA\Property(property: 'id_mitra', type: 'integer'),
-                    new OA\Property(property: 'id_admin', type: 'integer'),
                     new OA\Property(property: 'judul_lowongan', type: 'string'),
                     new OA\Property(property: 'lokasi', type: 'string'),
                     new OA\Property(property: 'deskripsi', type: 'string'),
@@ -135,6 +138,6 @@ class DaftarLowonganController extends Controller
 
     protected function relations(): array
     {
-        return ['mitra', 'admin'];
+        return ['mitra'];
     }
 }

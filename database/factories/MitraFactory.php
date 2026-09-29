@@ -13,7 +13,7 @@ class MitraFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_user' => null,
+            'id_user' => User::factory()->mitra(),
 
             'nama_perusahaan' => fake()->company(),
 

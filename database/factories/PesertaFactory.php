@@ -18,7 +18,7 @@ class PesertaFactory extends Factory
         ]);
 
         return [
-            'id_user' => User::factory(),
+            'id_user' => User::factory()->peserta(),
 
             'id_admin' => null,
 

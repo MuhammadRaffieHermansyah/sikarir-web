@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\AdminBlk;
 use App\Models\DaftarLowongan;
 use App\Models\Mitra;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -15,8 +14,6 @@ class DaftarLowonganFactory extends Factory
     {
         return [
             'id_mitra' => Mitra::factory(),
-
-            'id_admin' => AdminBlk::factory(),
 
             'judul_lowongan' => fake()->randomElement([
                 'Web Developer',
@@ -42,7 +39,8 @@ class DaftarLowonganFactory extends Factory
 
             'status' => fake()->randomElement([
                 'aktif',
-                'nonaktif',
+                'draft',
+                'ditutup',
             ]),
         ];
     }
