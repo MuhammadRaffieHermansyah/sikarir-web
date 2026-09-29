@@ -17,10 +17,11 @@ class DaftarLowonganController extends Controller
         $query = DaftarLowongan::with(['mitra', 'admin.user'])->latest('id_lowongan');
 
         if (Auth::user()->role === "mitra") {
-            $query->where('id_mitra', Auth::user()->id_mitra);
+            $query->where('id_mitra', Auth::user()->id);
         }
 
         $lowongans = $query->paginate(10);
+
         return view('lowongan.index', compact('lowongans'));
     }
 
@@ -28,7 +29,14 @@ class DaftarLowonganController extends Controller
     {
         $mitras  = Mitra::orderBy('nama_perusahaan')->get();
         $admins  = AdminBlk::with('user')->get();
-        return view('lowongan.create', compact('mitras', 'admins'));
+        
+        if (Auth::user()->role === "mitra") {
+            $mitra = Mitra::where('id_user', Auth::user()->id)->get();
+            $id_mitra = $mitra[0]->id_mitra;
+            $nama_perusahaan = $mitra[0]->nama_perusahaan;
+        }
+
+        return view('lowongan.create', compact('mitras', 'admins', 'id_mitra', 'nama_perusahaan'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -36,7 +44,7 @@ class DaftarLowonganController extends Controller
         $validated = $request->validate([
             'id_mitra'        => 'required|exists:mitras,id_mitra',
             'id_admin'        => 'required|exists:admin_blks,id_admin',
-            'judul_lowongan'  => 'required|string|max:255',
+            'judul_lowongan'  => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/|unique:daftar_lowongan,judul_lowongan',
             'lokasi'          => 'required|string|max:255',
             'deskripsi'       => 'required|string',
             'kualifikasi'     => 'required|string',
@@ -46,9 +54,11 @@ class DaftarLowonganController extends Controller
             'id_mitra.required'       => 'Mitra DU/DI wajib dipilih.',
             'id_admin.required'       => 'Admin BLK penanggung jawab wajib dipilih.',
             'judul_lowongan.required' => 'Judul posisi lowongan wajib diisi.',
+            'judul_lowongan.unique'   => 'Judul lowongan sudah ada',
             'lokasi.required'         => 'Lokasi wajib diisi',
             'deskripsi.required'      => 'Deskripsi wajib diisi',
             'kualifikasi.required'    => 'Kualifikasi wajib diisi',
+            'judul_lowongan.regex'    => 'Judul lowongan hanya boleh mengandung huruf dan spasi.',
         ]);
 
         DaftarLowongan::create($validated);
