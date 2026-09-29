@@ -12,17 +12,56 @@ use Illuminate\View\View;
 
 class DaftarLowonganController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $query = DaftarLowongan::with(['mitra', 'admin.user'])->latest('id_lowongan');
+        // 1. Inisialisasi Query Utama
+        $query = DaftarLowongan::with(['mitra', 'admin.user']);
 
+        // 2. Filter Berdasarkan Role User (Jika Mitra, Hanya Lihat Lowongan Miliknya)
         if (Auth::user()->role === "mitra") {
-            $query->where('id_mitra', Auth::user()->id);
+            $mitra = Mitra::where('id_user', Auth::user()->id)->first();
+            $idMitra = $mitra ? $mitra->id_mitra : null;
+
+            $query->where('id_mitra', $idMitra);
         }
 
-        $lowongans = $query->paginate(10);
+        // 3. Filter Pencarian Keyword (Judul Lowongan, Lokasi, Nama Perusahaan Mitra)
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('judul_lowongan', 'like', "%{$search}%")
+                  ->orWhere('lokasi', 'like', "%{$search}%")
+                  ->orWhereHas('mitra', function ($sub) use ($search) {
+                      $sub->where('nama_perusahaan', 'like', "%{$search}%");
+                  });
+            });
+        }
 
-        return view('lowongan.index', compact('lowongans'));
+        // 4. Filter Status Lowongan (aktif, nonaktif)
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // 5. Hitung Statistik Metric Card (Di-filter Sesuai Hak Akses Role Juga)
+        $baseMetricsQuery = DaftarLowongan::query();
+        if (Auth::user()->role === "mitra") {
+            $mitra = Mitra::where('id_user', Auth::user()->id)->first();
+            $baseMetricsQuery->where('id_mitra', $mitra ? $mitra->id_mitra : null);
+        }
+
+        $countAktif    = (clone $baseMetricsQuery)->where('status', 'aktif')->count();
+        $countNonaktif = (clone $baseMetricsQuery)->where('status', 'nonaktif')->count();
+
+        // 6. Paginate Data & Tahan Query String URL
+        $lowongans = $query->latest('id_lowongan')
+                           ->paginate(10)
+                           ->withQueryString();
+
+        return view('lowongan.index', compact(
+            'lowongans',
+            'countAktif',
+            'countNonaktif'
+        ));
     }
 
     public function create(): View
@@ -30,10 +69,15 @@ class DaftarLowonganController extends Controller
         $mitras  = Mitra::orderBy('nama_perusahaan')->get();
         $admins  = AdminBlk::with('user')->get();
         
+        $id_mitra = null;
+        $nama_perusahaan = null;
+
         if (Auth::user()->role === "mitra") {
-            $mitra = Mitra::where('id_user', Auth::user()->id)->get();
-            $id_mitra = $mitra[0]->id_mitra;
-            $nama_perusahaan = $mitra[0]->nama_perusahaan;
+            $mitra = Mitra::where('id_user', Auth::user()->id)->first();
+            if ($mitra) {
+                $id_mitra = $mitra->id_mitra;
+                $nama_perusahaan = $mitra->nama_perusahaan;
+            }
         }
 
         return view('lowongan.create', compact('mitras', 'admins', 'id_mitra', 'nama_perusahaan'));
@@ -49,17 +93,18 @@ class DaftarLowonganController extends Controller
             'deskripsi'       => 'required|string',
             'kualifikasi'     => 'required|string',
             'tanggal_posting' => 'nullable|date',
-            'status'          => 'required|in:aktif,ditutup,draft',
+            'status'          => 'required|in:aktif,nonaktif',
         ], [
             'id_mitra.required'       => 'Mitra DU/DI wajib dipilih.',
             'id_admin.required'       => 'Admin BLK penanggung jawab wajib dipilih.',
             'judul_lowongan.required' => 'Judul posisi lowongan wajib diisi.',
-            'judul_lowongan.unique'   => 'Judul lowongan sudah ada',
-            'lokasi.required'         => 'Lokasi wajib diisi',
-            'deskripsi.required'      => 'Deskripsi wajib diisi',
-            'kualifikasi.required'    => 'Kualifikasi wajib diisi',
+            'judul_lowongan.unique'   => 'Judul lowongan sudah ada.',
+            'lokasi.required'         => 'Lokasi wajib diisi.',
+            'deskripsi.required'      => 'Deskripsi wajib diisi.',
+            'kualifikasi.required'    => 'Kualifikasi wajib diisi.',
             'judul_lowongan.regex'    => 'Judul lowongan hanya boleh mengandung huruf dan spasi.',
             'lokasi.regex'            => 'Lokasi hanya boleh mengandung huruf dan spasi.',
+            'status.in'               => 'Status lowongan harus aktif atau nonaktif.',
         ]);
 
         DaftarLowongan::create($validated);
@@ -92,16 +137,17 @@ class DaftarLowonganController extends Controller
             'deskripsi'       => 'required|string',
             'kualifikasi'     => 'required|string',
             'tanggal_posting' => 'nullable|date',
-            'status'          => 'required|in:aktif,ditutup,draft',
+            'status'          => 'required|in:aktif,nonaktif',
         ], [
             'id_mitra.required'       => 'Mitra DU/DI wajib dipilih.',
             'id_admin.required'       => 'Admin BLK penanggung jawab wajib dipilih.',
             'judul_lowongan.required' => 'Judul posisi lowongan wajib diisi.',
-            'lokasi.required'         => 'Lokasi wajib diisi',
-            'deskripsi.required'      => 'Deskripsi wajib diisi',
-            'kualifikasi.required'    => 'Kualifikasi wajib diisi',
+            'lokasi.required'         => 'Lokasi wajib diisi.',
+            'deskripsi.required'      => 'Deskripsi wajib diisi.',
+            'kualifikasi.required'    => 'Kualifikasi wajib diisi.',
             'judul_lowongan.regex'    => 'Judul lowongan hanya boleh mengandung huruf dan spasi.',
             'lokasi.regex'            => 'Lokasi hanya boleh mengandung huruf dan spasi.',
+            'status.in'               => 'Status lowongan harus aktif atau nonaktif.',
         ]);
 
         $lowongan->update($validated);

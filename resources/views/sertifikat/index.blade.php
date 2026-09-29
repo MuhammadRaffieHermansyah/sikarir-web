@@ -13,9 +13,10 @@
       <p class="text-xs text-slate-500 mt-0.5">Kelola data terbitan sertifikat kelulusan pelatihan vokasi dan dokumen digital peserta.</p>
     </div>
 
-    <div class="flex flex-wrap items-center gap-2 self-start md:self-auto">
-      <a href="{{ route('sertifikat.create') }}" class="bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="award" class="w-4 h-4"></i> Tambah Sertifikat
+    <div class="flex items-center gap-2">
+      <a href="{{ route('sertifikat.create') }}" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold rounded-lg shadow-sm transition">
+        <i data-lucide="plus" class="w-4 h-4"></i>
+        <span>Tambah Sertifikat</span>
       </a>
     </div>
   </div>
@@ -37,26 +38,22 @@
 
   <!-- Management Section: Table Sertifikat -->
   <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-    <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div class="p-5 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-slate-50/50">
       <div>
-        <div class="flex items-center gap-2">
-          <div class="p-1.5 bg-emerald-50 text-emerald-700 rounded-lg">
-            <i data-lucide="award" class="w-4 h-4"></i>
-          </div>
-          <h2 class="font-bold text-slate-800 text-sm">Daftar Sertifikat Diterbitkan</h2>
-          <span class="bg-emerald-100 text-emerald-800 text-[11px] font-semibold px-2 py-0.5 rounded-full">
+        <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+          <span>Daftar Sertifikat Diterbitkan</span>
+          <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full">
             {{ isset($sertifikats) ? $sertifikats->total() : 0 }} Berkas
           </span>
-        </div>
+        </h2>
         <p class="text-xs text-slate-500 mt-1">Daftar sertifikat kompetensi resmi yang diterbitkan oleh Balai Latihan Kerja.</p>
       </div>
 
-      <div class="flex items-center gap-2">
-        <a href="{{ route('sertifikat.create') }}" class="inline-flex items-center gap-1.5 px-3 py-2 bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold rounded-lg shadow-sm transition">
-          <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-          <span>Tambah Sertifikat</span>
-        </a>
-      </div>
+      <!-- FORM PENCARIAN (Component) -->
+      <x-search-filter 
+        :action="route('sertifikat.index')" 
+        search-placeholder="Cari no sertifikat, peserta, pelatihan..." 
+      />
     </div>
 
     <!-- Table Content -->

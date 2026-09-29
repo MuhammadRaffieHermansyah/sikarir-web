@@ -53,43 +53,12 @@
         <p class="text-xs text-slate-500 mt-1">Daftar rekaman absensi harian peserta pelatihan yang terdaftar.</p>
       </div>
 
-      <!-- FORM PENCARIAN & FILTER -->
-      <form method="GET" action="{{ route('absen.index') }}" class="flex flex-col sm:flex-row items-center gap-2 w-full lg:w-auto">
-        <!-- Input Search -->
-        <div class="relative w-full sm:w-64">
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-            <i data-lucide="search" class="w-4 h-4"></i>
-          </div>
-          <input type="text" 
-                 name="search" 
-                 value="{{ request('search') }}" 
-                 placeholder="Cari peserta / pelatihan..." 
-                 class="w-full bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-3 py-2 text-xs font-medium text-slate-700 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition">
-        </div>
-
-        <!-- Filter Status -->
-        <select name="status" class="w-full sm:w-auto bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium text-slate-700 focus:bg-white focus:outline-none focus:border-emerald-600 transition">
-          <option value="">Semua Status</option>
-          <option value="hadir" @selected(request('status') === 'hadir')>Hadir</option>
-          <option value="izin" @selected(request('status') === 'izin')>Izin</option>
-          <option value="sakit" @selected(request('status') === 'sakit')>Sakit</option>
-          <option value="alfa" @selected(request('status') === 'alfa')>Alfa</option>
-        </select>
-
-        <!-- Submit & Reset Buttons -->
-        <div class="flex items-center gap-1.5 w-full sm:w-auto">
-          <button type="submit" class="flex-1 sm:flex-none px-3 py-2 bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold rounded-lg shadow-sm transition flex items-center justify-center gap-1">
-            <i data-lucide="search" class="w-3.5 h-3.5"></i>
-            <span>Cari</span>
-          </button>
-
-          @if(request('search') || request('status'))
-            <a href="{{ route('absen.index') }}" class="p-2 border border-slate-200 hover:bg-slate-50 text-slate-500 rounded-lg transition" title="Reset Filter">
-              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
-            </a>
-          @endif
-        </div>
-      </form>
+      <!-- FORM PENCARIAN & FILTER (Component) -->
+      <x-search-filter 
+        :action="route('absen.index')" 
+        search-placeholder="Cari peserta / pelatihan..." 
+        :status-options="['hadir' => 'Hadir', 'izin' => 'Izin', 'sakit' => 'Sakit', 'alfa' => 'Alfa']" 
+      />
     </div>
 
     <!-- Table Content -->

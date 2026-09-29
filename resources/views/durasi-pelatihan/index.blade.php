@@ -83,25 +83,11 @@
         <p class="text-xs text-slate-500 mt-0.5">Durasi digunakan sebagai referensi lama pelaksanaan program pelatihan.</p>
       </div>
 
-      <form method="GET" action="{{ route('durasi-pelatihan.index') }}" class="flex flex-col sm:flex-row items-center gap-2 w-full lg:w-auto">
-        <div class="relative w-full sm:w-64">
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-            <i data-lucide="search" class="w-4 h-4"></i>
-          </div>
-          <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari jumlah hari / jam..." class="w-full bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-3 py-2 text-xs font-medium text-slate-700 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition">
-        </div>
-        <div class="flex items-center gap-1.5 w-full sm:w-auto">
-          <button type="submit" class="flex-1 sm:flex-none px-3 py-2 bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold rounded-lg shadow-sm transition flex items-center justify-center gap-1">
-            <i data-lucide="search" class="w-3.5 h-3.5"></i>
-            <span>Cari</span>
-          </button>
-          @if(request('search'))
-            <a href="{{ route('durasi-pelatihan.index') }}" class="p-2 border border-slate-200 hover:bg-slate-50 text-slate-500 rounded-lg transition" title="Reset Filter">
-              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
-            </a>
-          @endif
-        </div>
-      </form>
+      <!-- FORM PENCARIAN (Component) -->
+      <x-search-filter 
+        :action="route('durasi-pelatihan.index')" 
+        search-placeholder="Cari jumlah hari / jam..." 
+      />
     </div>
 
     <div class="overflow-x-auto">
