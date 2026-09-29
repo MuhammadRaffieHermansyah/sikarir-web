@@ -7,6 +7,7 @@ use App\Models\Mitra;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class DaftarLowonganController extends Controller
@@ -91,18 +92,29 @@ class DaftarLowonganController extends Controller
         }
 
         $validated = $request->validate([
-            'judul_lowongan'  => 'required|string|max:255',
-            'lokasi'          => 'required|string|max:255',
+            'judul_lowongan'  => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[a-zA-Z\s]+$/',
+                Rule::unique('daftar_lowongan', 'judul_lowongan')->where(function ($query) use ($mitra) {
+                    return $query->where('id_mitra', $mitra->id_mitra);
+                }),
+            ],
+            'lokasi'          => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'deskripsi'       => 'required|string',
             'kualifikasi'     => 'required|string',
             'tanggal_posting' => 'nullable|date',
             'status'          => 'required|in:aktif,draft,ditutup',
         ], [
             'judul_lowongan.required' => 'Judul posisi lowongan wajib diisi.',
+            'judul_lowongan.unique'   => 'Perusahaan Anda sudah memiliki lowongan dengan judul tersebut.',
             'lokasi.required'         => 'Lokasi penempatan wajib diisi.',
             'deskripsi.required'      => 'Deskripsi pekerjaan wajib diisi.',
             'kualifikasi.required'    => 'Kualifikasi & persyaratan wajib diisi.',
             'status.in'               => 'Status lowongan harus aktif, draft, atau ditutup.',
+            'judul_lowongan.regex'    => 'Judul lowongan tidak boleh mengandung simbol atau angka.',
+            'lokasi.regex'            => 'Lokasi tidak boleh mengandung simbol atau angka.',
         ]);
 
         $validated['id_mitra'] = $mitra->id_mitra;
@@ -141,18 +153,31 @@ class DaftarLowonganController extends Controller
         }
 
         $validated = $request->validate([
-            'judul_lowongan'  => 'required|string|max:255',
-            'lokasi'          => 'required|string|max:255',
+            'judul_lowongan'  => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[a-zA-Z\s]+$/',
+                Rule::unique('daftar_lowongan', 'judul_lowongan')
+                    ->where(function ($query) use ($lowongan) {
+                        return $query->where('id_mitra', $lowongan->id_mitra);
+                    })
+                    ->ignore($lowongan->id_lowongan, 'id_lowongan'),
+            ],
+            'lokasi'          => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'deskripsi'       => 'required|string',
             'kualifikasi'     => 'required|string',
             'tanggal_posting' => 'nullable|date',
             'status'          => 'required|in:aktif,draft,ditutup',
         ], [
             'judul_lowongan.required' => 'Judul posisi lowongan wajib diisi.',
+            'judul_lowongan.unique'   => 'Perusahaan Anda sudah memiliki lowongan lain dengan judul tersebut.',
             'lokasi.required'         => 'Lokasi penempatan wajib diisi.',
             'deskripsi.required'      => 'Deskripsi pekerjaan wajib diisi.',
             'kualifikasi.required'    => 'Kualifikasi & persyaratan wajib diisi.',
             'status.in'               => 'Status lowongan harus aktif, draft, atau ditutup.',
+            'judul_lowongan.regex'    => 'Judul lowongan hanya boleh berisi huruf dan spasi.',
+            'lokasi.regex'            => 'Lokasi hanya boleh berisi huruf dan spasi.',
         ]);
 
         $lowongan->update($validated);

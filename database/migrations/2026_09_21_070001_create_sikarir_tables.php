@@ -51,11 +51,11 @@ return new class extends Migration
         Schema::create('daftar_lowongan', function (Blueprint $table) {
             $table->id('id_lowongan');
             $table->foreignId('id_mitra')->constrained('mitras', 'id_mitra')->cascadeOnDelete();
-            $table->string('judul_lowongan');
-            $table->string('lokasi')->nullable();
-            $table->text('deskripsi')->nullable();
-            $table->text('kualifikasi')->nullable();
-            $table->date('tanggal_posting')->nullable();
+            $table->string('judul_lowongan', 100);
+            $table->string('lokasi', 150);
+            $table->text('deskripsi');
+            $table->text('kualifikasi');
+            $table->date('tanggal_posting');
             $table->enum('status', ['aktif', 'draft', 'ditutup'])->default('aktif');
             $table->timestamps();
         });
