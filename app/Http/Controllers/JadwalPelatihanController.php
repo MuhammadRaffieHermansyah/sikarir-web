@@ -10,13 +10,44 @@ use Illuminate\View\View;
 
 class JadwalPelatihanController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $jadwals = JadwalPelatihan::with(['pelatihan', 'kelas.peserta.user'])
-            ->latest('id_jadwal')
-            ->paginate(10);
+        // 1. Inisialisasi Query Utama untuk Tabel
+        $query = JadwalPelatihan::with(['pelatihan', 'kelas.peserta.user']);
 
-        return view('jadwal-pelatihan.index', compact('jadwals'));
+        // 2. Filter Pencarian Keyword (Nama Pelatihan, Instruktur, Tempat)
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('instruktur', 'like', "%{$search}%")
+                  ->orWhere('tempat', 'like', "%{$search}%")
+                  ->orWhereHas('pelatihan', function ($sub) use ($search) {
+                      $sub->where('nama_pelatihan', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        // 3. Filter Status Kelas (tersedia, berlangsung, selesai)
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // 4. Hitung Statistik Metrics langsung dari DB (Biar Angka Card Atas Gak Jadi 0)
+        $countBerlangsung = JadwalPelatihan::where('status', 'berlangsung')->count();
+        $countTersedia    = JadwalPelatihan::where('status', 'tersedia')->count();
+        $countSelesai     = JadwalPelatihan::where('status', 'selesai')->count();
+
+        // 5. Paginate Data & Tahan Parameter URL saat Pindah Halaman
+        $jadwals = $query->latest('id_jadwal')
+                         ->paginate(10)
+                         ->withQueryString();
+
+        return view('jadwal-pelatihan.index', compact(
+            'jadwals',
+            'countBerlangsung',
+            'countTersedia',
+            'countSelesai'
+        ));
     }
 
     public function create(): View

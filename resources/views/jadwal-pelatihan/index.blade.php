@@ -53,7 +53,7 @@
       <div>
         <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Sedang Berlangsung</div>
         <div class="text-xl font-black text-slate-900 mt-0.5">
-          {{ $jadwals->where('status', 'berlangsung')->count() }} Batch
+          {{ $countBerlangsung ?? 0 }} Batch
         </div>
       </div>
     </div>
@@ -65,7 +65,7 @@
       <div>
         <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Pendaftaran Tersedia</div>
         <div class="text-xl font-black text-slate-900 mt-0.5">
-          {{ $jadwals->where('status', 'tersedia')->count() }} Batch
+          {{ $countTersedia ?? 0 }} Batch
         </div>
       </div>
     </div>
@@ -77,7 +77,7 @@
       <div>
         <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Batch Selesai</div>
         <div class="text-xl font-black text-slate-900 mt-0.5">
-          {{ $jadwals->where('status', 'selesai')->count() }} Batch
+          {{ $countSelesai ?? 0 }} Batch
         </div>
       </div>
     </div>
@@ -85,20 +85,58 @@
 
   <!-- Table Card -->
   <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-    <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/50">
+    
+    <!-- Table Header & Search Filter Bar -->
+    <div class="p-5 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-slate-50/50">
       <div>
-        <h3 class="font-bold text-slate-800 text-sm">Agenda Jadwal Pelatihan Kerja</h3>
-        <p class="text-xs text-slate-500">Daftar periode waktu kelas dan instruktur pembimbing.</p>
+        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+          <span>Agenda Jadwal Pelatihan Kerja</span>
+          <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full">
+            {{ $jadwals->total() }} Batch
+          </span>
+        </h3>
+        <p class="text-xs text-slate-500 mt-0.5">Daftar periode waktu kelas dan instruktur pembimbing.</p>
       </div>
 
-      <div class="flex items-center gap-2">
-        <div class="relative">
-          <input type="text" placeholder="Cari jadwal / instruktur..." class="bg-white border border-slate-200 text-slate-700 text-xs rounded-lg pl-8 pr-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-700 w-48 sm:w-60 shadow-sm" />
-          <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5"></i>
+      <!-- FORM PENCARIAN & FILTER -->
+      <form method="GET" action="{{ route('jadwal-pelatihan.index') }}" class="flex flex-col sm:flex-row items-center gap-2 w-full lg:w-auto">
+        <!-- Input Search -->
+        <div class="relative w-full sm:w-64">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+            <i data-lucide="search" class="w-4 h-4"></i>
+          </div>
+          <input type="text" 
+                 name="search" 
+                 value="{{ request('search') }}" 
+                 placeholder="Cari kejuruan, instruktur, tempat..." 
+                 class="w-full bg-white border border-slate-200 rounded-lg pl-9 pr-3 py-2 text-xs font-medium text-slate-700 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition shadow-sm">
         </div>
-      </div>
+
+        <!-- Filter Status Kelas -->
+        <select name="status" class="w-full sm:w-auto bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium text-slate-700 focus:bg-white focus:outline-none focus:border-emerald-600 transition shadow-sm">
+          <option value="">Semua Status</option>
+          <option value="tersedia" @selected(request('status') === 'tersedia')>Tersedia</option>
+          <option value="berlangsung" @selected(request('status') === 'berlangsung')>Berlangsung</option>
+          <option value="selesai" @selected(request('status') === 'selesai')>Selesai</option>
+        </select>
+
+        <!-- Submit & Reset Buttons -->
+        <div class="flex items-center gap-1.5 w-full sm:w-auto">
+          <button type="submit" class="flex-1 sm:flex-none px-3.5 py-2 bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold rounded-lg shadow-sm transition flex items-center justify-center gap-1">
+            <i data-lucide="search" class="w-3.5 h-3.5"></i>
+            <span>Cari</span>
+          </button>
+
+          @if(request('search') || request('status'))
+            <a href="{{ route('jadwal-pelatihan.index') }}" class="p-2 border border-slate-200 hover:bg-white bg-slate-50 text-slate-500 rounded-lg transition" title="Reset Filter">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+            </a>
+          @endif
+        </div>
+      </form>
     </div>
 
+    <!-- Table Content -->
     <div class="overflow-x-auto">
       <table class="w-full text-left text-xs">
         <thead>
@@ -131,10 +169,10 @@
               <td class="px-5 py-4">
                 <div class="text-slate-800 font-bold flex items-center gap-1.5">
                   <i data-lucide="calendar" class="w-3.5 h-3.5 text-emerald-600"></i>
-                  {{ $jadwal->tanggal_mulai ? $jadwal->tanggal_mulai->translatedFormat('d M Y') : '-' }}
+                  {{ $jadwal->tanggal_mulai ? \Illuminate\Support\Carbon::parse($jadwal->tanggal_mulai)->translatedFormat('d M Y') : '-' }}
                 </div>
                 <div class="flex items-center gap-1.5 text-slate-600 font-bold mt-0.5">
-                  s/d {{ $jadwal->tanggal_selesai ? $jadwal->tanggal_selesai->translatedFormat('d M Y') : '-' }}
+                  s/d {{ $jadwal->tanggal_selesai ? \Illuminate\Support\Carbon::parse($jadwal->tanggal_selesai)->translatedFormat('d M Y') : '-' }}
                 </div>
               </td>
 
@@ -199,11 +237,17 @@
                 <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
                   <i data-lucide="calendar" class="w-6 h-6"></i>
                 </div>
-                <div class="font-bold text-slate-700 text-sm">Belum Ada Jadwal Pelatihan</div>
-                <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">Buat jadwal dan tentukan tanggal pelaksanaan pelatihan kerja untuk kejuruan yang tersedia.</p>
-                <a href="{{ route('jadwal-pelatihan.create') }}" class="inline-flex items-center gap-1.5 mt-3 bg-emerald-900 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-sm">
-                  <i data-lucide="plus" class="w-3.5 h-3.5"></i> Buat Batch Jadwal
-                </a>
+                <div class="font-bold text-slate-700 text-sm">Belum Ada Jadwal Pelatihan Ditemukan</div>
+                <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">Coba ubah kata kunci pencarian atau reset filter status kelas.</p>
+                @if(request('search') || request('status'))
+                  <a href="{{ route('jadwal-pelatihan.index') }}" class="inline-flex items-center gap-1.5 mt-3 text-emerald-700 hover:underline text-xs font-semibold">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset Filter Pencarian
+                  </a>
+                @else
+                  <a href="{{ route('jadwal-pelatihan.create') }}" class="inline-flex items-center gap-1.5 mt-3 bg-emerald-900 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-sm">
+                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> Buat Batch Jadwal
+                  </a>
+                @endif
               </td>
             </tr>
           @endforelse
@@ -212,8 +256,8 @@
     </div>
 
     @if($jadwals->hasPages())
-      <div class="p-4 border-t border-slate-100">
-        {{ $jadwals->links() }}
+      <div class="p-4 border-t border-slate-100 bg-slate-50/50">
+        {{ $jadwals->withQueryString()->links('components.pagination') }}
       </div>
     @endif
   </div>
