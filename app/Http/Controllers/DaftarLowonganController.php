@@ -45,7 +45,7 @@ class DaftarLowonganController extends Controller
             'id_mitra'        => 'required|exists:mitras,id_mitra',
             'id_admin'        => 'required|exists:admin_blks,id_admin',
             'judul_lowongan'  => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/|unique:daftar_lowongan,judul_lowongan',
-            'lokasi'          => 'required|string|max:255',
+            'lokasi'          => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'deskripsi'       => 'required|string',
             'kualifikasi'     => 'required|string',
             'tanggal_posting' => 'nullable|date',
@@ -59,6 +59,7 @@ class DaftarLowonganController extends Controller
             'deskripsi.required'      => 'Deskripsi wajib diisi',
             'kualifikasi.required'    => 'Kualifikasi wajib diisi',
             'judul_lowongan.regex'    => 'Judul lowongan hanya boleh mengandung huruf dan spasi.',
+            'lokasi.regex'            => 'Lokasi hanya boleh mengandung huruf dan spasi.',
         ]);
 
         DaftarLowongan::create($validated);
@@ -86,8 +87,8 @@ class DaftarLowonganController extends Controller
         $validated = $request->validate([
             'id_mitra'        => 'required|exists:mitras,id_mitra',
             'id_admin'        => 'required|exists:admin_blks,id_admin',
-            'judul_lowongan'  => 'required|string|max:255',
-            'lokasi'          => 'required|string|max:255',
+            'judul_lowongan'  => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+            'lokasi'          => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'deskripsi'       => 'required|string',
             'kualifikasi'     => 'required|string',
             'tanggal_posting' => 'nullable|date',
@@ -99,6 +100,8 @@ class DaftarLowonganController extends Controller
             'lokasi.required'         => 'Lokasi wajib diisi',
             'deskripsi.required'      => 'Deskripsi wajib diisi',
             'kualifikasi.required'    => 'Kualifikasi wajib diisi',
+            'judul_lowongan.regex'    => 'Judul lowongan hanya boleh mengandung huruf dan spasi.',
+            'lokasi.regex'            => 'Lokasi hanya boleh mengandung huruf dan spasi.',
         ]);
 
         $lowongan->update($validated);
