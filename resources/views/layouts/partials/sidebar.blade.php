@@ -3,9 +3,8 @@
         <div class="p-4 flex items-center gap-3 border-b border-slate-100 bg-white">
             <!-- Gambar Logo -->
             <a href="{{ url('/') }}" class="flex items-center gap-3 group">
-                <img src="{{ asset('images/logo-sikarir.png') }}"
-                     alt="Logo siKarir BLK Jember"
-                     class="h-10 w-auto object-contain">
+                <img src="{{ asset('images/logo-sikarir.png') }}" alt="Logo siKarir BLK Jember"
+                    class="h-10 w-auto object-contain">
             </a>
         </div>
 
@@ -13,7 +12,6 @@
         <nav class="p-3 text-xs font-medium space-y-6">
 
             @if (auth()->user()->role === 'admin_blk')
-
                 <!-- UTAMA -->
                 <div>
                     <div class="text-[10px] uppercase font-bold text-slate-400 mb-2 px-3">
@@ -27,10 +25,8 @@
                             : 'text-slate-600 hover:bg-slate-50 hover:text-emerald-700 hover:translate-x-0.5 hover:shadow-sm' }}">
 
                         <i data-lucide="layout-dashboard"
-                           class="w-4 h-4 transition-colors duration-200
-                           {{ request()->routeIs('dashboard')
-                               ? 'text-emerald-600'
-                               : 'text-slate-400 group-hover:text-emerald-600' }}">
+                            class="w-4 h-4 transition-colors duration-200
+                           {{ request()->routeIs('dashboard') ? 'text-emerald-600' : 'text-slate-400 group-hover:text-emerald-600' }}">
                         </i>
 
                         Dashboard Ringkasan
@@ -53,10 +49,8 @@
 
                         <span class="flex items-center gap-2.5">
                             <i data-lucide="shield-check"
-                               class="w-4 h-4 transition-colors duration-200
-                               {{ request()->routeIs('admin-blk.*')
-                                   ? 'text-emerald-600'
-                                   : 'text-slate-400 group-hover:text-emerald-600' }}">
+                                class="w-4 h-4 transition-colors duration-200
+                               {{ request()->routeIs('admin-blk.*') ? 'text-emerald-600' : 'text-slate-400 group-hover:text-emerald-600' }}">
                             </i>
 
                             Admin BLK
@@ -77,10 +71,8 @@
 
                         <span class="flex items-center gap-2.5">
                             <i data-lucide="book"
-                               class="w-4 h-4 transition-colors duration-200
-                               {{ request()->routeIs('pelatihan.*')
-                                   ? 'text-emerald-600'
-                                   : 'text-slate-400 group-hover:text-emerald-600' }}">
+                                class="w-4 h-4 transition-colors duration-200
+                               {{ request()->routeIs('pelatihan.*') ? 'text-emerald-600' : 'text-slate-400 group-hover:text-emerald-600' }}">
                             </i>
 
                             Program Pelatihan
@@ -101,7 +93,7 @@
 
                         <span class="flex items-center gap-2.5">
                             <i data-lucide="calendar-fold"
-                               class="w-4 h-4 transition-colors duration-200
+                                class="w-4 h-4 transition-colors duration-200
                                {{ request()->routeIs('jadwal-pelatihan.*')
                                    ? 'text-emerald-600'
                                    : 'text-slate-400 group-hover:text-emerald-600' }}">
@@ -125,10 +117,8 @@
 
                         <span class="flex items-center gap-2.5">
                             <i data-lucide="briefcase-business"
-                               class="w-4 h-4 transition-colors duration-200
-                               {{ request()->routeIs('lowongan.*')
-                                   ? 'text-emerald-600'
-                                   : 'text-slate-400 group-hover:text-emerald-600' }}">
+                                class="w-4 h-4 transition-colors duration-200
+                               {{ request()->routeIs('lowongan.*') ? 'text-emerald-600' : 'text-slate-400 group-hover:text-emerald-600' }}">
                             </i>
 
                             Lowongan
@@ -149,10 +139,8 @@
 
                         <span class="flex items-center gap-2.5">
                             <i data-lucide="building-2"
-                               class="w-4 h-4 transition-colors duration-200
-                               {{ request()->routeIs('mitras.*')
-                                   ? 'text-emerald-600'
-                                   : 'text-slate-400 group-hover:text-emerald-600' }}">
+                                class="w-4 h-4 transition-colors duration-200
+                               {{ request()->routeIs('mitras.*') ? 'text-emerald-600' : 'text-slate-400 group-hover:text-emerald-600' }}">
                             </i>
 
                             Mitra DU/DI
@@ -180,10 +168,8 @@
 
                         <span class="flex items-center gap-2.5">
                             <i data-lucide="users-round"
-                               class="w-4 h-4 transition-colors duration-200
-                               {{ request()->routeIs('pesertas.*')
-                                   ? 'text-emerald-600'
-                                   : 'text-slate-400 group-hover:text-emerald-600' }}">
+                                class="w-4 h-4 transition-colors duration-200
+                               {{ request()->routeIs('pesertas.*') ? 'text-emerald-600' : 'text-slate-400 group-hover:text-emerald-600' }}">
                             </i>
 
                             Data Peserta
@@ -203,10 +189,8 @@
                             : 'text-slate-600 hover:bg-slate-50 hover:text-emerald-700 hover:translate-x-0.5 hover:shadow-sm' }}">
 
                         <i data-lucide="check-square"
-                           class="w-4 h-4 transition-colors duration-200
-                           {{ request()->routeIs('absen.*')
-                               ? 'text-emerald-600'
-                               : 'text-slate-400 group-hover:text-emerald-600' }}">
+                            class="w-4 h-4 transition-colors duration-200
+                           {{ request()->routeIs('absen.*') ? 'text-emerald-600' : 'text-slate-400 group-hover:text-emerald-600' }}">
                         </i>
 
                         Presensi Peserta
@@ -228,10 +212,8 @@
 
                         <span class="flex items-center gap-2.5">
                             <i data-lucide="award"
-                               class="w-4 h-4 transition-colors duration-200
-                               {{ request()->routeIs('sertifikat.*')
-                                   ? 'text-emerald-600'
-                                   : 'text-slate-400 group-hover:text-emerald-600' }}">
+                                class="w-4 h-4 transition-colors duration-200
+                               {{ request()->routeIs('sertifikat.*') ? 'text-emerald-600' : 'text-slate-400 group-hover:text-emerald-600' }}">
                             </i>
 
                             Penerbitan Sertifikat
@@ -242,10 +224,7 @@
                         </span>
                     </a>
                 </div>
-
-
             @elseif(auth()->user()->role === 'mitra')
-
                 <!-- MITRA -->
                 <div>
                     <div class="text-[10px] uppercase font-bold text-slate-400 mb-2 px-3">
@@ -260,21 +239,19 @@
 
                         <span class="flex items-center gap-2.5">
                             <i data-lucide="briefcase-business"
-                               class="w-4 h-4 transition-colors duration-200
-                               {{ request()->routeIs('lowongan.*')
-                                   ? 'text-emerald-600'
-                                   : 'text-slate-400 group-hover:text-emerald-600' }}">
+                                class="w-4 h-4 transition-colors duration-200
+                               {{ request()->routeIs('lowongan.*') ? 'text-emerald-600' : 'text-slate-400 group-hover:text-emerald-600' }}">
                             </i>
 
                             Lowongan Saya
                         </span>
 
                         <span class="bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">
-                            {{ \App\Models\Lowongan::where('id_mitra', auth()->user()->mitra->id_mitra ?? null)->count() }} Aktif
+                            {{ \App\Models\DaftarLowongan::where('id_mitra', auth()->user()->mitra->id_mitra ?? null)->count() }}
+                            Aktif
                         </span>
                     </a>
                 </div>
-
             @endif
         </nav>
     </div>
@@ -309,7 +286,7 @@
                 hover:shadow-sm">
 
                 <i data-lucide="settings"
-                   class="w-4 h-4 text-slate-400
+                    class="w-4 h-4 text-slate-400
                    group-hover:text-emerald-600
                    transition-colors duration-200">
                 </i>
@@ -331,7 +308,7 @@
                     transition-all duration-200">
 
                     <i data-lucide="log-out"
-                       class="w-4 h-4
+                        class="w-4 h-4
                        group-hover:translate-x-0.5
                        transition-transform duration-200">
                     </i>
