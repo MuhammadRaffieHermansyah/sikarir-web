@@ -87,11 +87,18 @@
             </div>
 
             <div>
-              <label for="durasi_lp" class="block text-xs font-semibold text-slate-700 mb-1.5">
-                Durasi Pelatihan (Jam Pelajaran / Hari)
+              <label for="id_durasi" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                Durasi Pelatihan (Hari / Jam)
               </label>
-              <input type="text" name="durasi_lp" id="durasi_lp" value="{{ old('durasi_lp', $pelatihan->durasi_lp) }}" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('durasi_lp') border-rose-400 bg-rose-50/50 @enderror" />
-              @error('durasi_lp')
+              <select name="id_durasi" id="id_durasi" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('id_durasi') border-rose-400 bg-rose-50/50 @enderror">
+                <option value="">-- Pilih Durasi --</option>
+                @foreach($durations as $durasi)
+                  <option value="{{ $durasi->id_durasi }}" {{ old('id_durasi', $pelatihan->id_durasi) == $durasi->id_durasi ? 'selected' : '' }}>
+                    {{ $durasi->durasi_label }}
+                  </option>
+                @endforeach
+              </select>
+              @error('id_durasi')
                 <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
               @enderror
             </div>

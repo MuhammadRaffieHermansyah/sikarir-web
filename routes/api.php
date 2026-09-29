@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AbsenController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DaftarLowonganController;
 use App\Http\Controllers\Api\DaftarPelatihanController;
+use App\Http\Controllers\Api\DurasiPelatihanController;
 use App\Http\Controllers\Api\JadwalPelatihanController;
 use App\Http\Controllers\Api\KelasPelatihanController;
 use App\Http\Controllers\Api\MitraController;
@@ -28,6 +29,7 @@ Route::name('api.')->group(function () {
     // Protected API resource routes
     Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('mitras', MitraController::class);
+        Route::apiResource('durasi-pelatihan', DurasiPelatihanController::class);
         Route::apiResource('pesertas', PesertaController::class);
         Route::apiResource('admin-blk', AdminBlkController::class);
         Route::apiResource('lowongan', DaftarLowonganController::class);

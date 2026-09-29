@@ -100,7 +100,7 @@
 
           <div>
             <span class="text-slate-400 font-medium block mb-1">Durasi Jam Pelatihan</span>
-            <span class="text-slate-800 font-semibold">{{ $kelas->jadwal->pelatihan->durasi_lp ?? '240 JP' }}</span>
+            <span class="text-slate-800 font-semibold">{{ $kelas->jadwal->pelatihan->durasi_label ?? '-' }}</span>
           </div>
 
           <div>

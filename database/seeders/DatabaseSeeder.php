@@ -6,6 +6,7 @@ use App\Models\AdminBlk;
 use App\Models\Absen;
 use App\Models\DaftarLowongan;
 use App\Models\DaftarPelatihan;
+use App\Models\DurasiPelatihan;
 use App\Models\JadwalPelatihan;
 use App\Models\KelasPelatihan;
 use App\Models\Mitra;
@@ -44,6 +45,16 @@ class DatabaseSeeder extends Seeder
         */
 
         $mitras = Mitra::factory(10)->create();
+
+        /*
+        |--------------------------------------------------------------------------
+        | DURASI PELATIHAN
+        |--------------------------------------------------------------------------
+        */
+
+        $this->call(DurasiPelatihanSeeder::class);
+
+        $durations = DurasiPelatihan::all();
 
         /*
         |--------------------------------------------------------------------------
@@ -189,13 +200,8 @@ class DatabaseSeeder extends Seeder
                     'deskripsi_pelatihan' =>
                         fake()->paragraph(3),
 
-                    'durasi_lp' =>
-                        fake()->randomElement([
-                            '40 JP',
-                            '80 JP',
-                            '120 JP',
-                            '160 JP',
-                        ]),
+                    'id_durasi' =>
+                        $durations->random()->id_durasi,
 
                     'kuota' =>
                         fake()->numberBetween(10, 30),

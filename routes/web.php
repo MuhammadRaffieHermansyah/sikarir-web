@@ -4,6 +4,7 @@ use App\Http\Controllers\AbsenController;
 use App\Http\Controllers\AdminBlkController;
 use App\Http\Controllers\DaftarLowonganController;
 use App\Http\Controllers\DaftarPelatihanController;
+use App\Http\Controllers\DurasiPelatihanController;
 use App\Http\Controllers\JadwalPelatihanController;
 use App\Http\Controllers\KelasPelatihanController;
 use App\Http\Controllers\MitraController;
@@ -38,6 +39,7 @@ Route::middleware('auth')->group(function () {
     // Resource web routes (return views)
     Route::middleware('role:admin_blk')->group(function () {
         Route::resource('mitras', MitraController::class);
+        Route::resource('durasi-pelatihan', DurasiPelatihanController::class);
         Route::resource('pesertas', PesertaController::class);
         Route::resource('admin-blk', AdminBlkController::class);
         Route::resource('jadwal-pelatihan', JadwalPelatihanController::class);

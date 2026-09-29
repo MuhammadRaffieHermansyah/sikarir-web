@@ -176,7 +176,7 @@
           </div>
           <div class="flex items-center justify-between text-slate-700">
             <span class="text-slate-400">Durasi Silabus:</span>
-            <span class="font-semibold">{{ $jadwal->pelatihan->durasi_lp ?? '240 JP' }}</span>
+            <span class="font-semibold">{{ $jadwal->pelatihan->durasi_label ?? '-' }}</span>
           </div>
         </div>
       </div>
