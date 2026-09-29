@@ -52,16 +52,16 @@ class MitraController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'nama_perusahaan' => 'required|unique:mitras,nama_perusahaan|string|max:255',
+            'nama_perusahaan' => 'required|unique:mitras,nama_perusahaan|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'id_user'         => 'required|exists:users,id|unique:mitras,id_user',
-            'jenis_mitra'     => 'required|string|max:100',
-            'bidang_usaha'    => 'required|string|max:255',
+            'jenis_mitra'     => 'required|string|max:100|regex:/^[a-zA-Z\s]+$/',
+            'bidang_usaha'    => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'no_telp'         => 'required|string|max:30',
-            'no_izin'         => 'required|string|max:100',
-            'jabatan_pic'     => 'required|string|max:100',
-            'provinsi'        => 'required|string|max:100',
-            'kota'            => 'required|string|max:100',
-            'alamat'          => 'required|string',
+            'no_izin'         => 'required|string|max:100|regex:/^[a-zA-Z0-9\s]+$/',
+            'jabatan_pic'     => 'required|string|max:100|regex:/^[a-zA-Z\s]+$/',
+            'provinsi'        => 'required|string|max:100|regex:/^[a-zA-Z\s]+$/',
+            'kota'            => 'required|string|max:100|regex:/^[a-zA-Z\s]+$/',
+            'alamat'          => 'required|string|regex:/^[a-zA-Z\s]+$/',
         ], [
             'nama_perusahaan.required' => 'Nama perusahaan wajib diisi.',
             'nama_perusahaan.unique'   => 'Nama perusahaan sudah terdaftar.',
@@ -74,6 +74,14 @@ class MitraController extends Controller
             'provinsi.required'        => 'Provinsi wajib diisi.',
             'kota.required'            => 'Kota wajib diisi.',
             'alamat.required'          => 'Alamat wajib diisi.',
+            'nama_perusahaan.regex'    => 'Nama perusahaan hanya boleh mengandung huruf dan spasi.',
+            'bidang_usaha.regex'       => 'Bidang usaha hanya boleh mengandung huruf dan spasi.',
+            'jabatan_pic.regex'        => 'Jabatan PIC hanya boleh mengandung huruf dan spasi.',
+            'provinsi.regex'           => 'Provinsi hanya boleh mengandung huruf dan spasi.',
+            'kota.regex'               => 'Kota hanya boleh mengandung huruf dan spasi.',
+            'jenis_mitra.regex'        => 'Jenis mitra hanya boleh mengandung huruf dan spasi.',
+            'no_izin.regex'            => 'Nomor izin hanya boleh mengandung huruf dan angka.',
+            'alamat.regex'             => 'Alamat hanya boleh mengandung huruf dan spasi.',
         ]);
 
         Mitra::create($validated);
