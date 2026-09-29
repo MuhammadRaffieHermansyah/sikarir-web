@@ -59,13 +59,13 @@ class PesertaController extends Controller
             'id_admin'            => 'nullable|exists:admin_blks,id_admin',
             'nomor_peserta'       => 'required|string|max:50|unique:pesertas,nomor_peserta',
             'jenis_kelamin'       => 'required|in:Laki-laki,Perempuan',
-            'jurusan'             => 'required|string|max:100',
+            'jurusan'             => 'required|string|max:100|regex:/^[a-zA-Z\s]+$/',
             'nomor_wa'            => 'required|string|max:30',
             'nomor_kk'            => 'required|string|max:30',
             'tanggal_lahir'       => 'required|date',
-            'tempat_lahir'        => 'required|string|max:100',
-            'pendidikan_terakhir' => 'required|string|max:100',
-            'alamat_lengkap'      => 'required|string',
+            'tempat_lahir'        => 'required|string|max:100|regex:/^[a-zA-Z\s]+$/',
+            'pendidikan_terakhir' => 'required|string|max:100|regex:/^[a-zA-Z\s]+$/',
+            'alamat_lengkap'      => 'required|string|regex:/^[a-zA-Z\s]+$/',
         ], [
             'id_user.required'       => 'Akun pengguna wajib dipilih.',
             'id_user.unique'         => 'Pengguna ini sudah terdaftar sebagai Peserta.',
@@ -79,6 +79,10 @@ class PesertaController extends Controller
             'tempat_lahir.required'  => 'Tempat lahir wajib diisi.',
             'pendidikan_terakhir.required' => 'Pendidikan terakhir wajib diisi.',
             'alamat_lengkap.required'      => 'Alamat lengkap wajib diisi.',
+            'jurusan.regex'                => 'Jurusan hanya boleh mengandung huruf dan spasi.',
+            'tempat_lahir.regex'           => 'Tempat lahir hanya boleh mengandung huruf dan spasi.',
+            'pendidikan_terakhir.regex'    => 'Pendidikan terakhir hanya boleh mengandung huruf dan spasi.',
+            'alamat_lengkap.regex'         => 'Alamat lengkap hanya boleh mengandung huruf dan spasi.',
         ]);
 
         Peserta::create($validated);
@@ -108,16 +112,20 @@ class PesertaController extends Controller
             'id_admin'            => 'nullable|exists:admin_blks,id_admin',
             'nomor_peserta'       => 'required|string|max:50|unique:pesertas,nomor_peserta,' . $peserta->id_peserta . ',id_peserta',
             'jenis_kelamin'       => 'required|in:Laki-laki,Perempuan',
-            'jurusan'             => 'nullable|string|max:100',
+            'jurusan'             => 'nullable|string|max:100|regex:/^[a-zA-Z\s]+$/',
             'nomor_wa'            => 'nullable|string|max:30',
             'nomor_kk'            => 'nullable|string|max:30',
             'tanggal_lahir'       => 'nullable|date',
-            'tempat_lahir'        => 'nullable|string|max:100',
-            'pendidikan_terakhir' => 'nullable|string|max:100',
-            'alamat_lengkap'      => 'nullable|string',
+            'tempat_lahir'        => 'nullable|string|max:100|regex:/^[a-zA-Z\s]+$/',
+            'pendidikan_terakhir' => 'nullable|string|max:100|regex:/^[a-zA-Z\s]+$/',
+            'alamat_lengkap'      => 'nullable|string|regex:/^[a-zA-Z\s]+$/',
         ], [
             'id_user.unique'       => 'Akun pengguna ini sudah terdaftar sebagai Peserta.',
             'nomor_peserta.unique' => 'Nomor peserta (NIS) sudah digunakan.',
+            'jurusan.regex'                => 'Jurusan hanya boleh mengandung huruf dan spasi.',
+            'tempat_lahir.regex'           => 'Tempat lahir hanya boleh mengandung huruf dan spasi.',
+            'pendidikan_terakhir.regex'    => 'Pendidikan terakhir hanya boleh mengandung huruf dan spasi.',
+            'alamat_lengkap.regex'         => 'Alamat lengkap hanya boleh mengandung huruf dan spasi.',
         ]);
 
         $peserta->update($validated);

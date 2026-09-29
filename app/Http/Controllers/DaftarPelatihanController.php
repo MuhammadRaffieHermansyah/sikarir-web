@@ -31,7 +31,7 @@ class DaftarPelatihanController extends Controller
     {
         $validated = $request->validate([
             'id_admin'            => 'required|exists:admin_blks,id_admin',
-            'nama_pelatihan'      => 'required|unique:daftar_pelatihan,nama_pelatihan|string|max:70',
+            'nama_pelatihan'      => 'required|unique:daftar_pelatihan,nama_pelatihan|string|max:70|regex:/^[a-zA-Z\s]+$/',
             'deskripsi_pelatihan' => 'nullable|string',
             'kuota'               => 'required|integer|min:1',
             'id_durasi'           => 'nullable|exists:durasi_pelatihan,id_durasi',
@@ -42,6 +42,7 @@ class DaftarPelatihanController extends Controller
             'nama_pelatihan.max'      => 'Nama kejuruan / program pelatihan maksimal 40 karakter.',
             'kuota.required'          => 'Kapasitas kuota peserta wajib ditentukan.',
             'kuota.min'               => 'Kuota minimal 1 orang peserta.',
+            'nama_pelatihan.regex'    => 'Nama kejuruan / program pelatihan hanya boleh mengandung huruf dan spasi.',
         ]);
 
         DaftarPelatihan::create($validated);
@@ -68,7 +69,7 @@ class DaftarPelatihanController extends Controller
 
         $validated = $request->validate([
             'id_admin'            => 'required|exists:admin_blks,id_admin',
-            'nama_pelatihan'      => 'required|string|max:70',
+            'nama_pelatihan'      => 'required|string|max:70|regex:/^[a-zA-Z\s]+$/',
             'deskripsi_pelatihan' => 'nullable|string',
             'kuota'               => 'required|integer|min:1',
             'id_durasi'           => 'nullable|exists:durasi_pelatihan,id_durasi',
@@ -78,6 +79,7 @@ class DaftarPelatihanController extends Controller
             'nama_pelatihan.max'      => 'Nama kejuruan / program pelatihan maksimal 40 karakter.',
             'kuota.required'          => 'Kapasitas kuota peserta wajib ditentukan.',
             'kuota.min'               => 'Kuota minimal 1 orang peserta.',
+            'nama_pelatihan.regex'    => 'Nama kejuruan / program pelatihan hanya boleh mengandung huruf dan spasi.',
         ]);
 
         $pelatihan->update($validated);

@@ -64,8 +64,8 @@ class JadwalPelatihanController extends Controller
             'tanggal_selesai' => 'required|date|after:tanggal_mulai',
             'jam_mulai'       => 'nullable|date_format:H:i',
             'jam_selesai'     => 'nullable|date_format:H:i',
-            'instruktur'      => 'nullable|string|max:150',
-            'tempat'          => 'nullable|string|max:255',
+            'instruktur'      => 'nullable|string|max:150|regex:/^[a-zA-Z\s]+$/',
+            'tempat'          => 'nullable|string|max:255|regex:/^[a-zA-Z0-9\s]+$/',
             'status'          => 'required|in:tersedia,berlangsung,selesai',
         ], [
             'id_pelatihan.required'           => 'Program pelatihan wajib dipilih.',
@@ -74,6 +74,8 @@ class JadwalPelatihanController extends Controller
             'tanggal_selesai.after_or_equal'  => 'Tanggal selesai harus sama atau setelah tanggal mulai.',
             'jam_mulai.date_format'           => 'Format jam mulai tidak valid (contoh: 08:00).',
             'jam_selesai.date_format'         => 'Format jam selesai tidak valid (contoh: 15:30).',
+            'instruktur.regex'                => 'Nama instruktur hanya boleh mengandung huruf dan spasi.',
+            'tempat.regex'                    => 'Tempat hanya boleh mengandung huruf dan angka.',
         ]);
 
         JadwalPelatihan::create($validated);
@@ -103,8 +105,8 @@ class JadwalPelatihanController extends Controller
             'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
             'jam_mulai'       => 'required|date_format:H:i',
             'jam_selesai'     => 'required|date_format:H:i',
-            'instruktur'      => 'required|string|max:150',
-            'tempat'          => 'required|string|max:255',
+            'instruktur'      => 'required|string|max:150|regex:/^[a-zA-Z\s]+$/',
+            'tempat'          => 'required|string|max:255|regex:/^[a-zA-Z0-9\s]+$/',
             'status'          => 'required|in:tersedia,berlangsung,selesai',
         ], [
             'id_pelatihan.required'           => 'Program pelatihan wajib dipilih.',
@@ -113,6 +115,8 @@ class JadwalPelatihanController extends Controller
             'tanggal_selesai.after_or_equal'  => 'Tanggal selesai harus sama atau setelah tanggal mulai.',
             'jam_mulai.date_format'           => 'Format jam mulai tidak valid (contoh: 08:00).',
             'jam_selesai.date_format'         => 'Format jam selesai tidak valid (contoh: 15:30).',
+            'instruktur.regex'                => 'Nama instruktur hanya boleh mengandung huruf dan spasi.',
+            'tempat.regex'                    => 'Tempat hanya boleh mengandung huruf dan angka.',
         ]);
 
         $jadwal->update($validated);

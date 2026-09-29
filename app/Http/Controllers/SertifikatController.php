@@ -36,7 +36,7 @@ class SertifikatController extends Controller
             'id_peserta'      => 'required|exists:pesertas,id_peserta',
             'id_jadwal'       => 'required|exists:jadwal_pelatihan,id_jadwal',
             'id_admin'        => 'required|exists:admin_blks,id_admin',
-            'no_sertifikat'   => 'required|string|max:100|unique:sertifikats,no_sertifikat',
+            'no_sertifikat'   => 'required|string|max:100|unique:sertifikats,no_sertifikat|regex:/^[a-zA-Z0-9\s]+$/',
             'tanggal_terbit'  => 'required|date',
             'file_sertifikat' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ], [
@@ -46,6 +46,7 @@ class SertifikatController extends Controller
             'no_sertifikat.required'  => 'Nomor seri sertifikat wajib diisi.',
             'no_sertifikat.unique'    => 'Nomor seri sertifikat sudah digunakan.',
             'tanggal_terbit.required' => 'Tanggal penerbitan sertifikat wajib diisi.',
+            'no_sertifikat.regex'     => 'Nomor sertifikat hanya boleh mengandung huruf dan angka.',
         ]);
 
         // Check if peserta already has sertifikat for this jadwal
@@ -84,9 +85,11 @@ class SertifikatController extends Controller
             'id_peserta'      => 'required|exists:pesertas,id_peserta',
             'id_jadwal'       => 'required|exists:jadwal_pelatihan,id_jadwal',
             'id_admin'        => 'required|exists:admin_blks,id_admin',
-            'no_sertifikat'   => 'required|string|max:100|unique:sertifikats,no_sertifikat,' . $sertifikat->id_sertifikat . ',id_sertifikat',
+            'no_sertifikat'   => 'required|string|max:100|unique:sertifikats,no_sertifikat,' . $sertifikat->id_sertifikat . ',id_sertifikat|regex:/^[a-zA-Z0-9\s]+$/',
             'tanggal_terbit'  => 'required|date',
             'file_sertifikat' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+        ], [
+            'no_sertifikat.regex'     => 'Nomor sertifikat hanya boleh mengandung huruf dan angka.',
         ]);
 
         // Prevent moving to a (peserta, jadwal) combination that already has a sertifikat
