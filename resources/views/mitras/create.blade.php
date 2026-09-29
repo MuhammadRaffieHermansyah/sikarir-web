@@ -61,7 +61,7 @@
             </div>
             {{-- Upload Input --}}
             <div class="flex-1 w-full">
-              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Logo Perusahaan <span class="text-slate-400 font-normal">(Opsional)</span></label>
+              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Logo Perusahaan <span class="text-rose-500">*</span></label>
               <label for="logo_perusahaan" class="flex items-center gap-3 w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 cursor-pointer hover:border-emerald-500 hover:bg-emerald-50/30 transition group">
                 <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 group-hover:bg-emerald-200 transition">
                   <i data-lucide="upload-cloud" class="w-4 h-4"></i>
