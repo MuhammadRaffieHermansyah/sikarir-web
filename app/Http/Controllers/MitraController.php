@@ -6,6 +6,7 @@ use App\Models\Mitra;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class MitraController extends Controller
@@ -54,7 +55,7 @@ class MitraController extends Controller
         $validated = $request->validate([
             'nama_perusahaan' => 'required|unique:mitras,nama_perusahaan|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'id_user'         => 'required|exists:users,id|unique:mitras,id_user',
-            'jenis_mitra'     => 'required|string|max:100|regex:/^[a-zA-Z\s]+$/',
+            'jenis_mitra'     => 'required|string|max:100',
             'bidang_usaha'    => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
             'no_telp'         => 'required|string|max:30',
             'no_izin'         => 'required|string|max:100|regex:/^[a-zA-Z0-9\s]+$/',
@@ -62,6 +63,7 @@ class MitraController extends Controller
             'provinsi'        => 'required|string|max:100|regex:/^[a-zA-Z\s]+$/',
             'kota'            => 'required|string|max:100|regex:/^[a-zA-Z\s]+$/',
             'alamat'          => 'required|string|regex:/^[a-zA-Z\s]+$/',
+            'logo_perusahaan' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
         ], [
             'nama_perusahaan.required' => 'Nama perusahaan wajib diisi.',
             'nama_perusahaan.unique'   => 'Nama perusahaan sudah terdaftar.',
@@ -79,10 +81,17 @@ class MitraController extends Controller
             'jabatan_pic.regex'        => 'Jabatan PIC hanya boleh mengandung huruf dan spasi.',
             'provinsi.regex'           => 'Provinsi hanya boleh mengandung huruf dan spasi.',
             'kota.regex'               => 'Kota hanya boleh mengandung huruf dan spasi.',
-            'jenis_mitra.regex'        => 'Jenis mitra hanya boleh mengandung huruf dan spasi.',
             'no_izin.regex'            => 'Nomor izin hanya boleh mengandung huruf dan angka.',
             'alamat.regex'             => 'Alamat hanya boleh mengandung huruf dan spasi.',
+            'logo_perusahaan.image'    => 'File logo harus berupa gambar.',
+            'logo_perusahaan.mimes'    => 'Format logo yang diizinkan: jpeg, png, jpg, gif, webp, svg.',
+            'logo_perusahaan.max'      => 'Ukuran file logo maksimal 2MB.',
         ]);
+
+        if ($request->hasFile('logo_perusahaan')) {
+            $validated['logo_perusahaan'] = $request->file('logo_perusahaan')
+                ->store('logos/mitras', 'public');
+        }
 
         Mitra::create($validated);
         return redirect()->route('mitras.index')->with('success', 'Data mitra DU/DI berhasil ditambahkan.');
@@ -116,10 +125,23 @@ class MitraController extends Controller
             'provinsi'        => 'nullable|string|max:100',
             'kota'            => 'nullable|string|max:100',
             'alamat'          => 'nullable|string',
+            'logo_perusahaan' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
         ], [
             'nama_perusahaan.required' => 'Nama perusahaan wajib diisi.',
             'id_user.unique'           => 'Akun pengguna ini sudah ditautkan ke mitra lain.',
+            'logo_perusahaan.image'    => 'File logo harus berupa gambar.',
+            'logo_perusahaan.mimes'    => 'Format logo yang diizinkan: jpeg, png, jpg, gif, webp, svg.',
+            'logo_perusahaan.max'      => 'Ukuran file logo maksimal 2MB.',
         ]);
+
+        if ($request->hasFile('logo_perusahaan')) {
+            // Delete old logo if exists
+            if ($mitra->logo_perusahaan) {
+                Storage::disk('public')->delete($mitra->logo_perusahaan);
+            }
+            $validated['logo_perusahaan'] = $request->file('logo_perusahaan')
+                ->store('logos/mitras', 'public');
+        }
 
         $mitra->update($validated);
         return redirect()->route('mitras.index')->with('success', 'Data mitra DU/DI berhasil diperbarui.');
@@ -128,6 +150,10 @@ class MitraController extends Controller
     public function destroy(int $id): RedirectResponse
     {
         $mitra = Mitra::findOrFail($id);
+        // Delete logo file from storage if exists
+        if ($mitra->logo_perusahaan) {
+            Storage::disk('public')->delete($mitra->logo_perusahaan);
+        }
         $mitra->delete();
         return redirect()->route('mitras.index')->with('success', 'Data mitra DU/DI berhasil dihapus.');
     }

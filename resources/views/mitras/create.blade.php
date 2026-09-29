@@ -28,7 +28,7 @@
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <!-- Left Column (Form) -->
     <div class="lg:col-span-2 space-y-6">
-      <form method="POST" action="{{ route('mitras.store') }}" class="space-y-6">
+      <form method="POST" action="{{ route('mitras.store') }}" enctype="multipart/form-data" class="space-y-6">
         @csrf
 
         @if($errors->any())
@@ -49,6 +49,30 @@
             <div>
               <h2 class="font-bold text-slate-800 text-sm">Identitas Perusahaan / Industri</h2>
               <p class="text-xs text-slate-500">Informasi resmi badan usaha atau instansi rekanan.</p>
+            </div>
+          </div>
+
+          {{-- Logo Upload --}}
+          <div class="flex flex-col sm:flex-row items-start gap-5">
+            {{-- Preview Area --}}
+            <div id="logo-preview-wrap" class="w-24 h-24 rounded-xl border-2 border-dashed border-slate-300 shrink-0 overflow-hidden relative bg-gradient-to-br from-slate-100 to-slate-200">
+              <span id="logo-placeholder" class="absolute inset-0 flex items-center justify-center text-slate-400"><i data-lucide="image" class="w-7 h-7"></i></span>
+              <img id="logo-preview-img" src="" alt="Preview Logo" class="w-full h-full object-cover hidden absolute inset-0">
+            </div>
+            {{-- Upload Input --}}
+            <div class="flex-1 w-full">
+              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Logo Perusahaan <span class="text-slate-400 font-normal">(Opsional)</span></label>
+              <label for="logo_perusahaan" class="flex items-center gap-3 w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 cursor-pointer hover:border-emerald-500 hover:bg-emerald-50/30 transition group">
+                <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 group-hover:bg-emerald-200 transition">
+                  <i data-lucide="upload-cloud" class="w-4 h-4"></i>
+                </span>
+                <div>
+                  <div class="text-xs font-semibold text-slate-700" id="logo-filename">Klik untuk pilih file logo</div>
+                  <div class="text-[11px] text-slate-400">PNG, JPG, WEBP, SVG · Maks. 2MB</div>
+                </div>
+              </label>
+              <input type="file" id="logo_perusahaan" name="logo_perusahaan" accept="image/*" class="sr-only" onchange="previewLogo(this)">
+              @error('logo_perusahaan')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
           </div>
 
@@ -190,3 +214,22 @@
   </div>
 @endsection
 
+@push('scripts')
+<script>
+function previewLogo(input) {
+    const img = document.getElementById('logo-preview-img');
+    const placeholder = document.getElementById('logo-placeholder');
+    const filename = document.getElementById('logo-filename');
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            img.src = e.target.result;
+            img.classList.remove('hidden');
+            placeholder.classList.add('hidden');
+        };
+        reader.readAsDataURL(input.files[0]);
+        filename.textContent = input.files[0].name;
+    }
+}
+</script>
+@endpush

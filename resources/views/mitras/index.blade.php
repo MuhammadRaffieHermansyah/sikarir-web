@@ -111,10 +111,20 @@
           @forelse($mitras ?? [] as $mitra)
             <tr class="hover:bg-slate-50/80 transition">
               <td class="px-5 py-3.5">
-                <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 text-white font-bold flex items-center justify-center text-xs shadow-sm shrink-0">
-                    {{ strtoupper(substr($mitra->nama_perusahaan, 0, 2)) }}
-                  </div>
+                <div class="flex items-center gap-3.5">
+                  {{-- Logo / Avatar --}}
+                  @if($mitra->logo_perusahaan)
+                    <div class="w-11 h-11 rounded-xl bg-white border border-slate-200 shadow-md flex items-center justify-center shrink-0 overflow-hidden">
+                      <img src="{{ Storage::url($mitra->logo_perusahaan) }}"
+                           alt="Logo {{ $mitra->nama_perusahaan }}"
+                           class="w-full h-full object-cover"
+                           onerror="this.parentElement.innerHTML='<span class=\'text-xs font-bold text-white\'></span>'; this.parentElement.className='w-11 h-11 rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 text-white font-bold flex items-center justify-center text-xs shadow-sm shrink-0';">
+                    </div>
+                  @else
+                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 text-white font-bold flex items-center justify-center text-xs shadow-sm shrink-0 ring-2 ring-white ring-offset-1">
+                      {{ strtoupper(substr($mitra->nama_perusahaan, 0, 2)) }}
+                    </div>
+                  @endif
                   <div>
                     <a href="{{ route('mitras.show', $mitra->id_mitra) }}" class="font-bold text-slate-900 hover:text-emerald-700 transition">
                       {{ $mitra->nama_perusahaan }}
