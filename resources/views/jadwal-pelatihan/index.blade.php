@@ -153,7 +153,7 @@
                 </div>
                 <div class="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5">
                   <i data-lucide="map-pin" class="w-3 h-3 text-slate-400"></i>
-                  {{ $jadwal->tempat ?? 'Workshop BLK' }}
+                  {{ $jadwal->ruanganWorkshop?->nama_ruangan ?? '-' }}
                 </div>
               </td>
 

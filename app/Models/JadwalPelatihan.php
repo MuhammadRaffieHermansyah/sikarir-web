@@ -11,7 +11,7 @@ class JadwalPelatihan extends Model
 
     protected $table = 'jadwal_pelatihan';
     protected $primaryKey = 'id_jadwal';
-    protected $fillable = ['id_pelatihan', 'tanggal_mulai', 'tanggal_selesai', 'jam_mulai', 'jam_selesai', 'id_instruktur', 'tempat', 'status'];
+    protected $fillable = ['id_pelatihan', 'tanggal_mulai', 'tanggal_selesai', 'jam_mulai', 'jam_selesai', 'id_instruktur', 'id_ruangan_workshop', 'status'];
     protected $casts = ['tanggal_mulai' => 'date', 'tanggal_selesai' => 'date'];
 
     public function getIdAttribute()
@@ -25,6 +25,10 @@ class JadwalPelatihan extends Model
     public function instruktur()
     {
         return $this->belongsTo(Instruktur::class, 'id_instruktur');
+    }
+    public function ruanganWorkshop()
+    {
+    return $this->belongsTo(RuanganWorkshop::class, 'id_ruangan_workshop');
     }
     public function kelas()
     {

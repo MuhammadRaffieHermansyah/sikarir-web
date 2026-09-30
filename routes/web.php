@@ -17,6 +17,7 @@ use App\Models\DaftarPelatihan;
 use App\Http\Controllers\PublicPelatihanController;
 use App\Http\Controllers\SertifikatController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RuanganWorkshopController;
 
 Route::get('/', function () {
     $pelatihans = DaftarPelatihan::all()->take(8);
@@ -46,6 +47,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('admin-blk', AdminBlkController::class);
         Route::resource('jadwal-pelatihan', JadwalPelatihanController::class);
         Route::resource('kelas-pelatihan', KelasPelatihanController::class);
+        Route::resource('ruangan-workshop', RuanganWorkshopController::class);
     });
 
     Route::middleware('role:admin_blk,mitra')->group(function () {

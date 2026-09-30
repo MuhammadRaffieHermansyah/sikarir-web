@@ -45,7 +45,7 @@
           </div>
           <div class="flex items-center gap-4 text-xs text-slate-500 mt-1.5 flex-wrap">
             <span class="flex items-center gap-1.5"><i data-lucide="user" class="w-3.5 h-3.5 text-slate-400"></i> Instruktur: {{ $jadwal->instruktur?->nama ?? 'Belum Ditunjuk' }}</span>
-            <span class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i> Lokasi: {{ $jadwal->tempat ?? 'Workshop BLK' }}</span>
+            <span class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i> Ruangan Workshop: {{ $jadwal->ruanganWorkshop?->nama_ruangan ?? '-' }} </span>
             <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i> Jam: {{ $jadwal->jam_mulai ? \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') : '08:00' }} - {{ $jadwal->jam_selesai ? \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') : '15:30' }}</span>
           </div>
         </div>
