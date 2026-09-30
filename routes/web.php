@@ -14,6 +14,7 @@ use App\Http\Controllers\PublicLowonganController;
 use App\Models\DaftarLowongan;
 use App\Models\DaftarPelatihan;
 use App\Http\Controllers\PublicPelatihanController;
+use App\Http\Controllers\HariLiburController;
 use App\Http\Controllers\SertifikatController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,21 @@ Route::get('/', function () {
 Route::get('/program-pelatihan', [PublicPelatihanController::class, 'index'])->name('pelatihan.katalog');
 Route::get('/lowongan-kerja', [PublicLowonganController::class, 'index'])->name('lowongan.katalog');
 Route::view('/tentang-blk', 'public.tentang-blk')->name('tentang.index');
+
+// Route internal untuk data dinamis pada form jadwal pelatihan
+Route::get('/internal/hari-libur', [HariLiburController::class, 'index'])->name('hari-libur.index')->middleware('auth');
+Route::get('/internal/pelatihan/{id}/durasi', function ($id) {
+    $pelatihan = \App\Models\DaftarPelatihan::with('durasi')->find($id);
+    if (!$pelatihan || !$pelatihan->durasi) {
+        return response()->json(['jam_mulai' => null, 'jam_selesai' => null, 'hari' => null, 'jam' => null]);
+    }
+    return response()->json([
+        'hari'      => $pelatihan->durasi->hari,
+        'jam'       => $pelatihan->durasi->jam,
+        'jam_mulai' => '08:00',
+        'jam_selesai' => '15:30',
+    ]);
+})->name('pelatihan.durasi')->middleware('auth');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
