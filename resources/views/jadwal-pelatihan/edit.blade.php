@@ -143,27 +143,22 @@
             </div>
 
             <div>
-              <label for="id_ruangan_workshop"
-                  class="block text-sm font-medium text-slate-700 mb-2">
-                  Ruangan Workshop
+              <label for="id_ruangan_workshop" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                Ruangan Workshop <span class="text-rose-500">*</span>
               </label>
-              <select
-                  name="id_ruangan_workshop"
-                  id="id_ruangan_workshop"
-                  class="w-full rounded-lg border border-slate-300 px-4 py-3
-                        text-sm focus:border-emerald-500 focus:ring-emerald-500">
-                  <option value="">-- Pilih Ruangan Workshop --</option>
-                  @foreach ($ruanganWorkshops as $ruangan)
-                      <option
-                          value="{{ $ruangan->id }}"
-                          {{ old('id_ruangan_workshop', $jadwal->id_ruangan_workshop) == $ruangan->id ? 'selected' : '' }}>
-                          {{ $ruangan->nama_ruangan }}
-                      </option>
-                  @endforeach
+              <select name="id_ruangan_workshop" id="id_ruangan_workshop" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('id_ruangan_workshop') border-rose-400 bg-rose-50/50 @enderror">
+                <option value="">-- Pilih Ruangan Workshop --</option>
+                @foreach($ruanganWorkshops as $ruangan)
+                  <option value="{{ $ruangan->id }}" {{ old('id_ruangan_workshop', $jadwal->id_ruangan_workshop) == $ruangan->id ? 'selected' : '' }}>{{ $ruangan->nama_ruangan }}</option>
+                @endforeach
               </select>
+              <p class="text-[11px] text-slate-400 mt-1">
+                Belum ada data? <a href="{{ route('ruangan-workshop.create', ['from' => 'jadwal']) }}" class="text-emerald-700 hover:underline font-semibold">Tambah ruangan baru</a>
+              </p>
               @error('id_ruangan_workshop')
-                  <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
               @enderror
+            </div>
           </div>
 
           <div>
