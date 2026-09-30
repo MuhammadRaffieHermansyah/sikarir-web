@@ -9,9 +9,11 @@ return new class extends Migration
         public function up(): void
     {
         Schema::table('jadwal_pelatihan', function (Blueprint $table) {
-            $table->foreign('id_ruangan_workshop')
-                ->references('id')
-                ->on('ruangan_workshops')
+            $table->dropColumn('tempat');
+
+            $table->foreignId('id_ruangan_workshop')
+                ->nullable()
+                ->constrained('ruangan_workshop')
                 ->nullOnDelete();
         });
     }
@@ -20,6 +22,7 @@ return new class extends Migration
     {
         Schema::table('jadwal_pelatihan', function (Blueprint $table) {
             $table->dropForeign(['id_ruangan_workshop']);
+            $table->dropColumn('id_ruangan_workshop');
         });
     }
 };

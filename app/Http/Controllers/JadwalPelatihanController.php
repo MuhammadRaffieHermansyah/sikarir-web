@@ -72,13 +72,8 @@ class JadwalPelatihanController extends Controller
             'tanggal_selesai' => 'required|date|after:tanggal_mulai',
             'jam_mulai'       => 'nullable|date_format:H:i',
             'jam_selesai'     => 'nullable|date_format:H:i',
-<<<<<<< HEAD
-            'instruktur'      => 'required|string|max:150|regex:/^[a-zA-Z\s.,\-\']+$/',
-            'tempat'          => 'required|string|max:255',
-=======
             'id_instruktur'    => 'nullable|exists:instruktur,id',
             'id_ruangan_workshop' => 'nullable|exists:ruangan_workshops,id',
->>>>>>> 58505e94a8585392566dcd4a539d37a8757ed57d
             'status'          => 'required|in:tersedia,berlangsung,selesai',
         ], [
             'id_pelatihan.required'           => 'Program pelatihan wajib dipilih.',
@@ -87,14 +82,8 @@ class JadwalPelatihanController extends Controller
             'tanggal_selesai.after_or_equal'  => 'Tanggal selesai harus sama atau setelah tanggal mulai.',
             'jam_mulai.date_format'           => 'Format jam mulai tidak valid (contoh: 08:00).',
             'jam_selesai.date_format'         => 'Format jam selesai tidak valid (contoh: 15:30).',
-<<<<<<< HEAD
-            'instruktur.required'             => 'Nama instruktur wajib diisi.',
-            'instruktur.regex'                => 'Nama instruktur hanya boleh mengandung huruf, spasi, titik, dan koma.',
-            'tempat.required'                 => 'Lokasi bengkel/ruangan wajib diisi.',
-=======
             'id_instruktur.exists'            => 'Instruktur yang dipilih tidak terdaftar.',
             'id_ruangan_workshop.exists'      => 'Ruangan workshop yang dipilih tidak terdaftar.',
->>>>>>> 58505e94a8585392566dcd4a539d37a8757ed57d
         ]);
 
         JadwalPelatihan::create($validated);
@@ -127,7 +116,7 @@ class JadwalPelatihanController extends Controller
             'jam_mulai'       => 'required|date_format:H:i',
             'jam_selesai'     => 'required|date_format:H:i',
             'id_instruktur'    => 'required|exists:instruktur,id',
-            'id_ruangan_workshop' => 'required|exists:ruangan_workshops,id',
+            'id_ruangan_workshop' => 'required|exists:ruangan_workshop,id',
             'status'          => 'required|in:tersedia,berlangsung,selesai',
         ], [
             'id_pelatihan.required'           => 'Program pelatihan wajib dipilih.',
