@@ -490,7 +490,6 @@ document.addEventListener('DOMContentLoaded', function () {
   tglSelesai.addEventListener('change', function () {
     if (tglMulai.value && this.value && hariLiburSet.size > 0) updatePreviewManual();
   });
-</script>
 
   function updatePreviewManual() {
     if (!tglMulai.value || !tglSelesai.value) return;
@@ -515,7 +514,7 @@ document.addEventListener('DOMContentLoaded', function () {
     previewJadwal.classList.remove('hidden');
     if (window.lucide) lucide.createIcons({ nodes: [previewJadwal] });
   }
-
+  
   // ---- 8. Validasi jam ----
   function validateJam() {
     if (jamMulai.value && jamSelesai.value && jamSelesai.value <= jamMulai.value) {
@@ -524,8 +523,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
   jamSelesai.addEventListener('change', validateJam);
-
+  
   // ---- 9. Trigger jika old() terisi ----
   if (selectPelatihan.value) selectPelatihan.dispatchEvent(new Event('change'));
-});
+  });
 </script>
