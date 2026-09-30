@@ -72,8 +72,8 @@ class JadwalPelatihanController extends Controller
             'tanggal_selesai' => 'required|date|after:tanggal_mulai',
             'jam_mulai'       => 'nullable|date_format:H:i',
             'jam_selesai'     => 'nullable|date_format:H:i',
-            'id_instruktur'    => 'required|exists:instruktur,id',
-            'id_ruangan_workshop' => 'required|exists:ruangan_workshop,id',
+            'id_instruktur'    => 'nullable|exists:instruktur,id',
+            'id_ruangan_workshop' => 'nullable|exists:ruangan_workshops,id',
             'status'          => 'required|in:tersedia,berlangsung,selesai',
         ], [
             'id_pelatihan.required'           => 'Program pelatihan wajib dipilih.',
