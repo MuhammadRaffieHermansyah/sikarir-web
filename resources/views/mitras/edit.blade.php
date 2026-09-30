@@ -31,8 +31,12 @@
   <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div class="flex items-center gap-4">
-        <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-slate-800 to-slate-950 text-white font-black text-lg flex items-center justify-center shadow-sm shrink-0">
-          {{ strtoupper(substr($mitra->nama_perusahaan, 0, 2)) }}
+        <div class="w-14 h-14 rounded-xl bg-white border border-slate-200 shadow-md flex items-center justify-center shrink-0 overflow-hidden">
+          @if($mitra->logo_perusahaan)
+            <img src="{{ Storage::url($mitra->logo_perusahaan) }}" alt="Logo {{ $mitra->nama_perusahaan }}" class="w-full h-full object-cover">
+          @else
+            {{ strtoupper(substr($mitra->nama_perusahaan, 0, 2)) }}
+          @endif
         </div>
         <div>
           <div class="flex items-center gap-2 flex-wrap">
@@ -62,7 +66,7 @@
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <!-- Left Column (Form) -->
     <div class="lg:col-span-2 space-y-6">
-      <form method="POST" action="{{ route('mitras.update', $mitra->id_mitra) }}" class="space-y-6">
+      <form method="POST" action="{{ route('mitras.update', $mitra->id_mitra) }}" enctype="multipart/form-data" class="space-y-6">
         @csrf
         @method('PUT')
 
@@ -84,6 +88,37 @@
             <div>
               <h3 class="font-bold text-slate-800 text-sm">Informasi Perusahaan</h3>
               <p class="text-xs text-slate-500">Perbarui rincian resmi badan usaha.</p>
+            </div>
+          </div>
+
+          {{-- Logo Upload --}}
+          <div class="flex flex-col sm:flex-row items-start gap-5">
+            {{-- Preview Area --}}
+            <div id="logo-preview-wrap" class="w-24 h-24 rounded-xl border-2 border-dashed border-slate-300 shrink-0 overflow-hidden relative bg-gradient-to-br from-slate-100 to-slate-200">
+              @if($mitra->logo_perusahaan)
+                <img id="logo-preview-img" src="{{ Storage::url($mitra->logo_perusahaan) }}" alt="Logo {{ $mitra->nama_perusahaan }}" class="w-full h-full object-cover absolute inset-0">
+                <span id="logo-placeholder" class="hidden absolute inset-0 flex items-center justify-center text-slate-400"><i data-lucide="image" class="w-7 h-7"></i></span>
+              @else
+                <span id="logo-placeholder" class="absolute inset-0 flex items-center justify-center text-slate-400"><i data-lucide="image" class="w-7 h-7"></i></span>
+                <img id="logo-preview-img" src="" alt="Preview Logo" class="w-full h-full object-cover hidden absolute inset-0">
+              @endif
+            </div>
+            {{-- Upload Input --}}
+            <div class="flex-1 w-full">
+              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Logo Perusahaan <span class="text-slate-400 font-normal">(Kosongkan jika tidak diubah)</span></label>
+              <label for="logo_perusahaan" class="flex items-center gap-3 w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 cursor-pointer hover:border-emerald-500 hover:bg-emerald-50/30 transition group">
+                <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 group-hover:bg-emerald-200 transition">
+                  <i data-lucide="upload-cloud" class="w-4 h-4"></i>
+                </span>
+                <div>
+                  <div class="text-xs font-semibold text-slate-700" id="logo-filename">
+                    {{ $mitra->logo_perusahaan ? 'Ganti logo...' : 'Klik untuk pilih file logo' }}
+                  </div>
+                  <div class="text-[11px] text-slate-400">PNG, JPG, WEBP, SVG · Maks. 2MB</div>
+                </div>
+              </label>
+              <input type="file" id="logo_perusahaan" name="logo_perusahaan" accept="image/*" class="sr-only" onchange="previewLogo(this)">
+              @error('logo_perusahaan')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
             </div>
           </div>
 
@@ -221,3 +256,22 @@
   </div>
 @endsection
 
+@push('scripts')
+<script>
+function previewLogo(input) {
+    const img = document.getElementById('logo-preview-img');
+    const placeholder = document.getElementById('logo-placeholder');
+    const filename = document.getElementById('logo-filename');
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            img.src = e.target.result;
+            img.classList.remove('hidden');
+            if (placeholder) placeholder.classList.add('hidden');
+        };
+        reader.readAsDataURL(input.files[0]);
+        filename.textContent = input.files[0].name;
+    }
+}
+</script>
+@endpush

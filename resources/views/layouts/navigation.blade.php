@@ -30,6 +30,9 @@
                     <x-nav-link :href="route('pelatihan.index')" :active="request()->routeIs('pelatihan.*')">
                         {{ __('Pelatihan') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('instruktur.index')" :active="request()->routeIs('instruktur.*')">
+                        {{ __('Instruktur') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('jadwal-pelatihan.index')" :active="request()->routeIs('jadwal-pelatihan.*')">
                         {{ __('Jadwal') }}
                     </x-nav-link>
@@ -114,6 +117,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('pelatihan.index')" :active="request()->routeIs('pelatihan.*')">
                 {{ __('Pelatihan') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('instruktur.index')" :active="request()->routeIs('instruktur.*')">
+                {{ __('Instruktur') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('jadwal-pelatihan.index')" :active="request()->routeIs('jadwal-pelatihan.*')">
                 {{ __('Jadwal Pelatihan') }}

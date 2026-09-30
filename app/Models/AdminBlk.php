@@ -24,10 +24,6 @@ class AdminBlk extends Model
     {
         return $this->hasMany(Peserta::class, 'id_admin');
     }
-    public function lowongan()
-    {
-        return $this->hasMany(DaftarLowongan::class, 'id_admin');
-    }
     public function pelatihan()
     {
         return $this->hasMany(DaftarPelatihan::class, 'id_admin');

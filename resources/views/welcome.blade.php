@@ -60,7 +60,7 @@
     <section
         class="relative overflow-hidden min-h-[520px] sm:min-h-[600px] text-white border-b border-emerald-800/40
            bg-emerald-950 bg-cover bg-center"
-    style="background-image: url('{{ asset('images/hero-image.png') }}');">
+    style="background-image: url('{{ asset('images/hero-image.webp') }}');">
         <!-- Background Accent Blur -->
         <div class="float-slow absolute -top-24 -left-24 w-64 h-64 sm:w-96 sm:h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="float-slow-2 absolute -bottom-24 -right-24 w-64 h-64 sm:w-96 sm:h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>

@@ -53,38 +53,21 @@
         </div>
 
         <div class="space-y-4">
+          <!-- Info Mitra -->
+          <div class="p-3.5 bg-emerald-50/60 border border-emerald-100 rounded-lg flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-center shrink-0">
+              {{ strtoupper(substr($lowongan->mitra->nama_perusahaan ?? 'M', 0, 2)) }}
+            </div>
+            <div>
+              <div class="text-[11px] text-slate-400 font-medium">Perusahaan Penerbit Lowongan</div>
+              <div class="text-xs font-bold text-slate-800">{{ $lowongan->mitra->nama_perusahaan ?? '-' }} ({{ $lowongan->mitra->bidang_usaha ?? 'Mitra DU/DI' }})</div>
+            </div>
+          </div>
+
           <div>
             <label for="judul_lowongan" class="block text-xs font-semibold text-slate-700 mb-1.5">Judul Posisi Lowongan <span class="text-rose-500">*</span></label>
             <input type="text" name="judul_lowongan" id="judul_lowongan" value="{{ old('judul_lowongan', $lowongan->judul_lowongan) }}"  class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('judul_lowongan') border-rose-400 @enderror" />
             @error('judul_lowongan')<p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>@enderror
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label for="id_mitra" class="block text-xs font-semibold text-slate-700 mb-1.5">Mitra Industri DU/DI <span class="text-rose-500">*</span></label>
-              <select name="id_mitra" id="id_mitra"  class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('id_mitra') border-rose-400 @enderror">
-                <option value="">-- Pilih Mitra --</option>
-                @foreach($mitras as $mitra)
-                  <option value="{{ $mitra->id_mitra }}" {{ old('id_mitra', $lowongan->id_mitra) == $mitra->id_mitra ? 'selected' : '' }}>
-                    {{ $mitra->nama_perusahaan }}
-                  </option>
-                @endforeach
-              </select>
-              @error('id_mitra')<p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>@enderror
-            </div>
-
-            <div>
-              <label for="id_admin" class="block text-xs font-semibold text-slate-700 mb-1.5">Admin BLK Penanggung Jawab <span class="text-rose-500">*</span></label>
-              <select name="id_admin" id="id_admin"  class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('id_admin') border-rose-400 @enderror">
-                <option value="">-- Pilih Admin BLK --</option>
-                @foreach($admins as $admin)
-                  <option value="{{ $admin->id_admin }}" {{ old('id_admin', $lowongan->id_admin) == $admin->id_admin ? 'selected' : '' }}>
-                    {{ $admin->user->name ?? 'Admin' }}
-                  </option>
-                @endforeach
-              </select>
-              @error('id_admin')<p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>@enderror
-            </div>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">

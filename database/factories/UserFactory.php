@@ -38,6 +38,36 @@ class UserFactory extends Factory
     }
 
     /**
+     * Indicate that the user is an Admin BLK.
+     */
+    public function adminBlk(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'role' => 'admin_blk',
+        ]);
+    }
+
+    /**
+     * Indicate that the user is a Mitra.
+     */
+    public function mitra(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'role' => 'mitra',
+        ]);
+    }
+
+    /**
+     * Indicate that the user is a Peserta.
+     */
+    public function peserta(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'role' => 'peserta',
+        ]);
+    }
+
+    /**
      * Indicate that the model's email address should be unverified.
      */
     public function unverified(): static

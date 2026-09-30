@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreDaftarLowonganRequest extends FormRequest
 {
@@ -12,6 +13,23 @@ class StoreDaftarLowonganRequest extends FormRequest
     }
     public function rules(): array
     {
-        return ['id_mitra' => 'required|exists:mitras,id_mitra', 'id_admin' => 'required|exists:admin_blks,id_admin', 'judul_lowongan' => 'required|string|max:255', 'lokasi' => 'nullable|string|max:255', 'deskripsi' => 'nullable|string', 'kualifikasi' => 'nullable|string', 'tanggal_posting' => 'nullable|date', 'status' => 'nullable|in:aktif,ditutup,draft'];
+        $idMitra = $this->input('id_mitra') ?? auth()->user()?->mitra?->id_mitra;
+
+        return [
+            'id_mitra'        => 'nullable|exists:mitras,id_mitra',
+            'judul_lowongan'  => [
+                'required',
+                'string',
+                'max:255',
+                $idMitra
+                    ? Rule::unique('daftar_lowongan', 'judul_lowongan')->where('id_mitra', $idMitra)
+                    : 'nullable',
+            ],
+            'lokasi'          => 'nullable|string|max:255',
+            'deskripsi'       => 'nullable|string',
+            'kualifikasi'     => 'nullable|string',
+            'tanggal_posting' => 'nullable|date',
+            'status'          => 'nullable|in:aktif,ditutup,draft',
+        ];
     }
 }

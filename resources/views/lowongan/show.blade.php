@@ -92,15 +92,19 @@
     <!-- Right sidebar -->
     <div class="space-y-6">
       <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
-        <h4 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100">Info Mitra & PIC</h4>
+        <h4 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100">Info Mitra & Perusahaan</h4>
         <div class="space-y-3 text-xs">
           <div>
             <span class="text-slate-400 block mb-0.5">Perusahaan</span>
             <span class="font-bold text-slate-800">{{ $lowongan->mitra->nama_perusahaan ?? '-' }}</span>
           </div>
           <div>
-            <span class="text-slate-400 block mb-0.5">Admin Penanggung Jawab</span>
-            <span class="font-semibold text-slate-700">{{ $lowongan->admin->user->name ?? '-' }}</span>
+            <span class="text-slate-400 block mb-0.5">Bidang Usaha</span>
+            <span class="font-semibold text-slate-700">{{ $lowongan->mitra->bidang_usaha ?? '-' }}</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block mb-0.5">Wilayah</span>
+            <span class="font-semibold text-slate-700">{{ $lowongan->mitra->kota ?? '-' }}{{ $lowongan->mitra->provinsi ? ', ' . $lowongan->mitra->provinsi : '' }}</span>
           </div>
           <div>
             <span class="text-slate-400 block mb-0.5">Tanggal Diposting</span>

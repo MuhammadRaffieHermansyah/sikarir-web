@@ -13,7 +13,7 @@ class AdminBlkFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_user' => User::factory(),
+            'id_user' => User::factory()->adminBlk(),
         ];
     }
 }

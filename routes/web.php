@@ -6,6 +6,7 @@ use App\Http\Controllers\DaftarLowonganController;
 use App\Http\Controllers\DaftarPelatihanController;
 use App\Http\Controllers\DurasiPelatihanController;
 use App\Http\Controllers\JadwalPelatihanController;
+use App\Http\Controllers\InstrukturController;
 use App\Http\Controllers\KelasPelatihanController;
 use App\Http\Controllers\MitraController;
 use App\Http\Controllers\PesertaController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\PublicPelatihanController;
 use App\Http\Controllers\HariLiburController;
 use App\Http\Controllers\SertifikatController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RuanganWorkshopController;
 
 Route::get('/', function () {
     $pelatihans = DaftarPelatihan::all()->take(8);
@@ -56,10 +58,12 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:admin_blk')->group(function () {
         Route::resource('mitras', MitraController::class);
         Route::resource('durasi-pelatihan', DurasiPelatihanController::class);
+        Route::resource('instruktur', InstrukturController::class);
         Route::resource('pesertas', PesertaController::class);
         Route::resource('admin-blk', AdminBlkController::class);
         Route::resource('jadwal-pelatihan', JadwalPelatihanController::class);
         Route::resource('kelas-pelatihan', KelasPelatihanController::class);
+        Route::resource('ruangan-workshop', RuanganWorkshopController::class);
     });
 
     Route::middleware('role:admin_blk,mitra')->group(function () {

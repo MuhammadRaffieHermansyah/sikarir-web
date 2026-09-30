@@ -162,30 +162,62 @@
           <!-- Instruktur & Tempat -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label for="instruktur" class="block text-xs font-semibold text-slate-700 mb-1.5">
-                Nama Instruktur / Pengajar
+              <label for="id_instruktur" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                Instruktur / Pengajar <span class="text-rose-500">*</span>
               </label>
+<<<<<<< HEAD
               <input type="text" name="instruktur" id="instruktur"
                 value="{{ old('instruktur', $jadwal->instruktur) }}"
                 oninput="this.value = this.value.replace(/[^a-zA-Z\s.,'-]/g, '')"
                 class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('instruktur') border-rose-400 bg-rose-50/50 @enderror" />
               @error('instruktur')
+=======
+              <select name="id_instruktur" id="id_instruktur" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('id_instruktur') border-rose-400 bg-rose-50/50 @enderror">
+                <option value="">-- Pilih Instruktur --</option>
+                @foreach($instrukturs ?? [] as $instruktur)
+                  <option value="{{ $instruktur->id }}" {{ old('id_instruktur', $jadwal->id_instruktur) == $instruktur->id ? 'selected' : '' }}>{{ $instruktur->nama }} ({{ $instruktur->bidang_keahlian }})</option>
+                @endforeach
+              </select>
+              <p class="text-[11px] text-slate-400 mt-1">
+                Belum ada data? <a href="{{ route('instruktur.create') }}" class="text-emerald-700 hover:underline font-semibold">Tambah instruktur baru</a>
+              </p>
+              @error('id_instruktur')
+>>>>>>> 58505e94a8585392566dcd4a539d37a8757ed57d
                 <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
               @enderror
             </div>
 
             <div>
-              <label for="tempat" class="block text-xs font-semibold text-slate-700 mb-1.5">
-                Lokasi Bengkel / Ruangan Kelas
+              <label for="id_ruangan_workshop"
+                  class="block text-sm font-medium text-slate-700 mb-2">
+                  Ruangan Workshop
               </label>
+<<<<<<< HEAD
               <input type="text" name="tempat" id="tempat"
                 value="{{ old('tempat', $jadwal->tempat) }}"
                 oninput="this.value = this.value.replace(/[^a-zA-Z0-9\s]/g, '')"
                 class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('tempat') border-rose-400 bg-rose-50/50 @enderror" />
               @error('tempat')
                 <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
+=======
+              <select
+                  name="id_ruangan_workshop"
+                  id="id_ruangan_workshop"
+                  class="w-full rounded-lg border border-slate-300 px-4 py-3
+                        text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                  <option value="">-- Pilih Ruangan Workshop --</option>
+                  @foreach ($ruanganWorkshops as $ruangan)
+                      <option
+                          value="{{ $ruangan->id }}"
+                          {{ old('id_ruangan_workshop', $jadwal->id_ruangan_workshop) == $ruangan->id ? 'selected' : '' }}>
+                          {{ $ruangan->nama_ruangan }}
+                      </option>
+                  @endforeach
+              </select>
+              @error('id_ruangan_workshop')
+                  <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+>>>>>>> 58505e94a8585392566dcd4a539d37a8757ed57d
               @enderror
-            </div>
           </div>
 
           <!-- Status -->
