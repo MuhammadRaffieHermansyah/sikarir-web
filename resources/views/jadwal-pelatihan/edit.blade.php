@@ -143,14 +143,27 @@
             </div>
 
             <div>
-              <label for="tempat" class="block text-xs font-semibold text-slate-700 mb-1.5">
-                Lokasi Bengkel / Ruangan Kelas
+              <label for="id_ruangan_workshop"
+                  class="block text-sm font-medium text-slate-700 mb-2">
+                  Ruangan Workshop
               </label>
-              <input type="text" name="tempat" id="tempat" value="{{ old('tempat', $jadwal->tempat) }}" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('tempat') border-rose-400 bg-rose-50/50 @enderror" />
-              @error('tempat')
-                <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
+              <select
+                  name="id_ruangan_workshop"
+                  id="id_ruangan_workshop"
+                  class="w-full rounded-lg border border-slate-300 px-4 py-3
+                        text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                  <option value="">-- Pilih Ruangan Workshop --</option>
+                  @foreach ($ruanganWorkshops as $ruangan)
+                      <option
+                          value="{{ $ruangan->id }}"
+                          {{ old('id_ruangan_workshop', $jadwal->id_ruangan_workshop) == $ruangan->id ? 'selected' : '' }}>
+                          {{ $ruangan->nama_ruangan }}
+                      </option>
+                  @endforeach
+              </select>
+              @error('id_ruangan_workshop')
+                  <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
               @enderror
-            </div>
           </div>
 
           <div>

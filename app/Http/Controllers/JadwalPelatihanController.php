@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JadwalPelatihan;
 use App\Models\DaftarPelatihan;
 use App\Models\Instruktur;
+use App\Models\RuanganWorkshop;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -14,13 +15,15 @@ class JadwalPelatihanController extends Controller
     public function index(Request $request): View
     {
         // 1. Inisialisasi Query Utama untuk Tabel
-        $query = JadwalPelatihan::with(['pelatihan', 'instruktur', 'kelas.peserta.user']);
+        $query = JadwalPelatihan::with(['pelatihan', 'instruktur', 'ruanganWorkshop', 'kelas.peserta.user']);
 
         // 2. Filter Pencarian Keyword (Nama Pelatihan, Instruktur, Tempat)
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('tempat', 'like', "%{$search}%")
+                $q->whereHas('ruanganWorkshop', function ($sub) use ($search) { 
+                    $sub->where('nama_ruangan', 'like', "%{$search}%");
+                })
                   ->orWhereHas('instruktur', function ($sub) use ($search) {
                       $sub->where('nama', 'like', "%{$search}%");
                   })
@@ -57,7 +60,8 @@ class JadwalPelatihanController extends Controller
     {
         $pelatihans = DaftarPelatihan::with('durasi')->orderBy('nama_pelatihan')->get();
         $instrukturs = Instruktur::orderBy('nama')->get();
-        return view('jadwal-pelatihan.create', compact('pelatihans', 'instrukturs'));
+        $ruanganWorkshops = RuanganWorkshop::orderBy('nama_ruangan')->get();
+        return view('jadwal-pelatihan.create', compact('pelatihans', 'instrukturs', 'ruanganWorkshops'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -69,7 +73,7 @@ class JadwalPelatihanController extends Controller
             'jam_mulai'       => 'nullable|date_format:H:i',
             'jam_selesai'     => 'nullable|date_format:H:i',
             'id_instruktur'    => 'nullable|exists:instruktur,id',
-            'tempat'          => 'nullable|string|max:255|regex:/^[a-zA-Z0-9\s]+$/',
+            'id_ruangan_workshop' => 'nullable|exists:ruangan_workshops,id',
             'status'          => 'required|in:tersedia,berlangsung,selesai',
         ], [
             'id_pelatihan.required'           => 'Program pelatihan wajib dipilih.',
@@ -79,7 +83,7 @@ class JadwalPelatihanController extends Controller
             'jam_mulai.date_format'           => 'Format jam mulai tidak valid (contoh: 08:00).',
             'jam_selesai.date_format'         => 'Format jam selesai tidak valid (contoh: 15:30).',
             'id_instruktur.exists'            => 'Instruktur yang dipilih tidak terdaftar.',
-            'tempat.regex'                    => 'Tempat hanya boleh mengandung huruf dan angka.',
+            'id_ruangan_workshop.exists'      => 'Ruangan workshop yang dipilih tidak terdaftar.',
         ]);
 
         JadwalPelatihan::create($validated);
@@ -88,7 +92,7 @@ class JadwalPelatihanController extends Controller
 
     public function show(int $id): View
     {
-        $jadwal = JadwalPelatihan::with(['pelatihan.admin.user', 'instruktur', 'kelas.peserta.user', 'absensi', 'sertifikat'])->findOrFail($id);
+        $jadwal = JadwalPelatihan::with(['pelatihan.admin.user', 'instruktur', 'ruanganWorkshop', 'kelas.peserta.user', 'absensi', 'sertifikat'])->findOrFail($id);
         return view('jadwal-pelatihan.show', compact('jadwal'));
     }
 
@@ -97,7 +101,8 @@ class JadwalPelatihanController extends Controller
         $jadwal     = JadwalPelatihan::findOrFail($id);
         $pelatihans = DaftarPelatihan::with('durasi')->orderBy('nama_pelatihan')->get();
         $instrukturs = Instruktur::orderBy('nama')->get();
-        return view('jadwal-pelatihan.edit', compact('jadwal', 'pelatihans', 'instrukturs'));
+        $ruanganWorkshops = RuanganWorkshop::orderBy('nama_ruangan')->get();
+        return view('jadwal-pelatihan.edit', compact('jadwal', 'pelatihans', 'ruanganWorkshops', 'instrukturs'));
     }
 
     public function update(Request $request, int $id): RedirectResponse
@@ -111,7 +116,7 @@ class JadwalPelatihanController extends Controller
             'jam_mulai'       => 'required|date_format:H:i',
             'jam_selesai'     => 'required|date_format:H:i',
             'id_instruktur'    => 'required|exists:instruktur,id',
-            'tempat'          => 'required|string|max:255|regex:/^[a-zA-Z0-9\s]+$/',
+            'id_ruangan_workshop' => 'required|exists:ruangan_workshops,id',
             'status'          => 'required|in:tersedia,berlangsung,selesai',
         ], [
             'id_pelatihan.required'           => 'Program pelatihan wajib dipilih.',
@@ -122,7 +127,8 @@ class JadwalPelatihanController extends Controller
             'jam_selesai.date_format'         => 'Format jam selesai tidak valid (contoh: 15:30).',
             'id_instruktur.required'          => 'Instruktur pembimbing wajib dipilih.',
             'id_instruktur.exists'            => 'Instruktur yang dipilih tidak terdaftar.',
-            'tempat.regex'                    => 'Tempat hanya boleh mengandung huruf dan angka.',
+            'id_ruangan_workshop.required'    => 'Ruangan workshop wajib dipilih.',
+            'id_ruangan_workshop.exists'      => 'Ruangan workshop yang dipilih tidak terdaftar.',
         ]);
 
         $jadwal->update($validated);
