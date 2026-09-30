@@ -25,6 +25,7 @@ class RuanganWorkshopController extends Controller
         }
 
         $ruanganWorkshops = $query
+            ->withCount('jadwal')
             ->orderBy('nama_ruangan')
             ->paginate(10)
             ->withQueryString();
@@ -48,7 +49,7 @@ class RuanganWorkshopController extends Controller
             'string',
             'max:150',
             'regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9\s]+$/',
-            'unique:ruangan_workshops,nama_ruangan',
+            'unique:ruangan_workshop,nama_ruangan',
         ],
     ], [
         'nama_ruangan.required' =>
@@ -108,7 +109,7 @@ class RuanganWorkshopController extends Controller
                 'regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9\s]+$/',
 
                 Rule::unique(
-                    'ruangan_workshops',
+                    'ruangan_workshop',
                     'nama_ruangan'
                 )->ignore($ruanganWorkshop->id),
             ],

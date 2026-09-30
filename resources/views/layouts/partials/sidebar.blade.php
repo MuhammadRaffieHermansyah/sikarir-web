@@ -150,6 +150,30 @@
                     </a>
 
 
+                    <!-- Ruangan Workshop -->
+                    <a href="{{ route('ruangan-workshop.index') }}"
+                        class="group flex items-center justify-between gap-2 px-3 py-2 rounded-lg transition-all duration-200
+                        {{ request()->routeIs('ruangan-workshop.*')
+                            ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-sm'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-emerald-700 hover:translate-x-0.5 hover:shadow-sm' }}">
+
+                        <span class="flex items-center gap-2.5 min-w-0">
+                            <i data-lucide="building-2"
+                                class="w-4 h-4 shrink-0 transition-colors duration-200
+                                   {{ request()->routeIs('ruangan-workshop.*')
+                                       ? 'text-emerald-600'
+                                       : 'text-slate-400 group-hover:text-emerald-600' }}">
+                            </i>
+
+                            <span class="truncate">Ruangan Workshop</span>
+                        </span>
+
+                        <span class="shrink-0 bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">
+                            {{ \App\Models\RuanganWorkshop::count() }} Ruangan
+                        </span>
+                    </a>
+
+
                     <!-- Jadwal Pelatihan -->
                     <a href="{{ route('jadwal-pelatihan.index') }}"
                         class="group flex items-center justify-between gap-2 px-3 py-2 rounded-lg transition-all duration-200
