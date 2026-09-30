@@ -12,6 +12,7 @@ use App\Models\JadwalPelatihan;
 use App\Models\KelasPelatihan;
 use App\Models\Mitra;
 use App\Models\Peserta;
+use App\Models\RuanganWorkshop;
 use App\Models\Sertifikat;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -76,6 +77,16 @@ class DatabaseSeeder extends Seeder
         $this->call(InstrukturSeeder::class);
 
         $instrukturs = Instruktur::all();
+
+        /*
+        |--------------------------------------------------------------------------
+        | RUANGAN WORKSHOP
+        |--------------------------------------------------------------------------
+        */
+
+        $this->call(RuanganWorkshopSeeder::class);
+
+        $ruanganWorkshops = RuanganWorkshop::all();
 
         /*
         |--------------------------------------------------------------------------
@@ -264,13 +275,8 @@ class DatabaseSeeder extends Seeder
                     'id_instruktur' =>
                         $instrukturs->random()->id,
 
-                    'tempat' =>
-                        fake()->randomElement([
-                            'Ruang Pelatihan 1',
-                            'Ruang Pelatihan 2',
-                            'Laboratorium Komputer',
-                            'Aula BLK',
-                        ]),
+                    'id_ruangan_workshop' =>
+                        $ruanganWorkshops->random()->id,
 
                     'status' =>
                         fake()->randomElement([

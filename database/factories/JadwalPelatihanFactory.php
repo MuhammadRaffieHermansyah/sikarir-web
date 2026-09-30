@@ -3,7 +3,9 @@
 namespace Database\Factories;
 
 use App\Models\DaftarPelatihan;
+use App\Models\Instruktur;
 use App\Models\JadwalPelatihan;
+use App\Models\RuanganWorkshop;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class JadwalPelatihanFactory extends Factory
@@ -39,14 +41,9 @@ class JadwalPelatihanFactory extends Factory
                 '16:30:00',
             ]),
 
-            'instruktur' => fake()->name(),
+            'id_instruktur' => Instruktur::factory(),
 
-            'tempat' => fake()->randomElement([
-                'Ruang Pelatihan 1',
-                'Ruang Pelatihan 2',
-                'Laboratorium Komputer',
-                'Aula BLK',
-            ]),
+            'id_ruangan_workshop' => RuanganWorkshop::factory(),
 
             'status' => fake()->randomElement([
                 'tersedia',
