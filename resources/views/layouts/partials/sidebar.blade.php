@@ -59,7 +59,7 @@
                     </div>
 
                     <!-- Admin BLK -->
-                    <a href="{{ route('admin-blk.index') }}"
+                    {{-- <a href="{{ route('admin-blk.index') }}"
                         class="group flex items-center justify-between gap-2 px-3 py-2 rounded-lg transition-all duration-200
                         {{ request()->routeIs('admin-blk.*')
                             ? 'bg-emerald-50 text-emerald-700 font-semibold shadow-sm'
@@ -77,7 +77,7 @@
                         <span class="shrink-0 bg-emerald-100 text-emerald-800 text-[10px] font-semibold px-1.5 py-0.5 rounded">
                             {{ \App\Models\AdminBlk::count() }} Admin
                         </span>
-                    </a>
+                    </a> --}}
 
 
                     <!-- Program Pelatihan -->

@@ -19,9 +19,9 @@
       <a href="{{ route('lowongan.index') }}" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
         <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali
       </a>
-      <a href="{{ route('lowongan.edit', $lowongan->id_lowongan) }}" class="bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold px-3.5 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+      {{-- <a href="{{ route('lowongan.edit', $lowongan->id_lowongan) }}" class="bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold px-3.5 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
         <i data-lucide="edit-3" class="w-4 h-4"></i> Edit Lowongan
-      </a>
+      </a> --}}
     </div>
   </div>
 
@@ -113,7 +113,7 @@
         </div>
       </div>
 
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-3">
+      {{-- <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-3">
         <h4 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100">Aksi Administratif</h4>
         <div class="space-y-2">
           <a href="{{ route('lowongan.edit', $lowongan->id_lowongan) }}" class="w-full px-3.5 py-2.5 bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold rounded-lg shadow-sm flex items-center justify-center gap-2 transition">
@@ -127,7 +127,7 @@
             </button>
           </form>
         </div>
-      </div>
+      </div> --}}
     </div>
   </div>
 @endsection
