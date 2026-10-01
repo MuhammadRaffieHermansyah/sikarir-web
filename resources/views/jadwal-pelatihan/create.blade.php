@@ -173,7 +173,7 @@
 
             <div>
               <label for="id_ruangan_workshop"
-                  class="block text-sm font-medium text-slate-700 mb-2">
+                  class="block text-xs font-medium text-slate-700 mb-2">
                   Ruangan Workshop
               </label>
               <select name="id_ruangan_workshop" id="id_ruangan_workshop" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('id_ruangan_workshop') border-rose-400 bg-rose-50/50 @enderror">
@@ -490,7 +490,6 @@ document.addEventListener('DOMContentLoaded', function () {
   tglSelesai.addEventListener('change', function () {
     if (tglMulai.value && this.value && hariLiburSet.size > 0) updatePreviewManual();
   });
-</script>
 
   function updatePreviewManual() {
     if (!tglMulai.value || !tglSelesai.value) return;

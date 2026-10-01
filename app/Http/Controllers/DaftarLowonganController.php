@@ -95,13 +95,13 @@ class DaftarLowonganController extends Controller
             'judul_lowongan'  => [
                 'required',
                 'string',
-                'max:255',
+                'max:100',
                 'regex:/^[a-zA-Z\s]+$/',
                 Rule::unique('daftar_lowongan', 'judul_lowongan')->where(function ($query) use ($mitra) {
                     return $query->where('id_mitra', $mitra->id_mitra);
                 }),
             ],
-            'lokasi'          => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+            'lokasi'          => 'required|string|max:255',
             'deskripsi'       => 'required|string',
             'kualifikasi'     => 'required|string',
             'tanggal_posting' => 'nullable|date',
@@ -109,12 +109,12 @@ class DaftarLowonganController extends Controller
         ], [
             'judul_lowongan.required' => 'Judul posisi lowongan wajib diisi.',
             'judul_lowongan.unique'   => 'Perusahaan Anda sudah memiliki lowongan dengan judul tersebut.',
+            'judul_lowongan.max'      => 'Judul posisi lowongan maksimal 100 karakter.',
             'lokasi.required'         => 'Lokasi penempatan wajib diisi.',
             'deskripsi.required'      => 'Deskripsi pekerjaan wajib diisi.',
             'kualifikasi.required'    => 'Kualifikasi & persyaratan wajib diisi.',
             'status.in'               => 'Status lowongan harus aktif, draft, atau ditutup.',
             'judul_lowongan.regex'    => 'Judul lowongan tidak boleh mengandung simbol atau angka.',
-            'lokasi.regex'            => 'Lokasi tidak boleh mengandung simbol atau angka.',
         ]);
 
         $validated['id_mitra'] = $mitra->id_mitra;
@@ -164,7 +164,7 @@ class DaftarLowonganController extends Controller
                     })
                     ->ignore($lowongan->id_lowongan, 'id_lowongan'),
             ],
-            'lokasi'          => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+            'lokasi'          => 'required|string|max:255',
             'deskripsi'       => 'required|string',
             'kualifikasi'     => 'required|string',
             'tanggal_posting' => 'nullable|date',
@@ -177,7 +177,6 @@ class DaftarLowonganController extends Controller
             'kualifikasi.required'    => 'Kualifikasi & persyaratan wajib diisi.',
             'status.in'               => 'Status lowongan harus aktif, draft, atau ditutup.',
             'judul_lowongan.regex'    => 'Judul lowongan hanya boleh berisi huruf dan spasi.',
-            'lokasi.regex'            => 'Lokasi hanya boleh berisi huruf dan spasi.',
         ]);
 
         $lowongan->update($validated);

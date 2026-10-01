@@ -68,7 +68,7 @@ class RuanganWorkshopController extends Controller
     RuanganWorkshop::create($validated);
 
     return redirect()
-        ->route('jadwal-pelatihan.create')
+        ->route('ruangan-workshop.index')
         ->with(
             'success',
             'Ruangan workshop berhasil ditambahkan.'

@@ -3,6 +3,7 @@
 @section('title', 'Dashboard Utama - SIKARIR')
 
 @section('content')
+
   <!-- Hero / Banner Welcome Section -->
   <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 p-6 md:p-8 text-white shadow-lg border border-emerald-800/40">
     <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">

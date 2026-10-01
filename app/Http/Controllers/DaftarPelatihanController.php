@@ -20,14 +20,14 @@ class DaftarPelatihanController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('nama_pelatihan', 'like', "%{$search}%")
-                  ->orWhere('deskripsi_pelatihan', 'like', "%{$search}%");
+                    ->orWhere('deskripsi_pelatihan', 'like', "%{$search}%");
             });
         }
 
         // Paginate data & tahan URL parameter
         $pelatihans = $query->latest('id_pelatihan')
-                            ->paginate(10)
-                            ->withQueryString();
+            ->paginate(10)
+            ->withQueryString();
 
         return view('pelatihan.index', compact('pelatihans'));
     }

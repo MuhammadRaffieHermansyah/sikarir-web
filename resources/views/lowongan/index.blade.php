@@ -172,6 +172,7 @@
                                         title="Lihat Detail">
                                         <i data-lucide="eye" class="w-4 h-4"></i>
                                     </a>
+                                    @if(auth()->user()->role == "mitra")
                                     <a href="{{ route('lowongan.edit', $lowongan->id_lowongan) }}"
                                         class="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-slate-100 rounded-lg transition"
                                         title="Edit Lowongan">
@@ -188,6 +189,7 @@
                                             <i data-lucide="trash-2" class="w-4 h-4"></i>
                                         </button>
                                     </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>

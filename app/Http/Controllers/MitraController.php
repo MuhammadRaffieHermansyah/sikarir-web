@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class MitraController extends Controller
@@ -63,7 +64,7 @@ class MitraController extends Controller
             'jabatan_pic'     => 'required|string|max:100|regex:/^[a-zA-Z\s]+$/',
             'provinsi'        => 'required|string|max:100|regex:/^[a-zA-Z\s]+$/',
             'kota'            => 'required|string|max:100|regex:/^[a-zA-Z\s]+$/',
-            'alamat'          => 'required|string|regex:/^[a-zA-Z\s]+$/',
+            'alamat'          => 'required|string',
         ], [
             'logo_perusahaan.required' => 'Logo perusahaan wajib diunggah.',
             'nama_perusahaan.required' => 'Nama perusahaan wajib diisi.',
@@ -83,7 +84,6 @@ class MitraController extends Controller
             'provinsi.regex'           => 'Provinsi hanya boleh mengandung huruf dan spasi.',
             'kota.regex'               => 'Kota hanya boleh mengandung huruf dan spasi.',
             'no_izin.regex'            => 'Nomor izin hanya boleh mengandung huruf dan angka.',
-            'alamat.regex'             => 'Alamat hanya boleh mengandung huruf dan spasi.',
             'logo_perusahaan.image'    => 'File logo harus berupa gambar.',
             'logo_perusahaan.mimes'    => 'Format logo yang diizinkan: jpeg, png, jpg, gif, webp, svg.',
             'logo_perusahaan.max'      => 'Ukuran file logo maksimal 2MB.',
@@ -100,7 +100,7 @@ class MitraController extends Controller
 
     public function show(int $id): View
     {
-        $mitra = Mitra::with(['user', 'lowongan.admin.user'])->findOrFail($id);
+        $mitra = Mitra::with(['user'])->findOrFail($id);
         return view('mitras.show', compact('mitra'));
     }
 
@@ -116,20 +116,34 @@ class MitraController extends Controller
         $mitra = Mitra::findOrFail($id);
 
         $validated = $request->validate([
-            'nama_perusahaan' => 'required|string|max:255',
-            'id_user'         => 'nullable|exists:users,id|unique:mitras,id_user,' . $mitra->id_mitra . ',id_mitra',
-            'jenis_mitra'     => 'nullable|string|max:100',
-            'bidang_usaha'    => 'nullable|string|max:255',
-            'no_telp'         => 'nullable|string|max:30',
-            'no_izin'         => 'nullable|string|max:100',
-            'jabatan_pic'     => 'nullable|string|max:100',
-            'provinsi'        => 'nullable|string|max:100',
-            'kota'            => 'nullable|string|max:100',
-            'alamat'          => 'nullable|string',
-            'logo_perusahaan' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
+            'logo_perusahaan' => 'image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
+            'nama_perusahaan' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/', Rule::unique('mitras', 'nama_perusahaan')->ignore($id, 'id_mitra')],
+            'id_user'         => 'required|',
+            'jenis_mitra'     => 'required|string|max:100',
+            'bidang_usaha'    => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+            'no_telp'         => 'required|string|max:30',
+            'no_izin'         => ['required','string','max:100', 'regex:/^[a-zA-Z0-9\s]+$/', Rule::unique('mitras', 'no_izin')->ignore($id, 'id_mitra')],
+            'jabatan_pic'     => 'required|string|max:100|regex:/^[a-zA-Z\s]+$/',
+            'provinsi'        => 'required|string|max:100|regex:/^[a-zA-Z\s]+$/',
+            'kota'            => 'required|string|max:100|regex:/^[a-zA-Z\s]+$/',
+            'alamat'          => 'required|string',
         ], [
             'nama_perusahaan.required' => 'Nama perusahaan wajib diisi.',
-            'id_user.unique'           => 'Akun pengguna ini sudah ditautkan ke mitra lain.',
+            'nama_perusahaan.unique'   => 'Nama perusahaan sudah terdaftar.',
+            'jenis_mitra.required'     => 'Jenis mitra wajib diisi.',
+            'bidang_usaha.required'    => 'Bidang usaha wajib diisi.',
+            'no_telp.required'         => 'Nomor telepon wajib diisi.',
+            'no_izin.required'         => 'Nomor izin wajib diisi.',
+            'jabatan_pic.required'     => 'Jabatan PIC wajib diisi.',
+            'provinsi.required'        => 'Provinsi wajib diisi.',
+            'kota.required'            => 'Kota wajib diisi.',
+            'alamat.required'          => 'Alamat wajib diisi.',
+            'nama_perusahaan.regex'    => 'Nama perusahaan hanya boleh mengandung huruf dan spasi.',
+            'bidang_usaha.regex'       => 'Bidang usaha hanya boleh mengandung huruf dan spasi.',
+            'jabatan_pic.regex'        => 'Jabatan PIC hanya boleh mengandung huruf dan spasi.',
+            'provinsi.regex'           => 'Provinsi hanya boleh mengandung huruf dan spasi.',
+            'kota.regex'               => 'Kota hanya boleh mengandung huruf dan spasi.',
+            'no_izin.regex'            => 'Nomor izin hanya boleh mengandung huruf dan angka.',
             'logo_perusahaan.image'    => 'File logo harus berupa gambar.',
             'logo_perusahaan.mimes'    => 'Format logo yang diizinkan: jpeg, png, jpg, gif, webp, svg.',
             'logo_perusahaan.max'      => 'Ukuran file logo maksimal 2MB.',

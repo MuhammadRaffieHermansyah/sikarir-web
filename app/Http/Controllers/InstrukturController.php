@@ -36,12 +36,13 @@ class InstrukturController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'nama' => 'required|string|max:150|regex:/^[a-zA-Z\s]+$/',
+            'nama' => 'required|string|max:150|regex:/^[a-zA-Z\s]+$/|unique:instruktur,nama',
             'bidang_keahlian' => 'required|string|max:150|regex:/^[a-zA-Z\s]+$/',
         ], [
             'nama.required' => 'Nama instruktur wajib diisi.',
             'nama.max' => 'Nama instruktur maksimal 150 karakter.',
             'nama.regex' => 'Nama instruktur hanya boleh mengandung huruf dan spasi.',
+            'nama.unique' => 'Nama instruktur sudah terdaftar.',
             'bidang_keahlian.required' => 'Bidang keahlian wajib diisi.',
             'bidang_keahlian.max' => 'Bidang keahlian maksimal 150 karakter.',
             'bidang_keahlian.regex' => 'Bidang keahlian hanya boleh mengandung huruf dan spasi.',
