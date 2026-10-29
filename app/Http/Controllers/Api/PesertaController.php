@@ -107,16 +107,19 @@ class PesertaController extends Controller
         }
 
         $validated = $request->validate([
-            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
-            'nomor_kk' => 'required|string|max:30',
-            'nomor_wa' => 'required|string|max:30',
-            'tanggal_lahir' => 'required|date',
-            'tempat_lahir' => 'required|string|max:100',
-            'alamat_lengkap' => 'required|string',
-            'pendidikan_terakhir' => 'required|string|max:100',
-            'pendidikan_sekarang' => 'nullable|string|max:100',
-            'jurusan' => 'nullable|string|max:150',
-            'pas_foto' => 'nullable|string',
+            'jenis_kelamin'      => 'required|in:Laki-laki,Perempuan',
+            'nomor_kk'           => 'required|string|max:30',
+            'nomor_wa'           => 'required|string|max:30',
+            'tanggal_lahir'      => 'required|date',
+            'tempat_lahir'       => 'required|string|max:100',
+            'alamat_lengkap'     => 'required|string',
+            'pendidikan_terakhir'=> 'required|string|max:100',
+            'pendidikan_sekarang'=> 'nullable|string|max:100',
+            'status_pendidikan'  => 'nullable|in:sudah_lulus,masih_menempuh',
+            'jurusan'            => 'nullable|string|max:150',
+            'is_disabilitas'     => 'nullable|boolean',
+            'jenis_disabilitas'  => 'nullable|string|max:100',
+            'pas_foto'           => 'nullable|file|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $peserta = Peserta::firstOrCreate(
@@ -126,6 +129,18 @@ class PesertaController extends Controller
                 'jenis_kelamin' => $validated['jenis_kelamin'],
             ]
         );
+
+        // Handle upload pas foto
+        if ($request->hasFile('pas_foto')) {
+            // Hapus foto lama jika ada
+            if ($peserta->pas_foto) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($peserta->pas_foto);
+            }
+            $path = $request->file('pas_foto')->store('pas_foto', 'public');
+            $validated['pas_foto'] = $path;
+        } else {
+            unset($validated['pas_foto']); // jangan hapus foto lama kalau tidak ada upload baru
+        }
 
         $peserta->update($validated);
 
