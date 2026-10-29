@@ -8,6 +8,7 @@ use App\Http\Controllers\DurasiPelatihanController;
 use App\Http\Controllers\JadwalPelatihanController;
 use App\Http\Controllers\InstrukturController;
 use App\Http\Controllers\KelasPelatihanController;
+use App\Http\Controllers\LamaranLowonganController;
 use App\Http\Controllers\MitraController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\ProfileController;
@@ -68,6 +69,8 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('role:admin_blk,mitra')->group(function () {
         Route::resource('lowongan', DaftarLowonganController::class);
+        // Update status lamaran peserta
+        Route::patch('lamaran/{id}/update-status', [LamaranLowonganController::class, 'updateStatus'])->name('lamaran.update-status');
     });
 
     Route::middleware('role:admin_blk,mitra,peserta')->group(function () {
@@ -75,6 +78,9 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::middleware('role:admin_blk,peserta')->group(function () {
+        Route::get('absen/rekap', [AbsenController::class, 'rekap'])->name('absen.rekap');
+        Route::get('absen/export', [AbsenController::class, 'export'])->name('absen.export');
+        Route::get('absen/cetak', [AbsenController::class, 'cetak'])->name('absen.cetak');
         Route::resource('absen', AbsenController::class);
         Route::resource('sertifikat', SertifikatController::class);
     });

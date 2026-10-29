@@ -12,6 +12,10 @@ class StoreKelasPelatihanRequest extends FormRequest
     }
     public function rules(): array
     {
-        return ['id_peserta' => 'required|exists:pesertas,id_peserta', 'id_jadwal' => 'required|exists:jadwal_pelatihan,id_jadwal', 'status' => 'nullable|string|max:30'];
+        return [
+            'id_peserta' => 'nullable|exists:pesertas,id_peserta',
+            'id_jadwal'  => 'required|exists:jadwal_pelatihan,id_jadwal',
+            'status'     => 'nullable|string|max:30',
+        ];
     }
 }

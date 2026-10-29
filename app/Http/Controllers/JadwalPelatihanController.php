@@ -67,14 +67,17 @@ class JadwalPelatihanController extends Controller
         public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'id_pelatihan'    => 'required|exists:daftar_pelatihan,id_pelatihan',
-            'tanggal_mulai'   => 'required|date|after_or_equal:today',
-            'tanggal_selesai' => 'required|date|after:tanggal_mulai',
-            'jam_mulai'       => 'nullable|date_format:H:i',
-            'jam_selesai'     => 'nullable|date_format:H:i',
-            'id_instruktur'    => 'nullable|exists:instruktur,id',
+            'id_pelatihan'        => 'required|exists:daftar_pelatihan,id_pelatihan',
+            'tanggal_mulai'       => 'required|date|after_or_equal:today',
+            'tanggal_selesai'     => 'required|date|after:tanggal_mulai',
+            'jam_mulai'           => 'nullable|date_format:H:i',
+            'jam_selesai'         => 'nullable|date_format:H:i',
+            'id_instruktur'       => 'nullable|exists:instruktur,id',
             'id_ruangan_workshop' => 'nullable|exists:ruangan_workshop,id',
-            'status'          => 'required|in:tersedia,berlangsung,selesai',
+            'status'              => 'required|in:tersedia,berlangsung,selesai',
+            'lokasi_latitude'     => 'nullable|numeric|between:-90,90',
+            'lokasi_longitude'    => 'nullable|numeric|between:-180,180',
+            'radius_meter'        => 'nullable|integer|min:10|max:10000',
         ], [
             'id_pelatihan.required'           => 'Program pelatihan wajib dipilih.',
             'tanggal_mulai.required'          => 'Tanggal mulai pelatihan wajib diisi.',
@@ -85,6 +88,16 @@ class JadwalPelatihanController extends Controller
             'id_instruktur.exists'            => 'Instruktur yang dipilih tidak terdaftar.',
             'id_ruangan_workshop.exists'      => 'Ruangan workshop yang dipilih tidak terdaftar.',
         ]);
+
+        if (empty($validated['lokasi_latitude'])) {
+            $validated['lokasi_latitude'] = -8.1763;
+        }
+        if (empty($validated['lokasi_longitude'])) {
+            $validated['lokasi_longitude'] = 113.7007;
+        }
+        if (empty($validated['radius_meter'])) {
+            $validated['radius_meter'] = 100;
+        }
 
         JadwalPelatihan::create($validated);
         return redirect()->route('jadwal-pelatihan.index')->with('success', 'Batch jadwal pelatihan berhasil ditambahkan.');
@@ -110,14 +123,17 @@ class JadwalPelatihanController extends Controller
         $jadwal = JadwalPelatihan::findOrFail($id);
 
         $validated = $request->validate([
-            'id_pelatihan'    => 'required|exists:daftar_pelatihan,id_pelatihan',
-            'tanggal_mulai'   => 'required|date',
-            'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
-            'jam_mulai'       => 'required|date_format:H:i',
-            'jam_selesai'     => 'required|date_format:H:i',
-            'id_instruktur'    => 'required|exists:instruktur,id',
+            'id_pelatihan'        => 'required|exists:daftar_pelatihan,id_pelatihan',
+            'tanggal_mulai'       => 'required|date',
+            'tanggal_selesai'     => 'required|date|after_or_equal:tanggal_mulai',
+            'jam_mulai'           => 'required|date_format:H:i',
+            'jam_selesai'         => 'required|date_format:H:i',
+            'id_instruktur'       => 'required|exists:instruktur,id',
             'id_ruangan_workshop' => 'required|exists:ruangan_workshop,id',
-            'status'          => 'required|in:tersedia,berlangsung,selesai',
+            'status'              => 'required|in:tersedia,berlangsung,selesai',
+            'lokasi_latitude'     => 'nullable|numeric|between:-90,90',
+            'lokasi_longitude'    => 'nullable|numeric|between:-180,180',
+            'radius_meter'        => 'nullable|integer|min:10|max:10000',
         ], [
             'id_pelatihan.required'           => 'Program pelatihan wajib dipilih.',
             'tanggal_mulai.required'          => 'Tanggal mulai pelatihan wajib diisi.',

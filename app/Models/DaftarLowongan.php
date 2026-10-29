@@ -18,8 +18,14 @@ class DaftarLowongan extends Model
     {
         return $this->getKey();
     }
+
     public function mitra()
     {
         return $this->belongsTo(Mitra::class, 'id_mitra');
+    }
+
+    public function lamaran()
+    {
+        return $this->hasMany(LamaranLowongan::class, 'id_lowongan');
     }
 }

@@ -14,42 +14,22 @@ class JadwalPelatihanFactory extends Factory
 
     public function definition(): array
     {
-        $tanggalMulai = fake()->dateTimeBetween(
-            'now',
-            '+3 months'
-        );
-
+        $tanggalMulai = fake()->dateTimeBetween('now', '+3 months');
         $tanggalSelesai = (clone $tanggalMulai);
         $tanggalSelesai->modify('+30 days');
 
         return [
             'id_pelatihan' => DaftarPelatihan::factory(),
-
             'tanggal_mulai' => $tanggalMulai->format('Y-m-d'),
-
             'tanggal_selesai' => $tanggalSelesai->format('Y-m-d'),
-
-            'jam_mulai' => fake()->randomElement([
-                '08:00:00',
-                '08:30:00',
-                '09:00:00',
-            ]),
-
-            'jam_selesai' => fake()->randomElement([
-                '15:00:00',
-                '16:00:00',
-                '16:30:00',
-            ]),
-
+            'jam_mulai' => fake()->randomElement(['08:00:00', '08:30:00', '09:00:00']),
+            'jam_selesai' => fake()->randomElement(['15:00:00', '16:00:00', '16:30:00']),
             'id_instruktur' => Instruktur::factory(),
-
             'id_ruangan_workshop' => RuanganWorkshop::factory(),
-
-            'status' => fake()->randomElement([
-                'tersedia',
-                'berlangsung',
-                'selesai',
-            ]),
+            'lokasi_latitude' => -8.1763,
+            'lokasi_longitude' => 113.7007,
+            'radius_meter' => 100,
+            'status' => fake()->randomElement(['tersedia', 'berlangsung', 'selesai']),
         ];
     }
 }

@@ -19,9 +19,6 @@
       <a href="{{ route('lowongan.index') }}" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
         <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali
       </a>
-      {{-- <a href="{{ route('lowongan.edit', $lowongan->id_lowongan) }}" class="bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold px-3.5 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="edit-3" class="w-4 h-4"></i> Edit Lowongan
-      </a> --}}
     </div>
   </div>
 
@@ -55,6 +52,9 @@
           <span class="w-2 h-2 rounded-full {{ $lowongan->status === 'aktif' ? 'bg-emerald-500 animate-pulse' : ($lowongan->status === 'draft' ? 'bg-amber-400' : 'bg-slate-400') }}"></span>
           {{ ucfirst($lowongan->status) }}
         </div>
+        @if($lowongan->lamaran)
+          <div class="text-[11px] text-slate-500 mt-1">{{ $lowongan->lamaran->count() }} pelamar</div>
+        @endif
       </div>
     </div>
   </div>
@@ -68,7 +68,7 @@
           <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
             <i data-lucide="file-text" class="w-4 h-4"></i>
           </div>
-          <h3 class="font-bold text-slate-800 text-sm">Deskripsi Pekerjaan & Tanggung Jawab</h3>
+          <h3 class="font-bold text-slate-800 text-sm">Deskripsi Pekerjaan &amp; Tanggung Jawab</h3>
         </div>
         <div class="text-xs text-slate-700 leading-relaxed whitespace-pre-line bg-slate-50/70 p-4 rounded-xl border border-slate-100">
           {{ $lowongan->deskripsi ?: 'Belum ada deskripsi pekerjaan yang ditambahkan.' }}
@@ -81,18 +81,98 @@
           <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
             <i data-lucide="check-square" class="w-4 h-4"></i>
           </div>
-          <h3 class="font-bold text-slate-800 text-sm">Kualifikasi & Persyaratan Pendaftar</h3>
+          <h3 class="font-bold text-slate-800 text-sm">Kualifikasi &amp; Persyaratan Pendaftar</h3>
         </div>
         <div class="text-xs text-slate-700 leading-relaxed whitespace-pre-line bg-slate-50/70 p-4 rounded-xl border border-slate-100">
           {{ $lowongan->kualifikasi ?: 'Belum ada kualifikasi yang dicantumkan.' }}
         </div>
       </div>
+
+      <!-- Daftar Pelamar (Admin & Mitra only) -->
+      @if(auth()->user() && in_array(auth()->user()->role, ['admin_blk', 'mitra']))
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-4">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-violet-50 text-violet-700 flex items-center justify-center shrink-0">
+                <i data-lucide="users" class="w-4 h-4"></i>
+              </div>
+              <h3 class="font-bold text-slate-800 text-sm">Daftar Pelamar</h3>
+            </div>
+            <span class="bg-violet-100 text-violet-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full">
+              {{ $lowongan->lamaran->count() }} Pelamar
+            </span>
+          </div>
+
+          @if($lowongan->lamaran->isEmpty())
+            <div class="text-center py-6 text-xs text-slate-400">
+              <i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 text-slate-300"></i>
+              Belum ada pelamar yang mendaftar untuk posisi ini.
+            </div>
+          @else
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs">
+                <thead>
+                  <tr class="border-b border-slate-100">
+                    <th class="text-left py-2 px-2 text-slate-500 font-semibold">Peserta</th>
+                    <th class="text-left py-2 px-2 text-slate-500 font-semibold">Nomor</th>
+                    <th class="text-left py-2 px-2 text-slate-500 font-semibold">Tanggal</th>
+                    <th class="text-left py-2 px-2 text-slate-500 font-semibold">Status</th>
+                    <th class="text-right py-2 px-2 text-slate-500 font-semibold">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-50">
+                  @foreach($lowongan->lamaran as $lam)
+                    <tr class="hover:bg-slate-50/50">
+                      <td class="py-2.5 px-2">
+                        <div class="font-semibold text-slate-800">{{ $lam->peserta->user->name ?? '-' }}</div>
+                        <div class="text-slate-400 text-[10px]">{{ $lam->peserta->user->email ?? '-' }}</div>
+                      </td>
+                      <td class="py-2.5 px-2 text-slate-600 font-mono">{{ $lam->peserta->nomor_peserta ?? '-' }}</td>
+                      <td class="py-2.5 px-2 text-slate-600">{{ $lam->tanggal_melamar?->translatedFormat('d M Y') ?? '-' }}</td>
+                      <td class="py-2.5 px-2">
+                        @php
+                          $statusColors = [
+                            'melamar'   => 'bg-blue-100 text-blue-800',
+                            'diproses'  => 'bg-amber-100 text-amber-800',
+                            'wawancara' => 'bg-violet-100 text-violet-800',
+                            'diterima'  => 'bg-emerald-100 text-emerald-800',
+                            'ditolak'   => 'bg-rose-100 text-rose-800',
+                          ];
+                        @endphp
+                        <span class="px-2 py-0.5 rounded-full font-semibold {{ $statusColors[$lam->status] ?? 'bg-slate-100 text-slate-600' }}">
+                          {{ ucfirst($lam->status) }}
+                        </span>
+                      </td>
+                      <td class="py-2.5 px-2 text-right">
+                        <form action="{{ route('lamaran.update-status', $lam->id_lamaran) }}" method="POST" class="inline-flex items-center gap-1">
+                          @csrf
+                          @method('PATCH')
+                          <select name="status" class="text-[11px] border border-slate-200 rounded-lg px-1.5 py-1 focus:outline-none focus:ring-1 focus:ring-emerald-600">
+                            <option value="melamar"   {{ $lam->status === 'melamar'   ? 'selected' : '' }}>Melamar</option>
+                            <option value="diproses"  {{ $lam->status === 'diproses'  ? 'selected' : '' }}>Diproses</option>
+                            <option value="wawancara" {{ $lam->status === 'wawancara' ? 'selected' : '' }}>Wawancara</option>
+                            <option value="diterima"  {{ $lam->status === 'diterima'  ? 'selected' : '' }}>Diterima</option>
+                            <option value="ditolak"   {{ $lam->status === 'ditolak'   ? 'selected' : '' }}>Ditolak</option>
+                          </select>
+                          <button type="submit" class="bg-emerald-800 hover:bg-emerald-900 text-white px-2 py-1 rounded-lg text-[11px] font-semibold transition">
+                            Simpan
+                          </button>
+                        </form>
+                      </td>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
+            </div>
+          @endif
+        </div>
+      @endif
     </div>
 
     <!-- Right sidebar -->
     <div class="space-y-6">
       <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
-        <h4 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100">Info Mitra & Perusahaan</h4>
+        <h4 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100">Info Mitra &amp; Perusahaan</h4>
         <div class="space-y-3 text-xs">
           <div>
             <span class="text-slate-400 block mb-0.5">Perusahaan</span>
@@ -113,21 +193,23 @@
         </div>
       </div>
 
-      {{-- <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-3">
-        <h4 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100">Aksi Administratif</h4>
-        <div class="space-y-2">
-          <a href="{{ route('lowongan.edit', $lowongan->id_lowongan) }}" class="w-full px-3.5 py-2.5 bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold rounded-lg shadow-sm flex items-center justify-center gap-2 transition">
-            <i data-lucide="edit-3" class="w-4 h-4"></i> Edit Lowongan
-          </a>
-          <form action="{{ route('lowongan.destroy', $lowongan->id_lowongan) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus lowongan ini?')">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="w-full px-3.5 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold rounded-lg flex items-center justify-center gap-2 transition">
-              <i data-lucide="trash-2" class="w-4 h-4"></i> Hapus Lowongan
-            </button>
-          </form>
+      @if(auth()->user() && in_array(auth()->user()->role, ['admin_blk', 'mitra']))
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-3">
+          <h4 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100">Aksi Administratif</h4>
+          <div class="space-y-2">
+            <a href="{{ route('lowongan.edit', $lowongan->id_lowongan) }}" class="w-full px-3.5 py-2.5 bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold rounded-lg shadow-sm flex items-center justify-center gap-2 transition">
+              <i data-lucide="edit-3" class="w-4 h-4"></i> Edit Lowongan
+            </a>
+            <form action="{{ route('lowongan.destroy', $lowongan->id_lowongan) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus lowongan ini?')">
+              @csrf
+              @method('DELETE')
+              <button type="submit" class="w-full px-3.5 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold rounded-lg flex items-center justify-center gap-2 transition">
+                <i data-lucide="trash-2" class="w-4 h-4"></i> Hapus Lowongan
+              </button>
+            </form>
+          </div>
         </div>
-      </div> --}}
+      @endif
     </div>
   </div>
 @endsection

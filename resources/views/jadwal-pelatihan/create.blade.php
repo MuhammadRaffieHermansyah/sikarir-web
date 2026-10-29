@@ -210,17 +210,79 @@
         </div>
     </div>
 
-        <!-- ================================================ -->
-        <!-- PREVIEW HARI EFEKTIF (muncul setelah kalkulasi)  -->
-        <!-- ================================================ -->
-        <div id="preview-jadwal" class="hidden bg-white rounded-xl border border-emerald-200 shadow-sm p-5 space-y-4">
-            <div class="flex items-center gap-2 border-b border-emerald-100 pb-3">
-                <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center">
-                    <i data-lucide="calendar-check" class="w-4 h-4"></i>
-                </div>
-                <h3 class="font-bold text-slate-800 text-sm">Preview Hari Efektif Pelatihan</h3>
-                <span id="badge-hari-efektif" class="ml-auto text-[10px] font-bold bg-emerald-800 text-white px-2 py-0.5 rounded-full"></span>
+            <!-- Geofencing Presensi GPS -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-4">
+        <div class="border-b border-slate-100 pb-3 flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-800 flex items-center justify-center">
+              <i data-lucide="map-pin" class="w-4 h-4"></i>
             </div>
+            <div>
+              <h2 class="font-bold text-slate-800 text-sm">Titik Lokasi &amp; Geofencing Presensi Peserta</h2>
+              <p class="text-[11px] text-slate-500">Koordinat GPS yang diwajibkan bagi peserta saat melakukan presensi masuk di aplikasi mobile.</p>
+            </div>
+          </div>
+          <button type="button" id="btn-use-current-location" class="px-2.5 py-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg flex items-center gap-1 transition">
+            <i data-lucide="crosshair" class="w-3.5 h-3.5"></i> Ambil GPS Saat Ini
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label for="lokasi_latitude" class="block text-xs font-semibold text-slate-700 mb-1.5">
+              Latitude
+            </label>
+            <input type="number" step="any" name="lokasi_latitude" id="lokasi_latitude"
+              value="{{ old('lokasi_latitude', '-8.1763000') }}"
+              class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700" placeholder="-8.1763000" />
+            @error('lokasi_latitude')
+              <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
+            @enderror
+          </div>
+
+          <div>
+            <label for="lokasi_longitude" class="block text-xs font-semibold text-slate-700 mb-1.5">
+              Longitude
+            </label>
+            <input type="number" step="any" name="lokasi_longitude" id="lokasi_longitude"
+              value="{{ old('lokasi_longitude', '113.7007000') }}"
+              class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700" placeholder="113.7007000" />
+            @error('lokasi_longitude')
+              <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
+            @enderror
+          </div>
+
+          <div>
+            <label for="radius_meter" class="block text-xs font-semibold text-slate-700 mb-1.5">
+              Radius Presensi (Meter)
+            </label>
+            <input type="number" name="radius_meter" id="radius_meter"
+              value="{{ old('radius_meter', '100') }}"
+              class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700" placeholder="100" />
+            @error('radius_meter')
+              <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
+            @enderror
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 pt-1">
+          <button type="button" onclick="document.getElementById('lokasi_latitude').value='-8.1763000';document.getElementById('lokasi_longitude').value='113.7007000';document.getElementById('radius_meter').value='100';" class="text-[11px] text-slate-500 hover:text-emerald-700 underline font-medium">
+            Reset ke Default (Kampus Utama BLK Jember - 100m)
+          </button>
+        </div>
+      </div>
+
+      <!-- ================================================ -->
+      <!-- PREVIEW HARI EFEKTIF (muncul setelah kalkulasi)  -->
+      <!-- ================================================ -->
+      <div id="preview-jadwal" class="hidden bg-white rounded-xl border border-emerald-200 shadow-sm p-5 space-y-4">
+        <div class="flex items-center gap-2 border-b border-emerald-100 pb-3">
+          <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center">
+            <i data-lucide="calendar-check" class="w-4 h-4"></i>
+          </div>
+          <h3 class="font-bold text-slate-800 text-sm">Preview Hari Efektif Pelatihan</h3>
+          <span id="badge-hari-efektif" class="ml-auto text-[10px] font-bold bg-emerald-800 text-white px-2 py-0.5 rounded-full"></span>
+        </div>
 
         <!-- Statistik angka -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -417,15 +479,39 @@ document.addEventListener('DOMContentLoaded', function () {
 }
 
   // ---- 5. Helpers ----
-  function isLibur(ds) {
+function isLibur(ds) {
     var dow = new Date(ds + 'T00:00:00').getDay();
     return dow === 0 || dow === 6 || hariLiburSet.has(ds);
   }
-  function formatTgl(ds) {
+function formatTgl(ds) {
     return new Date(ds + 'T00:00:00').toLocaleDateString('id-ID', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
   }
-  var HARI = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-
+        var HARI = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+function cekDataLibur() {
+    if (!tglMulai.value || !tglSelesai.value) { warnDataLibur.classList.add('hidden'); return; }
+    var t1 = +tglMulai.value.split('-')[0], t2 = +tglSelesai.value.split('-')[0];
+    var kosong = [];
+    for (var t = t1; t <= t2; t++) { if (tahunTanpaData.has(t)) kosong.push(t); }
+    if (kosong.length) {
+    warnDataLibur.textContent = 'Data libur nasional tahun ' + kosong.join(', ') +
+    ' belum tersedia. Tanggal selesai hanya melewati Sabtu & Minggu — periksa manual.';
+    warnDataLibur.classList.remove('hidden');
+    } else {
+        warnDataLibur.classList.add('hidden');
+    }
+  }
+  // Pastikan data libur semua tahun dalam rentang sudah dimuat, lalu jalankan callback
+function muatHariLiburRentang(callback) {
+    var t1 = +tglMulai.value.split('-')[0], t2 = +tglSelesai.value.split('-')[0];
+    var jobs = [];
+    for (var t = t1; t <= t2; t++) jobs.push(fetchHariLibur(t));
+    Promise.all(jobs).then(function (res) {
+        var semua = [];
+        res.forEach(function (r) { semua = semua.concat(r); });
+        hariLiburSet = new Set(semua);
+        callback();
+    });
+  }
    // ---- 6. Hitung tanggal selesai (skip hari libur) ----
 function hitungTanggalSelesai() {
     if (!tglMulai.value || !jumlahHariAktif) return;
@@ -459,19 +545,6 @@ function hitungTanggalSelesai() {
     tglSelesai.min   = tglMulai.value;
     tglSelesai.value = selesai;
 
-      // Peringatan jika data libur tahun yang terlewati belum tersedia
-    var tahunKosong = [];
-    for (var t = tahun; t <= +selesai.split('-')[0]; t++) {
-        if (tahunTanpaData.has(t)) tahunKosong.push(t);
-        }
-        if (tahunKosong.length) {
-        warnDataLibur.textContent = 'Data libur nasional tahun ' + tahunKosong.join(', ') +
-        ' belum tersedia. Tanggal selesai hanya melewati Sabtu & Minggu — periksa manual.';
-        warnDataLibur.classList.remove('hidden');
-        } else {
-        warnDataLibur.classList.add('hidden');
-        }
-
         var diff = Math.round((fromStr(selesai) - fromStr(tglMulai.value)) / 86400000) + 1;
         prevTotalHari.textContent     = jumlahHariAktif;
         if (prevTotalJam) prevTotalJam.textContent = jumlahJamTotal || '-';
@@ -479,6 +552,7 @@ function hitungTanggalSelesai() {
         prevTotalKalender.textContent = diff;
         badgeHariEfektif.textContent  = jumlahHariAktif + ' Hari Aktif';
         renderChip(dilewati);
+        cekDataLibur();
         previewJadwal.classList.remove('hidden');
         if (window.lucide) lucide.createIcons({ nodes: [previewJadwal] });
         loadingTglSelesai.classList.add('hidden');
@@ -508,7 +582,7 @@ function renderChip(arr) {
 
     tglSelesai.addEventListener('change', function () {
         if (!this.value) return;
-        if (tglMulai.value) updatePreviewManual();
+        if (tglMulai.value) muatHariLiburRentang(updatePreviewManual);
     });
 
 function updatePreviewManual() {
@@ -531,6 +605,7 @@ function updatePreviewManual() {
     prevTotalKalender.textContent = diff;
     badgeHariEfektif.textContent  = aktif + ' Hari Aktif';
     renderChip(arr);
+    cekDataLibur();
     previewJadwal.classList.remove('hidden');
     if (window.lucide) lucide.createIcons({ nodes: [previewJadwal] });
     }
@@ -543,6 +618,20 @@ function updatePreviewManual() {
         }
     }
     jamSelesai.addEventListener('change', validateJam);
+
+        // ---- Ambil GPS saat ini (Geofencing) ----
+    var btnGps = document.getElementById('btn-use-current-location');
+    if (btnGps) {
+        btnGps.addEventListener('click', function () {
+            if (!navigator.geolocation) { alert('Browser tidak mendukung geolocation.'); return; }
+            navigator.geolocation.getCurrentPosition(function (pos) {
+                document.getElementById('lokasi_latitude').value  = pos.coords.latitude.toFixed(7);
+                document.getElementById('lokasi_longitude').value = pos.coords.longitude.toFixed(7);
+            }, function () {
+                alert('Gagal mengambil lokasi. Izinkan akses lokasi di browser.');
+            });
+        });
+    }
 
     // ---- 9. Trigger jika old() terisi ----
     if (selectPelatihan.value) selectPelatihan.dispatchEvent(new Event('change'));

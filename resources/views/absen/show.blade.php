@@ -101,6 +101,40 @@
           </p>
         </div>
 
+        <!-- Informasi Lokasi GPS -->
+        <div class="md:col-span-2 pt-4 border-t border-slate-100">
+          <span class="text-slate-400 font-medium uppercase text-[10px] tracking-wider flex items-center gap-1 mb-2">
+            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-600"></i> Koordinat Lokasi GPS
+          </span>
+          @if($absen->latitude && $absen->longitude)
+            <div class="p-3.5 bg-emerald-50/60 border border-emerald-100 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-slate-700">
+              <div class="space-y-0.5">
+                <p class="font-semibold text-slate-800">
+                  Lat: <span class="font-mono text-emerald-700">{{ $absen->latitude }}</span>, 
+                  Lng: <span class="font-mono text-emerald-700">{{ $absen->longitude }}</span>
+                </p>
+                <p class="text-[11px] text-slate-500">
+                  @if($absen->jarak_meter !== null)
+                    Terdeteksi <strong class="text-slate-700">{{ round($absen->jarak_meter) }} meter</strong> dari titik pelatihan
+                  @else
+                    Presensi tercatat dengan koordinat GPS
+                  @endif
+                </p>
+              </div>
+              <a href="https://www.google.com/maps?q={{ $absen->latitude }},{{ $absen->longitude }}" 
+                 target="_blank" 
+                 rel="noopener noreferrer"
+                 class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-md text-[11px] shadow-sm transition shrink-0">
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Buka Google Maps
+              </a>
+            </div>
+          @else
+            <div class="p-3 bg-slate-50 border border-slate-100 rounded-lg text-slate-500 text-xs">
+              Tidak ada data koordinat GPS (presensi manual / perizinan).
+            </div>
+          @endif
+        </div>
+
         <div class="md:col-span-2 pt-4 border-t border-slate-100 space-y-1.5">
           <span class="text-slate-400 font-medium uppercase text-[10px] tracking-wider flex items-center gap-1">
             <i data-lucide="file-text" class="w-3.5 h-3.5 text-slate-400"></i> Keterangan / Catatan

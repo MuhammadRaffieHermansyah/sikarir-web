@@ -222,7 +222,7 @@
                         class="reveal group bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm hover:shadow-lg hover:border-emerald-300 hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
                         <div>
                             <div class="relative h-40 sm:h-36 bg-slate-100 overflow-hidden">
-                                <img src="{{ $item->gambar_url ?? asset('images/placeholder.jpg') }}"
+                                <img src="{{ $item->gambar_url ?? 'https://media.istockphoto.com/id/2233679882/photo/two-young-adult-programmers-discussing-code-on-laptop-in-office.webp?a=1&b=1&s=612x612&w=0&k=20&c=PzaTx4WP272kbAqs_EBEEl2yx8nqCbUwTN8Au8Ndm6E=' }}"
                                     class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="{{ $item->nama }}">
                                 <span
                                     class="absolute top-2 left-2 bg-emerald-900/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-md backdrop-blur-sm">Buka</span>

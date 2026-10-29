@@ -350,7 +350,7 @@
     <!-- Footer Sidebar -->
     <div class="shrink-0 p-3 border-t border-slate-200">
 
-        <div class="bg-indigo-50/80 p-2.5 rounded-lg mb-2 flex items-center justify-between gap-2">
+        {{-- <div class="bg-indigo-50/80 p-2.5 rounded-lg mb-2 flex items-center justify-between gap-2">
             <div class="min-w-0">
                 <div class="text-[10px] text-indigo-500 font-medium">
                     UNIT PELAKSANA
@@ -360,9 +360,8 @@
                     BLK Pusat Vokasi
                 </div>
             </div>
-
             <i data-lucide="arrow-left-right" class="w-4 h-4 shrink-0 text-indigo-400"></i>
-        </div>
+        </div> --}}
 
 
         <div class="flex items-center justify-between gap-2 pt-1 text-xs text-slate-600">

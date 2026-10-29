@@ -11,8 +11,21 @@ class JadwalPelatihan extends Model
 
     protected $table = 'jadwal_pelatihan';
     protected $primaryKey = 'id_jadwal';
-    protected $fillable = ['id_pelatihan', 'tanggal_mulai', 'tanggal_selesai', 'jam_mulai', 'jam_selesai', 'id_instruktur', 'id_ruangan_workshop', 'status'];
-    protected $casts = ['tanggal_mulai' => 'date', 'tanggal_selesai' => 'date'];
+    protected $fillable = [
+        'id_pelatihan', 'tanggal_mulai', 'tanggal_selesai',
+        'jam_mulai', 'jam_selesai', 'id_instruktur',
+        'id_ruangan_workshop', 'status',
+        // Kolom lokasi GPS untuk validasi presensi
+        'lokasi_latitude', 'lokasi_longitude', 'radius_meter',
+    ];
+
+    protected $casts = [
+        'tanggal_mulai'    => 'date',
+        'tanggal_selesai'  => 'date',
+        'lokasi_latitude'  => 'decimal:7',
+        'lokasi_longitude' => 'decimal:7',
+        'radius_meter'     => 'integer',
+    ];
 
     public function getIdAttribute()
     {

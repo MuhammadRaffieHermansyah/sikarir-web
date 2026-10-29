@@ -39,10 +39,25 @@ class AuthController extends Controller
     public function register(RegisterRequest $request): JsonResponse
     {
         $data = $request->validated();
+        if (empty($data['role'])) {
+            $data['role'] = 'peserta';
+        }
         $user = User::create($data);
+
+        // Jika mendaftar sebagai peserta, buatkan record peserta awal
+        if ($user->role === 'peserta') {
+            \App\Models\Peserta::firstOrCreate(
+                ['id_user' => $user->id],
+                [
+                    'nomor_peserta' => 'PST-' . date('Ymd') . '-' . str_pad($user->id, 4, '0', STR_PAD_LEFT),
+                    'jenis_kelamin' => 'Laki-laki',
+                ]
+            );
+        }
+
         return response()->json([
             'message' => 'Registrasi berhasil',
-            'data' => $user,
+            'data' => $user->load('peserta'),
             'token' => $user->createToken('sikarir')->plainTextToken,
         ], 201);
     }

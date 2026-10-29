@@ -28,6 +28,36 @@ class SertifikatController extends Controller
         return SertifikatResource::collection(Sertifikat::with(['peserta.user', 'jadwal.pelatihan', 'admin.user'])->latest()->paginate(15))->response();
     }
 
+    #[OA\Get(
+        path: '/api/sertifikat/me',
+        summary: 'Ambil semua sertifikat yang dimiliki peserta login',
+        tags: ['Sertifikat'],
+        security: [['sanctum' => []]],
+        responses: [
+            new OA\Response(response: 200, description: 'Daftar sertifikat peserta'),
+            new OA\Response(response: 401, description: 'Unauthenticated'),
+        ]
+    )]
+    public function me(\Illuminate\Http\Request $request): JsonResponse
+    {
+        $user = $request->user();
+        $peserta = $user->peserta ?? null;
+
+        if (!$peserta) {
+            return response()->json(['message' => 'Data peserta tidak ditemukan.', 'data' => []], 200);
+        }
+
+        $sertifikats = Sertifikat::with(['peserta.user', 'jadwal.pelatihan', 'admin.user'])
+            ->where('id_peserta', $peserta->id_peserta)
+            ->latest('tanggal_terbit')
+            ->get();
+
+        return response()->json([
+            'message' => 'Daftar sertifikat berhasil diambil',
+            'data'    => SertifikatResource::collection($sertifikats),
+        ]);
+    }
+
     #[OA\Post(
         path: '/api/sertifikat',
         summary: 'Upload sertifikat baru untuk peserta',
