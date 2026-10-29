@@ -89,6 +89,23 @@ class PesertaController extends Controller
             return response()->json(['message' => 'Unauthenticated.'], 401);
         }
 
+        // Normalisasi jenis kelamin jika dikirim huruf kecil / singkatan
+        if ($request->has('jenis_kelamin')) {
+            $jk = strtolower(trim((string) $request->jenis_kelamin));
+            if ($jk === 'laki-laki' || $jk === 'pria' || $jk === 'l') {
+                $request->merge(['jenis_kelamin' => 'Laki-laki']);
+            } elseif ($jk === 'perempuan' || $jk === 'wanita' || $jk === 'p') {
+                $request->merge(['jenis_kelamin' => 'Perempuan']);
+            }
+        }
+
+        if ($request->has('nomor_kk')) {
+            $request->merge(['nomor_kk' => trim((string) $request->nomor_kk)]);
+        }
+        if ($request->has('nomor_wa')) {
+            $request->merge(['nomor_wa' => trim((string) $request->nomor_wa)]);
+        }
+
         $validated = $request->validate([
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'nomor_kk' => 'required|string|max:30',

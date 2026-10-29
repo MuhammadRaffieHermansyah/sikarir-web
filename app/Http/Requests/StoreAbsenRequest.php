@@ -10,16 +10,17 @@ class StoreAbsenRequest extends FormRequest
     {
         return true;
     }
+
     public function rules(): array
     {
         return [
-            'id_jadwal'        => 'required|exists:jadwal_pelatihan,id_jadwal',
-            'id_peserta'       => 'required|exists:pesertas,id_peserta',
+            'id_jadwal'        => 'nullable',
+            'id_peserta'       => 'nullable',
             'tanggal'          => 'required|date',
-            'jam_hadir'        => 'nullable|date_format:H:i',
-            'status_kehadiran' => 'required|in:hadir,izin,sakit,alpha',
+            'jam_hadir'        => 'nullable|string',
+            'status_kehadiran' => 'required|in:hadir,izin,sakit,alpha,alpa',
             'keterangan'       => 'nullable|string|max:255',
-            // Kolom lokasi GPS (wajib jika status hadir)
+            // Kolom lokasi GPS (opsional / tervalidasi jika hadir)
             'latitude'         => 'nullable|numeric|between:-90,90',
             'longitude'        => 'nullable|numeric|between:-180,180',
         ];

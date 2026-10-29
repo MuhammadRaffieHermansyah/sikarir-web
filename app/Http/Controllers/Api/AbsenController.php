@@ -8,6 +8,8 @@ use App\Http\Requests\UpdateAbsenRequest;
 use App\Http\Resources\AbsenResource;
 use App\Models\Absen;
 use App\Models\JadwalPelatihan;
+use App\Models\KelasPelatihan;
+use App\Models\Peserta;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
@@ -27,10 +29,18 @@ class AbsenController extends Controller
             new OA\Response(response: 401, description: 'Unauthenticated'),
         ]
     )]
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+        $user = $request->user();
+        $query = Absen::with($this->relations())->latest('tanggal');
+
+        // Jika user adalah peserta, filter hanya data miliknya
+        if ($user && $user->peserta) {
+            $query->where('id_peserta', $user->peserta->id_peserta);
+        }
+
         return AbsenResource::collection(
-            Absen::with($this->relations())->latest()->paginate(15)
+            $query->paginate(15)
         )->response();
     }
 
@@ -50,7 +60,7 @@ class AbsenController extends Controller
         $peserta = $user->peserta ?? null;
 
         if (! $peserta) {
-            return response()->json(['message' => 'Data peserta tidak ditemukan.'], 404);
+            return response()->json(['message' => 'Data peserta tidak ditemukan.', 'data' => null], 200);
         }
 
         $absen = Absen::with($this->relations())
@@ -81,7 +91,7 @@ class AbsenController extends Controller
         $peserta = $user->peserta ?? null;
 
         if (!$peserta) {
-            return response()->json(['message' => 'Data peserta tidak ditemukan.'], 404);
+            return response()->json(['message' => 'Data peserta tidak ditemukan.', 'data' => null], 200);
         }
 
         $query = Absen::with(['jadwal.pelatihan'])->where('id_peserta', $peserta->id_peserta);
@@ -95,7 +105,7 @@ class AbsenController extends Controller
         $totalHadir   = $records->where('status_kehadiran', 'hadir')->count();
         $totalIzin    = $records->where('status_kehadiran', 'izin')->count();
         $totalSakit   = $records->where('status_kehadiran', 'sakit')->count();
-        $totalAlpha   = $records->where('status_kehadiran', 'alpha')->count();
+        $totalAlpha   = $records->whereIn('status_kehadiran', ['alpha', 'alpa'])->count();
         $totalSesi    = $records->count();
         $persentase   = $totalSesi > 0 ? round(($totalHadir / $totalSesi) * 100, 1) : 0;
         $statusLulus  = $persentase >= 80 ? 'Memenuhi Syarat Sertifikasi' : 'Kehadiran Belum Memenuhi Syarat';
@@ -148,7 +158,7 @@ class AbsenController extends Controller
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ['id_peserta', 'id_jadwal', 'tanggal', 'status_kehadiran'],
+                required: ['tanggal', 'status_kehadiran'],
                 properties: [
                     new OA\Property(property: 'id_peserta', type: 'integer'),
                     new OA\Property(property: 'id_jadwal', type: 'integer'),
@@ -170,18 +180,59 @@ class AbsenController extends Controller
     public function store(StoreAbsenRequest $request): JsonResponse
     {
         $data = $request->validated();
+        $user = $request->user();
 
-        // Cek duplikasi presensi
+        // 1. Resolve id_peserta
+        $peserta = $user?->peserta;
+        if ($peserta) {
+            $data['id_peserta'] = $peserta->id_peserta;
+        } elseif (!empty($data['id_peserta'])) {
+            $found = Peserta::find($data['id_peserta']) ?? Peserta::where('id_user', $data['id_peserta'])->first();
+            if ($found) {
+                $data['id_peserta'] = $found->id_peserta;
+            } else {
+                return response()->json(['message' => 'Data peserta tidak valid.'], 422);
+            }
+        } else {
+            return response()->json(['message' => 'Data peserta tidak ditemukan. Silakan lengkapi profil terlebih dahulu.'], 422);
+        }
+
+        // 2. Resolve id_jadwal jika kosong atau tidak valid
+        if (empty($data['id_jadwal']) || !JadwalPelatihan::where('id_jadwal', $data['id_jadwal'])->exists()) {
+            $activeKelas = KelasPelatihan::where('id_peserta', $data['id_peserta'])->latest('id_kelas')->first();
+            if ($activeKelas) {
+                $data['id_jadwal'] = $activeKelas->id_jadwal;
+            } else {
+                $defaultJadwal = JadwalPelatihan::whereIn('status', ['berlangsung', 'tersedia'])->first() ?? JadwalPelatihan::first();
+                $data['id_jadwal'] = $defaultJadwal?->id_jadwal ?? 1;
+            }
+        }
+
+        // 3. Normalisasi status_kehadiran ('alpa' -> 'alpha')
+        if (isset($data['status_kehadiran']) && $data['status_kehadiran'] === 'alpa') {
+            $data['status_kehadiran'] = 'alpha';
+        }
+
+        // 4. Format jam_hadir
+        if (empty($data['jam_hadir'])) {
+            $data['jam_hadir'] = now()->format('H:i');
+        } elseif (strlen($data['jam_hadir']) > 5) {
+            $data['jam_hadir'] = substr($data['jam_hadir'], 0, 5);
+        }
+
+        // 5. Cek duplikasi presensi
         $exists = Absen::where('id_peserta', $data['id_peserta'])
             ->where('id_jadwal', $data['id_jadwal'])
             ->where('tanggal', $data['tanggal'])
             ->exists();
 
         if ($exists) {
-            abort(422, 'Data presensi untuk peserta ini pada tanggal tersebut sudah tercatat.');
+            return response()->json([
+                'message' => 'Presensi Anda untuk jadwal ini pada tanggal tersebut sudah tercatat.',
+            ], 422);
         }
 
-        // Validasi lokasi GPS jika status "hadir"
+        // 6. Validasi lokasi GPS jika status "hadir"
         if ($data['status_kehadiran'] === 'hadir') {
             $locationResult = $this->validateLocation($data);
             if ($locationResult['error']) {
@@ -191,12 +242,11 @@ class AbsenController extends Controller
                     'radius_meter' => $locationResult['radius_meter'] ?? null,
                 ], 403);
             }
-            // Simpan jarak
             $data['jarak_meter'] = $locationResult['jarak_meter'];
         }
 
         $absen = Absen::create($data);
-        return (new AbsenResource($absen))->response()->setStatusCode(201);
+        return (new AbsenResource($absen->load($this->relations())))->response()->setStatusCode(201);
     }
 
     #[OA\Get(
@@ -291,7 +341,7 @@ class AbsenController extends Controller
 
     protected function relations(): array
     {
-        return ['peserta', 'jadwal'];
+        return ['peserta.user', 'jadwal.pelatihan', 'jadwal.ruanganWorkshop'];
     }
 
     /**
@@ -304,7 +354,6 @@ class AbsenController extends Controller
         $lat = $data['latitude']  ?? null;
         $lng = $data['longitude'] ?? null;
 
-        // Jika tidak ada koordinat, tolak
         if ($lat === null || $lng === null) {
             return [
                 'error'   => true,
@@ -314,11 +363,9 @@ class AbsenController extends Controller
             ];
         }
 
-        // Ambil koordinat lokasi dari jadwal
         $jadwal = JadwalPelatihan::find($data['id_jadwal']);
 
         if (! $jadwal || $jadwal->lokasi_latitude === null || $jadwal->lokasi_longitude === null) {
-            // Jadwal belum diatur lokasi → izinkan (admin belum set lokasi)
             return ['error' => false, 'message' => 'OK', 'jarak_meter' => null, 'radius_meter' => null];
         }
 

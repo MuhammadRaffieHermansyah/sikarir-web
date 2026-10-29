@@ -50,7 +50,7 @@ class KelasPelatihanController extends Controller
 
         $kelas = KelasPelatihan::with([
             'jadwal.pelatihan',
-            'jadwal.instruktur.user',
+            'jadwal.instruktur',
             'jadwal.ruanganWorkshop',
         ])
         ->where('id_peserta', $peserta->id_peserta)
@@ -133,7 +133,7 @@ class KelasPelatihanController extends Controller
     )]
     public function show(int $id): JsonResponse
     {
-        return (new KelasPelatihanResource(KelasPelatihan::with(['peserta.user', 'jadwal.pelatihan'])->findOrFail($id)))->response();
+        return (new KelasPelatihanResource(KelasPelatihan::with(['peserta.user', 'jadwal.pelatihan', 'jadwal.instruktur', 'jadwal.ruanganWorkshop'])->findOrFail($id)))->response();
     }
 
     #[OA\Put(
