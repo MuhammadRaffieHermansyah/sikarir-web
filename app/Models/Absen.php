@@ -11,8 +11,18 @@ class Absen extends Model
 
     protected $table = 'absens';
     protected $primaryKey = 'id_absen';
-    protected $fillable = ['id_jadwal', 'id_peserta', 'tanggal', 'jam_hadir', 'status_kehadiran', 'keterangan'];
-    protected $casts = ['tanggal' => 'date'];
+    protected $fillable = [
+        'id_jadwal', 'id_peserta', 'tanggal', 'jam_hadir',
+        'status_kehadiran', 'keterangan',
+        'latitude', 'longitude', 'jarak_meter',
+    ];
+
+    protected $casts = [
+        'tanggal'     => 'date',
+        'latitude'    => 'decimal:7',
+        'longitude'   => 'decimal:7',
+        'jarak_meter' => 'decimal:2',
+    ];
 
     public function getIdAttribute()
     {

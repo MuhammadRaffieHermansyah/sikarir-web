@@ -12,7 +12,13 @@ class RegisterRequest extends FormRequest
     }
     public function rules(): array
     {
-        return ['name' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/', 'email' => 'required|email|max:255|unique:users,email', 'password' => 'required|string|min:8|confirmed', 'role' => 'required|in:peserta,mitra'];
+        return [
+            'name'                  => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
+            'email'                 => 'required|email|max:255|unique:users,email',
+            'password'              => 'required|string|min:8',
+            'password_confirmation' => 'nullable|string|same:password',
+            'role'                  => 'nullable|in:peserta,mitra',
+        ];
     }
 
     public function messages(): array

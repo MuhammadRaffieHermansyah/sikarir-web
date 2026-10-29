@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DaftarLowongan;
+use App\Models\LamaranLowongan;
 use App\Models\Mitra;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,11 +22,10 @@ class DaftarLowonganController extends Controller
         if (Auth::user()->role === 'mitra') {
             $mitra = Auth::user()->mitra;
             $idMitra = $mitra ? $mitra->id_mitra : null;
-
             $query->where('id_mitra', $idMitra);
         }
 
-        // 3. Filter Pencarian Keyword (Judul Lowongan, Lokasi, Nama Perusahaan Mitra)
+        // 3. Filter Pencarian Keyword
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -37,12 +37,12 @@ class DaftarLowonganController extends Controller
             });
         }
 
-        // 4. Filter Status Lowongan (aktif, draft, ditutup)
+        // 4. Filter Status Lowongan
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
-        // 5. Hitung Statistik Metric Card (Di-filter Sesuai Hak Akses Role)
+        // 5. Hitung Statistik
         $baseMetricsQuery = DaftarLowongan::query();
         if (Auth::user()->role === 'mitra') {
             $mitra = Auth::user()->mitra;
@@ -53,7 +53,6 @@ class DaftarLowonganController extends Controller
         $countDraft   = (clone $baseMetricsQuery)->where('status', 'draft')->count();
         $countDitutup = (clone $baseMetricsQuery)->where('status', 'ditutup')->count();
 
-        // 6. Paginate Data & Tahan Query String URL
         $lowongans = $query->latest('id_lowongan')
             ->paginate(10)
             ->withQueryString();
@@ -93,9 +92,7 @@ class DaftarLowonganController extends Controller
 
         $validated = $request->validate([
             'judul_lowongan'  => [
-                'required',
-                'string',
-                'max:100',
+                'required', 'string', 'max:100',
                 'regex:/^[a-zA-Z\s]+$/',
                 Rule::unique('daftar_lowongan', 'judul_lowongan')->where(function ($query) use ($mitra) {
                     return $query->where('id_mitra', $mitra->id_mitra);
@@ -128,7 +125,7 @@ class DaftarLowonganController extends Controller
 
     public function show(int $id): View
     {
-        $lowongan = DaftarLowongan::with('mitra')->findOrFail($id);
+        $lowongan = DaftarLowongan::with(['mitra', 'lamaran.peserta.user'])->findOrFail($id);
         return view('lowongan.show', compact('lowongan'));
     }
 
@@ -154,9 +151,7 @@ class DaftarLowonganController extends Controller
 
         $validated = $request->validate([
             'judul_lowongan'  => [
-                'required',
-                'string',
-                'max:255',
+                'required', 'string', 'max:255',
                 'regex:/^[a-zA-Z\s]+$/',
                 Rule::unique('daftar_lowongan', 'judul_lowongan')
                     ->where(function ($query) use ($lowongan) {

@@ -233,6 +233,68 @@
                     </div>
                 </div>
 
+                            <!-- Geofencing Presensi GPS -->
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-4">
+                <div class="border-b border-slate-100 pb-3 flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-800 flex items-center justify-center">
+                            <i data-lucide="map-pin" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <h2 class="font-bold text-slate-800 text-sm">Titik Lokasi &amp; Geofencing Presensi Peserta</h2>
+                            <p class="text-[11px] text-slate-500">Koordinat GPS yang diwajibkan bagi peserta saat melakukan presensi masuk di aplikasi mobile.</p>
+                        </div>
+                    </div>
+                    <button type="button" id="btn-use-current-location" class="px-2.5 py-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg flex items-center gap-1 transition">
+                        <i data-lucide="crosshair" class="w-3.5 h-3.5"></i> Ambil GPS Saat Ini
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label for="lokasi_latitude" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                            Latitude
+                        </label>
+                        <input type="number" step="any" name="lokasi_latitude" id="lokasi_latitude"
+                            value="{{ old('lokasi_latitude', $jadwal->lokasi_latitude ?? '-8.1763000') }}"
+                            class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700" placeholder="-8.1763000" />
+                        @error('lokasi_latitude')
+                            <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="lokasi_longitude" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                            Longitude
+                        </label>
+                        <input type="number" step="any" name="lokasi_longitude" id="lokasi_longitude"
+                            value="{{ old('lokasi_longitude', $jadwal->lokasi_longitude ?? '113.7007000') }}"
+                            class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700" placeholder="113.7007000" />
+                        @error('lokasi_longitude')
+                            <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="radius_meter" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                            Radius Presensi (Meter)
+                        </label>
+                        <input type="number" name="radius_meter" id="radius_meter"
+                            value="{{ old('radius_meter', $jadwal->radius_meter ?? 100) }}"
+                            class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700" placeholder="100" />
+                        @error('radius_meter')
+                            <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-1">
+                    <button type="button" onclick="document.getElementById('lokasi_latitude').value='-8.1763000';document.getElementById('lokasi_longitude').value='113.7007000';document.getElementById('radius_meter').value='100';" class="text-[11px] text-slate-500 hover:text-emerald-700 underline font-medium">
+                        Reset ke Default (Kampus Utama BLK Jember - 100m)
+                    </button>
+                </div>
+            </div>
+
                 <!-- ================================================ -->
                 <!-- PREVIEW HARI EFEKTIF                             -->
                 <!-- ================================================ -->
@@ -636,5 +698,25 @@
         }
         jamSelesai.addEventListener('change', validateJam);
         validateJam();
+    
+  var btnLoc = document.getElementById('btn-use-current-location');
+  if (btnLoc && navigator.geolocation) {
+    btnLoc.addEventListener('click', function() {
+      btnLoc.innerHTML = '<span class="inline-block animate-spin mr-1">⌛</span> Mendeteksi...';
+      navigator.geolocation.getCurrentPosition(function(pos) {
+        document.getElementById('lokasi_latitude').value = pos.coords.latitude.toFixed(7);
+        document.getElementById('lokasi_longitude').value = pos.coords.longitude.toFixed(7);
+        btnLoc.innerHTML = '✔ Berhasil';
+        setTimeout(function() {
+          btnLoc.innerHTML = '<i data-lucide="crosshair" class="w-3.5 h-3.5"></i> Ambil GPS Saat Ini';
+          if (window.lucide) lucide.createIcons();
+        }, 2000);
+      }, function(err) {
+        alert('Gagal mengambil lokasi: ' + err.message);
+        btnLoc.innerHTML = '<i data-lucide="crosshair" class="w-3.5 h-3.5"></i> Ambil GPS Saat Ini';
+        if (window.lucide) lucide.createIcons();
+      }, { enableHighAccuracy: true });
     });
+  }
+});
 </script>

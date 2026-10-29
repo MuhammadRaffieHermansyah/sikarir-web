@@ -29,6 +29,40 @@ class KelasPelatihanController extends Controller
         return KelasPelatihanResource::collection(KelasPelatihan::with(['peserta.user', 'jadwal.pelatihan'])->latest()->paginate(15))->response();
     }
 
+    #[OA\Get(
+        path: '/api/kelas-pelatihan/me',
+        summary: 'Ambil semua kelas pelatihan yang diikuti peserta login',
+        tags: ['Kelas Pelatihan'],
+        security: [['sanctum' => []]],
+        responses: [
+            new OA\Response(response: 200, description: 'Daftar kelas pelatihan peserta'),
+            new OA\Response(response: 401, description: 'Unauthenticated'),
+        ]
+    )]
+    public function myClasses(\Illuminate\Http\Request $request): JsonResponse
+    {
+        $user = $request->user();
+        $peserta = $user->peserta ?? null;
+
+        if (!$peserta) {
+            return response()->json(['message' => 'Data peserta tidak ditemukan.', 'data' => []], 200);
+        }
+
+        $kelas = KelasPelatihan::with([
+            'jadwal.pelatihan',
+            'jadwal.instruktur.user',
+            'jadwal.ruanganWorkshop',
+        ])
+        ->where('id_peserta', $peserta->id_peserta)
+        ->latest('id_kelas')
+        ->get();
+
+        return response()->json([
+            'message' => 'Daftar kelas pelatihan peserta berhasil diambil',
+            'data'    => KelasPelatihanResource::collection($kelas),
+        ]);
+    }
+
     #[OA\Post(
         path: '/api/kelas-pelatihan',
         summary: 'Daftarkan peserta ke kelas pelatihan',
@@ -52,6 +86,27 @@ class KelasPelatihanController extends Controller
     public function store(StoreKelasPelatihanRequest $request): JsonResponse
     {
         $data = $request->validated();
+
+        // Jika id_peserta tidak disediakan di body, gunakan id_peserta user yang login
+        if (empty($data['id_peserta'])) {
+            $user = $request->user();
+            $peserta = $user?->peserta;
+            if (!$peserta) {
+                abort(422, 'Data peserta tidak ditemukan. Silakan lengkapi profil terlebih dahulu.');
+            }
+            $data['id_peserta'] = $peserta->id_peserta;
+        } else {
+            $peserta = \App\Models\Peserta::find($data['id_peserta']);
+        }
+
+        // Validasi kelengkapan profil peserta
+        if (!$peserta || !$peserta->isProfileComplete()) {
+            return response()->json([
+                'message' => 'Data diri Anda belum lengkap. Silakan lengkapi data diri Anda terlebih dahulu sebelum mendaftar pelatihan.',
+                'is_profile_complete' => false,
+            ], 422);
+        }
+
         $item = DB::transaction(function () use ($data) {
             $jadwal = JadwalPelatihan::with('pelatihan')->lockForUpdate()->findOrFail($data['id_jadwal']);
             if ($jadwal->status !== 'tersedia') abort(422, 'Jadwal pelatihan tidak tersedia.');

@@ -27,6 +27,94 @@ class PesertaController extends Controller
         return PesertaResource::collection(Peserta::with($this->relations())->latest()->paginate(15))->response();
     }
 
+    #[OA\Get(
+        path: '/api/pesertas/me',
+        summary: 'Ambil profil peserta untuk user yang sedang login',
+        tags: ['Peserta'],
+        security: [['sanctum' => []]],
+        responses: [
+            new OA\Response(response: 200, description: 'Data peserta user login'),
+            new OA\Response(response: 401, description: 'Unauthenticated'),
+        ]
+    )]
+    public function me(\Illuminate\Http\Request $request): JsonResponse
+    {
+        $user = $request->user();
+        if (!$user) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
+        $peserta = Peserta::firstOrCreate(
+            ['id_user' => $user->id],
+            [
+                'nomor_peserta' => 'PST-' . date('Ymd') . '-' . str_pad($user->id, 4, '0', STR_PAD_LEFT),
+                'jenis_kelamin' => 'Laki-laki',
+            ]
+        );
+
+        return (new PesertaResource($peserta->load($this->relations())))->response();
+    }
+
+    #[OA\Put(
+        path: '/api/pesertas/me',
+        summary: 'Lengkapi atau update data diri peserta yang sedang login',
+        tags: ['Peserta'],
+        security: [['sanctum' => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['jenis_kelamin', 'nomor_kk', 'nomor_wa', 'tanggal_lahir', 'tempat_lahir', 'alamat_lengkap', 'pendidikan_terakhir'],
+                properties: [
+                    new OA\Property(property: 'jenis_kelamin', type: 'string', enum: ['Laki-laki', 'Perempuan']),
+                    new OA\Property(property: 'nomor_kk', type: 'string', example: '3509123456789001'),
+                    new OA\Property(property: 'nomor_wa', type: 'string', example: '081234567890'),
+                    new OA\Property(property: 'tanggal_lahir', type: 'string', format: 'date', example: '2002-05-15'),
+                    new OA\Property(property: 'tempat_lahir', type: 'string', example: 'Jember'),
+                    new OA\Property(property: 'alamat_lengkap', type: 'string', example: 'Jl. Basuki Rahmat No. 10, Jember'),
+                    new OA\Property(property: 'pendidikan_terakhir', type: 'string', example: 'SMA / SMK'),
+                    new OA\Property(property: 'pendidikan_sekarang', type: 'string', example: 'Mahasiswa'),
+                    new OA\Property(property: 'jurusan', type: 'string', example: 'Teknik Komputer & Jaringan'),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: 'Data diri peserta berhasil diperbarui'),
+            new OA\Response(response: 422, description: 'Validasi gagal'),
+        ]
+    )]
+    public function updateMe(\Illuminate\Http\Request $request): JsonResponse
+    {
+        $user = $request->user();
+        if (!$user) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
+        $validated = $request->validate([
+            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+            'nomor_kk' => 'required|string|max:30',
+            'nomor_wa' => 'required|string|max:30',
+            'tanggal_lahir' => 'required|date',
+            'tempat_lahir' => 'required|string|max:100',
+            'alamat_lengkap' => 'required|string',
+            'pendidikan_terakhir' => 'required|string|max:100',
+            'pendidikan_sekarang' => 'nullable|string|max:100',
+            'jurusan' => 'nullable|string|max:150',
+            'pas_foto' => 'nullable|string',
+        ]);
+
+        $peserta = Peserta::firstOrCreate(
+            ['id_user' => $user->id],
+            [
+                'nomor_peserta' => 'PST-' . date('Ymd') . '-' . str_pad($user->id, 4, '0', STR_PAD_LEFT),
+                'jenis_kelamin' => $validated['jenis_kelamin'],
+            ]
+        );
+
+        $peserta->update($validated);
+
+        return (new PesertaResource($peserta->fresh()->load($this->relations())))->response();
+    }
+
     #[OA\Post(
         path: '/api/pesertas',
         summary: 'Buat data peserta baru',

@@ -148,7 +148,7 @@
                 <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-300 transition flex flex-col justify-between">
                     <div>
                         <div class="relative h-44 bg-slate-100">
-                            <img src="{{ $item->gambar_url ?? asset('images/placeholder.jpg') }}" class="w-full h-full object-cover" alt="{{ $item->nama }}">
+                            <img src="{{ $item->gambar_url ?? 'https://media.istockphoto.com/id/2233679882/photo/two-young-adult-programmers-discussing-code-on-laptop-in-office.webp?a=1&b=1&s=612x612&w=0&k=20&c=PzaTx4WP272kbAqs_EBEEl2yx8nqCbUwTN8Au8Ndm6E=' }}" class="w-full h-full object-cover" alt="{{ $item->nama }}">
                             <span class="absolute top-2.5 left-2.5 bg-emerald-900/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg backdrop-blur-sm shadow-sm">
                                 {{ $item->sumber_dana ?? '100% Gratis APBD' }}
                             </span>
