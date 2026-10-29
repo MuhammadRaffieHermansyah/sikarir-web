@@ -119,7 +119,7 @@ class PesertaController extends Controller
             'jurusan'            => 'nullable|string|max:150',
             'is_disabilitas'     => 'nullable|boolean',
             'jenis_disabilitas'  => 'nullable|string|max:100',
-            'pas_foto'           => 'nullable|file|image|mimes:jpg,jpeg,png|max:2048',
+            'pas_foto'           => 'nullable|file|image|mimes:jpg,jpeg,png,webp|max:10240',
         ]);
 
         $peserta = Peserta::firstOrCreate(

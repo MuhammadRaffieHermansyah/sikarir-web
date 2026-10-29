@@ -28,7 +28,7 @@ class UpdatePesertaRequest extends FormRequest
             'alamat_lengkap' => 'sometimes|nullable|string',
             'pendidikan_terakhir' => 'sometimes|nullable|string|max:100',
             'pendidikan_sekarang' => 'sometimes|nullable|string|max:100',
-            'pas_foto' => 'sometimes|nullable|file|image|mimes:jpg,jpeg,png|max:2048',
+            'pas_foto' => 'sometimes|nullable|file|image|mimes:jpg,jpeg,png,webp|max:10240',
             'jurusan' => 'sometimes|nullable|string|max:150',
             'is_disabilitas' => 'sometimes|nullable|boolean',
             'jenis_disabilitas' => 'sometimes|nullable|string|max:100',
