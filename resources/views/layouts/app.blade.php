@@ -62,6 +62,5 @@
           window.matchMedia('(min-width: 768px)').addEventListener('change', (e) => { if (e.matches) setOpen(false); });
       })();
   </script>
-   @stack('scripts')
 </body>
 </html>

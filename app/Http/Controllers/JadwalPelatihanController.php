@@ -21,7 +21,7 @@ class JadwalPelatihanController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->whereHas('ruanganWorkshop', function ($sub) use ($search) { 
+                $q->whereHas('ruanganWorkshop', function ($sub) use ($search) {
                     $sub->where('nama_ruangan', 'like', "%{$search}%");
                 })
                   ->orWhereHas('instruktur', function ($sub) use ($search) {
@@ -64,7 +64,7 @@ class JadwalPelatihanController extends Controller
         return view('jadwal-pelatihan.create', compact('pelatihans', 'instrukturs', 'ruanganWorkshops'));
     }
 
-    public function store(Request $request): RedirectResponse
+        public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'id_pelatihan'    => 'required|exists:daftar_pelatihan,id_pelatihan',

@@ -229,7 +229,7 @@
                                 <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
                             @enderror
                         </div>
-
+                    </div>
                     </div>
                 </div>
 
@@ -276,6 +276,7 @@
                         <i data-lucide="alert-triangle" class="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-amber-600"></i>
                         <span id="warn-tgl-mulai-text"></span>
                     </div>
+                    <div id="warn-data-libur" class="hidden text-[11px] text-rose-800 bg-rose-50 border border-rose-200 px-3 py-2 rounded-lg"></div>
                 </div>
             </div>
 
@@ -286,7 +287,7 @@
                         <i data-lucide="save" class="w-4 h-4 text-emerald-700"></i>
                         Aksi Pembaruan
                     </h3>
-  
+
                     <div class="text-xs text-slate-500 space-y-2">
                         <div class="flex items-center justify-between">
                             <span>Dibuat:</span>
@@ -299,7 +300,7 @@
                                 class="font-semibold text-slate-700">{{ $jadwal->updated_at ? $jadwal->updated_at->translatedFormat('d M Y') : '-' }}</span>
                         </div>
                     </div>
-  
+
                     <div
                         class="p-3 bg-amber-50/60 rounded-lg border border-amber-100 space-y-1.5 text-[11px] text-amber-900">
                         <span class="font-bold block">Hari Tidak Aktif (Dilewati Otomatis):</span>
@@ -314,7 +315,7 @@
                             </div>
                         </div>
                     </div>
-  
+
                     <div class="pt-2 space-y-2">
                         <button type="submit"
                             class="w-full bg-emerald-900 hover:bg-emerald-950 text-white font-semibold text-xs py-2.5 px-4 rounded-lg shadow-sm flex items-center justify-center gap-2 transition">
@@ -326,7 +327,7 @@
                         </a>
                     </div>
                 </div>
-  
+
                 <div class="bg-rose-50/50 rounded-xl border border-rose-200 shadow-sm p-5 space-y-3">
                     <h4 class="font-bold text-rose-800 text-xs flex items-center gap-1.5">
                         <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600"></i> Zona Berbahaya
@@ -358,6 +359,8 @@
         var badgeHariEfektif = document.getElementById('badge-hari-efektif');
         var listLiburContainer = document.getElementById('list-libur-container');
         var listLibur = document.getElementById('list-libur');
+        var warnDataLibur  = document.getElementById('warn-data-libur');
+        var tahunTanpaData = new Set();
         var warnTglMulai = document.getElementById('warn-tgl-mulai');
         var warnTglMulaiText = document.getElementById('warn-tgl-mulai-text');
 
@@ -466,27 +469,19 @@
             validateJam();
         });
 
-        // ---- 4. Fetch hari libur (cached) ----
-        function fetchHariLibur(tahun) {
-            if (cacheHariLibur[tahun]) return Promise.resolve(cacheHariLibur[tahun]);
-            var meta = document.querySelector('meta[name="csrf-token"]');
-            return fetch('http://localhost:8000/internal/hari-libur?tahun=' + tahun, {
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRF-TOKEN': meta ? meta.content : ''
-                    }
-                })
-                .then(function(r) {
-                    if (!r.ok) throw 0;
-                    return r.json();
-                })
-                .then(function(d) {
-                    return (cacheHariLibur[tahun] = d.hari_libur || []);
-                })
-                .catch(function() {
-                    return [];
-                });
-        }
+    // ---- 4. Fetch hari libur (cached) ----
+function fetchHariLibur(tahun) {
+    if (cacheHariLibur[tahun]) return Promise.resolve(cacheHariLibur[tahun]);
+    return fetch('{{ route("hari-libur.index") }}?tahun=' + tahun, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+        })
+        .then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(function(d) {
+            if (!d.tersedia) tahunTanpaData.add(tahun); else tahunTanpaData.delete(tahun);
+            return (cacheHariLibur[tahun] = d.hari_libur || []);
+        })
+        .catch(function() { tahunTanpaData.add(tahun); return []; });
+}
 
         // ---- 5. Helpers ----
         function isLibur(ds) {
@@ -503,7 +498,19 @@
             });
         }
         var HARI = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-
+        function cekDataLibur() {
+        if (!tglMulai.value || !tglSelesai.value) { warnDataLibur.classList.add('hidden'); return; }
+        var t1 = +tglMulai.value.split('-')[0], t2 = +tglSelesai.value.split('-')[0];
+        var kosong = [];
+        for (var t = t1; t <= t2; t++) { if (tahunTanpaData.has(t)) kosong.push(t); }
+        if (kosong.length) {
+            warnDataLibur.textContent = 'Data libur nasional tahun ' + kosong.join(', ') +
+                ' belum tersedia. Tanggal selesai hanya melewati Sabtu & Minggu — periksa manual.';
+            warnDataLibur.classList.remove('hidden');
+        } else {
+            warnDataLibur.classList.add('hidden');
+        }
+    }
         // ---- 6. Hitung tanggal selesai (skip hari libur) ----
         function hitungTanggalSelesai() {
             if (!tglMulai.value || !jumlahHariAktif) return;
@@ -551,6 +558,7 @@
                 prevTotalKalender.textContent = diff;
                 badgeHariEfektif.textContent = jumlahHariAktif + ' Hari Aktif';
                 renderChip(dilewati);
+                cekDataLibur();
                 previewJadwal.classList.remove('hidden');
                 if (window.lucide) lucide.createIcons({
                     nodes: [previewJadwal]
@@ -587,12 +595,13 @@
         });
 
         tglSelesai.addEventListener('change', function() {
+            if (!this.value) return;
             if (this.value <= tglMulai.value) {
                 alert('Tanggal selesai harus setelah tanggal mulai!');
                 this.value = '';
                 return;
             }
-            if (tglMulai.value && hariLiburSet.size > 0) updatePreviewManual();
+            if (tglMulai.value) updatePreviewManual();
         });
 
         function updatePreviewManual() {
@@ -621,6 +630,7 @@
             prevTotalKalender.textContent = diff;
             badgeHariEfektif.textContent = aktif + ' Hari Aktif';
             renderChip(arr);
+            cekDataLibur();
             previewJadwal.classList.remove('hidden');
             if (window.lucide) lucide.createIcons({
                 nodes: [previewJadwal]
