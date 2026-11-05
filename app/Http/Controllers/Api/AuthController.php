@@ -90,7 +90,7 @@ class AuthController extends Controller
         }
         return response()->json([
             'message' => 'Login berhasil',
-            'data' => $user,
+            'data' => $user->load(['peserta', 'mitra', 'adminBlk']),
             'token' => $user->createToken('sikarir')->plainTextToken,
         ]);
     }

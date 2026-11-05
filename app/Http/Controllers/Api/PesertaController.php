@@ -89,17 +89,37 @@ class PesertaController extends Controller
             return response()->json(['message' => 'Unauthenticated.'], 401);
         }
 
+        // Normalisasi jenis kelamin jika dikirim huruf kecil / singkatan
+        if ($request->has('jenis_kelamin')) {
+            $jk = strtolower(trim((string) $request->jenis_kelamin));
+            if ($jk === 'laki-laki' || $jk === 'pria' || $jk === 'l') {
+                $request->merge(['jenis_kelamin' => 'Laki-laki']);
+            } elseif ($jk === 'perempuan' || $jk === 'wanita' || $jk === 'p') {
+                $request->merge(['jenis_kelamin' => 'Perempuan']);
+            }
+        }
+
+        if ($request->has('nomor_kk')) {
+            $request->merge(['nomor_kk' => trim((string) $request->nomor_kk)]);
+        }
+        if ($request->has('nomor_wa')) {
+            $request->merge(['nomor_wa' => trim((string) $request->nomor_wa)]);
+        }
+
         $validated = $request->validate([
-            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
-            'nomor_kk' => 'required|string|max:30',
-            'nomor_wa' => 'required|string|max:30',
-            'tanggal_lahir' => 'required|date',
-            'tempat_lahir' => 'required|string|max:100',
-            'alamat_lengkap' => 'required|string',
-            'pendidikan_terakhir' => 'required|string|max:100',
-            'pendidikan_sekarang' => 'nullable|string|max:100',
-            'jurusan' => 'nullable|string|max:150',
-            'pas_foto' => 'nullable|string',
+            'jenis_kelamin'      => 'required|in:Laki-laki,Perempuan',
+            'nomor_kk'           => 'required|string|max:30',
+            'nomor_wa'           => 'required|string|max:30',
+            'tanggal_lahir'      => 'required|date',
+            'tempat_lahir'       => 'required|string|max:100',
+            'alamat_lengkap'     => 'required|string',
+            'pendidikan_terakhir'=> 'required|string|max:100',
+            'pendidikan_sekarang'=> 'nullable|string|max:100',
+            'status_pendidikan'  => 'nullable|in:sudah_lulus,masih_menempuh',
+            'jurusan'            => 'nullable|string|max:150',
+            'is_disabilitas'     => 'nullable|boolean',
+            'jenis_disabilitas'  => 'nullable|string|max:100',
+            'pas_foto'           => 'nullable|file|image|mimes:jpg,jpeg,png,webp|max:10240',
         ]);
 
         $peserta = Peserta::firstOrCreate(
@@ -109,6 +129,18 @@ class PesertaController extends Controller
                 'jenis_kelamin' => $validated['jenis_kelamin'],
             ]
         );
+
+        // Handle upload pas foto
+        if ($request->hasFile('pas_foto')) {
+            // Hapus foto lama jika ada
+            if ($peserta->pas_foto) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($peserta->pas_foto);
+            }
+            $path = $request->file('pas_foto')->store('pas_foto', 'public');
+            $validated['pas_foto'] = $path;
+        } else {
+            unset($validated['pas_foto']); // jangan hapus foto lama kalau tidak ada upload baru
+        }
 
         $peserta->update($validated);
 
