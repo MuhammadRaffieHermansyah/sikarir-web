@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Mitra;
 use App\Models\User;
+use Dotenv\Util\Regex;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -59,7 +60,7 @@ class MitraController extends Controller
             'id_user'         => 'required|exists:users,id|unique:mitras,id_user',
             'jenis_mitra'     => 'required|string|max:100',
             'bidang_usaha'    => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
-            'no_telp'         => 'required|string|max:30',
+            'no_telp'         => 'required|string|min:10|max:13|regex:/^[0-9]+$/',
             'no_izin'         => 'required|string|max:100|regex:/^[a-zA-Z0-9\s]+$/',
             'jabatan_pic'     => 'required|string|max:100|regex:/^[a-zA-Z\s]+$/',
             'provinsi'        => 'required|string|max:100|regex:/^[a-zA-Z\s]+$/',
@@ -87,6 +88,9 @@ class MitraController extends Controller
             'logo_perusahaan.image'    => 'File logo harus berupa gambar.',
             'logo_perusahaan.mimes'    => 'Format logo yang diizinkan: jpeg, png, jpg, gif, webp, svg.',
             'logo_perusahaan.max'      => 'Ukuran file logo maksimal 2MB.',
+            'no_telp.regex'          => 'Nomor telepon harus berupa angka.',
+            'no_telp.min'              => 'Nomor telepon minimal 10 digit.',
+            'no_telp.max'              => 'Nomor telepon maksimal 13 digit.',
         ]);
 
         if ($request->hasFile('logo_perusahaan')) {
@@ -121,7 +125,7 @@ class MitraController extends Controller
             'id_user'         => 'required|',
             'jenis_mitra'     => 'required|string|max:100',
             'bidang_usaha'    => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
-            'no_telp'         => 'required|string|max:30',
+            'no_telp'         => 'required|string|min:10|max:13|regex:/^[0-9]+$/',
             'no_izin'         => ['required','string','max:100', 'regex:/^[a-zA-Z0-9\s]+$/', Rule::unique('mitras', 'no_izin')->ignore($id, 'id_mitra')],
             'jabatan_pic'     => 'required|string|max:100|regex:/^[a-zA-Z\s]+$/',
             'provinsi'        => 'required|string|max:100|regex:/^[a-zA-Z\s]+$/',
@@ -147,6 +151,9 @@ class MitraController extends Controller
             'logo_perusahaan.image'    => 'File logo harus berupa gambar.',
             'logo_perusahaan.mimes'    => 'Format logo yang diizinkan: jpeg, png, jpg, gif, webp, svg.',
             'logo_perusahaan.max'      => 'Ukuran file logo maksimal 2MB.',
+            'no_telp.regex'          => 'Nomor telepon harus berupa angka.',
+            'no_telp.min'              => 'Nomor telepon minimal 10 digit.',
+            'no_telp.max'              => 'Nomor telepon maksimal 13 digit.',
         ]);
 
         if ($request->hasFile('logo_perusahaan')) {
