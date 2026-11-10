@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Data Peserta Vokasi & Magang - BLK CONNECT')
+@section('title', 'Data Peserta - SiKarir')
 
 @section('content')
   <!-- Title & Action Bar -->
@@ -9,9 +9,9 @@
       <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
         <a href="{{ route('admin-blk.index') }}" class="hover:text-emerald-700 transition">Beranda</a>
         <span>&gt;</span>
-        <span class="text-slate-600 font-medium">Peserta Magang & Vokasi</span>
+        <span class="text-slate-600 font-medium">Peserta SiKarir</span>
       </div>
-      <h1 class="text-xl font-black text-slate-900 tracking-tight">Data Peserta Pelatihan & Magang Industri</h1>
+      <h1 class="text-xl font-black text-slate-900 tracking-tight">Data Peserta Pelatihan</h1>
       <p class="text-xs text-slate-500 mt-0.5">Monitoring data induk peserta vokasi, status keikutsertaan kelas, presensi, dan capaian sertifikasi.</p>
     </div>
 
@@ -77,12 +77,12 @@
     <div class="p-5 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
       <div>
         <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-          <span>Daftar Peserta Pelatihan & Magang</span>
+          <span>Daftar Peserta Pelatihan </span>
           <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full">
             {{ isset($pesertas) ? $pesertas->total() : 0 }} Peserta
           </span>
         </h2>
-        <p class="text-xs text-slate-500 mt-0.5">Daftar lengkap peserta vokasi yang terdaftar pada sistem SIMAGANG BLK.</p>
+        <p class="text-xs text-slate-500 mt-0.5">Daftar lengkap peserta vokasi yang terdaftar pada sistem SiKarir .</p>
       </div>
 
       <!-- FORM PENCARIAN & FILTER (Component) -->
