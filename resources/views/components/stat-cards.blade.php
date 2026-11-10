@@ -1,4 +1,4 @@
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
   <!-- Total Pengguna -->
   <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
     <div>
