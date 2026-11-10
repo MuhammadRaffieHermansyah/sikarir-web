@@ -3,7 +3,7 @@
   <div class="lg:col-span-2 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
     <div class="flex items-center justify-between mb-4">
       <div>
-        <h3 class="font-bold text-slate-800 text-sm">Tren Aktivitas Magang & Log Presensi</h3>
+        <h3 class="font-bold text-slate-800 text-sm">Tren Aktivitas & Log Presensi</h3>
         <p class="text-xs text-slate-500">Tingkat kehadiran harian dan pengisian jurnal industri minggu berjalan</p>
       </div>
       <div class="flex items-center gap-4 text-xs">
@@ -74,7 +74,7 @@
       <div class="bg-slate-50 p-2.5 rounded-lg flex items-center gap-2">
         <i data-lucide="clock" class="w-4 h-4 text-emerald-600"></i>
         <div>
-          <div class="text-[10px] text-slate-400">Total Jam Magang</div>
+          <div class="text-[10px] text-slate-400">Total Jam Pelatihan</div>
           <div class="font-bold text-slate-800">34,600 Jam</div>
         </div>
       </div>
@@ -103,7 +103,7 @@
         </div>
       </div>
 
-      <p class="text-center text-xs font-semibold text-slate-700 mb-3">838 dari 865 peserta magang aktif</p>
+      
 
       <div class="grid grid-cols-3 gap-2 text-center text-xs bg-slate-50 p-2 rounded-lg">
         <div>

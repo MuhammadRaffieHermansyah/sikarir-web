@@ -40,26 +40,6 @@
     </div>
   </div>
 
-  <!-- Peserta Magang -->
-  <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
-    <div>
-      <div class="flex items-center justify-between text-slate-500 mb-1">
-        <span class="text-[11px] font-bold tracking-wider uppercase">PESERTA MAGANG AKTIF</span>
-        <div class="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg"><i data-lucide="building" class="w-4 h-4"></i></div>
-      </div>
-      <div class="flex items-baseline gap-2">
-        <span class="text-2xl font-black text-slate-800">865</span>
-        <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded flex items-center gap-0.5">
-          <i data-lucide="trending-up" class="w-3 h-3"></i> 8.2%
-        </span>
-      </div>
-      <p class="text-[11px] text-slate-500 mt-1">Siswa</p>
-    </div>
-    <div class="mt-4 pt-3 border-t border-slate-100 grid grid-cols-2 gap-2 text-[11px] text-slate-500">
-      <div><span class="font-bold text-slate-700">64</span> Mitra DU/DI</div>
-      <div><span class="font-bold text-slate-700">96.8%</span> Kehadiran</div>
-    </div>
-  </div>
 
   <!-- Sertifikat -->
   <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
