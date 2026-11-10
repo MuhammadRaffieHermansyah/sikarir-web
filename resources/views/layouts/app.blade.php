@@ -10,7 +10,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-slate-100 font-sans text-slate-800 flex h-screen overflow-hidden">
+<body class="admin-shell font-sans text-slate-800 flex h-screen overflow-hidden">
 
   <!-- Include Sidebar Partial -->
   @include('layouts.partials.sidebar')

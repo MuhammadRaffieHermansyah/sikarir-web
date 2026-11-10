@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#145642">
     <title>@yield('title', 'siKarir - UPT BLK Jember')</title>
 
     <!-- Fonts -->
@@ -11,7 +12,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="font-sans antialiased text-slate-800 bg-white min-h-screen flex flex-col justify-between">
+<body class="site-shell font-sans antialiased min-h-screen flex flex-col justify-between">
 
     {{-- NAVBAR --}}
     @include('layouts.navbar')

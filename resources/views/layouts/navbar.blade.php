@@ -8,34 +8,34 @@
     ];
 @endphp
 
-<header id="siteHeader" class="bg-white border-b border-slate-200/80 sticky top-0 z-50 backdrop-blur-md bg-white/95">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3 sm:gap-6">
+<header id="siteHeader" class="sticky top-0 z-50 border-b border-[#e0e9dd] bg-[#fbfcf8]/92 backdrop-blur-xl">
+    <div class="site-container flex items-center justify-between gap-3 py-3 sm:gap-6">
 
         <!-- Logo Branding -->
         <a href="{{ url('/') }}" class="flex items-center gap-2.5 sm:gap-3 shrink-0 group min-w-0">
-            <div class="w-9 h-9 bg-emerald-900 text-white rounded-xl flex items-center justify-center font-black text-xs shadow-md group-hover:bg-emerald-950 transition shrink-0">
-                <i data-lucide="layers" class="w-5 h-5 text-emerald-400"></i>
-            </div>
+            <span class="grid h-10 w-10 place-items-center rounded-xl bg-[#145642] text-[#d8f36a] shadow-[0_8px_18px_rgba(20,86,66,.16)] transition group-hover:scale-105 shrink-0">
+                <i data-lucide="sparkles" class="w-5 h-5"></i>
+            </span>
             <div class="leading-none min-w-0">
-                <span class="block font-black text-slate-900 text-base tracking-tight group-hover:text-emerald-700 transition">siKarir</span>
-                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5 whitespace-nowrap">UPT BLK JEMBER</p>
+                <span class="block text-base font-black tracking-[-.04em] text-[#173f31] transition group-hover:text-[#39734e]">siKarir</span>
+                <p class="mt-0.5 whitespace-nowrap text-[9px] font-extrabold uppercase tracking-[.14em] text-[#789080]">UPT BLK JEMBER</p>
             </div>
         </a>
 
         <!-- Main Navigation Links (desktop, mulai lg) -->
-        <nav class="hidden lg:flex items-center gap-1 text-xs font-semibold shrink-0">
+        <nav class="hidden shrink-0 items-center gap-1 lg:flex">
             @foreach ($navLinks as $link)
                 <a href="{{ $link['url'] }}"
-                   class="{{ $link['active'] ? 'bg-emerald-50 text-emerald-800 font-bold px-3.5 py-2 rounded-xl border border-emerald-200/80' : 'text-slate-600 hover:text-emerald-700 hover:bg-slate-50 px-3.5 py-2 rounded-xl' }} transition whitespace-nowrap">
+                   class="site-nav-link {{ $link['active'] ? 'is-active' : '' }} whitespace-nowrap">
                     {{ $link['label'] }}
                 </a>
             @endforeach
         </nav>
 
         <!-- Quick Search Bar (layar lebar, mulai xl) -->
-        <div class="hidden xl:flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs flex-1 max-w-xs focus-within:bg-white focus-within:border-emerald-600 focus-within:ring-1 focus-within:ring-emerald-600 transition shadow-sm">
-            <i data-lucide="search" class="w-4 h-4 text-slate-400 shrink-0"></i>
-            <input type="text" placeholder="Cari kejuruan, sertifikasi, posisi..." class="bg-transparent outline-none w-full text-xs font-medium text-slate-800 placeholder:text-slate-400">
+        <div class="hidden max-w-xs flex-1 items-center gap-2 rounded-full border border-[#dfe8dc] bg-white px-3.5 py-2 text-xs shadow-sm transition focus-within:border-[#86a969] focus-within:ring-4 focus-within:ring-[#dff0c7]/70 xl:flex">
+            <i data-lucide="search" class="h-4 w-4 shrink-0 text-[#74907a]"></i>
+            <input type="text" placeholder="Cari kejuruan, posisi..." class="w-full bg-transparent text-xs font-medium text-[#244638] outline-none placeholder:text-[#91a298]">
         </div>
 
         <!-- Auth Action Buttons & User Menu -->
@@ -44,30 +44,31 @@
             {{-- Tombol aksi: tampil mulai sm. Di bawah sm dipindah ke menu hamburger --}}
             <div class="hidden sm:flex items-center gap-2 sm:gap-3">
                 @guest
-                    <a href="{{ route('login') }}" class="font-bold text-slate-700 hover:text-emerald-700 px-2 sm:px-3 py-2 transition">
+                    <a href="{{ route('login') }}" class="px-2 py-2 text-xs font-extrabold text-[#476756] transition hover:text-[#145642] sm:px-3">
                         Masuk
                     </a>
-                    <a href="{{ route('register') }}" class="bg-emerald-900 hover:bg-emerald-950 text-white px-3 sm:px-4 py-2 rounded-xl font-bold shadow-sm transition flex items-center gap-1.5">
+                    <a href="{{ route('register') }}" class="site-primary-action">
                         <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
                         <span>Daftar</span>
                     </a>
                 @else
-                    <a href="{{ route('dashboard') }}" class="bg-emerald-900 hover:bg-emerald-950 text-white px-3 sm:px-4 py-2 rounded-xl font-bold shadow-sm transition flex items-center gap-1.5">
+                    <a href="{{ route('dashboard') }}" class="site-primary-action">
                         <i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i>
                         <span>Dashboard</span>
                     </a>
                 @endguest
 
-                <span class="w-px h-5 bg-slate-200"></span>
+                <span class="h-5 w-px bg-[#dfe8dc]"></span>
 
                 <!-- Notification Bell -->
-                <button type="button" class="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition" title="Notifikasi" aria-label="Notifikasi">
+                <button type="button" class="relative grid h-9 w-9 place-items-center rounded-xl border border-[#dfe8dc] bg-white text-[#5d7968] shadow-sm transition hover:-translate-y-0.5 hover:border-[#aac78d] hover:bg-[#f0f6e8] hover:text-[#145642]" title="Notifikasi" aria-label="Notifikasi">
                     <i data-lucide="bell" class="w-4 h-4"></i>
+                    <span class="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-[#a7c748] ring-2 ring-white"></span>
                 </button>
 
                 <!-- User Profile Avatar -->
                 <a href="{{ auth()->check() ? route('profile.edit') : route('login') }}"
-                   class="w-8 h-8 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 hover:text-emerald-700 hover:border-emerald-300 transition shadow-sm" title="Profil Saya" aria-label="Profil Saya">
+                   class="grid h-9 w-9 place-items-center rounded-xl border border-[#dfe8dc] bg-[#145642] text-[#d8f36a] shadow-sm transition hover:-translate-y-0.5 hover:bg-[#0f4636]" title="Profil Saya" aria-label="Profil Saya">
                     <i data-lucide="user" class="w-4 h-4"></i>
                 </a>
 
@@ -80,7 +81,7 @@
 
             <!-- Tombol Hamburger (di bawah lg) -->
             <button id="menuToggle" type="button"
-                    class="lg:hidden w-9 h-9 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 flex items-center justify-center transition active:scale-95"
+                    class="lg:hidden grid h-10 w-10 place-items-center rounded-xl border border-[#dfe8dc] bg-white text-[#315d49] shadow-sm transition hover:bg-[#f0f6e8]"
                     aria-label="Buka menu" aria-controls="mobileMenu" aria-expanded="false">
                 <span id="iconMenu"><i data-lucide="menu" class="w-5 h-5"></i></span>
                 <span id="iconClose" class="hidden"><i data-lucide="x" class="w-5 h-5"></i></span>
@@ -89,8 +90,8 @@
     </div>
 
     <!-- Menu Mobile / Tablet (di bawah lg) -->
-    <div id="mobileMenu" class="hidden lg:hidden border-t border-slate-200/80 bg-white max-h-[calc(100vh-4rem)] overflow-y-auto">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 space-y-4">
+    <div id="mobileMenu" class="hidden max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-[#dfe8dc] bg-[#fbfcf8] lg:hidden">
+        <div class="site-container space-y-4 py-4">
 
             <!-- Pencarian cepat -->
             <form method="GET" action="{{ route('pelatihan.katalog') }}"
