@@ -4,38 +4,40 @@
 
 @section('content')
 
+<div class="public-page">
+
     {{-- HERO SECTION --}}
-    <section class="relative overflow-hidden bg-linear-to-br from-emerald-900 via-teal-950 to-slate-900 text-white border-b border-emerald-800/40">
+    <section class="public-hero relative overflow-hidden text-white">
         <!-- Background Accent Blur -->
         <div class="absolute -top-24 -left-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="max-w-7xl mx-auto px-6 py-10 md:py-14 relative z-10">
+        <div class="max-w-7xl mx-auto px-0 py-6 md:py-8 relative z-10">
             <!-- Breadcrumb -->
-            <nav class="flex items-center gap-2 text-xs font-semibold text-emerald-200/80 mb-6">
+            <!-- <nav class="flex items-center gap-2 text-xs font-semibold text-emerald-200/80 mb-6">
                 <a href="{{ url('/') }}" class="hover:text-white transition flex items-center gap-1">
                     <i data-lucide="home" class="w-3.5 h-3.5"></i> Beranda
                 </a>
                 <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-emerald-500"></i>
                 <span class="text-white font-bold">Lowongan Kerja (BKK)</span>
-            </nav>
+            </nav> -->
 
-            <div class="grid md:grid-cols-12 gap-8 items-center">
-                <div class="md:col-span-8 space-y-3">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 rounded-full border border-emerald-400/30 text-emerald-300 text-xs font-semibold backdrop-blur-sm">
+            <div class="grid gap-8 items-center">
+                <div class="space-y-5">
+                    <div class="public-kicker">
                         <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
                         PORTAL RESMI BKK UPT BLK JEMBER
                     </div>
-                    <h1 class="text-2xl md:text-4xl font-black leading-tight tracking-tight text-white">
-                        Bursa Kerja Khusus & Peluang Karir Mitra DUDI
+                    <h1 class="text-white">
+                        Bursa Kerja Khusus.<br><span class="public-hero-accent">Peluang Karir Mitra DUDI.</span>
                     </h1>
-                    <p class="text-emerald-100/80 max-w-2xl text-xs md:text-sm leading-relaxed">
+                    <p class="text-emerald-100/80 max-w-2xl">
                         Platform penyaluran kerja terverifikasi dan kolaborasi DUDI Jawa Timur. Menghubungkan alumni pelatihan vokasi bersertifikat BNSP dan talenta kerja kompeten langsung dengan perusahaan kredibel.
                     </p>
                 </div>
 
                 <!-- Banner Stat Widget -->
-                <div class="md:col-span-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 text-xs text-emerald-100 flex items-center gap-4 shadow-xl">
+                <div class="public-hero-aside md:col-span-4 rounded-[1.5rem] bg-white/8 backdrop-blur-md border border-white/15 p-5 text-xs text-emerald-100 flex items-center gap-4 shadow-2xl">
                     <div class="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400 shrink-0">
                         <i data-lucide="building-2" class="w-6 h-6"></i>
                     </div>
@@ -50,10 +52,10 @@
     </section>
 
     <!-- MAIN CONTENT & FILTER -->
-    <div class="max-w-7xl mx-auto px-6 py-10">
+    <div class="max-w-7xl mx-auto px-0 py-10 md:py-14">
 
         {{-- SEARCH & FILTER PANEL --}}
-        <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm mb-8 space-y-4">
+        <div class="public-filter bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm mb-8 space-y-4">
             <form method="GET" action="{{ route('lowongan.katalog') }}" class="flex flex-col md:flex-row gap-3">
                 <div class="relative flex-1">
                     <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
@@ -93,7 +95,7 @@
                         <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-600"></i> Populer:
                     </span>
                     @foreach (['Teknisi Las', 'Otomotif Roda 4', 'Operator Garmen', 'Web Developer', 'Barista Kopi'] as $tag)
-                        <a href="{{ route('lowongan.katalog', ['q' => $tag]) }}" class="bg-slate-100 hover:bg-emerald-50 hover:text-emerald-800 border border-slate-200/80 rounded-lg px-2.5 py-1 text-[11px] font-semibold text-slate-600 transition">
+                        <a href="{{ route('lowongan.katalog', ['q' => $tag]) }}" class="bg-slate-100 hover:bg-lime-100 hover:text-emerald-950 border border-slate-200/80 rounded-full px-3 py-1 text-[11px] font-semibold text-slate-600 transition">
                             {{ $tag }}
                         </a>
                     @endforeach
@@ -285,5 +287,6 @@
             </div>
         </div>
     </div>
+</div>
 
 @endsection

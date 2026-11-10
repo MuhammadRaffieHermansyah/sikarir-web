@@ -151,6 +151,169 @@
         border-radius: 999px;
         background: #b6c9b3;
     }
+
+    .public-page {
+        background: var(--color-sikarir-paper);
+    }
+
+    .public-hero {
+        position: relative;
+        display: flex;
+        min-height: min(760px, calc(100vh - 72px));
+        align-items: center;
+        overflow: hidden;
+        border-bottom: 1px solid rgb(216 243 106 / .20);
+        background: #083d30;
+        color: white;
+    }
+
+    .public-hero::before {
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(circle at 90% 50%, rgb(24 112 76 / .35), transparent 30rem),
+            radial-gradient(circle at 16% 110%, rgb(216 243 106 / .08), transparent 22rem);
+        content: '';
+        pointer-events: none;
+    }
+
+    .public-hero > .max-w-7xl {
+        padding-top: 4.75rem;
+        padding-bottom: 6.5rem;
+    }
+
+    .public-page .max-w-7xl {
+        width: min(1160px, calc(100% - 2rem));
+    }
+
+    .public-hero h1 {
+        max-width: 50rem;
+        font-family: var(--font-sans);
+        font-size: clamp(3.25rem, 7.2vw, 6.5rem);
+        font-weight: 800;
+        letter-spacing: -.075em;
+        line-height: .9;
+    }
+
+    .public-hero h1 .text-emerald-400,
+    .public-hero h1 .public-hero-accent {
+        color: var(--color-sikarir-lime);
+    }
+
+    .public-hero p {
+        max-width: 36rem;
+        font-size: clamp(.9375rem, 1.5vw, 1.125rem);
+        line-height: 1.7;
+    }
+
+    .public-hero .public-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        border: 1px solid rgb(216 243 106 / .38);
+        border-radius: 999px;
+        background: rgb(216 243 106 / .10);
+        padding: .25rem .75rem;
+        color: var(--color-sikarir-lime);
+        font-size: .65rem;
+        font-weight: 800;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        backdrop-filter: blur(6px);
+    }
+
+    .public-hero-aside {
+        display: none;
+    }
+
+    .public-page .public-card,
+    .public-page .bg-white.rounded-2xl.border {
+        border-color: #dfe9dc;
+        box-shadow: 0 12px 26px rgb(20 61 48 / .055);
+    }
+
+    .public-page .public-card:hover,
+    .public-page .bg-white.rounded-2xl.border:hover {
+        border-color: #bbd49e;
+        box-shadow: 0 18px 32px rgb(20 61 48 / .09);
+    }
+
+    .public-page .public-soft-section,
+    .public-page .bg-slate-50\/80 {
+        border-color: #dfe9dc;
+        background: #eef4e8;
+    }
+
+    .public-page .public-filter {
+        border-color: #d9e7d5;
+        background: rgb(255 255 255 / .95);
+        box-shadow: 0 16px 34px rgb(20 61 48 / .07);
+    }
+
+    .public-page input,
+    .public-page select {
+        border-color: #dce8d8 !important;
+        background-color: #fbfcf8 !important;
+    }
+
+    .public-page input:focus,
+    .public-page select:focus {
+        border-color: #86a969 !important;
+        box-shadow: 0 0 0 4px rgb(216 243 106 / .30) !important;
+    }
+
+    .public-page .bg-emerald-900 {
+        background-color: var(--color-sikarir-emerald);
+    }
+
+    .public-page .hover\:bg-emerald-950:hover {
+        background-color: #0f4636;
+    }
+
+    .public-page .text-emerald-400 {
+        color: var(--color-sikarir-lime);
+    }
+
+    .public-page .bg-emerald-50 {
+        background-color: #eef5e7;
+    }
+
+    .public-page .border-emerald-200\/80,
+    .public-page .border-emerald-200 {
+        border-color: #cee1bb;
+    }
+
+    .public-page .text-purple-700 {
+        color: #39734e;
+    }
+
+    .public-page .bg-purple-50 {
+        background-color: #eef5e7;
+    }
+
+    .public-page .border-purple-100 {
+        border-color: #cee1bb;
+    }
+
+    @media (max-width: 640px) {
+        .public-page .max-w-7xl {
+            width: min(100% - 2rem, 520px);
+        }
+
+        .public-hero h1 {
+            font-size: clamp(3.1rem, 14vw, 4.4rem);
+        }
+
+        .public-hero {
+            min-height: 720px;
+            align-items: flex-start;
+        }
+
+        .public-hero > .max-w-7xl {
+            padding-top: 5rem;
+            padding-bottom: 8rem;
+        }
+    }
 }
 
 @utility scrollbar-none {

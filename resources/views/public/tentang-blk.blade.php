@@ -4,6 +4,8 @@
 
 @section('content')
 
+<div class="public-page">
+
     {{-- TOP INFO BAR --}}
     <!-- <div class="bg-slate-50 border-b border-slate-200/80 text-xs py-2.5 px-6">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2 text-slate-600 font-medium">
@@ -22,22 +24,22 @@
     </div> -->
 
     {{-- HERO SECTION --}}
-    <section class="relative overflow-hidden bg-linear-to-br from-emerald-900 via-teal-950 to-slate-900 text-white border-b border-emerald-800/40">
+    <section class="public-hero relative overflow-hidden text-white">
         <!-- Background Accent Blur -->
         <div class="absolute -top-24 -left-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="max-w-7xl mx-auto px-6 py-12 md:py-16 relative z-10">
-            <div class="grid md:grid-cols-12 gap-8 items-center">
-                <div class="md:col-span-7 space-y-4">
-                    <span class="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 rounded-full border border-emerald-400/30 text-emerald-300 text-xs font-semibold backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-0 py-6 md:py-8 relative z-10">
+            <div class="grid gap-8 items-center">
+                <div class="space-y-5">
+                    <span class="public-kicker">
                         <i data-lucide="building-2" class="w-4 h-4 text-emerald-400"></i>
                         LEMBAGA VOKASI PEMERINTAH PROVINSI JAWA TIMUR
                     </span>
-                    <h1 class="text-2xl md:text-4xl font-black leading-tight tracking-tight text-white">
-                        Profil & Komitmen Kejuruan <span class="text-emerald-400">UPT BLK Jember</span>
+                    <h1 class="text-white">
+                        Profil & Komitmen Kejuruan.<br><span class="public-hero-accent">UPT BLK Jember.</span>
                     </h1>
-                    <p class="text-emerald-100/80 text-xs md:text-sm leading-relaxed max-w-xl">
+                    <p class="text-emerald-100/80 max-w-xl">
                         Lembaga Pelatihan Vokasi Pemerintah Provinsi Jawa Timur Pencetak Tenaga Terampil Siap Kerja, Berdaya Saing Global, dan Tersertifikasi Nasional BNSP melalui pembiayaan APBD & APBN secara gratis dan transparan.
                     </p>
 
@@ -56,32 +58,12 @@
                     </div>
                 </div>
 
-                <!-- Hero Media Preview -->
-                <div class="md:col-span-5 relative">
-                    <div class="relative h-72 md:h-80 rounded-2xl overflow-hidden border border-white/20 shadow-2xl bg-slate-800">
-                        <img src="{{ asset('images/pembukaanblk2.jpeg') }}" class="w-full h-full object-cover" alt="Rapat Sosialisasi BLK Jember">
-                        <span class="absolute top-3 left-3 bg-slate-900/80 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg backdrop-blur-sm flex items-center gap-1">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Rapat Sosialisasi BLK Jember
-                        </span>
-                    </div>
-
-                    <!-- Floating Badge -->
-                    <div class="absolute -bottom-4 -left-4 bg-white text-slate-800 shadow-xl rounded-2xl p-3.5 border border-slate-200/80 flex items-center gap-3">
-                        <div class="p-2 bg-emerald-100 text-emerald-800 rounded-xl shrink-0">
-                            <i data-lucide="shield-check" class="w-6 h-6"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-slate-900 text-xs">LSP P1 BLK Jember</h4>
-                            <p class="text-[10px] text-slate-500 font-medium">Terlisensi Penuh BNSP Republik Indonesia</p>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
 
     <!-- MAIN CONTENT AREA -->
-    <div class="max-w-7xl mx-auto px-6 py-12 space-y-12">
+    <div class="max-w-7xl mx-auto px-0 py-12 md:py-16 space-y-12">
 
         {{-- SEJARAH & LANDASAN HUKUM --}}
         <div class="grid md:grid-cols-12 gap-8 items-start">
@@ -439,5 +421,7 @@
             </div>
         </div>
     </section>
+
+</div>
 
 @endsection

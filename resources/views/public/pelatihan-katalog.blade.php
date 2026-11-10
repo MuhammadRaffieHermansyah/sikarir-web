@@ -4,6 +4,8 @@
 
 @section('content')
 
+<div class="public-page">
+
     {{-- TICKER INFO ANNOUNCEMENT --}}
     <!-- <div class="bg-emerald-900 text-white text-xs font-medium py-2.5 px-6 border-b border-emerald-800">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
@@ -20,37 +22,37 @@
     </div> -->
 
     {{-- HERO SECTION --}}
-    <section class="relative overflow-hidden bg-gradient-to-br from-emerald-900 via-teal-950 to-slate-900 text-white border-b border-emerald-800/40">
+    <section class="public-hero relative overflow-hidden text-white">
         <!-- Background Accent Blur -->
         <div class="absolute -top-24 -left-24 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="max-w-7xl mx-auto px-6 py-10 md:py-14 relative z-10">
+        <div class="max-w-7xl mx-auto px-0 py-6 md:py-8 relative z-10">
             <!-- Breadcrumb -->
-            <nav class="flex items-center gap-2 text-xs font-semibold text-emerald-200/80 mb-6">
+            <!-- <nav class="flex items-center gap-2 text-xs font-semibold text-emerald-200/80 mb-6">
                 <a href="{{ url('/') }}" class="hover:text-white transition flex items-center gap-1">
                     <i data-lucide="home" class="w-3.5 h-3.5"></i> Beranda
                 </a>
                 <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-emerald-500"></i>
                 <span class="text-white font-bold">Katalog Pelatihan</span>
-            </nav>
+            </nav> -->
 
-            <div class="grid md:grid-cols-12 gap-8 items-center">
-                <div class="md:col-span-8 space-y-3">
-                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 rounded-full border border-emerald-400/30 text-emerald-300 text-xs font-semibold backdrop-blur-sm">
+            <div class="grid gap-8 items-center">
+                <div class="space-y-5">
+                    <div class="public-kicker">
                         <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
                         PENDIDIKAN VOKASI TERAKREDITASI KEMNAKER RI & BNSP
                     </div>
-                    <h1 class="text-2xl md:text-4xl font-black leading-tight tracking-tight text-white">
-                        Katalog Program Pelatihan Kerja & Vokasi
+                    <h1 class="text-white">
+                        Katalog Program.<br><span class="public-hero-accent">Pelatihan Kerja & Vokasi.</span>
                     </h1>
-                    <p class="text-emerald-100/80 max-w-2xl text-xs md:text-sm leading-relaxed">
+                    <p class="text-emerald-100/80 max-w-2xl">
                         Tingkatkan keahlian kerja nyata Anda tanpa biaya. Seluruh program pelatihan vokasi di UPT Balai Latihan Kerja Jember didanai <span class="text-emerald-300 font-bold">100% Gratis</span> melalui pembiayaan APBD Provinsi Jawa Timur dan APBN Kemnaker RI.
                     </p>
                 </div>
 
                 <!-- Banner Stat Widget -->
-                <div class="md:col-span-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 text-xs text-emerald-100 space-y-2 shadow-xl">
+                <div class="public-hero-aside md:col-span-4 rounded-[1.5rem] bg-white/8 backdrop-blur-md border border-white/15 p-5 text-xs text-emerald-100 space-y-2 shadow-2xl">
                     <div class="flex items-center justify-between font-bold text-white text-sm pb-2 border-b border-white/10">
                         <span class="flex items-center gap-1.5"><i data-lucide="wallet" class="w-4 h-4 text-emerald-400"></i> Alokasi Anggaran</span>
                         <span class="text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-2 py-0.5 rounded-full">DIPA 2026</span>
@@ -64,7 +66,7 @@
     </section>
 
     <!-- MAIN CONTENT AREA -->
-    <div class="max-w-7xl mx-auto px-6 py-10 space-y-8">
+    <div class="max-w-7xl mx-auto px-0 py-10 md:py-14 space-y-8">
 
         {{-- STAT STRIP --}}
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -87,7 +89,7 @@
         </div>
 
         {{-- SEARCH & FILTER PANEL --}}
-        <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm space-y-4">
+        <div class="public-filter bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm space-y-4">
             <form method="GET" action="{{ route('pelatihan.katalog') }}" class="grid md:grid-cols-12 gap-3">
                 <div class="relative md:col-span-6">
                     <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
@@ -413,5 +415,7 @@
             </div>
         </div>
     </section>
+
+</div>
 
 @endsection
