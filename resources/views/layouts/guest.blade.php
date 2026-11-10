@@ -13,7 +13,7 @@
         @fonts
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-slate-900 antialiased bg-slate-100 selection:bg-emerald-500 selection:text-white min-h-screen flex items-center justify-center p-4 md:p-6">
+    <body class="site-shell font-sans text-slate-900 antialiased min-h-screen flex items-center justify-center p-4 md:p-6">
 
         <div class="w-full max-w-6xl mx-auto">
             {{ $slot }}
