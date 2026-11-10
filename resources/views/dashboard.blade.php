@@ -10,13 +10,13 @@
       <div class="space-y-2 max-w-2xl">
         <div class="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 rounded-full border border-emerald-400/30 text-emerald-300 text-xs font-semibold backdrop-blur-sm">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          SIMAGANG & SIKARIR BLK
+          SIKARIR BLK
         </div>
         <h1 class="text-2xl md:text-3xl font-black tracking-tight text-white">
           Selamat Datang di SIKARIR
         </h1>
         <p class="text-emerald-100/80 text-xs md:text-sm leading-relaxed">
-          Sistem Informasi Karir & Pelatihan Vokasi Balai Latihan Kerja. Monitor operasional pelatihan, magang industri, hingga penerbitan sertifikasi kompetensi.
+          Sistem Informasi Karir & Pelatihan Vokasi Balai Latihan Kerja. Monitor operasional pelatihan, hingga penerbitan sertifikasi kompetensi.
         </p>
       </div>
 
