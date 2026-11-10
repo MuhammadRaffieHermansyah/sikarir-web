@@ -1,536 +1,353 @@
 @extends('layouts.public')
 
-
-@section('title', 'siKarir - UPT BLK Jember | Beranda Portal Pelatihan & Karir')
+@section('title', 'siKarir — Skill baru, peluang baru | UPT BLK Jember')
 
 @section('content')
+@php
+    $pelatihans = $pelatihans ?? [];
+    $lowongans = $lowongans ?? [];
+    $berita = $berita ?? [];
+    $alumni = $alumni ?? [];
+@endphp
 
-    {{-- ANIMASI: CSS + JS --}}
-    <script>document.documentElement.classList.add('js-anim');</script>
-    <style>
-        /* Animasi saat halaman dimuat (hero) */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        .anim-up { animation: fadeUp .7s ease-out var(--d, 0ms) both; }
+<style>
+    .sikarir-home {
+        --sk-ink: #12372e;
+        --sk-green: #0d4939;
+        --sk-lime: #d8f36a;
+        --sk-paper: #f7f8f3;
+        --sk-line: #e3e8df;
+        --sk-hero-bg: url('/images/hero-image.webp');
+        background: var(--sk-paper);
+        color: var(--sk-ink);
+    }
+    .sikarir-home * { box-sizing: border-box; }
+    .sk-wrap { width: min(1160px, calc(100% - 48px)); margin-inline: auto; }
+    .sk-eyebrow { display: inline-flex; align-items: center; gap: 9px; color: #47705d; font-size: 11px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+    .sk-eyebrow::before { width: 8px; height: 8px; border-radius: 99px; background: #a7c748; content: ''; }
+    .sk-title { margin: 10px 0 0; color: #14382f; font-size: clamp(32px, 4.3vw, 54px); font-weight: 800; letter-spacing: -.055em; line-height: .99; }
+    .sk-copy { color: #61736b; font-size: 15px; line-height: 1.75; }
+    .sk-hero { position: relative; isolation: isolate; display: flex; min-height: min(760px, calc(100vh - 72px)); align-items: center; overflow: hidden; background-color: #083d30; background-image: linear-gradient(90deg, rgba(4, 40, 31, .97) 0%, rgba(4, 40, 31, .9) 40%, rgba(4, 40, 31, .25) 76%, rgba(4, 40, 31, .08) 100%), var(--sk-hero-bg, url('/images/hero-image.webp')); background-position: center right; background-size: cover; }
+    .sk-hero::after { position: absolute; z-index: -1; right: 6%; bottom: 9%; width: 100px; height: 100px; border: 1px solid rgba(216, 243, 106, .48); border-radius: 50%; content: ''; }
+    .sk-hero-inner { width: min(1160px, calc(100% - 48px)); margin: 0 auto; padding: 76px 0 104px; }
+    .sk-hero .sk-eyebrow { color: #d8f36a; }
+    .sk-hero h1 { max-width: 790px; margin: 22px 0 0; color: #fff; font-size: clamp(48px, 8.2vw, 104px); font-weight: 800; letter-spacing: -.075em; line-height: .9; }
+    .sk-hero h1 em { color: var(--sk-lime); font-style: normal; }
+    .sk-hero p { max-width: 570px; margin: 24px 0 0; color: rgba(239, 247, 239, .83); font-size: clamp(15px, 1.5vw, 18px); line-height: 1.7; }
+    .sk-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .sk-btn { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; gap: 10px; padding: 0 20px; border: 1px solid transparent; border-radius: 999px; font-size: 13px; font-weight: 800; text-decoration: none; transition: transform .18s ease, background-color .18s ease, color .18s ease, border-color .18s ease; }
+    .sk-btn:hover { transform: translateY(-2px); }
+    .sk-btn:active { transform: translateY(1px); }
+    .sk-btn-lime { background: var(--sk-lime); color: #183a2b; }
+    .sk-btn-lime:hover { background: #e5ff83; }
+    .sk-btn-glass { border-color: rgba(255,255,255,.35); color: #fff; background: rgba(255,255,255,.08); }
+    .sk-btn-glass:hover { background: rgba(255,255,255,.16); }
+    .sk-search { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: end; margin-top: -44px; padding: 16px; border: 1px solid #e5e9e3; border-radius: 22px; background: #fff; box-shadow: 0 18px 50px rgba(20, 49, 39, .12); }
+    .sk-search label { display: block; margin: 0 0 7px 4px; color: #65766c; font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+    .sk-search-field { display: flex; min-height: 50px; align-items: center; gap: 10px; padding: 0 14px; border: 1px solid #e4e9e2; border-radius: 14px; background: #f8faf6; }
+    .sk-search-field i { color: #718579; }
+    .sk-search input { width: 100%; border: 0; outline: 0; background: transparent; color: #183c30; font-size: 14px; }
+    .sk-search input::placeholder { color: #96a39a; }
+    .sk-search .sk-btn { min-height: 50px; border-radius: 14px; background: var(--sk-green); color: white; }
+    .sk-search .sk-btn:hover { background: #08392d; }
+    .sk-stats { padding: 36px 0 56px; }
+    .sk-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); overflow: hidden; border: 1px solid var(--sk-line); border-radius: 20px; background: #fff; }
+    .sk-stat { padding: 23px 24px; border-right: 1px solid var(--sk-line); }
+    .sk-stat:last-child { border-right: 0; }
+    .sk-stat strong { display: block; color: var(--sk-ink); font-size: clamp(24px, 3vw, 34px); font-weight: 800; letter-spacing: -.06em; }
+    .sk-stat span { display: block; margin-top: 3px; color: #708077; font-size: 12px; line-height: 1.5; }
+    .sk-section { padding: 78px 0; }
+    .sk-section-soft { border-block: 1px solid var(--sk-line); background: #f0f3ec; }
+    .sk-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 30px; }
+    .sk-head .sk-title { max-width: 650px; }
+    .sk-link { display: inline-flex; align-items: center; gap: 8px; color: #28634e; font-size: 13px; font-weight: 800; text-decoration: none; }
+    .sk-link:hover { color: #102f26; }
+    .sk-grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .sk-service { min-height: 205px; padding: 24px; border: 1px solid var(--sk-line); border-radius: 20px; background: #fff; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+    .sk-service:hover, .sk-program:hover, .sk-job:hover { transform: translateY(-3px); border-color: #c3d5a5; box-shadow: 0 16px 30px rgba(18,55,46,.08); }
+    .sk-icon { display: grid; width: 44px; height: 44px; place-items: center; border-radius: 14px; background: #eff5e6; color: #28634e; }
+    .sk-service h3 { margin: 21px 0 7px; color: #183b30; font-size: 17px; font-weight: 800; letter-spacing: -.03em; }
+    .sk-service p { margin: 0; color: #718077; font-size: 13px; line-height: 1.7; }
+    .sk-program-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+    .sk-program { display: flex; min-width: 0; flex-direction: column; overflow: hidden; border: 1px solid var(--sk-line); border-radius: 20px; background: #fff; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+    .sk-program-media { position: relative; height: 168px; overflow: hidden; background: #e8eee4; }
+    .sk-program-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s ease; }
+    .sk-program:hover .sk-program-media img { transform: scale(1.03); }
+    .sk-chip { position: absolute; top: 12px; left: 12px; padding: 7px 10px; border: 1px solid rgba(255,255,255,.6); border-radius: 999px; background: rgba(15, 56, 43, .85); color: #fff; font-size: 10px; font-weight: 800; backdrop-filter: blur(8px); }
+    .sk-program-body { display: flex; flex: 1; flex-direction: column; padding: 18px; }
+    .sk-program-body .sk-category { color: #56806a; font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+    .sk-program-body h3 { margin: 8px 0; color: #183b30; font-size: 16px; font-weight: 800; line-height: 1.35; }
+    .sk-program-body p { display: -webkit-box; overflow: hidden; margin: 0; color: #718077; font-size: 12px; line-height: 1.65; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; }
+    .sk-card-actions { display: flex; gap: 8px; margin-top: auto; padding-top: 18px; }
+    .sk-card-actions a { display: inline-flex; min-height: 40px; flex: 1; align-items: center; justify-content: center; border: 1px solid #dfe6dc; border-radius: 12px; color: #305745; font-size: 11px; font-weight: 800; text-decoration: none; }
+    .sk-card-actions a:last-child { border-color: var(--sk-green); background: var(--sk-green); color: #fff; }
+    .sk-card-actions a:hover { border-color: #94aa8a; }
+    .sk-job-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .sk-job { display: flex; min-height: 235px; flex-direction: column; padding: 22px; border: 1px solid var(--sk-line); border-radius: 20px; background: #fff; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+    .sk-job-top { display: flex; align-items: start; justify-content: space-between; gap: 12px; }
+    .sk-job h3 { margin: 0; color: #183b30; font-size: 17px; font-weight: 800; line-height: 1.35; }
+    .sk-status { flex: none; padding: 6px 9px; border-radius: 99px; background: #eff5e6; color: #376749; font-size: 10px; font-weight: 800; }
+    .sk-job-company, .sk-job-location { display: flex; align-items: center; gap: 8px; margin: 13px 0 0; color: #75847b; font-size: 12px; }
+    .sk-job-desc { margin: 16px 0; color: #718077; font-size: 12px; line-height: 1.7; }
+    .sk-job-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 14px; border-top: 1px solid #edf0eb; }
+    .sk-job-foot small { color: #8a978f; font-size: 10px; }
+    .sk-job-foot strong { display: block; margin-top: 4px; color: #345141; font-size: 12px; }
+    .sk-job-foot a { padding: 10px 14px; border-radius: 12px; background: var(--sk-green); color: #fff; font-size: 11px; font-weight: 800; text-decoration: none; }
+    .sk-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin-top: 38px; }
+    .sk-step { position: relative; padding: 0 24px 0 0; }
+    .sk-step:not(:last-child)::after { position: absolute; top: 22px; left: 50px; width: calc(100% - 64px); height: 1px; background: #cdd9c8; content: ''; }
+    .sk-step-number { position: relative; z-index: 1; display: grid; width: 46px; height: 46px; place-items: center; border: 1px solid #cdd9c8; border-radius: 50%; background: var(--sk-paper); color: #315d47; font-size: 12px; font-weight: 800; }
+    .sk-step h3 { margin: 19px 0 8px; color: #183b30; font-size: 16px; font-weight: 800; }
+    .sk-step p { margin: 0; color: #718077; font-size: 12px; line-height: 1.7; }
+    .sk-story-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 54px; }
+    .sk-story-list { display: grid; gap: 12px; }
+    .sk-story { display: flex; gap: 15px; padding: 13px; border: 1px solid var(--sk-line); border-radius: 17px; background: #fff; }
+    .sk-story img { width: 94px; height: 82px; flex: none; border-radius: 12px; object-fit: cover; }
+    .sk-story h3 { margin: 6px 0; color: #183b30; font-size: 14px; font-weight: 800; line-height: 1.4; }
+    .sk-story p { margin: 0; color: #718077; font-size: 11px; line-height: 1.6; }
+    .sk-story-meta { color: #64816e; font-size: 9px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+    .sk-alumni { display: grid; gap: 12px; }
+    .sk-quote { padding: 20px; border: 1px solid var(--sk-line); border-radius: 18px; background: #fff; }
+    .sk-quote-person { display: flex; align-items: center; gap: 11px; margin-bottom: 12px; }
+    .sk-quote-person img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; }
+    .sk-quote-person strong { display: block; color: #183b30; font-size: 12px; }
+    .sk-quote-person span { display: block; margin-top: 3px; color: #7e8c83; font-size: 10px; }
+    .sk-quote blockquote { margin: 0; color: #566a5e; font-size: 12px; line-height: 1.75; }
+    .sk-about { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 17px 19px; border-radius: 16px; background: #eaf1df; }
+    .sk-about strong { color: #183b30; font-size: 12px; }
+    .sk-about p { margin: 4px 0 0; color: #718077; font-size: 11px; line-height: 1.55; }
+    .sk-about a { flex: none; color: #28634e; font-size: 11px; font-weight: 800; text-decoration: none; }
+    .sk-cta { padding: 42px; border-radius: 26px; background: #103e32; color: white; }
+    .sk-cta-inner { display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+    .sk-cta h2 { max-width: 580px; margin: 13px 0 0; color: #fff; font-size: clamp(30px, 4vw, 47px); font-weight: 800; letter-spacing: -.06em; line-height: 1; }
+    .sk-cta p { max-width: 570px; margin: 14px 0 0; color: rgba(239,247,239,.76); font-size: 13px; line-height: 1.7; }
+    .sk-empty { grid-column: 1 / -1; padding: 38px 20px; border: 1px dashed #cbd6c8; border-radius: 18px; color: #7d8c81; text-align: center; font-size: 13px; }
+    @media (max-width: 900px) {
+        .sk-program-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .sk-story-grid { gap: 30px; }
+        .sk-cta-inner { align-items: start; flex-direction: column; }
+    }
+    @media (max-width: 640px) {
+        .sk-wrap, .sk-hero-inner { width: min(100% - 36px, 520px); }
+        .sk-hero { min-height: 720px; align-items: start; background-image: linear-gradient(90deg, rgba(4, 40, 31, .93), rgba(4, 40, 31, .72)), var(--sk-hero-bg, url('/images/hero-image.webp')); background-position: 58% center; }
+        .sk-hero-inner { padding: 80px 0 130px; }
+        .sk-hero h1 { font-size: clamp(49px, 14vw, 70px); }
+        .sk-hero::after { right: 9%; bottom: 5%; width: 58px; height: 58px; }
+        .sk-search { grid-template-columns: 1fr; margin-top: -84px; padding: 12px; border-radius: 18px; }
+        .sk-search .sk-btn { width: 100%; }
+        .sk-stats { padding: 28px 0 36px; }
+        .sk-stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .sk-stat { padding: 17px; border-bottom: 1px solid var(--sk-line); }
+        .sk-stat:nth-child(2) { border-right: 0; }
+        .sk-stat:nth-child(n+3) { border-bottom: 0; }
+        .sk-section { padding: 56px 0; }
+        .sk-head { align-items: start; flex-direction: column; margin-bottom: 22px; }
+        .sk-grid-3, .sk-job-grid { grid-template-columns: 1fr; }
+        .sk-service { min-height: 0; }
+        .sk-program-grid { gap: 12px; }
+        .sk-program-media { height: 130px; }
+        .sk-program-body { padding: 14px; }
+        .sk-program-body h3 { font-size: 14px; }
+        .sk-program-body p { font-size: 11px; }
+        .sk-card-actions { flex-direction: column; padding-top: 13px; }
+        .sk-card-actions a { min-height: 37px; }
+        .sk-steps { grid-template-columns: 1fr; gap: 24px; margin-top: 26px; }
+        .sk-step { display: grid; grid-template-columns: 46px 1fr; column-gap: 15px; padding: 0; }
+        .sk-step:not(:last-child)::after { top: 48px; left: 22px; width: 1px; height: calc(100% - 22px); }
+        .sk-step-number { grid-row: span 2; }
+        .sk-step h3 { margin: 2px 0 5px; }
+        .sk-story-grid { grid-template-columns: 1fr; gap: 38px; }
+        .sk-cta { padding: 26px 21px; border-radius: 20px; }
+        .sk-cta .sk-actions { width: 100%; }
+        .sk-cta .sk-btn { width: 100%; }
+        .sk-story img { width: 82px; height: 76px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .sk-btn, .sk-service, .sk-program, .sk-job, .sk-program-media img { transition: none; }
+        .sk-btn:hover, .sk-service:hover, .sk-program:hover, .sk-job:hover { transform: none; }
+    }
+</style>
 
-        /* Animasi saat elemen masuk layar (scroll reveal) */
-        @keyframes revealUp {
-            from { opacity: 0; transform: translateY(28px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        .js-anim .reveal { opacity: 0; }
-        .js-anim .reveal.is-visible {
-            opacity: 1;
-            animation: revealUp .6s ease-out var(--d, 0ms) backwards;
-        }
-
-        /* Blob hero melayang pelan */
-        @keyframes floatSlow {
-            0%, 100% { transform: translate(0, 0); }
-            50%      { transform: translate(18px, -22px); }
-        }
-        .float-slow { animation: floatSlow 9s ease-in-out infinite; }
-        .float-slow-2 { animation: floatSlow 11s ease-in-out infinite reverse; }
-
-        /* Kilau tipis pada tombol CTA utama */
-        @keyframes shine {
-            from { transform: translateX(-120%) skewX(-20deg); }
-            to   { transform: translateX(320%) skewX(-20deg); }
-        }
-        .btn-shine { position: relative; overflow: hidden; }
-        .btn-shine::after {
-            content: '';
-            position: absolute; top: 0; bottom: 0; left: 0; width: 35%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
-            transform: translateX(-120%) skewX(-20deg);
-        }
-        .btn-shine:hover::after { animation: shine .9s ease-out; }
-
-        @media (prefers-reduced-motion: reduce) {
-            .anim-up, .float-slow, .float-slow-2,
-            .js-anim .reveal.is-visible { animation: none; }
-            .js-anim .reveal { opacity: 1; }
-            .btn-shine:hover::after { animation: none; }
-        }
-    </style>
-
-    {{-- HERO SECTION --}}
-    <section
-        class="relative overflow-hidden min-h-[520px] sm:min-h-[600px] text-white border-b border-emerald-800/40
-           bg-emerald-950 bg-cover bg-center"
-    style="background-image: url('{{ asset('images/hero-image.webp') }}');">
-        <!-- Background Accent Blur -->
-        <div class="float-slow absolute -top-24 -left-24 w-64 h-64 sm:w-96 sm:h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="float-slow-2 absolute -bottom-24 -right-24 w-64 h-64 sm:w-96 sm:h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 md:py-16 relative z-10">
-            <!-- Top Announcement Badge -->
-            <div
-                class="anim-up inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 rounded-full border border-emerald-400/30 text-emerald-200 text-[10px] sm:text-xs font-semibold leading-snug backdrop-blur-sm mb-4 mt-4 sm:mt-8 md:mt-20 max-w-full">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
-                PORTAL RESMI UPT BLK JEMBER DISNAKERTRANS JATIM
+<div class="sikarir-home">
+    {{-- Hero: portal dan aksi utama --}}
+    <section class="sk-hero" style="--sk-hero-bg: url('{{ asset('images/hero-image.webp') }}');">
+        <div class="sk-hero-inner">
+            <span class="sk-eyebrow">Portal resmi UPT BLK Jember</span>
+            <h1>Skill baru.<br><em>Peluang baru.</em></h1>
+            <p>Temukan pelatihan vokasi, sertifikasi kompetensi, dan peluang kerja yang terhubung dengan industri bersama UPT BLK Jember.</p>
+            <div class="sk-actions">
+                <a href="{{ route('pelatihan.katalog') }}" class="sk-btn sk-btn-lime">Jelajahi pelatihan <i data-lucide="arrow-up-right" class="w-4 h-4"></i></a>
+                <a href="{{ route('lowongan.katalog') }}" class="sk-btn sk-btn-glass">Cari lowongan <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
             </div>
-            <div class="grid md:grid-cols-12 gap-8 items-center">
-                <div class="md:col-span-8 space-y-3 sm:space-y-4">
-                    <h1 class="anim-up text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black leading-tight tracking-tight text-white" style="--d: 120ms">
-                        Portal Pelatihan Vokasi & Bursa Karir Resmi <span class="text-emerald-400">siKarir</span>
-                    </h1>
-                    <p class="anim-up text-emerald-100/80 max-w-2xl text-xs md:text-sm leading-relaxed" style="--d: 240ms">
-                        Tingkatkan keahlian kerja bersertifikasi BNSP dan raih peluang karir terverifikasi bersama UPT Balai
-                        Latihan Kerja (BLK) Jember - Dinas Tenaga Kerja & Transmigrasi Provinsi Jawa Timur. Siap mencetak
-                        talenta vokasi unggul berdaya saing industri.
-                    </p>
-                </div>
-            </div>
-
-            {{-- Search Bar: 3 kolom + tombol submit --}}
-            <form method="GET" action="{{ route('pelatihan.katalog') }}"
-                style="--d: 380ms"
-                class="anim-up bg-white rounded-2xl shadow-xl mt-10 sm:mt-20 md:mt-32 lg:mt-[12.5rem] p-3 md:p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-3 items-center text-slate-800 border border-slate-200/80">
-                <div class="sm:col-span-2 md:col-span-4 space-y-1">
-                    <label class="block text-[10px] uppercase font-bold text-slate-400 tracking-wider">Cari Pelatihan /
-                        Kejuruan</label>
-                    <div class="relative">
-                        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 text-slate-400"></i>
-                        <input type="text" name="q" placeholder="Otomotif, Las SMAW, IT Python..."
-                            class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2 text-sm md:text-xs font-semibold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition">
-                    </div>
-                </div>
-
-                <div class="sm:col-span-1 md:col-span-3 space-y-1">
-                    <label class="block text-[10px] uppercase font-bold text-slate-400 tracking-wider">Kategori
-                        Program</label>
-                    <select name="kategori"
-                        class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm md:text-xs font-semibold text-slate-800 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition">
-                        <option value="">Semua Program & Lowongan</option>
-                    </select>
-                </div>
-
-                <div class="sm:col-span-1 md:col-span-3 space-y-1">
-                    <label class="block text-[10px] uppercase font-bold text-slate-400 tracking-wider">Lokasi /
-                        Kampus</label>
-                    <select name="wilayah"
-                        class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm md:text-xs font-semibold text-slate-800 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition">
-                        <option value="">Kampus UPT BLK Jember</option>
-                    </select>
-                </div>
-
-                <div class="sm:col-span-2 md:col-span-2 self-end">
-                    <button type="submit"
-                        class="btn-shine w-full bg-emerald-900 hover:bg-emerald-950 text-white rounded-xl py-2.5 px-4 font-bold text-xs transition active:scale-[0.98] flex items-center justify-center gap-1.5 shadow-md">
-                        <i data-lucide="search" class="w-4 h-4"></i> Temukan
-                    </button>
-                </div>
-            </form>
         </div>
     </section>
 
-    {{-- STAT STRIP (Kartu Putih Floating) --}}
-    <section class="bg-slate-50 border-b border-slate-200/80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 -mt-8 pt-2 pb-10 sm:pb-12 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 relative z-20">
-            @foreach ([
-                ['icon' => 'graduation-cap', 'count' => 12, 'suffix' => '+', 'value' => '12+', 'label' => 'Kejuruan', 'sub' => 'Pelatihan Berstandar Nasional'],
-                ['icon' => 'trending-up', 'count' => 94, 'suffix' => '%', 'value' => '94%', 'label' => 'Lulusan', 'sub' => 'Terserap Bekerja & Wirausaha'],
-                ['icon' => 'zap', 'count' => 100, 'suffix' => '%', 'value' => '100%', 'label' => 'Gratis', 'sub' => 'Dibiayai APBD & APBN Penuh'],
-                ['icon' => 'award', 'count' => null, 'suffix' => '', 'value' => 'BNSP', 'label' => 'Resmi', 'sub' => 'Sertifikasi Standar Industri'],
-            ] as $stat)
-                <div style="--d: {{ $loop->index * 100 }}ms"
-                    class="reveal group bg-white rounded-2xl border border-slate-200/80 shadow-sm p-3 sm:p-4 md:p-5 flex flex-col items-start sm:flex-row sm:items-center gap-2.5 sm:gap-3.5 hover:border-emerald-300 hover:shadow-md hover:-translate-y-1 transition duration-300">
-                    <div
-                        class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center shrink-0 group-hover:bg-emerald-900 group-hover:text-white group-hover:scale-110 transition duration-300">
-                        <i data-lucide="{{ $stat['icon'] }}" class="w-4 h-4 sm:w-5 sm:h-5"></i>
-                    </div>
-                    <div class="min-w-0">
-                        <p class="font-black text-slate-900 text-sm md:text-base leading-tight">
-                            @if ($stat['count'])
-                                <span data-count="{{ $stat['count'] }}" data-suffix="{{ $stat['suffix'] }}">{{ $stat['value'] }}</span>
-                            @else
-                                <span>{{ $stat['value'] }}</span>
-                            @endif
-                            {{ $stat['label'] }}
-                        </p>
-                        <p class="text-[10px] font-medium text-slate-500 mt-0.5 leading-snug">{{ $stat['sub'] }}</p>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    </section>
-
-    {{-- LAYANAN UNGGULAN --}}
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-        <div class="reveal flex flex-col sm:flex-row sm:items-end justify-between mb-6 sm:mb-8 gap-2">
+    {{-- Pencarian cepat --}}
+    <div class="sk-wrap">
+        <form method="GET" action="{{ route('pelatihan.katalog') }}" class="sk-search">
             <div>
-                <span
-                    class="text-[11px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-100">
-                    Layanan Mandiri Publik
-                </span>
-                <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight mt-2">Layanan Unggulan siKarir</h2>
+                <label for="home-search">Cari pelatihan atau kejuruan</label>
+                <div class="sk-search-field"><i data-lucide="search" class="w-4 h-4"></i><input id="home-search" type="search" name="q" placeholder="Contoh: otomotif, las, tata boga..."></div>
             </div>
-            <a href="#" class="group text-xs font-bold text-emerald-800 hover:underline flex items-center gap-1 shrink-0">
-                Semua Menu Layanan <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
-            </a>
-        </div>
+            <button type="submit" class="sk-btn">Temukan program <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+        </form>
+    </div>
 
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            @foreach ([
-            ['icon' => 'user-check', 'title' => 'Pendaftaran Pelatihan', 'desc' => 'Pelatihan Reguler Berbasis Kompetensi (PBK) & Mobile Training Unit (MTU) pedesaan.', 'highlight' => false],
-            ['icon' => 'briefcase', 'title' => 'Bursa Kerja Khusus (BKK)', 'desc' => 'Peluang kerja resmi terverifikasi dinas bagi alumni vokasi dan pencari kerja umum.', 'highlight' => false],
-            ['icon' => 'award', 'title' => 'Uji Kompetensi & Sertifikasi', 'desc' => 'Jadwal asesmen kompetensi profesi LSP-P1 BLK Jember terlisensi resmi BNSP.', 'highlight' => false],
-            ['icon' => 'messages-square', 'title' => 'Konsultasi & Bimbingan Jabatan', 'desc' => 'Konseling karir cuma-cuma bersama instruktur dan psikolog ketenagakerjaan.', 'highlight' => false],
-            ['icon' => 'building-2', 'title' => 'Magang & Kemitraan DUDI', 'desc' => 'Sinergi Dunia Usaha dan Dunia Industri (DUDI) untuk program on-the-job training.', 'highlight' => false],
-            ['icon' => 'file-check-2', 'title' => 'Verifikasi Sertifikat Digital', 'desc' => 'Cek keaslian sertifikat kelulusan BLK dan e-Sertifikat kompetensi via kode unik.', 'highlight' => false],
-        ] as $layanan)
-                <div style="--d: {{ ($loop->index % 3) * 100 }}ms"
-                    class="reveal group bg-white rounded-2xl border border-slate-200/80 p-5 sm:p-6 shadow-sm hover:shadow-lg hover:border-emerald-300 hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
-                    <div>
-                        <div
-                            class="w-10 h-10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition duration-300 {{ $layanan['highlight'] ? 'bg-slate-900 text-white' : 'bg-emerald-50 text-emerald-800 group-hover:bg-emerald-900 group-hover:text-white' }}">
-                            <i data-lucide="{{ $layanan['icon'] }}" class="w-5 h-5"></i>
-                        </div>
-                        <h3 class="font-bold text-slate-900 text-sm mb-1.5">{{ $layanan['title'] }}</h3>
-                        <p class="text-xs text-slate-500 leading-relaxed">{{ $layanan['desc'] }}</p>
-                    </div>
-                </div>
-            @endforeach
+    {{-- Statistik yang sudah digunakan di halaman --}}
+    <section class="sk-stats">
+        <div class="sk-wrap sk-stats-grid">
+            <div class="sk-stat"><strong>12+</strong><span>Kejuruan pelatihan</span></div>
+            <div class="sk-stat"><strong>94%</strong><span>Lulusan terserap kerja &amp; wirausaha</span></div>
+            <div class="sk-stat"><strong>Gratis</strong><span>Program dibiayai APBD &amp; APBN</span></div>
+            <div class="sk-stat"><strong>BNSP</strong><span>Sertifikasi standar kompetensi</span></div>
         </div>
     </section>
 
-    {{-- PROGRAM PELATIHAN --}}
-    <section class="bg-slate-50/80 border-y border-slate-200/80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-            <div class="reveal flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-8 gap-4">
-                <div>
-                    <span
-                        class="inline-block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100/80 px-2.5 py-1 rounded-md border border-emerald-200/80">
-                        PENDAFTARAN GELOMBANG II TA 2026
-                    </span>
-                    <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight mt-2">Program Pelatihan Kejuruan
-                        UPT BLK Jember</h2>
-                </div>
-                <a href="{{ route('pelatihan.katalog') }}"
-                    class="group w-full sm:w-auto justify-center bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition active:scale-[0.98] inline-flex items-center gap-1.5 shrink-0 shadow-sm">
-                    <span>Lihat Semua Pelatihan</span>
-                    <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
-                </a>
+    {{-- Layanan --}}
+    <section class="sk-section sk-section-soft">
+        <div class="sk-wrap">
+            <div class="sk-head">
+                <div><span class="sk-eyebrow">Dari belajar sampai kerja</span><h2 class="sk-title">Satu tempat buat<br>naik level.</h2></div>
             </div>
-
-            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                @forelse ($pelatihans ?? [] as $item)
-                    <div style="--d: {{ ($loop->index % 4) * 100 }}ms"
-                        class="reveal group bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm hover:shadow-lg hover:border-emerald-300 hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
-                        <div>
-                            <div class="relative h-40 sm:h-36 bg-slate-100 overflow-hidden">
-                                <img src="{{ $item->gambar_url ?? 'https://media.istockphoto.com/id/2233679882/photo/two-young-adult-programmers-discussing-code-on-laptop-in-office.webp?a=1&b=1&s=612x612&w=0&k=20&c=PzaTx4WP272kbAqs_EBEEl2yx8nqCbUwTN8Au8Ndm6E=' }}"
-                                    class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="{{ $item->nama }}">
-                                <span
-                                    class="absolute top-2 left-2 bg-emerald-900/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-md backdrop-blur-sm">Buka</span>
-                                <span
-                                    class="absolute top-2 right-2 bg-slate-900/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-md backdrop-blur-sm">{{ $item->sumber_dana ?? 'APBN Gratis' }}</span>
-                            </div>
-                            <div class="p-4 space-y-2">
-                                <p class="text-[10px] font-bold text-emerald-700 uppercase tracking-wider">
-                                    {{ $item->kategori ?? 'Kategori' }}</p>
-                                <h3 class="font-bold text-slate-900 text-sm leading-snug line-clamp-1">
-                                    {{ $item->nama_pelatihan }}</h3>
-                                <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">
-                                    {{ $item->deskripsi_pelatihan }}</p>
-                            </div>
-                        </div>
-                        <div class="p-4 pt-0 flex items-center gap-2 mt-3">
-                            <a href="{{ route('pelatihan.katalog') . '#' . $item->id }}"
-                                class="w-1/2 text-center text-xs font-semibold border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl py-2 transition">Silabus</a>
-                            <a href="{{ route('register') }}"
-                                class="w-1/2 text-center text-xs font-bold bg-emerald-900 hover:bg-emerald-950 text-white rounded-xl py-2 transition active:scale-[0.98] shadow-sm">Daftar</a>
-                        </div>
-                    </div>
-                @empty
-                    <div
-                        class="reveal sm:col-span-2 lg:col-span-4 p-8 bg-white rounded-2xl border border-slate-200/80 text-center text-slate-400 text-xs">
-                        <i data-lucide="book-open" class="w-8 h-8 mx-auto text-slate-300 mb-2"></i>
-                        Belum ada data pelatihan aktif.
-                    </div>
-                @endforelse
-            </div>
-        </div>
-    </section>
-
-    {{-- BURSA KERJA --}}
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-        <div class="reveal flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-8 gap-4">
-            <div>
-                <span
-                    class="inline-block text-[11px] font-bold uppercase tracking-wider text-purple-700 bg-purple-50 px-2.5 py-1 rounded-md border border-purple-100">
-                    KONEKSI KARIR & INDUSTRI
-                </span>
-                <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight mt-2">Bursa Kerja Khusus (BKK) &
-                    Lowongan Kerja</h2>
-            </div>
-            <a href="{{ route('lowongan.katalog') }}"
-                class="group w-full sm:w-auto justify-center bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition active:scale-[0.98] inline-flex items-center gap-1.5 shrink-0 shadow-sm">
-                <span>Lihat Semua Lowongan</span>
-                <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
-            </a>
-        </div>
-
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            @forelse ($lowongans ?? [] as $job)
-                <div style="--d: {{ ($loop->index % 3) * 100 }}ms"
-                    class="reveal bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm hover:shadow-lg hover:border-emerald-300 hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
-
-                    <div>
-                        {{-- Judul & Status --}}
-                        <div class="flex justify-between items-start mb-2 gap-2">
-                            <h3 class="font-bold text-slate-900 text-sm min-w-0 break-words">
-                                {{ $job->judul_lowongan }}
-                            </h3>
-
-                            <span
-                                class="text-[10px] font-bold
-                    bg-emerald-50 text-emerald-800
-                    border border-emerald-200/80
-                    px-2 py-0.5 rounded-full shrink-0">
-                                {{ ucfirst($job->status) }}
-                            </span>
-                        </div>
-
-                        {{-- Nama Mitra --}}
-                        <p class="text-xs font-medium text-slate-500 flex items-center gap-1 mb-2">
-                            <i data-lucide="building-2" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
-                            <span class="min-w-0 break-words">{{ $job->mitra->nama ?? '-' }}</span>
-                        </p>
-
-                        {{-- Lokasi --}}
-                        <p class="text-xs font-medium text-slate-500 flex items-center gap-1 mb-4">
-                            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
-                            <span class="min-w-0 break-words">{{ $job->lokasi ?? '-' }}</span>
-                        </p>
-
-                        {{-- Deskripsi --}}
-                        <p class="text-xs text-slate-500 line-clamp-2">
-                            {{ $job->deskripsi ?? 'Tidak ada deskripsi.' }}
-                        </p>
-                    </div>
-
-                    {{-- Footer --}}
-                    <div class="pt-3 mt-4 border-t border-slate-100 flex items-center justify-between gap-3">
-
-                        {{-- Tanggal Posting --}}
-                        <div>
-                            <p class="text-[10px] text-slate-400 uppercase font-bold">
-                                Diposting
-                            </p>
-
-                            <p class="font-bold text-slate-800 text-xs mt-0.5">
-                                {{ $job->tanggal_posting ? \Carbon\Carbon::parse($job->tanggal_posting)->format('d M Y') : '-' }}
-                            </p>
-                        </div>
-
-                        {{-- Tombol Lamar --}}
-                        <a href="{{ route('lowongan.katalog') . '#' . $job->id_lowongan }}"
-                            class="text-xs font-bold bg-emerald-900 hover:bg-emerald-950 text-white rounded-xl px-3.5 py-2 transition active:scale-[0.98] shadow-sm shrink-0">
-                            Lamar
-                        </a>
-                    </div>
-
-                </div>
-
-            @empty
-
-                <div
-                    class="reveal sm:col-span-2 lg:col-span-3 p-8 bg-white rounded-2xl border border-slate-200/80 text-center text-slate-400 text-xs">
-                    <i data-lucide="briefcase" class="w-8 h-8 mx-auto text-slate-300 mb-2"></i>
-                    Belum ada lowongan aktif saat ini.
-                </div>
-            @endforelse
-        </div>
-    </section>
-
-    {{-- ALUR PENDAFTARAN --}}
-    <section class="bg-slate-50/80 border-y border-slate-200/80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-            <div class="reveal text-center max-w-xl mx-auto mb-8 sm:mb-10 space-y-1">
-                <span
-                    class="inline-block text-[11px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-100">
-                    TRANSPARAN & MUDAH
-                </span>
-                <h2 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Alur Pendaftaran Pelatihan siKarir
-                </h2>
-            </div>
-
-            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div class="sk-grid-3">
                 @foreach ([
-                    ['no' => '01', 'title' => 'Buat Akun & NIK', 'desc' => 'Daftarkan akun siKarir menggunakan NIK KTP yang valid, lengkapi profil pribadi.', 'note' => 'Validasi Dispendukcapil'],
-                    ['no' => '02', 'title' => 'Pilih Kejuruan', 'desc' => 'Eksplorasi katalog pelatihan aktif sesuai minat karir, jadwal, dan kuota.', 'note' => '1 Peserta 1 Program Aktif'],
-                    ['no' => '03', 'title' => 'Tes Minat & Wawancara', 'desc' => 'Ikuti tes tertulis online serta verifikasi wawancara tatap muka di workshop BLK.', 'note' => 'Pengumuman Transparan'],
-                    ['no' => '04', 'title' => 'Pelatihan & Sertifikasi', 'desc' => 'Jalani pelatihan intensif gratis hingga ujian kompetensi resmi BNSP RI.', 'note' => 'Terhubung ke DUDI'],
-                ] as $step)
-                    <div style="--d: {{ $loop->index * 120 }}ms"
-                        class="reveal group bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm hover:shadow-lg hover:border-emerald-300 hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
-                        <div>
-                            <div
-                                class="w-9 h-9 rounded-xl bg-emerald-900 text-white flex items-center justify-center font-black text-xs mb-3 shadow-md group-hover:scale-110 group-hover:-rotate-6 transition duration-300">
-                                {{ $step['no'] }}
-                            </div>
-                            <h3 class="font-bold text-slate-900 text-sm mb-1">{{ $step['title'] }}</h3>
-                            <p class="text-xs text-slate-500 leading-relaxed mb-3">{{ $step['desc'] }}</p>
-                        </div>
-                        <div
-                            class="pt-2 border-t border-slate-100 flex items-center gap-1 text-[11px] font-bold text-emerald-700">
-                            <i data-lucide="check-circle-2" class="w-3.5 h-3.5 shrink-0"></i>
-                            <span>{{ $step['note'] }}</span>
-                        </div>
-                    </div>
+                    ['icon' => 'user-round-check', 'title' => 'Pendaftaran pelatihan', 'desc' => 'Pelatihan Reguler Berbasis Kompetensi (PBK) dan Mobile Training Unit (MTU) pedesaan.'],
+                    ['icon' => 'briefcase-business', 'title' => 'Bursa kerja khusus', 'desc' => 'Peluang kerja terverifikasi bagi alumni vokasi dan pencari kerja umum.'],
+                    ['icon' => 'badge-check', 'title' => 'Sertifikasi kompetensi', 'desc' => 'Uji kompetensi profesi melalui LSP-P1 BLK Jember berlisensi BNSP.'],
+                    ['icon' => 'messages-square', 'title' => 'Konsultasi karir', 'desc' => 'Bimbingan jabatan bersama instruktur dan tenaga konseling ketenagakerjaan.'],
+                    ['icon' => 'building-2', 'title' => 'Magang & kemitraan', 'desc' => 'Program on-the-job training bersama Dunia Usaha dan Dunia Industri (DUDI).'],
+                    ['icon' => 'file-check-2', 'title' => 'Verifikasi sertifikat', 'desc' => 'Cek keaslian sertifikat kelulusan BLK dan e-Sertifikat kompetensi.'],
+                ] as $layanan)
+                    <article class="sk-service">
+                        <div class="sk-icon"><i data-lucide="{{ $layanan['icon'] }}" class="w-5 h-5"></i></div>
+                        <h3>{{ $layanan['title'] }}</h3>
+                        <p>{{ $layanan['desc'] }}</p>
+                    </article>
                 @endforeach
             </div>
         </div>
     </section>
 
-    {{-- WARTA & ALUMNI --}}
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-14 grid lg:grid-cols-2 gap-8 lg:gap-10">
-        {{-- Warta --}}
-        <div class="reveal">
-            <div class="flex justify-between items-center mb-5 sm:mb-6 gap-3">
-                <h2 class="text-lg font-black text-slate-900 tracking-tight">Warta & Agenda BLK</h2>
-                <a href="#" class="group text-xs font-bold text-emerald-800 hover:underline flex items-center gap-1 shrink-0">
-                    Lihat Arsip <i data-lucide="arrow-right" class="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"></i>
-                </a>
+    {{-- Program pelatihan --}}
+    <section class="sk-section">
+        <div class="sk-wrap">
+            <div class="sk-head">
+                <div><span class="sk-eyebrow">Belajar yang kepake</span><h2 class="sk-title">Pilih skill.<br>Mulai dari sini.</h2></div>
+                <a href="{{ route('pelatihan.katalog') }}" class="sk-link">Semua pelatihan <i data-lucide="arrow-up-right" class="w-4 h-4"></i></a>
             </div>
-
-            <div class="space-y-4">
-                @forelse ($berita ?? [] as $b)
-                    <div style="--d: {{ $loop->index * 100 }}ms"
-                        class="reveal group bg-white rounded-2xl border border-slate-200/80 p-3 flex gap-3 sm:gap-4 shadow-sm hover:shadow-md hover:border-emerald-300 hover:-translate-y-0.5 transition duration-300">
-                        <div class="w-20 h-16 sm:w-24 sm:h-20 rounded-xl overflow-hidden shrink-0">
-                            <img src="{{ $b->gambar_url ?? asset('images/placeholder.jpg') }}"
-                                class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+            <div class="sk-program-grid">
+                @forelse ($pelatihans as $item)
+                    <article class="sk-program">
+                        <div class="sk-program-media">
+                            <img src="{{ $item->gambar_url ?? asset('images/hero-image.webp') }}" alt="{{ $item->nama_pelatihan }}" loading="lazy">
+                            <span class="sk-chip">{{ $item->sumber_dana ?? 'Program pelatihan' }}</span>
                         </div>
-                        <div class="space-y-1 min-w-0">
-                            <p class="text-[10px] font-bold text-emerald-700 uppercase">{{ $b->kategori ?? 'PENGUMUMAN' }}
-                                &bull; {{ $b->tanggal ?? '' }}</p>
-                            <h3 class="font-bold text-slate-800 text-xs leading-snug line-clamp-1">{{ $b->judul }}
-                            </h3>
-                            <p class="text-[11px] text-slate-500 line-clamp-2 leading-relaxed">{{ $b->ringkasan }}</p>
+                        <div class="sk-program-body">
+                            <span class="sk-category">{{ $item->kategori ?? 'Kejuruan' }}</span>
+                            <h3>{{ $item->nama_pelatihan }}</h3>
+                            <p>{{ $item->deskripsi_pelatihan }}</p>
+                            <div class="sk-card-actions">
+                                <a href="{{ route('pelatihan.katalog') . '#' . ($item->id_pelatihan ?? $item->id) }}">Lihat silabus</a>
+                                <a href="{{ route('register') }}">Daftar</a>
+                            </div>
                         </div>
-                    </div>
+                    </article>
                 @empty
-                    <div class="p-6 bg-white rounded-2xl border border-slate-200/80 text-center text-slate-400 text-xs">
-                        Belum ada warta terbaru.
-                    </div>
+                    <div class="sk-empty">Belum ada data pelatihan aktif.</div>
                 @endforelse
             </div>
         </div>
+    </section>
 
-        {{-- Alumni & Info Profil --}}
-        <div class="reveal space-y-5 sm:space-y-6" style="--d: 150ms">
-            <h2 class="text-lg font-black text-slate-900 tracking-tight">Kisah Alumni Sukses</h2>
-
-            @forelse ($alumni ?? [] as $a)
-                <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm hover:shadow-md transition duration-300">
-                    <div class="flex items-center gap-3 mb-2">
-                        <img src="{{ $a->foto_url ?? asset('images/avatar-placeholder.jpg') }}"
-                            class="w-10 h-10 rounded-full object-cover border border-emerald-200 shrink-0">
-                        <div class="min-w-0">
-                            <p class="font-bold text-slate-800 text-xs">{{ $a->nama }}</p>
-                            <p class="text-[11px] text-slate-500 font-medium">{{ $a->profesi }}</p>
+    {{-- Lowongan kerja --}}
+    <section class="sk-section sk-section-soft">
+        <div class="sk-wrap">
+            <div class="sk-head">
+                <div><span class="sk-eyebrow">Langkah berikutnya</span><h2 class="sk-title">Peluang kerja<br>buat kamu kejar.</h2></div>
+                <a href="{{ route('lowongan.katalog') }}" class="sk-link">Semua lowongan <i data-lucide="arrow-up-right" class="w-4 h-4"></i></a>
+            </div>
+            <div class="sk-job-grid">
+                @forelse ($lowongans as $job)
+                    <article class="sk-job">
+                        <div class="sk-job-top"><h3>{{ $job->judul_lowongan }}</h3><span class="sk-status">{{ ucfirst($job->status) }}</span></div>
+                        <p class="sk-job-company"><i data-lucide="building-2" class="w-4 h-4"></i>{{ $job->mitra->nama_perusahaan ?? $job->mitra->nama ?? '-' }}</p>
+                        <p class="sk-job-location"><i data-lucide="map-pin" class="w-4 h-4"></i>{{ $job->lokasi ?? '-' }}</p>
+                        <p class="sk-job-desc">{{ $job->deskripsi ?? 'Tidak ada deskripsi.' }}</p>
+                        <div class="sk-job-foot">
+                            <div><small>Diposting</small><strong>{{ $job->tanggal_posting ? \Carbon\Carbon::parse($job->tanggal_posting)->format('d M Y') : '-' }}</strong></div>
+                            <a href="{{ route('lowongan.katalog') . '#' . $job->id_lowongan }}">Lihat posisi</a>
                         </div>
-                    </div>
-                    <p class="text-xs text-slate-600 italic leading-relaxed">&ldquo;{{ $a->testimoni }}&rdquo;</p>
-                </div>
-            @empty
-                <div class="p-6 bg-white rounded-2xl border border-slate-200/80 text-center text-slate-400 text-xs">
-                    Belum ada testimoni alumni.
-                </div>
-            @endforelse
+                    </article>
+                @empty
+                    <div class="sk-empty">Belum ada lowongan aktif saat ini.</div>
+                @endforelse
+            </div>
+        </div>
+    </section>
 
-            <div class="bg-emerald-50 border border-emerald-200/80 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                    <h3 class="font-bold text-slate-800 text-xs">Tentang UPT BLK Jember</h3>
-                    <p class="text-[11px] text-slate-500 mt-0.5">Lembaga pelatihan vokasi Disnakertrans Jatim berfasilitas
-                        workshop modern.</p>
+    {{-- Alur pendaftaran --}}
+    <section class="sk-section">
+        <div class="sk-wrap">
+            <span class="sk-eyebrow">Alurnya transparan</span>
+            <h2 class="sk-title">Empat langkah buat<br>mulai perjalananmu.</h2>
+            <div class="sk-steps">
+                @foreach ([
+                    ['title' => 'Buat akun', 'desc' => 'Daftarkan akun siKarir menggunakan NIK yang valid dan lengkapi profil.'],
+                    ['title' => 'Pilih kejuruan', 'desc' => 'Cari program aktif yang sesuai minat, jadwal, dan kuota.'],
+                    ['title' => 'Ikuti seleksi', 'desc' => 'Jalani tes tertulis online dan verifikasi wawancara di workshop BLK.'],
+                    ['title' => 'Belajar & sertifikasi', 'desc' => 'Ikuti pelatihan hingga uji kompetensi resmi BNSP.'],
+                ] as $step)
+                    <article class="sk-step">
+                        <span class="sk-step-number">{{ sprintf('%02d', $loop->iteration) }}</span>
+                        <h3>{{ $step['title'] }}</h3>
+                        <p>{{ $step['desc'] }}</p>
+                    </article>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    {{-- Warta dan alumni --}}
+    <section class="sk-section sk-section-soft">
+        <div class="sk-wrap sk-story-grid">
+            <div>
+                <div class="sk-head"><div><span class="sk-eyebrow">Info terbaru</span><h2 class="sk-title">Warta &amp; agenda BLK.</h2></div></div>
+                <div class="sk-story-list">
+                    @forelse ($berita as $b)
+                        <article class="sk-story">
+                            <img src="{{ $b->gambar_url ?? asset('images/hero-image.webp') }}" alt="" loading="lazy">
+                            <div><span class="sk-story-meta">{{ $b->kategori ?? 'Pengumuman' }} · {{ $b->tanggal ?? '' }}</span><h3>{{ $b->judul }}</h3><p>{{ $b->ringkasan }}</p></div>
+                        </article>
+                    @empty
+                        <div class="sk-empty">Belum ada warta terbaru.</div>
+                    @endforelse
                 </div>
-                <a href="{{ route('tentang.index') }}"
-                    class="bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-bold px-3 py-2 rounded-xl shrink-0 text-center transition active:scale-[0.98] shadow-sm">Profil
-                    Lengkap</a>
+            </div>
+            <div>
+                <div class="sk-head"><div><span class="sk-eyebrow">Cerita lulusan</span><h2 class="sk-title">Dari BLK ke dunia kerja.</h2></div></div>
+                <div class="sk-alumni">
+                    @forelse ($alumni as $a)
+                        <article class="sk-quote">
+                            <div class="sk-quote-person"><img src="{{ $a->foto_url ?? asset('images/logo-sikarir.png') }}" alt="" loading="lazy"><div><strong>{{ $a->nama }}</strong><span>{{ $a->profesi }}</span></div></div>
+                            <blockquote>“{{ $a->testimoni }}”</blockquote>
+                        </article>
+                    @empty
+                        <div class="sk-empty">Belum ada testimoni alumni.</div>
+                    @endforelse
+                    <div class="sk-about"><div><strong>Tentang UPT BLK Jember</strong><p>Lembaga pelatihan vokasi Disnakertrans Jatim dengan fasilitas workshop.</p></div><a href="{{ route('tentang.index') }}">Kenali BLK <span aria-hidden="true">↗</span></a></div>
+                </div>
             </div>
         </div>
     </section>
 
     {{-- CTA --}}
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 pb-10 sm:pb-14">
-        <div
-            class="reveal relative overflow-hidden bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 text-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 flex flex-col md:flex-row justify-between md:items-center gap-6 shadow-xl border border-emerald-800/40">
-            <!-- Aksen melayang -->
-            <div class="float-slow absolute -top-16 -right-10 w-56 h-56 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="float-slow-2 absolute -bottom-16 left-10 w-56 h-56 bg-teal-400/10 rounded-full blur-3xl pointer-events-none"></div>
-
-            <div class="relative space-y-2 max-w-xl">
-                <span
-                    class="inline-block text-[10px] sm:text-[11px] font-bold text-emerald-300 uppercase tracking-wider bg-emerald-500/20 px-2.5 py-1 rounded-full border border-emerald-400/30">
-                    INVESTASI MASA DEPAN JAWA TIMUR
-                </span>
-                <h2 class="text-xl md:text-2xl font-black tracking-tight text-white">Siap Memulai Karir Impian Anda?</h2>
-                <p class="text-xs md:text-sm text-emerald-100/80 leading-relaxed">
-                    Pendaftaran dibuka setiap bulan. Bebas biaya pendaftaran, bebas uang gedung, dan didukung penuh
-                    fasilitas modern standar industri.
-                </p>
-            </div>
-            <div class="relative flex flex-col sm:flex-row gap-3 w-full md:w-auto shrink-0">
-                <a href="{{ route('register') }}"
-                    class="btn-shine bg-white text-emerald-900 hover:bg-emerald-50 px-4 py-2.5 rounded-xl font-bold text-xs transition active:scale-[0.98] shadow-md flex items-center justify-center gap-1.5">
-                    <i data-lucide="user-plus" class="w-4 h-4 text-emerald-700"></i> Daftar Akun siKarir
-                </a>
-                <a href="#"
-                    class="border border-white/40 hover:bg-white/10 text-white px-4 py-2.5 rounded-xl font-semibold text-xs transition active:scale-[0.98] flex items-center justify-center gap-1.5">
-                    <i data-lucide="download" class="w-4 h-4"></i> Unduh Brosur PBK
-                </a>
+    <section class="sk-section">
+        <div class="sk-wrap sk-cta">
+            <div class="sk-cta-inner">
+                <div><span class="sk-eyebrow">Masa depan dimulai dari skill</span><h2>Siap mulai langkah barumu?</h2><p>Daftar akun siKarir, temukan program yang cocok, dan siapkan diri untuk peluang berikutnya.</p></div>
+                <div class="sk-actions"><a href="{{ route('register') }}" class="sk-btn sk-btn-lime">Buat akun siKarir <i data-lucide="arrow-up-right" class="w-4 h-4"></i></a></div>
             </div>
         </div>
     </section>
-
-    {{-- ANIMASI: JS (scroll reveal + hitung angka statistik) --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-            // Animasi hitung angka
-            function countUp(el) {
-                const target = parseInt(el.dataset.count, 10);
-                const suffix = el.dataset.suffix || '';
-                if (reduceMotion || isNaN(target)) { el.textContent = target + suffix; return; }
-
-                const duration = 1400;
-                const start = performance.now();
-                function tick(now) {
-                    const p = Math.min((now - start) / duration, 1);
-                    const eased = 1 - Math.pow(1 - p, 3);
-                    el.textContent = Math.round(target * eased) + suffix;
-                    if (p < 1) requestAnimationFrame(tick);
-                }
-                requestAnimationFrame(tick);
-            }
-
-            const items = document.querySelectorAll('.reveal');
-
-            if (!('IntersectionObserver' in window)) {
-                items.forEach(el => el.classList.add('is-visible'));
-                document.querySelectorAll('[data-count]').forEach(countUp);
-                return;
-            }
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (!entry.isIntersecting) return;
-                    const el = entry.target;
-                    el.classList.add('is-visible');
-                    el.querySelectorAll('[data-count]').forEach(countUp);
-                    observer.unobserve(el);
-                });
-            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
-            items.forEach(el => observer.observe(el));
-        });
-    </script>
-
+</div>
 @endsection
