@@ -9,7 +9,7 @@
       <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
         <a href="{{ route('admin-blk.index') }}" class="hover:text-emerald-700 transition">Beranda</a>
         <span>&gt;</span>
-        <span class="text-slate-600 font-medium">Jadwal Pelatihan</span>
+        <span class="text-slate-600 font-medium">Jadwal & Kelas</span>
       </div>
       <h1 class="text-xl font-black text-slate-900 tracking-tight">Jadwal & Batch Kelas Vokasi</h1>
       <p class="text-xs text-slate-500 mt-0.5">Pantau periode pelaksanaan kursus, ketersediaan ruangan bengkel kerja, dan instruktur pengampu.</p>
@@ -85,12 +85,12 @@
 
   <!-- Table Card -->
   <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-    
+
     <!-- Table Header & Search Filter Bar -->
     <div class="p-5 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-slate-50/50">
       <div>
         <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-          <span>Agenda Jadwal Pelatihan Kerja</span>
+          <span>Agenda Jadwal & Kelas Kerja</span>
           <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full">
             {{ $jadwals->total() }} Batch
           </span>
@@ -99,10 +99,10 @@
       </div>
 
       <!-- FORM PENCARIAN & FILTER (Component) -->
-      <x-search-filter 
-        :action="route('jadwal-pelatihan.index')" 
-        search-placeholder="Cari kejuruan, instruktur..." 
-        :status-options="['tersedia' => 'Tersedia', 'berlangsung' => 'Berlangsung', 'selesai' => 'Selesai']" 
+      <x-search-filter
+        :action="route('jadwal-pelatihan.index')"
+        search-placeholder="Cari kejuruan, instruktur..."
+        :status-options="['tersedia' => 'Tersedia', 'berlangsung' => 'Berlangsung', 'selesai' => 'Selesai']"
       />
     </div>
 
@@ -207,7 +207,7 @@
                 <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
                   <i data-lucide="calendar" class="w-6 h-6"></i>
                 </div>
-                <div class="font-bold text-slate-700 text-sm">Belum Ada Jadwal Pelatihan Ditemukan</div>
+                <div class="font-bold text-slate-700 text-sm">Belum Ada Jadwal & Kelas Ditemukan</div>
                 <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">Coba ubah kata kunci pencarian atau reset filter status kelas.</p>
                 @if(request('search') || request('status'))
                   <a href="{{ route('jadwal-pelatihan.index') }}" class="inline-flex items-center gap-1.5 mt-3 text-emerald-700 hover:underline text-xs font-semibold">

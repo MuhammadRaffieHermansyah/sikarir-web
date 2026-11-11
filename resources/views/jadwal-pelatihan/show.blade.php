@@ -9,7 +9,7 @@
       <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
         <a href="{{ route('admin-blk.index') }}" class="hover:text-emerald-700 transition">Beranda</a>
         <span>&gt;</span>
-        <a href="{{ route('jadwal-pelatihan.index') }}" class="hover:text-emerald-700 transition">Jadwal Pelatihan</a>
+        <a href="{{ route('jadwal-pelatihan.index') }}" class="hover:text-emerald-700 transition">Jadwal & Kelas</a>
         <span>&gt;</span>
         <span class="text-slate-600 font-medium">Detail Batch</span>
       </div>

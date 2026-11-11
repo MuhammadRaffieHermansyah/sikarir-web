@@ -102,7 +102,7 @@
 
         @csrf
 
-        {{-- 
+        {{--
             Menyimpan asal halaman.
             Kalau datang dari Jadwal Pelatihan,
             nilainya akan menjadi "jadwal".
@@ -224,7 +224,7 @@
 
                         Data ruangan workshop ini akan digunakan
                         sebagai pilihan pada form
-                        <strong>Jadwal Pelatihan</strong>.
+                        <strong>Jadwal & Kelas</strong>.
 
                     </p>
 

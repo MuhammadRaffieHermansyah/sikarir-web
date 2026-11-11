@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Buat Batch Jadwal Pelatihan - Disnaker BLK')
+@section('title', 'Buat Batch Jadwal & Kelas - Disnaker BLK')
 
 @section('content')
     <!-- Title & Breadcrumbs -->
@@ -9,11 +9,11 @@
             <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
                 <a href="{{ route('admin-blk.index') }}" class="hover:text-emerald-700 transition">Beranda</a>
                 <span>&gt;</span>
-                <a href="{{ route('jadwal-pelatihan.index') }}" class="hover:text-emerald-700 transition">Jadwal Pelatihan</a>
+                <a href="{{ route('jadwal-pelatihan.index') }}" class="hover:text-emerald-700 transition">Jadwal & Kelas</a>
                 <span>&gt;</span>
                 <span class="text-slate-600 font-medium">Buat Batch Jadwal</span>
             </div>
-            <h1 class="text-xl font-black text-slate-900 tracking-tight">Buat Batch Jadwal Pelatihan</h1>
+            <h1 class="text-xl font-black text-slate-900 tracking-tight">Buat Batch Jadwal & Kelas</h1>
             <p class="text-xs text-slate-500 mt-0.5">Tentukan periode pelatihan, ruangan bengkel kerja/laboratorium, dan instruktur pembimbing.</p>
             </div>
             <div>
@@ -332,7 +332,7 @@
           </p>
             <div class="p-3 bg-emerald-50/60 rounded-lg border border-emerald-100 space-y-1 text-[11px] text-emerald-900">
                 <span class="font-bold block">Info Presensi:</span>
-                Sistem absensi harian peserta akan otomatis ditautkan ke jadwal pelatihan ini.
+                Sistem absensi harian peserta akan otomatis ditautkan ke jadwal & kelas ini.
             </div>
           <div class="p-3 bg-amber-50/60 rounded-lg border border-amber-100 space-y-1.5 text-[11px] text-amber-900">
             <span class="font-bold block">Hari Tidak Aktif (Dilewati Otomatis):</span>

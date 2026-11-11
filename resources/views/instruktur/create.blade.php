@@ -87,7 +87,7 @@
         </h3>
         <div class="space-y-3 text-xs text-slate-600 leading-relaxed">
           <p>
-            Data instruktur ini akan muncul sebagai pilihan pada form <strong>Jadwal Pelatihan</strong> beserta bidang keahliannya.
+            Data instruktur ini akan muncul sebagai pilihan pada form <strong>Jadwal & Kelas</strong> beserta bidang keahliannya.
           </p>
           <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 text-[11px] text-slate-500">
             Contoh: <span class="font-bold text-slate-700">Teknik Kendaraan Ringan</span>, <span class="font-bold text-slate-700">Teknik Komputer Jaringan</span>

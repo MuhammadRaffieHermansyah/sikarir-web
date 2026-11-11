@@ -7,7 +7,7 @@
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
     <div>
       <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
-        <a href="{{ route('absen.index') }}" class="hover:text-emerald-700 transition">Daftar Absensi</a> &gt; 
+        <a href="{{ route('absen.index') }}" class="hover:text-emerald-700 transition">Daftar Absensi</a> &gt;
         <span class="text-slate-600 font-medium">Tambah Presensi</span>
       </div>
       <h1 class="text-xl font-black text-slate-900 tracking-tight">Catat Kehadiran Peserta</h1>
@@ -71,7 +71,7 @@
           <!-- Jadwal Select -->
           <div class="md:col-span-1 space-y-1">
             <label class="block text-xs font-semibold text-slate-700">
-              Jadwal Pelatihan <span class="text-rose-500">*</span>
+              Jadwal & Kelas <span class="text-rose-500">*</span>
             </label>
             <select name="id_jadwal"  class="w-full bg-white border @error('id_jadwal') border-rose-500 @else border-slate-200 @enderror rounded-lg px-3 py-2 text-xs font-medium text-slate-700 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 shadow-sm">
               <option value="">-- Pilih Jadwal --</option>

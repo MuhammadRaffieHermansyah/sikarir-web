@@ -165,7 +165,7 @@
                             </span>
                         </a>
 
-                        <!-- Jadwal Pelatihan -->
+                        <!-- Jadwal & Kelas -->
                         <a href="{{ route('jadwal-pelatihan.index') }}"
                             class="group flex items-center justify-between gap-2 px-3 py-2 rounded-lg transition-all duration-200
                             {{ request()->routeIs('jadwal-pelatihan.*')
@@ -178,7 +178,7 @@
                                    {{ request()->routeIs('jadwal-pelatihan.*') ? 'text-emerald-600' : 'text-slate-400 group-hover:text-emerald-600' }}">
                                 </i>
 
-                                <span class="truncate">Jadwal Pelatihan</span>
+                                <span class="truncate">Jadwal & Kelas</span>
                             </span>
 
                             <span class="shrink-0 bg-emerald-100 text-emerald-700 font-semibold text-[10px] px-1.5 py-0.5 rounded">
@@ -255,10 +255,10 @@
                 </div>
 
                 <!-- KELULUSAN & EVALUASI -->
-                
 
-                    
-                
+
+
+
 
                 <!-- MITRA & LOWONGAN -->
                 <div>

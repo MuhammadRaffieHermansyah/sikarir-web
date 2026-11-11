@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Jadwal Pelatihan - ' . ($jadwal->pelatihan->nama_pelatihan ?? 'Jadwal'))
+@section('title', 'Edit Jadwal & Kelas - ' . ($jadwal->pelatihan->nama_pelatihan ?? 'Jadwal'))
 
 @section('content')
     <!-- Title & Breadcrumbs -->
@@ -9,11 +9,11 @@
             <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
                 <a href="{{ route('admin-blk.index') }}" class="hover:text-emerald-700 transition">Beranda</a>
                 <span>&gt;</span>
-                <a href="{{ route('jadwal-pelatihan.index') }}" class="hover:text-emerald-700 transition">Jadwal Pelatihan</a>
+                <a href="{{ route('jadwal-pelatihan.index') }}" class="hover:text-emerald-700 transition">Jadwal & Kelas</a>
                 <span>&gt;</span>
                 <span class="text-slate-600 font-medium">Edit Jadwal</span>
             </div>
-            <h1 class="text-xl font-black text-slate-900 tracking-tight">Perbarui Batch Jadwal Pelatihan</h1>
+            <h1 class="text-xl font-black text-slate-900 tracking-tight">Perbarui Batch Jadwal & Kelas</h1>
             <p class="text-xs text-slate-500 mt-0.5">Ubah tanggal pelaksanaan, jam kegiatan belajar mengajar, instruktur,
                 atau ruangan kelas.</p>
         </div>
