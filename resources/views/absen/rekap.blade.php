@@ -7,7 +7,7 @@
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
     <div>
       <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
-        <a href="{{ route('absen.index') }}" class="hover:text-emerald-700 transition">Daftar Absensi</a> &gt; 
+        <a href="{{ route('absen.index') }}" class="hover:text-emerald-700 transition">Daftar Absensi</a> &gt;
         <span class="text-slate-600 font-medium">Rekapitulasi & Laporan Kehadiran</span>
       </div>
       <h1 class="text-xl font-black text-slate-900 tracking-tight">Rekapitulasi & Laporan Presensi</h1>
@@ -36,14 +36,14 @@
     </div>
 
     <form method="GET" action="{{ route('absen.rekap') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 text-xs">
-      <!-- Filter Jadwal Pelatihan -->
+      <!-- Filter Jadwal & Kelas -->
       <div class="lg:col-span-2">
-        <label class="block font-semibold text-slate-600 mb-1">Batch / Jadwal Pelatihan</label>
+        <label class="block font-semibold text-slate-600 mb-1">Batch / Jadwal & Kelas</label>
         <select name="id_jadwal" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs focus:ring-1 focus:ring-emerald-600 focus:outline-none">
           <option value="">-- Semua Program Pelatihan --</option>
           @foreach($jadwals as $j)
             <option value="{{ $j->id_jadwal }}" {{ request('id_jadwal') == $j->id_jadwal ? 'selected' : '' }}>
-              {{ $j->pelatihan->nama_pelatihan ?? 'Pelatihan #'.$j->id_jadwal }} 
+              {{ $j->pelatihan->nama_pelatihan ?? 'Pelatihan #'.$j->id_jadwal }}
               ({{ $j->tanggal_mulai ? \Carbon\Carbon::parse($j->tanggal_mulai)->format('d M') : '' }} - {{ $j->tanggal_selesai ? \Carbon\Carbon::parse($j->tanggal_selesai)->format('d M Y') : '' }})
             </option>
           @endforeach

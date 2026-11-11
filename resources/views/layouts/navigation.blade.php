@@ -122,7 +122,7 @@
                 {{ __('Instruktur') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('jadwal-pelatihan.index')" :active="request()->routeIs('jadwal-pelatihan.*')">
-                {{ __('Jadwal Pelatihan') }}
+                {{ __('Jadwal & Kelas') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('kelas-pelatihan.index')" :active="request()->routeIs('kelas-pelatihan.*')">
                 {{ __('Kelas Pelatihan') }}

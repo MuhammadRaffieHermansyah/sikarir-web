@@ -12,7 +12,7 @@
         <span class="text-slate-600 font-medium">Instruktur</span>
       </div>
       <h1 class="text-xl font-black text-slate-900 tracking-tight">Master Instruktur</h1>
-      <p class="text-xs text-slate-500 mt-0.5">Kelola daftar instruktur dan bidang keahlian yang dapat ditugaskan pada jadwal pelatihan.</p>
+      <p class="text-xs text-slate-500 mt-0.5">Kelola daftar instruktur dan bidang keahlian yang dapat ditugaskan pada jadwal & kelas.</p>
     </div>
 
     <div class="flex items-center gap-2">
@@ -80,13 +80,13 @@
             {{ isset($instrukturs) ? $instrukturs->total() : 0 }} Data
           </span>
         </h2>
-        <p class="text-xs text-slate-500 mt-0.5">Instruktur menjadi pilihan wajib saat membuat batch jadwal pelatihan.</p>
+        <p class="text-xs text-slate-500 mt-0.5">Instruktur menjadi pilihan wajib saat membuat batch jadwal & kelas.</p>
       </div>
 
       <!-- FORM PENCARIAN (Component) -->
-      <x-search-filter 
-        :action="route('instruktur.index')" 
-        search-placeholder="Cari nama / bidang keahlian..." 
+      <x-search-filter
+        :action="route('instruktur.index')"
+        search-placeholder="Cari nama / bidang keahlian..."
       />
     </div>
 

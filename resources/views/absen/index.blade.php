@@ -40,7 +40,7 @@
 
   <!-- Management Section: Table Absensi -->
   <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-    
+
     <!-- Table Header & Search Filter Bar -->
     <div class="p-5 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
       <div>
@@ -57,10 +57,10 @@
       </div>
 
       <!-- FORM PENCARIAN & FILTER (Component) -->
-      <x-search-filter 
-        :action="route('absen.index')" 
-        search-placeholder="Cari peserta / pelatihan..." 
-        :status-options="['hadir' => 'Hadir', 'izin' => 'Izin', 'sakit' => 'Sakit', 'alfa' => 'Alfa']" 
+      <x-search-filter
+        :action="route('absen.index')"
+        search-placeholder="Cari peserta / pelatihan..."
+        :status-options="['hadir' => 'Hadir', 'izin' => 'Izin', 'sakit' => 'Sakit', 'alfa' => 'Alfa']"
       />
     </div>
 
@@ -71,7 +71,7 @@
           <tr class="bg-slate-50 text-slate-500 border-b border-slate-200 text-[11px] uppercase tracking-wider">
             <th class="px-5 py-3 font-semibold w-12 text-center">#</th>
             <th class="px-5 py-3 font-semibold">Peserta</th>
-            <th class="px-5 py-3 font-semibold">Jadwal Pelatihan</th>
+            <th class="px-5 py-3 font-semibold">Jadwal & Kelas</th>
             <th class="px-5 py-3 font-semibold">Tanggal</th>
             <th class="px-5 py-3 font-semibold text-center">Status</th>
             <th class="px-5 py-3 font-semibold text-right">Aksi</th>

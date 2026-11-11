@@ -12,7 +12,7 @@
         <span class="text-slate-600 font-medium">Ruangan Workshop</span>
       </div>
       <h1 class="text-xl font-black text-slate-900 tracking-tight">Master Ruangan Workshop</h1>
-      <p class="text-xs text-slate-500 mt-0.5">Kelola daftar ruangan workshop yang dapat digunakan pada jadwal pelatihan.</p>
+      <p class="text-xs text-slate-500 mt-0.5">Kelola daftar ruangan workshop yang dapat digunakan pada jadwal & kelas.</p>
     </div>
 
     <div class="flex items-center gap-2">
@@ -80,13 +80,13 @@
             {{ isset($ruanganWorkshops) ? $ruanganWorkshops->total() : 0 }} Data
           </span>
         </h2>
-        <p class="text-xs text-slate-500 mt-0.5">Ruangan workshop menjadi pilihan saat membuat batch jadwal pelatihan.</p>
+        <p class="text-xs text-slate-500 mt-0.5">Ruangan workshop menjadi pilihan saat membuat batch jadwal & kelas.</p>
       </div>
 
       <!-- FORM PENCARIAN (Component) -->
-      <x-search-filter 
-        :action="route('ruangan-workshop.index')" 
-        search-placeholder="Cari nama ruangan..." 
+      <x-search-filter
+        :action="route('ruangan-workshop.index')"
+        search-placeholder="Cari nama ruangan..."
       />
     </div>
 

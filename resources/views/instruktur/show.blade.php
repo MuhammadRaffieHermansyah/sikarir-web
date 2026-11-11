@@ -14,7 +14,7 @@
         <span class="text-slate-600 font-medium">Detail Instruktur</span>
       </div>
       <h1 class="text-xl font-black text-slate-900 tracking-tight">Detail Instruktur</h1>
-      <p class="text-xs text-slate-500 mt-0.5">Informasi lengkap instruktur beserta jadwal pelatihan yang diampu.</p>
+      <p class="text-xs text-slate-500 mt-0.5">Informasi lengkap instruktur beserta jadwal & kelas yang diampu.</p>
     </div>
 
     <div class="flex items-center gap-2">
@@ -78,7 +78,7 @@
           <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600"></i> Zona Berbahaya
         </h4>
         <p class="text-[11px] text-rose-600 leading-relaxed">
-          Menghapus instruktur ini akan membuat jadwal pelatihan terkait kehilangan penugasan instruktur (tidak dihapus).
+          Menghapus instruktur ini akan membuat jadwal & kelas terkait kehilangan penugasan instruktur (tidak dihapus).
         </p>
         <form action="{{ route('instruktur.destroy', $instruktur->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus instruktur ini?')">
           @csrf
@@ -90,13 +90,13 @@
       </div>
     </div>
 
-    <!-- Jadwal Pelatihan Terkait -->
+    <!-- Jadwal & Kelas Terkait -->
     <div class="lg:col-span-2">
       <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div class="p-5 border-b border-slate-100">
           <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
             <i data-lucide="calendar-clock" class="w-4 h-4 text-emerald-700"></i>
-            Jadwal Pelatihan Diampu
+            Jadwal & Kelas Diampu
           </h2>
         </div>
         <div class="overflow-x-auto">
@@ -132,7 +132,7 @@
                       <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
                         <i data-lucide="calendar-clock" class="w-6 h-6"></i>
                       </div>
-                      <p class="text-xs font-medium text-slate-600">Instruktur ini belum ditugaskan pada jadwal pelatihan</p>
+                      <p class="text-xs font-medium text-slate-600">Instruktur ini belum ditugaskan pada jadwal & kelas</p>
                     </div>
                   </td>
                 </tr>

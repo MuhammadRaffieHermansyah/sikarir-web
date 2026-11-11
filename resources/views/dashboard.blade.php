@@ -171,7 +171,7 @@
         <div>
           <div class="flex items-center justify-between mb-3">
             <span class="text-[11px] font-bold uppercase tracking-wider text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-100">
-              Jadwal Pelatihan
+              Jadwal & kelas
             </span>
             <div class="p-2 bg-slate-50 text-slate-600 rounded-lg group-hover:bg-emerald-900 group-hover:text-white transition-colors">
               <i data-lucide="calendar" class="w-4 h-4"></i>
