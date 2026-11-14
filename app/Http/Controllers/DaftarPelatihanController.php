@@ -8,29 +8,30 @@ use App\Models\DurasiPelatihan;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class DaftarPelatihanController extends Controller
 {
     public function index(Request $request): View
-    {
-        $query = DaftarPelatihan::with(['admin.user', 'jadwal', 'durasi']);
+{
+    $query = DaftarPelatihan::with(['admin.user', 'jadwal', 'durasi']);
 
-        // Filter Pencarian Keyword (Nama Pelatihan atau Deskripsi)
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('nama_pelatihan', 'like', "%{$search}%")
-                    ->orWhere('deskripsi_pelatihan', 'like', "%{$search}%");
-            });
-        }
-
-        // Paginate data & tahan URL parameter
-        $pelatihans = $query->latest('id_pelatihan')
-            ->paginate(10)
-            ->withQueryString();
-
-        return view('pelatihan.index', compact('pelatihans'));
+    // Filter Pencarian Keyword (Nama Pelatihan atau Deskripsi)
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('nama_pelatihan', 'like', "%{$search}%")
+                ->orWhere('deskripsi_pelatihan', 'like', "%{$search}%");
+        });
     }
+
+    // Paginate data & tahan URL parameter
+    $pelatihans = $query->latest('id_pelatihan')
+        ->paginate(10)
+        ->withQueryString();
+
+    return view('pelatihan.index', compact('pelatihans'));
+}
 
     public function create(): View
     {
@@ -47,6 +48,7 @@ class DaftarPelatihanController extends Controller
             'deskripsi_pelatihan' => 'nullable|string',
             'kuota'               => 'required|integer|min:1',
             'id_durasi'           => 'nullable|exists:durasi_pelatihan,id_durasi',
+            'gambar'              => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ], [
             'id_admin.required'       => 'Admin BLK penanggung jawab wajib dipilih.',
             'nama_pelatihan.required' => 'Nama kejuruan / program pelatihan wajib diisi.',
@@ -55,8 +57,14 @@ class DaftarPelatihanController extends Controller
             'kuota.required'          => 'Kapasitas kuota peserta wajib ditentukan.',
             'kuota.min'               => 'Kuota minimal 1 orang peserta.',
             'nama_pelatihan.regex'    => 'Nama kejuruan / program pelatihan hanya boleh mengandung huruf dan spasi.',
-        ]);
+            'gambar.image'            => 'File harus berupa gambar.',
+            'gambar.mimes'            => 'Format gambar harus JPG, PNG, atau WEBP.',
+            'gambar.max'              => 'Ukuran gambar maksimal 2 MB.',
+            ]);
 
+        if ($request->hasFile('gambar')) {
+    $validated['gambar'] = $request->file('gambar')->store('pelatihan', 'public');
+}
         DaftarPelatihan::create($validated);
         return redirect()->route('pelatihan.index')->with('success', 'Program kejuruan pelatihan vokasi berhasil ditambahkan.');
     }
@@ -85,6 +93,7 @@ class DaftarPelatihanController extends Controller
             'deskripsi_pelatihan' => 'nullable|string',
             'kuota'               => 'required|integer|min:1',
             'id_durasi'           => 'nullable|exists:durasi_pelatihan,id_durasi',
+            'gambar'              => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ], [
             'id_admin.required'       => 'Admin BLK penanggung jawab wajib dipilih.',
             'nama_pelatihan.required' => 'Nama kejuruan / program pelatihan wajib diisi.',
@@ -92,7 +101,20 @@ class DaftarPelatihanController extends Controller
             'kuota.required'          => 'Kapasitas kuota peserta wajib ditentukan.',
             'kuota.min'               => 'Kuota minimal 1 orang peserta.',
             'nama_pelatihan.regex'    => 'Nama kejuruan / program pelatihan hanya boleh mengandung huruf dan spasi.',
+            'gambar.image'            => 'File harus berupa gambar.',
+            'gambar.mimes'            => 'Format gambar harus JPG, PNG, atau WEBP.',
+            'gambar.max'              => 'Ukuran gambar maksimal 2 MB.',
         ]);
+
+        if ($request->hasFile('gambar')) {
+            if ($pelatihan->gambar) {
+            Storage::disk('public')->delete($pelatihan->gambar);
+            }
+        $validated['gambar'] = $request->file('gambar')->store('pelatihan', 'public');
+            } elseif ($request->boolean('hapus_gambar') && $pelatihan->gambar) {
+        Storage::disk('public')->delete($pelatihan->gambar);
+        $validated['gambar'] = null;
+}
 
         $pelatihan->update($validated);
         return redirect()->route('pelatihan.index')->with('success', 'Program kejuruan pelatihan vokasi berhasil diperbarui.');
@@ -101,7 +123,12 @@ class DaftarPelatihanController extends Controller
     public function destroy(int $id): RedirectResponse
     {
         $pelatihan = DaftarPelatihan::findOrFail($id);
+        if ($pelatihan->gambar) {
+        Storage::disk('public')->delete($pelatihan->gambar);
+        }
         $pelatihan->delete();
         return redirect()->route('pelatihan.index')->with('success', 'Program kejuruan pelatihan vokasi berhasil dihapus.');
+
     }
+
 }

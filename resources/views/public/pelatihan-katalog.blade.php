@@ -137,86 +137,81 @@
         <div class="flex justify-between items-center text-xs text-slate-500 font-medium px-1">
             <p class="flex items-center gap-1.5 font-bold text-slate-800">
                 <i data-lucide="book-open" class="w-4 h-4 text-emerald-700"></i>
-                Menampilkan {{ is_object($pelatihan) && method_exists($pelatihan, 'total') ? $pelatihan->total() : (($pelatihan ?? collect())->count() ?: 6) }} Program Pelatihan Vokasi
+                Menampilkan {{ is_object($pelatihan) && method_exists($pelatihan, 'total') ? $pelatihan->total() : (($pelatihan ?? collect())->count() ?: 0) }} Program Pelatihan Vokasi
             </p>
             <span class="text-emerald-700 font-bold flex items-center gap-1">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Terverifikasi DIPA 2026
             </span>
         </div>
+{{-- GRID PELATIHAN --}}
+<div class="grid md:grid-cols-3 gap-6">
+    @forelse ($pelatihan as $item)
+        @php $jadwal = $item->jadwal_terdekat; @endphp
+        <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-300 transition flex flex-col justify-between">
+            <div>
+                <div class="relative h-44 bg-slate-100">
+                    <img src="{{ $item->gambar_url ?? asset('images/hero-image.webp') }}"
+                            class="w-full h-full object-cover" alt="{{ $item->nama_pelatihan }}">
 
-        {{-- GRID PELATIHAN --}}
-        <div class="grid md:grid-cols-3 gap-6">
-            @forelse ($pelatihan ?? [] as $item)
-                <div class="bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-300 transition flex flex-col justify-between">
-                    <div>
-                        <div class="relative h-44 bg-slate-100">
-                            <img src="{{ $item->gambar_url ?? 'https://media.istockphoto.com/id/2233679882/photo/two-young-adult-programmers-discussing-code-on-laptop-in-office.webp?a=1&b=1&s=612x612&w=0&k=20&c=PzaTx4WP272kbAqs_EBEEl2yx8nqCbUwTN8Au8Ndm6E=' }}" class="w-full h-full object-cover" alt="{{ $item->nama }}">
-                            <span class="absolute top-2.5 left-2.5 bg-emerald-900/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg backdrop-blur-sm shadow-sm">
-                                {{ $item->sumber_dana ?? '100% Gratis APBD' }}
-                            </span>
-                            <span class="absolute top-2.5 right-2.5 bg-slate-900/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg backdrop-blur-sm shadow-sm">
-                                {{ $item->tipe ?? 'PBK Reguler' }}
-                            </span>
-                        </div>
-                        <div class="p-5 space-y-3">
-                            <div class="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                                <span class="flex items-center gap-1 text-emerald-700">
-                                    <i data-lucide="wrench" class="w-3.5 h-3.5"></i> {{ $item->kategori ?? 'Kejuruan' }}
-                                </span>
-                                <span class="flex items-center gap-1">
-                                    <i data-lucide="calendar" class="w-3.5 h-3.5"></i> s/d {{ $item->batas_seleksi ?? '-' }}
-                                </span>
-                            </div>
+                    @if ($jadwal)
+                        <span class="absolute top-2.5 left-2.5 bg-emerald-900/90 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg backdrop-blur-sm shadow-sm">
+                            Pendaftaran Buka
+                        </span>
+                    @else
+                        <span class="absolute top-2.5 left-2.5 bg-slate-900/80 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg backdrop-blur-sm shadow-sm">
+                            Belum Ada Jadwal
+                        </span>
+                    @endif
+                </div>
 
-                            <div class="flex justify-between items-start gap-2">
-                                <h3 class="font-bold text-slate-900 text-base leading-snug line-clamp-1">{{ $item->nama }}</h3>
-                                <span class="text-[10px] font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md shrink-0 border border-slate-200">
-                                    {{ $item->jam_pelajaran ?? '240' }} JP
-                                </span>
-                            </div>
-
-                            <p class="text-xs text-slate-500 leading-relaxed line-clamp-2">{{ $item->deskripsi }}</p>
-
-                            <!-- Progress Bars Kursi -->
-                            <!-- <div class="space-y-1.5 pt-1">
-                                <div class="flex justify-between text-[11px] font-semibold">
-                                    <span class="text-slate-500">Kuota: {{ $item->kuota ?? 16 }} Siswa</span>
-                                    <span class="{{ ($item->sisa_kursi ?? 5) <= 2 ? 'text-rose-600 font-bold' : 'text-slate-700' }}">
-                                        Sisa {{ $item->sisa_kursi ?? '-' }} Kursi {{ ($item->sisa_kursi ?? 5) <= 2 ? '(Kritis)' : '' }}
-                                    </span>
-                                </div>
-                                <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden border border-slate-200/60">
-                                    <div class="h-full rounded-full transition-all duration-300 {{ ($item->sisa_kursi ?? 5) <= 2 ? 'bg-rose-500' : 'bg-emerald-600' }}"
-                                         style="width: {{ $item->persentase_terisi ?? 70 }}%"></div>
-                                </div>
-                            </div> -->
-
-                            <!-- Badges Fasilitas -->
-                            <div class="flex flex-wrap gap-1.5 pt-1">
-                                @foreach ($item->fasilitas ?? ['Sertifikat BNSP', 'Uang Saku'] as $fasilitas)
-                                    <span class="text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200/80 px-2 py-0.5 rounded-md flex items-center gap-1">
-                                        <i data-lucide="check" class="w-3 h-3 text-emerald-600"></i> {{ $fasilitas }}
-                                    </span>
-                                @endforeach
-                            </div>
-                        </div>
+                <div class="p-5 space-y-3">
+                    <div class="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        <span class="flex items-center gap-1 text-emerald-700">
+                            <i data-lucide="users" class="w-3.5 h-3.5"></i> Kuota {{ $item->kuota }} Siswa
+                        </span>
+                        <span class="flex items-center gap-1">
+                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                            {{ $jadwal ? 'Mulai ' . $jadwal->tanggal_mulai->translatedFormat('d M Y') : 'Jadwal menyusul' }}
+                        </span>
                     </div>
 
-                    <div class="p-5 pt-0 flex gap-2">
-                        <a href="{{ route('pelatihan.katalog') . '#' . $item->id }}" class="w-1/2 text-center text-xs font-semibold border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl py-2.5 transition">Silabus</a>
-                        <a href="{{ route('register') }}" class="w-1/2 text-center text-xs font-bold bg-emerald-900 hover:bg-emerald-950 text-white rounded-xl py-2.5 transition shadow-sm flex items-center justify-center gap-1">
-                            <span>Daftar</span>
-                            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-                        </a>
+                    <div class="flex justify-between items-start gap-2">
+                        <h3 class="font-bold text-slate-900 text-base leading-snug line-clamp-1">{{ $item->nama_pelatihan }}</h3>
+                        @if ($item->durasi)
+                            <span class="text-[10px] font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md shrink-0 border border-slate-200">
+                                {{ $item->durasi->jam }} Jam
+                            </span>
+                        @endif
                     </div>
+
+                    <p class="text-xs text-slate-500 leading-relaxed line-clamp-2">
+                        {{ $item->deskripsi_pelatihan ?: 'Deskripsi program belum ditambahkan.' }}
+                    </p>
+
+                    @if ($item->durasi)
+                        <p class="text-[11px] font-semibold text-slate-500 flex items-center gap-1">
+                            <i data-lucide="timer" class="w-3.5 h-3.5 text-emerald-600"></i>
+                            Durasi {{ $item->durasi->durasi_label }}
+                        </p>
+                    @endif
                 </div>
-            @empty
-                <div class="col-span-3 p-10 bg-white rounded-2xl border border-slate-200/80 text-center text-slate-400 text-xs">
-                    <i data-lucide="book-open" class="w-10 h-10 mx-auto text-slate-300 mb-2"></i>
-                    Belum ada data pelatihan yang tersedia saat ini.
-                </div>
-            @endforelse
+            </div>
+
+            <div class="p-5 pt-0 flex gap-2">
+                <a href="#" class="w-1/2 text-center text-xs font-semibold border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl py-2.5 transition">Silabus</a>
+                <a href="{{ route('register') }}" class="w-1/2 text-center text-xs font-bold bg-emerald-900 hover:bg-emerald-950 text-white rounded-xl py-2.5 transition shadow-sm flex items-center justify-center gap-1">
+                    <span>Daftar</span>
+                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                </a>
+            </div>
         </div>
+    @empty
+        <div class="col-span-3 p-10 bg-white rounded-2xl border border-slate-200/80 text-center text-slate-400 text-xs">
+            <i data-lucide="book-open" class="w-10 h-10 mx-auto text-slate-300 mb-2"></i>
+            Belum ada data pelatihan yang tersedia saat ini.
+        </div>
+    @endforelse
+</div>
 
         {{-- PAGINATION --}}
         <div class="mt-8">

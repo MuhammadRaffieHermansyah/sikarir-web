@@ -41,8 +41,14 @@
         <div class="absolute -right-12 -top-12 w-56 h-56 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none"></div>
     </div>
 
-    <!-- Hero Profile Banner Card (30% Emerald Brand Identity) -->
-    
+    <!-- Poster Program -->
+    @if ($pelatihan->gambar_url)
+        <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
+            <img src="{{ $pelatihan->gambar_url }}" alt="Poster {{ $pelatihan->nama_pelatihan }}"
+                class="w-full max-h-96 object-cover">
+        </div>
+    @endif
+
 
     <!-- Quick Stats Bento Grid (3 Cards) -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">

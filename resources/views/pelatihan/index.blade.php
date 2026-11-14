@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Katalog Program Pelatihan Vokasi - Disnaker BLK')
+@section('title', 'Katalog Program Pelatihan Vokasi- SiKarir BLK')
 
 @section('content')
 <div class="space-y-6 sm:space-y-8">
@@ -180,7 +180,14 @@
                             <td class="px-6 py-4.5">
                                 <div class="flex items-center gap-3.5 min-w-[240px]">
                                     <div class="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-800 font-black flex items-center justify-center text-xs shrink-0 group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-200">
-                                        <i data-lucide="book-open" class="w-4 h-4"></i>
+                                        @if ($pelatihan->gambar_url)
+                                            <img src="{{ $pelatihan->gambar_url }}" alt="{{ $pelatihan->nama_pelatihan }}"
+                                                class="w-10 h-10 rounded-2xl object-cover border border-emerald-100 shrink-0 group-hover:scale-105 transition-all duration-200">
+                                        @else
+                                            <div class="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-800 font-black flex items-center justify-center text-xs shrink-0 group-hover:scale-105 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-200">
+                                                <i data-lucide="book-open" class="w-4 h-4"></i>
+                                            </div>
+                                        @endif
                                     </div>
                                     <div class="min-w-0">
                                         <a href="{{ route('pelatihan.show', $pelatihan->id_pelatihan) }}"
