@@ -56,7 +56,7 @@
     @endif
 
     <!-- Form Layout: 2 Columns -->
-    <form action="{{ route('pelatihan.update', $pelatihan->id_pelatihan) }}" method="POST"
+    <form action="{{ route('pelatihan.update', $pelatihan->id_pelatihan) }}" method="POST" enctype="multipart/form-data"
         class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-start">
         @csrf
         @method('PUT')
@@ -211,17 +211,78 @@
                 </div>
             </div>
 
-            <!-- Zona Berbahaya Card -->
-            <div class="bg-rose-50/60 rounded-3xl border border-rose-200 shadow-sm p-6 space-y-3">
-                <div class="flex items-center gap-2 text-rose-800">
-                    <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600"></i>
-                    <h4 class="font-black text-xs uppercase tracking-wider">Zona Perhatian</h4>
-                </div>
-                <p class="text-xs text-rose-700/90 leading-relaxed font-medium">
-                    Perubahan kapasitas kuota atau durasi belajar akan langsung berlaku untuk pendaftaran batch jadwal kelas selanjutnya.
-                </p>
+            <!-- Upload Poster Card -->
+                @php $adaGambar = (bool) $pelatihan->gambar_url; @endphp
+                <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 space-y-4">
+                    <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
+                        <i data-lucide="image" class="w-4 h-4 text-emerald-700"></i>
+                        <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider">Poster Program</h3>
+                    </div>
+
+                    <label for="gambar" id="dropzone"
+                        class="relative flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-slate-200 hover:border-emerald-500 bg-slate-50 hover:bg-emerald-50/40 rounded-2xl cursor-pointer overflow-hidden transition @error('gambar') border-rose-400 @enderror">
+
+                    <!-- Placeholder -->
+                    <div id="upload-placeholder" class="{{ $adaGambar ? 'hidden' : 'flex' }} flex-col items-center gap-2 text-center px-4">
+                        <i data-lucide="upload-cloud" class="w-8 h-8 text-slate-400"></i>
+                        <p class="text-xs font-bold text-slate-600">Klik untuk upload gambar</p>
+                        <p class="text-[11px] text-slate-400">JPG, PNG, WEBP. Maks 2 MB.</p>
+                    </div>
+
+                    <!-- Preview (gambar lama kalau ada) -->
+                    <img id="upload-preview" src="{{ $pelatihan->gambar_url }}" alt="Preview poster"
+                        class="{{ $adaGambar ? '' : 'hidden' }} absolute inset-0 w-full h-full object-cover" />
+
+                    <input type="file" name="gambar" id="gambar" accept="image/png,image/jpeg,image/webp" class="hidden" />
+                </label>
+
+                <!-- Penanda: 1 = hapus gambar lama -->
+                <input type="hidden" name="hapus_gambar" id="hapus_gambar" value="0">
+                <button type="button" id="remove-image"
+                    class="{{ $adaGambar ? '' : 'hidden' }} w-full text-xs font-bold text-rose-600 hover:text-rose-700 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 transition">
+                    Hapus gambar
+                </button>
+                @error('gambar')
+                    <p class="text-rose-600 text-[11px] font-semibold">{{ $message }}</p>
+                @enderror
             </div>
         </div>
     </form>
 </div>
+@push('scripts')
+<script>
+    const input = document.getElementById('gambar');
+    const preview = document.getElementById('upload-preview');
+    const placeholder = document.getElementById('upload-placeholder');
+    const removeBtn = document.getElementById('remove-image');
+    const hapusInput = document.getElementById('hapus_gambar');
+    const adaGambarLama = {{ $adaGambar ? 'true' : 'false' }};
+
+    input.addEventListener('change', () => {
+        const file = input.files[0];
+        if (!file) return;
+        if (file.size > 2 * 1024 * 1024) {
+            alert('Ukuran gambar maksimal 2 MB.');
+            input.value = '';
+            return;
+        }
+        preview.src = URL.createObjectURL(file);
+        preview.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+        placeholder.classList.remove('flex');
+        removeBtn.classList.remove('hidden');
+        hapusInput.value = '0';
+    });
+
+    removeBtn.addEventListener('click', () => {
+        input.value = '';
+        preview.removeAttribute('src');
+        preview.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+        placeholder.classList.add('flex');
+        removeBtn.classList.add('hidden');
+        hapusInput.value = adaGambarLama ? '1' : '0';
+    });
+</script>
+@endpush
 @endsection

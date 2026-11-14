@@ -12,7 +12,7 @@ class DaftarPelatihan extends Model
 
     protected $table = 'daftar_pelatihan';
     protected $primaryKey = 'id_pelatihan';
-    protected $fillable = ['id_admin', 'nama_pelatihan', 'deskripsi_pelatihan', 'id_durasi', 'kuota'];
+    protected $fillable = ['id_admin', 'nama_pelatihan', 'deskripsi_pelatihan', 'gambar', 'id_durasi', 'kuota'];
     protected $casts = ['kuota' => 'integer'];
 
     public function getIdAttribute()
@@ -36,4 +36,16 @@ class DaftarPelatihan extends Model
     {
         return $this->durasi?->durasi_label;
     }
+    public function getGambarUrlAttribute(): ?string
+{
+    return $this->gambar ? asset('storage/' . $this->gambar) : null;
+}
+    public function getJadwalTerdekatAttribute()
+{
+    return $this->jadwal
+        ->where('status', 'tersedia')
+        ->filter(fn ($j) => $j->tanggal_mulai->gte(now()->startOfDay()))
+        ->sortBy('tanggal_mulai')
+        ->first();
+}
 }

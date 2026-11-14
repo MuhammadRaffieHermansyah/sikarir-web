@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Tambah Program Pelatihan Vokasi - Disnaker BLK')
+@section('title', 'Tambah Program Pelatihan Vokasi - SiKarir BLK')
 
 @section('content')
 <div class="space-y-6 sm:space-y-8">
@@ -50,7 +50,7 @@
     @endif
 
     <!-- Form Layout: 2 Columns -->
-    <form action="{{ route('pelatihan.store') }}" method="POST" class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-start">
+    <form action="{{ route('pelatihan.store') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-start">
         @csrf
 
         <!-- Main Form Fields (2 Cols) -->
@@ -187,32 +187,69 @@
                 </div>
             </div>
 
-            <!-- Panduan Vokasi Card -->
+           <!-- Upload Poster Card -->
             <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 space-y-4">
-                <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
-                    <i data-lucide="info" class="w-4 h-4 text-emerald-700"></i>
-                    <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider">Panduan Kurikulum</h3>
-                </div>
-
-                <div class="space-y-3 text-xs text-slate-600 leading-relaxed">
-                    <p>
-                        Pastikan nama kejuruan mengacu pada Standar Kompetensi Kerja Nasional Indonesia (<strong>SKKNI</strong>) Disnakertrans.
-                    </p>
-
-                    <div class="p-4 bg-emerald-50/60 rounded-2xl border border-emerald-100 space-y-2 text-[11px]">
-                        <div class="font-bold text-emerald-900 flex items-center gap-1.5">
-                            <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-600"></i>
-                            <span>Alur Pembukaan Kelas:</span>
-                        </div>
-                        <ol class="list-decimal list-inside space-y-1 text-emerald-800/90 pl-1 font-medium">
-                            <li>Buat Program Pelatihan (di sini)</li>
-                            <li>Tentukan Jadwal &amp; Ruangan</li>
-                            <li>Buka Pendaftaran Siswa</li>
-                        </ol>
+                    <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
+                        <i data-lucide="image" class="w-4 h-4 text-emerald-700"></i>
+                        <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider">Poster Program</h3>
                     </div>
-                </div>
+
+                    <label for="gambar" id="dropzone"
+                        class="relative flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-slate-200 hover:border-emerald-500 bg-slate-50 hover:bg-emerald-50/40 rounded-2xl cursor-pointer overflow-hidden transition @error('gambar') border-rose-400 @enderror">
+
+                    <!-- Placeholder -->
+                    <div id="upload-placeholder" class="flex flex-col items-center gap-2 text-center px-4">
+                        <i data-lucide="upload-cloud" class="w-8 h-8 text-slate-400"></i>
+                        <p class="text-xs font-bold text-slate-600">Klik untuk upload gambar</p>
+                        <p class="text-[11px] text-slate-400">JPG, PNG, WEBP. Maks 2 MB.</p>
+                    </div>
+
+                    <!-- Preview -->
+                    <img id="upload-preview" src="" alt="Preview poster"
+                        class="hidden absolute inset-0 w-full h-full object-cover" />
+
+                    <input type="file" name="gambar" id="gambar" accept="image/png,image/jpeg,image/webp" class="hidden" />
+                </label>
+
+                <button type="button" id="remove-image"
+                    class="hidden w-full text-xs font-bold text-rose-600 hover:text-rose-700 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 transition">
+                    Hapus gambar
+                </button>
+                @error('gambar')
+                    <p class="text-rose-600 text-[11px] font-semibold">{{ $message }}</p>
+                @enderror
             </div>
         </div>
     </form>
 </div>
+@push('scripts')
+<script>
+    const input = document.getElementById('gambar');
+    const preview = document.getElementById('upload-preview');
+    const placeholder = document.getElementById('upload-placeholder');
+    const removeBtn = document.getElementById('remove-image');
+
+    input.addEventListener('change', () => {
+        const file = input.files[0];
+        if (!file) return;
+        if (file.size > 2 * 1024 * 1024) {
+            alert('Ukuran gambar maksimal 2 MB.');
+            input.value = '';
+            return;
+        }
+        preview.src = URL.createObjectURL(file);
+        preview.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+        removeBtn.classList.remove('hidden');
+    });
+
+    removeBtn.addEventListener('click', () => {
+        input.value = '';
+        preview.src = '';
+        preview.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+        removeBtn.classList.add('hidden');
+    });
+</script>
+@endpush
 @endsection
