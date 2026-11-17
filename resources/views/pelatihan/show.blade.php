@@ -3,262 +3,243 @@
 @section('title', 'Detail Program Pelatihan - ' . $pelatihan->nama_pelatihan)
 
 @section('content')
-<div class="pelatihan-admin space-y-6 sm:space-y-8">
-    <!-- Header Section & Actions -->
-    <div class="pelatihan-page-header flex flex-col md:flex-row md:items-end justify-between gap-5 p-6 sm:p-8 relative overflow-hidden">
-        <div class="space-y-2 relative z-10 max-w-2xl">
-            <p class="pelatihan-breadcrumb">Beranda <span>›</span> Program Pelatihan <span>›</span> Detail Program</p>
-            <!-- Eyebrow Badge -->
-            <div class="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 border border-emerald-200/80 rounded-full text-emerald-800 text-[11px] font-bold tracking-wide">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span>RINCIAN KURIKULUM &amp; KELAS</span>
-            </div>
-
-            <!-- Title & Subtitle -->
-            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
-                {{ $pelatihan->nama_pelatihan }}
-            </h1>
-            <p class="text-xs sm:text-sm text-slate-500 leading-relaxed">
-                Spesifikasi kompetensi vokasi, silabus pembelajaran, kapasitas kuota, dan jadwal batch pelaksanaan kelas.
-            </p>
-        </div>
-
-        <!-- Action CTAs -->
-        <div class="pelatihan-header-actions flex items-center gap-2.5 flex-wrap relative z-10 shrink-0">
-            <a href="{{ route('pelatihan.index') }}"
-                class="bg-white hover:bg-slate-50 text-slate-700 hover:text-emerald-800 border border-slate-200 text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-sm hover:shadow transition-all duration-200 active:scale-[0.98]">
-                <i data-lucide="arrow-left" class="w-4 h-4 text-emerald-600"></i>
-                <span>Kembali</span>
-            </a>
-
-            <!-- 10% Accent CTA: Warm Gold (#F59E0B) -->
-            <a href="{{ route('pelatihan.edit', $pelatihan->id_pelatihan) }}"
-                class="pelatihan-header-primary bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-black px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-md shadow-emerald-900/20 active:scale-[0.98] transition-all duration-200">
-                <i data-lucide="edit-3" class="w-4 h-4"></i>
-                <span>Edit Kurikulum</span>
-            </a>
-        </div>
-
-        <div class="absolute -right-12 -top-12 w-56 h-56 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none"></div>
+  <!-- Title & Breadcrumbs -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-3 sm:pt-5 pb-1">
+    <div>
+      <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
+        <a href="{{ route('admin-blk.index') }}" class="hover:text-emerald-700 transition">Beranda</a>
+        <span>&gt;</span>
+        <a href="{{ route('pelatihan.index') }}" class="hover:text-emerald-700 transition">Program Pelatihan</a>
+        <span>&gt;</span>
+        <span class="text-slate-600 font-medium">Detail Program</span>
+      </div>
+      <h1 class="text-xl font-black text-slate-900 tracking-tight">{{ $pelatihan->nama_pelatihan }}</h1>
+      <p class="text-xs text-slate-500 mt-0.5">Spesifikasi kompetensi vokasi, silabus pembelajaran, kapasitas kuota, dan jadwal batch pelaksanaan kelas.</p>
     </div>
 
-    <!-- Poster Program -->
-    @if ($pelatihan->gambar_url)
-        <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
-            <img src="{{ $pelatihan->gambar_url }}" alt="Poster {{ $pelatihan->nama_pelatihan }}"
-                class="w-full max-h-96 object-cover">
-        </div>
-    @endif
+    <div class="flex items-center gap-2">
+      <a href="{{ route('pelatihan.index') }}" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Daftar
+      </a>
+      <a href="{{ route('pelatihan.edit', $pelatihan->id_pelatihan) }}" class="bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold px-3.5 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+        <i data-lucide="edit-3" class="w-4 h-4"></i> Edit Kurikulum
+      </a>
+    </div>
+  </div>
 
+  <!-- Poster Program -->
+  @if ($pelatihan->gambar_url)
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <img src="{{ $pelatihan->gambar_url }}" alt="Poster {{ $pelatihan->nama_pelatihan }}"
+        class="w-full max-h-72 object-cover">
+    </div>
+  @endif
 
-    <!-- Quick Stats Bento Grid (3 Cards) -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
-        <!-- Stat 1: Total Batch -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6 hover:shadow-md hover:border-emerald-300 transition-all duration-200 flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-                <i data-lucide="calendar" class="w-6 h-6"></i>
-            </div>
-            <div>
-                <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Batch Jadwal</div>
-                <div class="text-xl sm:text-2xl font-black text-slate-900 mt-0.5">
-                    {{ count($pelatihan->jadwal ?? []) }} Batch
-                </div>
-            </div>
-        </div>
-
-        <!-- Stat 2: Kuota / Angkatan -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6 hover:shadow-md hover:border-emerald-300 transition-all duration-200 flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-                <i data-lucide="users" class="w-6 h-6"></i>
-            </div>
-            <div>
-                <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Kapasitas / Angkatan</div>
-                <div class="text-xl sm:text-2xl font-black text-slate-900 mt-0.5">
-                    {{ $pelatihan->kuota }} Peserta
-                </div>
-            </div>
-        </div>
-
-        <!-- Stat 3: Standar Kompetensi -->
-        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6 hover:shadow-md hover:border-emerald-300 transition-all duration-200 flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-                <i data-lucide="award" class="w-6 h-6"></i>
-            </div>
-            <div>
-                <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Standar Sertifikasi</div>
-                <div class="text-xl sm:text-2xl font-black text-slate-900 mt-0.5">
-                    BNSP &amp; SKKNI
-                </div>
-            </div>
-        </div>
+  <!-- Top Metrics -->
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-3.5">
+      <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+        <i data-lucide="calendar" class="w-5 h-5"></i>
+      </div>
+      <div>
+        <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Total Batch Jadwal</div>
+        <div class="text-lg font-black text-slate-900 mt-0.5">{{ count($pelatihan->jadwal ?? []) }} Batch</div>
+      </div>
     </div>
 
-    <!-- Main Detail Grid (2 Cols left, 1 Col right) -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-start">
-        <!-- Left 2 Cols: Silabus & Jadwal Batch -->
-        <div class="lg:col-span-2 space-y-6 sm:space-y-8">
-            <!-- Card 1: Silabus & Deskripsi -->
-            <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 sm:p-8 space-y-5">
-                <div class="flex items-center gap-3 pb-4 border-b border-slate-100">
-                    <div class="w-9 h-9 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-                        <i data-lucide="file-text" class="w-4 h-4"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-black text-slate-900 text-sm sm:text-base tracking-tight">
-                            Deskripsi Silabus &amp; Output Kejuruan
-                        </h3>
-                        <p class="text-xs text-slate-500">Materi dan keahlian kerja yang dipelajari selama pelatihan vokasi.</p>
-                    </div>
-                </div>
-
-                <div class="text-xs sm:text-sm text-slate-700 leading-relaxed whitespace-pre-line bg-slate-50/70 p-5 sm:p-6 rounded-2xl border border-slate-100 font-normal">
-                    {{ $pelatihan->deskripsi_pelatihan ?: 'Belum ada silabus / deskripsi pelatihan yang ditambahkan untuk kejuruan ini.' }}
-                </div>
-            </div>
-
-            <!-- Card 2: Jadwal Kelas Aktif -->
-            <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
-                <div class="p-6 sm:p-7 border-b border-slate-100 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-                            <i data-lucide="calendar-check" class="w-4 h-4"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-black text-slate-900 text-sm sm:text-base tracking-tight">
-                                Batch &amp; Jadwal Kelas
-                            </h3>
-                            <p class="text-xs text-slate-500">Jadwal yang dibuka untuk program kejuruan ini.</p>
-                        </div>
-                    </div>
-
-                    <!-- 10% Accent Link CTA: Cyan -->
-                    <a href="{{ route('jadwal-pelatihan.create') }}"
-                        class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 hover:text-emerald-950 bg-emerald-50 hover:bg-emerald-100 px-3.5 py-2 rounded-xl transition">
-                        <i data-lucide="plus" class="w-4 h-4 text-emerald-700"></i>
-                        <span>Buka Batch Baru</span>
-                    </a>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs">
-                        <thead>
-                            <tr class="bg-slate-50/80 text-slate-400 border-b border-slate-100 uppercase tracking-wider text-[11px] font-bold">
-                                <th class="px-6 py-4">Instruktur</th>
-                                <th class="px-6 py-4">Ruangan</th>
-                                <th class="px-6 py-4">Hari &amp; Jam</th>
-                                <th class="px-6 py-4">Peserta Terdaftar</th>
-                                <th class="px-6 py-4 text-right">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100 text-slate-700">
-                            @forelse($pelatihan->jadwal ?? [] as $jadwal)
-                                <tr class="hover:bg-slate-50/70 transition-colors">
-                                    <td class="px-6 py-4 font-bold text-slate-900">
-                                        {{ $jadwal->instruktur ?? '-' }}
-                                    </td>
-                                    <td class="px-6 py-4 text-slate-600 font-medium">
-                                        {{ $jadwal->ruangan ?? '-' }}
-                                    </td>
-                                    <td class="px-6 py-4 text-slate-600 font-medium">
-                                        {{ $jadwal->hari ?? '-' }} <span class="text-slate-400">({{ $jadwal->jam ?? '-' }})</span>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                                            <i data-lucide="users" class="w-3.5 h-3.5 text-emerald-600"></i>
-                                            {{ count($jadwal->kelas ?? []) }} Siswa
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4 text-right">
-                                        <a href="{{ route('jadwal-pelatihan.show', $jadwal->id_jadwal) }}"
-                                            class="inline-flex items-center gap-1 text-emerald-700 hover:text-emerald-900 font-bold hover:underline">
-                                            <span>Rincian</span>
-                                            <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5" class="px-6 py-10 text-center text-slate-400">
-                                        <div class="w-10 h-10 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-2">
-                                            <i data-lucide="calendar" class="w-5 h-5"></i>
-                                        </div>
-                                        <p class="font-medium text-xs">Belum ada batch jadwal kelas yang dibuat untuk program ini.</p>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Right 1 Col: Metadata & Aksi -->
-        <div class="space-y-6">
-            <!-- Metadata Card -->
-            <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 space-y-4">
-                <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
-                    <i data-lucide="info" class="w-4 h-4 text-emerald-700"></i>
-                    <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">Metadata Pelatihan</h4>
-                </div>
-
-                <div class="space-y-3.5 text-xs">
-                    <div class="flex items-center justify-between text-slate-700">
-                        <span class="text-slate-400">Durasi Pelatihan:</span>
-                        <span class="font-bold text-slate-900">{{ $pelatihan->durasi_label ?? '-' }}</span>
-                    </div>
-                    <div class="flex items-center justify-between text-slate-700">
-                        <span class="text-slate-400">Target Kuota Siswa:</span>
-                        <span class="font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md">{{ $pelatihan->kuota }} Siswa / Batch</span>
-                    </div>
-                    <div class="flex items-center justify-between text-slate-700">
-                        <span class="text-slate-400">Terdaftar Pada:</span>
-                        <span class="font-bold text-slate-900">
-                            {{ $pelatihan->created_at ? $pelatihan->created_at->translatedFormat('d M Y') : '-' }}
-                        </span>
-                    </div>
-                    <div class="flex items-center justify-between text-slate-700">
-                        <span class="text-slate-400">Terakhir Diperbarui:</span>
-                        <span class="font-bold text-slate-900">
-                            {{ $pelatihan->updated_at ? $pelatihan->updated_at->translatedFormat('d M Y') : '-' }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Aksi Administratif Card -->
-            <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 space-y-3">
-                <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
-                    <i data-lucide="sliders" class="w-4 h-4 text-emerald-700"></i>
-                    <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">Aksi Administratif</h4>
-                </div>
-
-                <div class="space-y-2.5">
-                    <!-- 10% Accent CTA: Warm Gold (#F59E0B) -->
-                    <a href="{{ route('pelatihan.edit', $pelatihan->id_pelatihan) }}"
-                        class="w-full px-4 py-3 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-black rounded-xl shadow-md shadow-emerald-900/20 flex items-center justify-center gap-2 active:scale-95 transition-all">
-                        <i data-lucide="edit-3" class="w-4 h-4"></i>
-                        <span>Edit Kurikulum</span>
-                    </a>
-
-                    <a href="{{ route('jadwal-pelatihan.create') }}"
-                        class="w-full px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl flex items-center justify-center gap-2 transition active:scale-95">
-                        <i data-lucide="calendar-plus" class="w-4 h-4"></i>
-                        <span>Buat Jadwal Baru</span>
-                    </a>
-
-                    <form action="{{ route('pelatihan.destroy', $pelatihan->id_pelatihan) }}" method="POST"
-                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus program kejuruan ini?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit"
-                            class="w-full px-4 py-3 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold rounded-xl flex items-center justify-center gap-2 transition active:scale-95 cursor-pointer">
-                            <i data-lucide="trash-2" class="w-4 h-4 text-rose-600"></i>
-                            <span>Hapus Program</span>
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-3.5">
+      <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
+        <i data-lucide="users" class="w-5 h-5"></i>
+      </div>
+      <div>
+        <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Kapasitas / Angkatan</div>
+        <div class="text-lg font-black text-slate-900 mt-0.5">{{ $pelatihan->kuota }} Peserta</div>
+      </div>
     </div>
-</div>
+
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-3.5">
+      <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
+        <i data-lucide="award" class="w-5 h-5"></i>
+      </div>
+      <div>
+        <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Standar Sertifikasi</div>
+        <div class="text-lg font-black text-slate-900 mt-0.5">BNSP &amp; SKKNI</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Detail Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+    <!-- Left 2 Cols -->
+    <div class="lg:col-span-2 space-y-6">
+      <!-- Silabus -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-4">
+        <div class="border-b border-slate-100 pb-3 flex items-center gap-2">
+          <div class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-800 flex items-center justify-center">
+            <i data-lucide="file-text" class="w-4 h-4"></i>
+          </div>
+          <h2 class="font-bold text-slate-800 text-sm">Deskripsi Silabus &amp; Output Kejuruan</h2>
+        </div>
+
+        <div class="text-xs text-slate-700 leading-relaxed whitespace-pre-line bg-slate-50 p-4 rounded-lg border border-slate-100">{{ $pelatihan->deskripsi_pelatihan ?: 'Belum ada silabus / deskripsi pelatihan yang ditambahkan untuk kejuruan ini.' }}</div>
+      </div>
+
+      <!-- Jadwal -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+              <span>Batch &amp; Jadwal Kelas</span>
+              <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                {{ count($pelatihan->jadwal ?? []) }} Batch
+              </span>
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">Jadwal yang dibuka untuk program kejuruan ini.</p>
+          </div>
+
+          <a href="{{ route('jadwal-pelatihan.create') }}"
+            class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-3 py-2 rounded-lg transition">
+            <i data-lucide="plus" class="w-4 h-4 text-emerald-700"></i> Buka Batch Baru
+          </a>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="bg-slate-50 text-slate-500 border-b border-slate-200 text-[11px] uppercase tracking-wider">
+                <th class="px-5 py-3 font-semibold">Instruktur</th>
+                <th class="px-5 py-3 font-semibold">Ruangan</th>
+                <th class="px-5 py-3 font-semibold">Hari &amp; Jam</th>
+                <th class="px-5 py-3 font-semibold">Peserta</th>
+                <th class="px-5 py-3 font-semibold text-right">Aksi</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-slate-700">
+              @forelse($pelatihan->jadwal ?? [] as $jadwal)
+                @php
+                  // instruktur & ruangan bisa berupa relasi (object) atau kolom teks biasa
+                  $instruktur = $jadwal->instruktur;
+                  $namaInstruktur = is_object($instruktur) ? ($instruktur->nama ?? '-') : ($instruktur ?: '-');
+
+                  $ruangan = $jadwal->ruangan;
+                  $namaRuangan = is_object($ruangan)
+                      ? ($ruangan->nama_ruangan ?? $ruangan->nama ?? '-')
+                      : ($ruangan ?: '-');
+                @endphp
+                <tr class="hover:bg-slate-50/80 transition">
+                  <td class="px-5 py-3.5">
+                    <div class="flex items-center gap-2.5">
+                      <div class="w-7 h-7 rounded-full bg-slate-100 text-slate-600 font-bold text-[10px] flex items-center justify-center shrink-0">
+                        {{ strtoupper(substr($namaInstruktur, 0, 1)) }}
+                      </div>
+                      <div class="min-w-0">
+                        <div class="font-bold text-slate-900">{{ $namaInstruktur }}</div>
+                        @if (is_object($instruktur) && !empty($instruktur->bidang_keahlian))
+                          <div class="text-[11px] text-slate-400">{{ $instruktur->bidang_keahlian }}</div>
+                        @endif
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-5 py-3.5 text-slate-600 font-medium">{{ $namaRuangan }}</td>
+                  <td class="px-5 py-3.5 text-slate-600 font-medium">
+                    {{ $jadwal->hari ?? '-' }} <span class="text-slate-400">({{ $jadwal->jam ?? '-' }})</span>
+                  </td>
+                  <td class="px-5 py-3.5">
+                    <span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded text-[11px] whitespace-nowrap">
+                      <i data-lucide="users" class="w-3 h-3"></i> {{ count($jadwal->kelas ?? []) }} Siswa
+                    </span>
+                  </td>
+                  <td class="px-5 py-3.5 text-right">
+                    <a href="{{ route('jadwal-pelatihan.show', $jadwal->id_jadwal) }}"
+                      class="inline-flex items-center gap-1 text-emerald-700 hover:text-emerald-900 font-semibold hover:underline">
+                      Rincian <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                    </a>
+                  </td>
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="5" class="px-5 py-10 text-center text-slate-400">
+                    <div class="flex flex-col items-center justify-center gap-2">
+                      <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+                        <i data-lucide="calendar" class="w-6 h-6"></i>
+                      </div>
+                      <p class="text-xs font-medium text-slate-600">Belum ada batch jadwal kelas yang dibuat untuk program ini</p>
+                    </div>
+                  </td>
+                </tr>
+              @endforelse
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Col -->
+    <div class="space-y-6">
+      <!-- Metadata -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+        <h3 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100 flex items-center gap-2">
+          <i data-lucide="info" class="w-4 h-4 text-emerald-700"></i>
+          Metadata Pelatihan
+        </h3>
+
+        <div class="space-y-3 text-xs">
+          <div class="flex items-center justify-between gap-3">
+            <span class="text-slate-400">Kode:</span>
+            <span class="font-mono font-bold text-slate-700">#PLT-{{ str_pad((string) $pelatihan->id_pelatihan, 3, '0', STR_PAD_LEFT) }}</span>
+          </div>
+          <div class="flex items-center justify-between gap-3">
+            <span class="text-slate-400">Durasi Pelatihan:</span>
+            <span class="font-bold text-slate-900">{{ $pelatihan->durasi_label ?? '-' }}</span>
+          </div>
+          <div class="flex items-center justify-between gap-3">
+            <span class="text-slate-400">Target Kuota:</span>
+            <span class="font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded text-[11px]">{{ $pelatihan->kuota }} Siswa / Batch</span>
+          </div>
+          <div class="flex items-center justify-between gap-3">
+            <span class="text-slate-400">Terdaftar Pada:</span>
+            <span class="font-bold text-slate-900">
+              {{ $pelatihan->created_at ? $pelatihan->created_at->translatedFormat('d M Y') : '-' }}
+            </span>
+          </div>
+          <div class="flex items-center justify-between gap-3">
+            <span class="text-slate-400">Terakhir Diperbarui:</span>
+            <span class="font-bold text-slate-900">
+              {{ $pelatihan->updated_at ? $pelatihan->updated_at->translatedFormat('d M Y') : '-' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aksi Administratif -->
+      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+        <h3 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100 flex items-center gap-2">
+          <i data-lucide="sliders" class="w-4 h-4 text-emerald-700"></i>
+          Aksi Administratif
+        </h3>
+
+        <div class="space-y-2">
+          <a href="{{ route('pelatihan.edit', $pelatihan->id_pelatihan) }}"
+            class="w-full bg-emerald-900 hover:bg-emerald-950 text-white font-semibold text-xs py-2.5 px-4 rounded-lg shadow-sm flex items-center justify-center gap-2 transition">
+            <i data-lucide="edit-3" class="w-4 h-4"></i> Edit Kurikulum
+          </a>
+
+          <a href="{{ route('jadwal-pelatihan.create') }}"
+            class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition">
+            <i data-lucide="calendar-plus" class="w-4 h-4"></i> Buat Jadwal Baru
+          </a>
+
+          <form action="{{ route('pelatihan.destroy', $pelatihan->id_pelatihan) }}" method="POST"
+            onsubmit="return confirm('Apakah Anda yakin ingin menghapus program kejuruan ini?')">
+            @csrf
+            @method('DELETE')
+            <button type="submit"
+              class="w-full bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold text-xs py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition cursor-pointer">
+              <i data-lucide="trash-2" class="w-4 h-4"></i> Hapus Program
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 @endsection
