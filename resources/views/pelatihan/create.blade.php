@@ -3,13 +3,14 @@
 @section('title', 'Tambah Program Pelatihan Vokasi - SiKarir BLK')
 
 @section('content')
-<div class="space-y-6 sm:space-y-8">
+<div class="pelatihan-admin space-y-6 sm:space-y-8">
     <!-- Header Section -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-5 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-sm relative overflow-hidden">
+    <div class="pelatihan-page-header flex flex-col md:flex-row md:items-end justify-between gap-5 p-6 sm:p-8 relative overflow-hidden">
         <div class="space-y-2 relative z-10 max-w-2xl">
+            <p class="pelatihan-breadcrumb">Beranda <span>›</span> Program Pelatihan <span>›</span> Tambah Program</p>
             <!-- Eyebrow Badge -->
             <div class="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 border border-emerald-200/80 rounded-full text-emerald-800 text-[11px] font-bold tracking-wide">
-                <span class="w-2 h-2 rounded-full bg-lime-1000"></span>
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
                 <span>FORMULIR KEJURUAN BARU</span>
             </div>
 
@@ -23,7 +24,7 @@
         </div>
 
         <!-- Back Button -->
-        <div class="relative z-10 shrink-0">
+        <div class="pelatihan-header-actions relative z-10 shrink-0">
             <a href="{{ route('pelatihan.index') }}"
                 class="bg-white hover:bg-slate-50 text-slate-700 hover:text-emerald-800 border border-slate-200 text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-sm hover:shadow transition-all duration-200 active:scale-[0.98]">
                 <i data-lucide="arrow-left" class="w-4 h-4 text-emerald-600"></i>
@@ -175,7 +176,7 @@
                 <div class="space-y-2.5 pt-1">
                     <!-- 10% Accent CTA: Warm Gold (#F59E0B) -->
                     <button type="submit"
-                        class="w-full bg-lime-1000 hover:bg-lime-300 text-emerald-950 font-black text-xs py-3.5 px-4 rounded-xl shadow-md shadow-lime-400/30 flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer">
+                        class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-black text-xs py-3.5 px-4 rounded-xl shadow-md shadow-emerald-900/20 flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer">
                         <i data-lucide="save" class="w-4 h-4"></i>
                         <span>Simpan Program Baru</span>
                     </button>

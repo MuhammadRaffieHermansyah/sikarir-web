@@ -3,13 +3,14 @@
 @section('title', 'Katalog Program Pelatihan Vokasi- SiKarir BLK')
 
 @section('content')
-<div class="space-y-6 sm:space-y-8">
+<div class="pelatihan-admin space-y-6 sm:space-y-8">
     <!-- Header Section & Actions -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-5 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-sm relative overflow-hidden">
+    <div class="pelatihan-page-header flex flex-col md:flex-row md:items-end justify-between gap-5 p-6 sm:p-8 relative overflow-hidden">
         <div class="space-y-2 relative z-10 max-w-2xl">
+            <p class="pelatihan-breadcrumb">Beranda <span>›</span> Program Pelatihan</p>
             <!-- Eyebrow Badge -->
             <div class="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 border border-emerald-200/80 rounded-full text-emerald-800 text-[11px] font-bold tracking-wide">
-                <span class="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 <span>KEJURUAN & KURIKULUM VOKASI</span>
             </div>
 
@@ -23,7 +24,7 @@
         </div>
 
         <!-- Action CTAs -->
-        <div class="flex items-center gap-2.5 flex-wrap relative z-10 shrink-0">
+        <div class="pelatihan-header-actions flex items-center gap-2.5 flex-wrap relative z-10 shrink-0">
             <a href="{{ route('jadwal-pelatihan.index') }}"
                 class="bg-white hover:bg-slate-50 text-slate-700 hover:text-emerald-800 border border-slate-200 text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-sm hover:shadow transition-all duration-200 active:scale-[0.98]">
                 <i data-lucide="calendar" class="w-4 h-4 text-emerald-600"></i>
@@ -32,7 +33,7 @@
 
             <!-- 10% Accent CTA: Warm Gold (#F59E0B) -->
             <a href="{{ route('pelatihan.create') }}"
-                class="bg-lime-400 hover:bg-lime-300 text-emerald-950 text-xs font-black px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-md shadow-lime-400/30 active:scale-[0.98] transition-all duration-200">
+                class="pelatihan-header-primary bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-black px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-md shadow-emerald-900/20 active:scale-[0.98] transition-all duration-200">
                 <i data-lucide="plus-circle" class="w-4 h-4"></i>
                 <span>Tambah Program Baru</span>
             </a>
@@ -80,10 +81,10 @@
         <!-- Card 2: Kuota Siswa -->
         <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6 hover:shadow-md hover:border-emerald-300 transition-all duration-200 flex flex-col justify-between">
             <div class="flex items-center justify-between gap-3 mb-3">
-                <span class="text-[11px] font-bold text-lime-800 uppercase tracking-wider bg-lime-100 px-2.5 py-1 rounded-lg">
+                <span class="text-[11px] font-bold text-emerald-800 uppercase tracking-wider bg-emerald-50 px-2.5 py-1 rounded-lg">
                     Kapasitas Siswa
                 </span>
-                <div class="w-10 h-10 rounded-xl bg-lime-100 text-lime-700 flex items-center justify-center shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
                     <i data-lucide="users" class="w-5 h-5"></i>
                 </div>
             </div>
@@ -141,8 +142,8 @@
                     <h2 class="text-base sm:text-lg font-black text-emerald-900 tracking-tight">
                         Daftar Kejuruan & Kurikulum Pelatihan
                     </h2>
-                    <span class="bg-lime-100 text-lime-800 border border-lime-300/80 text-[10px] font-bold px-2.5 py-0.5 rounded-full inline-flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-lime-500"></span>
+                    <span class="bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold px-2.5 py-0.5 rounded-full inline-flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                         {{ $pelatihans->total() }} Program
                     </span>
                 </div>
@@ -203,8 +204,8 @@
 
                             <!-- Alokasi Kuota -->
                             <td class="px-6 py-4.5">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-lime-100 text-lime-800 border border-lime-300/80">
-                                    <i data-lucide="users" class="w-3.5 h-3.5 text-lime-600"></i>
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                                    <i data-lucide="users" class="w-3.5 h-3.5 text-emerald-600"></i>
                                     {{ $pelatihan->kuota }} Kursi
                                 </span>
                             </td>
@@ -239,7 +240,7 @@
                                     </a>
 
                                     <a href="{{ route('pelatihan.edit', $pelatihan->id_pelatihan) }}"
-                                        class="p-2 text-slate-500 hover:text-lime-700 hover:bg-lime-100 rounded-xl transition"
+                                        class="p-2 text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 rounded-xl transition"
                                         title="Edit Kurikulum">
                                         <i data-lucide="edit-3" class="w-4 h-4"></i>
                                     </a>
@@ -275,7 +276,7 @@
                                     </a>
                                 @else
                                     <a href="{{ route('pelatihan.create') }}"
-                                        class="inline-flex items-center gap-2 mt-4 bg-lime-400 hover:bg-lime-300 text-emerald-950 text-xs font-black px-4 py-2 rounded-xl shadow-sm transition">
+                                        class="inline-flex items-center gap-2 mt-4 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-black px-4 py-2 rounded-xl shadow-sm transition">
                                         <i data-lucide="plus" class="w-4 h-4"></i> Buat Program Baru
                                     </a>
                                 @endif
