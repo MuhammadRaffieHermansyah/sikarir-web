@@ -390,7 +390,7 @@
             </a>
 
             <!-- Logout -->
-            <form method="POST" action="{{ route('logout') }}" class="inline">
+            <form method="POST" action="{{ route('logout') }}" class="inline" data-confirm-action="logout">
                 @csrf
 
                 <button type="submit"

@@ -3,13 +3,14 @@
 @section('title', 'Detail Program Pelatihan - ' . $pelatihan->nama_pelatihan)
 
 @section('content')
-<div class="space-y-6 sm:space-y-8">
+<div class="pelatihan-admin space-y-6 sm:space-y-8">
     <!-- Header Section & Actions -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-5 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-sm relative overflow-hidden">
+    <div class="pelatihan-page-header flex flex-col md:flex-row md:items-end justify-between gap-5 p-6 sm:p-8 relative overflow-hidden">
         <div class="space-y-2 relative z-10 max-w-2xl">
+            <p class="pelatihan-breadcrumb">Beranda <span>›</span> Program Pelatihan <span>›</span> Detail Program</p>
             <!-- Eyebrow Badge -->
             <div class="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 border border-emerald-200/80 rounded-full text-emerald-800 text-[11px] font-bold tracking-wide">
-                <span class="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 <span>RINCIAN KURIKULUM &amp; KELAS</span>
             </div>
 
@@ -23,7 +24,7 @@
         </div>
 
         <!-- Action CTAs -->
-        <div class="flex items-center gap-2.5 flex-wrap relative z-10 shrink-0">
+        <div class="pelatihan-header-actions flex items-center gap-2.5 flex-wrap relative z-10 shrink-0">
             <a href="{{ route('pelatihan.index') }}"
                 class="bg-white hover:bg-slate-50 text-slate-700 hover:text-emerald-800 border border-slate-200 text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-sm hover:shadow transition-all duration-200 active:scale-[0.98]">
                 <i data-lucide="arrow-left" class="w-4 h-4 text-emerald-600"></i>
@@ -32,7 +33,7 @@
 
             <!-- 10% Accent CTA: Warm Gold (#F59E0B) -->
             <a href="{{ route('pelatihan.edit', $pelatihan->id_pelatihan) }}"
-                class="bg-lime-1000 hover:bg-lime-300 text-emerald-950 text-xs font-black px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-md shadow-lime-400/30 active:scale-[0.98] transition-all duration-200">
+                class="pelatihan-header-primary bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-black px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-md shadow-emerald-900/20 active:scale-[0.98] transition-all duration-200">
                 <i data-lucide="edit-3" class="w-4 h-4"></i>
                 <span>Edit Kurikulum</span>
             </a>
@@ -67,7 +68,7 @@
 
         <!-- Stat 2: Kuota / Angkatan -->
         <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 sm:p-6 hover:shadow-md hover:border-emerald-300 transition-all duration-200 flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-lime-100 text-lime-700 flex items-center justify-center shrink-0">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
                 <i data-lucide="users" class="w-6 h-6"></i>
             </div>
             <div>
@@ -162,8 +163,8 @@
                                         {{ $jadwal->hari ?? '-' }} <span class="text-slate-400">({{ $jadwal->jam ?? '-' }})</span>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-lime-100 text-lime-800 border border-lime-300/80">
-                                            <i data-lucide="users" class="w-3.5 h-3.5 text-lime-600"></i>
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                                            <i data-lucide="users" class="w-3.5 h-3.5 text-emerald-600"></i>
                                             {{ count($jadwal->kelas ?? []) }} Siswa
                                         </span>
                                     </td>
@@ -207,7 +208,7 @@
                     </div>
                     <div class="flex items-center justify-between text-slate-700">
                         <span class="text-slate-400">Target Kuota Siswa:</span>
-                        <span class="font-bold text-lime-800 bg-lime-100 px-2 py-0.5 rounded-md">{{ $pelatihan->kuota }} Siswa / Batch</span>
+                        <span class="font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md">{{ $pelatihan->kuota }} Siswa / Batch</span>
                     </div>
                     <div class="flex items-center justify-between text-slate-700">
                         <span class="text-slate-400">Terdaftar Pada:</span>
@@ -234,7 +235,7 @@
                 <div class="space-y-2.5">
                     <!-- 10% Accent CTA: Warm Gold (#F59E0B) -->
                     <a href="{{ route('pelatihan.edit', $pelatihan->id_pelatihan) }}"
-                        class="w-full px-4 py-3 bg-lime-1000 hover:bg-lime-300 text-emerald-950 text-xs font-black rounded-xl shadow-md shadow-lime-400/30 flex items-center justify-center gap-2 active:scale-95 transition-all">
+                        class="w-full px-4 py-3 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-black rounded-xl shadow-md shadow-emerald-900/20 flex items-center justify-center gap-2 active:scale-95 transition-all">
                         <i data-lucide="edit-3" class="w-4 h-4"></i>
                         <span>Edit Kurikulum</span>
                     </a>

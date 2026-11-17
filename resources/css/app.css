@@ -267,11 +267,116 @@
 
     .delete-confirmation__confirm:hover { background: #b91c1c; }
 
+    .delete-confirmation.is-logout .delete-confirmation__icon {
+        background: #eaf4dd;
+        color: #28634e;
+    }
+
+    .delete-confirmation.is-logout .delete-confirmation__eyebrow { color: #47705d; }
+
+    .delete-confirmation.is-logout .delete-confirmation__confirm {
+        border-color: var(--color-sikarir-emerald);
+        background: var(--color-sikarir-emerald);
+        box-shadow: 0 8px 18px rgb(20 86 66 / .19);
+    }
+
+    .delete-confirmation.is-logout .delete-confirmation__confirm:hover { background: #0f4636; }
+
     .delete-confirmation-open { overflow: hidden; }
 
     @media (max-width: 480px) {
         .delete-confirmation__dialog { padding: 1.4rem; border-radius: 1.25rem; }
         .delete-confirmation__actions { flex-direction: column-reverse; }
+    }
+
+    .pelatihan-admin .pelatihan-page-header {
+        padding: .7rem 0 1.5rem;
+    }
+
+    .pelatihan-admin .pelatihan-page-header::after { content: none; }
+
+    .pelatihan-admin .pelatihan-page-header h1 {
+        color: #0f172a;
+        font-size: clamp(1.9rem, 3vw, 2.5rem);
+        letter-spacing: -.05em;
+    }
+
+    .pelatihan-admin .pelatihan-page-header p {
+        color: #61738f;
+        font-size: .95rem;
+    }
+
+    .pelatihan-admin .pelatihan-page-header .pelatihan-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        margin: 0 0 .45rem;
+        color: #8298b5;
+        font-size: .82rem;
+        font-weight: 700;
+    }
+
+    .pelatihan-admin .pelatihan-page-header .pelatihan-breadcrumb span {
+        color: #a6b6ca;
+    }
+
+    .pelatihan-admin .pelatihan-page-header > div:first-child > .inline-flex { display: none; }
+
+    .pelatihan-admin .pelatihan-header-actions a {
+        border-color: #dce8d8;
+        background: #fff;
+        color: #426453;
+        box-shadow: 0 4px 12px rgb(20 61 48 / .05);
+    }
+
+    .pelatihan-admin .pelatihan-header-actions a:hover {
+        border-color: #a8c4a4;
+        background: #f2f8ee;
+        color: #145642;
+    }
+
+    .pelatihan-admin .pelatihan-header-actions .pelatihan-header-primary {
+        border-color: #145642;
+        background: #145642;
+        color: #fff;
+        box-shadow: 0 10px 22px rgb(20 86 66 / .18);
+    }
+
+    .pelatihan-admin .pelatihan-header-actions .pelatihan-header-primary:hover {
+        background: #0f4636;
+        color: #fff;
+    }
+
+    .pelatihan-admin .bg-white.rounded-3xl {
+        border-color: #dfe9dc;
+        border-radius: 1.25rem;
+        box-shadow: 0 12px 28px rgb(20 61 48 / .055);
+    }
+
+    .pelatihan-admin .bg-white.rounded-2xl {
+        border-color: #dfe9dc;
+        box-shadow: 0 10px 24px rgb(20 61 48 / .045);
+    }
+
+    .pelatihan-admin input:not([type='file']),
+    .pelatihan-admin select,
+    .pelatihan-admin textarea {
+        border-color: #dce8d8 !important;
+        background-color: #fbfcf8;
+    }
+
+    .pelatihan-admin input:not([type='file']):focus,
+    .pelatihan-admin select:focus,
+    .pelatihan-admin textarea:focus {
+        border-color: #368162 !important;
+        box-shadow: 0 0 0 4px rgb(20 86 66 / .14) !important;
+    }
+
+    .pelatihan-admin .bg-slate-50\/80 { background: #f4f8f1; }
+
+    @media (max-width: 640px) {
+        .pelatihan-admin .pelatihan-header-actions { width: 100%; }
+        .pelatihan-admin .pelatihan-header-actions a { flex: 1; justify-content: center; }
     }
 
     .public-page {
