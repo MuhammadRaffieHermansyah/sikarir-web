@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Lowongan Magang Industri - Disnaker BLK')
+@section('title', 'Lowongan Magang Industri - SiKarir BLK')
 
 @section('content')
     <!-- Title & Breadcrumbs -->
@@ -116,10 +116,14 @@
                             </td>
                             <td class="px-5 py-4">
                                 <div class="flex items-center gap-3">
-                                    <div
-                                        class="w-9 h-9 rounded-lg bg-slate-100 text-slate-700 font-black flex items-center justify-center text-xs shrink-0">
-                                        {{ strtoupper(substr($lowongan->mitra->nama_perusahaan ?? 'M', 0, 2)) }}
-                                    </div>
+                                    < @if ($lowongan->gambar_url)
+                                            <img src="{{ $lowongan->gambar_url }}" alt="{{ $lowongan->judul_lowongan }}"
+                                                class="w-9 h-9 rounded-lg object-cover shrink-0">
+                                        @else
+                                            <div class="w-9 h-9 rounded-lg bg-slate-100 text-slate-700 font-black flex items-center justify-center text-xs shrink-0">
+                                                {{ strtoupper(substr($lowongan->mitra->nama_perusahaan ?? 'M', 0, 2)) }}
+                                            </div>
+                                        @endif
                                     <div>
                                         <a href="{{ route('lowongan.show', $lowongan->id_lowongan) }}"
                                             class="font-bold text-slate-900 group-hover:text-emerald-700 transition">
@@ -129,7 +133,7 @@
                                             {{ $lowongan->mitra->nama_perusahaan ?? 'Mitra Tidak Tercatat' }}
                                         </div>
                                     </div>
-                                </div>
+                                </>
                             </td>
 
                             <td class="px-5 py-4">

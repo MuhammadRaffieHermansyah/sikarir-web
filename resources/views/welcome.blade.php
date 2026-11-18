@@ -83,6 +83,9 @@
     .sk-card-actions a:last-child { border-color: var(--sk-green); background: var(--sk-green); color: #fff; }
     .sk-card-actions a:hover { border-color: #94aa8a; }
     .sk-job-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .sk-job-media { height: 140px; margin: -22px -22px 16px; overflow: hidden; border-radius: 20px 20px 0 0; background: #e8eee4; }
+    .sk-job-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s ease; }
+    .sk-job:hover .sk-job-media img { transform: scale(1.03); }
     .sk-job { display: flex; min-height: 235px; flex-direction: column; padding: 22px; border: 1px solid var(--sk-line); border-radius: 20px; background: #fff; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
     .sk-job-top { display: flex; align-items: start; justify-content: space-between; gap: 12px; }
     .sk-job h3 { margin: 0; color: #183b30; font-size: 17px; font-weight: 800; line-height: 1.35; }
@@ -93,6 +96,11 @@
     .sk-job-foot small { color: #8a978f; font-size: 10px; }
     .sk-job-foot strong { display: block; margin-top: 4px; color: #345141; font-size: 12px; }
     .sk-job-foot a { padding: 10px 14px; border-radius: 12px; background: var(--sk-green); color: #fff; font-size: 11px; font-weight: 800; text-decoration: none; }
+        .sk-job-meta { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; color: #75847b; font-size: 11px; }
+    .sk-job-meta span { display: flex; align-items: center; gap: 7px; }
+    .sk-more { display: inline-flex; width: 100%; min-height: 40px; align-items: center; justify-content: center; gap: 6px; border: 1px solid var(--sk-green); border-radius: 12px; background: var(--sk-green); color: #fff; font: inherit; font-size: 11px; font-weight: 800; cursor: pointer; transition: background .2s ease; }
+    .sk-more:hover { background: #08392d; }
+
     .sk-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin-top: 38px; }
     .sk-step { position: relative; padding: 0 24px 0 0; }
     .sk-step:not(:last-child)::after { position: absolute; top: 22px; left: 50px; width: calc(100% - 64px); height: 1px; background: #cdd9c8; content: ''; }
@@ -259,7 +267,7 @@
         </div>
     </section>
 
-    {{-- Lowongan kerja --}}
+            {{-- Lowongan kerja --}}
     <section class="sk-section sk-section-soft">
         <div class="sk-wrap">
             <div class="sk-head">
@@ -268,14 +276,25 @@
             </div>
             <div class="sk-job-grid">
                 @forelse ($lowongans as $job)
-                    <article class="sk-job">
-                        <div class="sk-job-top"><h3>{{ $job->judul_lowongan }}</h3><span class="sk-status">{{ ucfirst($job->status) }}</span></div>
-                        <p class="sk-job-company"><i data-lucide="building-2" class="w-4 h-4"></i>{{ $job->mitra->nama_perusahaan ?? $job->mitra->nama ?? '-' }}</p>
-                        <p class="sk-job-location"><i data-lucide="map-pin" class="w-4 h-4"></i>{{ $job->lokasi ?? '-' }}</p>
-                        <p class="sk-job-desc">{{ $job->deskripsi ?? 'Tidak ada deskripsi.' }}</p>
-                        <div class="sk-job-foot">
-                            <div><small>Diposting</small><strong>{{ $job->tanggal_posting ? \Carbon\Carbon::parse($job->tanggal_posting)->format('d M Y') : '-' }}</strong></div>
-                            <a href="{{ route('lowongan.katalog') . '#' . $job->id_lowongan }}">Lihat posisi</a>
+                    @php
+                        $tgl = $job->tanggal_posting ? \Carbon\Carbon::parse($job->tanggal_posting)->translatedFormat('d M Y') : '-';
+                    @endphp
+                    <article class="sk-program">
+                        <div class="sk-program-media">
+                            <img src="{{ $job->gambar_url ?? asset('images/hero-image.webp') }}" alt="{{ $job->judul_lowongan }}" loading="lazy">
+                            <span class="sk-chip">{{ ucfirst($job->status) }}</span>
+                        </div>
+                        <div class="sk-program-body">
+                            <span class="sk-category">{{ $job->mitra->nama_perusahaan ?? '-' }}</span>
+                            <h3>{{ $job->judul_lowongan }}</h3>
+                            <p>{{ $job->deskripsi ?: 'Tidak ada deskripsi.' }}</p>
+                            <div class="sk-job-meta">
+                                <span><i data-lucide="map-pin" class="w-3.5 h-3.5"></i>{{ $job->lokasi ?? '-' }}</span>
+                                <span><i data-lucide="calendar" class="w-3.5 h-3.5"></i>Diposting {{ $tgl }}</span>
+                            </div>
+                            <div class="sk-card-actions">
+                                <a href="{{ route('lowongan.detail', $job->id_lowongan) }}">Lihat selengkapnya <i data-lucide="arrow-right" class="w-3.5 h-3.5" style="margin-left:6px"></i></a>
+                            </div>
                         </div>
                     </article>
                 @empty

@@ -34,7 +34,7 @@
     </div>
   @endif
 
-  <form action="{{ route('lowongan.update', $lowongan->id_lowongan) }}" method="POST" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <form action="{{ route('lowongan.update', $lowongan->id_lowongan) }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     @csrf
     @method('PUT')
 
@@ -110,6 +110,33 @@
     </div>
 
     <div class="space-y-6">
+        @php $adaGambar = (bool) $lowongan->gambar_url; @endphp
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+    <h3 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100 flex items-center gap-2">
+        <i data-lucide="image" class="w-4 h-4 text-emerald-700"></i> Foto Lowongan
+    </h3>
+
+    <label for="gambar" id="dropzone"
+        class="relative flex flex-col items-center justify-center w-full h-44 border-2 border-dashed border-slate-200 hover:border-emerald-500 bg-slate-50 hover:bg-emerald-50/40 rounded-lg cursor-pointer overflow-hidden transition @error('gambar') border-rose-400 @enderror">
+        <div id="upload-placeholder" class="{{ $adaGambar ? 'hidden' : 'flex' }} flex-col items-center gap-2 text-center px-4">
+            <i data-lucide="upload-cloud" class="w-7 h-7 text-slate-400"></i>
+            <p class="text-xs font-semibold text-slate-600">Klik untuk upload foto</p>
+            <p class="text-[11px] text-slate-400">JPG, PNG, WEBP. Maks 2 MB.</p>
+        </div>
+        <img id="upload-preview" src="{{ $lowongan->gambar_url }}" alt="Preview foto"
+            class="{{ $adaGambar ? '' : 'hidden' }} absolute inset-0 w-full h-full object-cover" />
+        <input type="file" name="gambar" id="gambar" accept="image/png,image/jpeg,image/webp" class="hidden" />
+    </label>
+
+    <input type="hidden" name="hapus_gambar" id="hapus_gambar" value="0">
+    <button type="button" id="remove-image"
+        class="{{ $adaGambar ? '' : 'hidden' }} w-full text-xs font-semibold text-rose-600 hover:text-rose-700 py-2 rounded-lg bg-rose-50 hover:bg-rose-100 transition">
+        Hapus gambar
+    </button>
+    @error('gambar')
+        <p class="text-rose-600 text-[11px]">{{ $message }}</p>
+    @enderror
+</div>
       <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
         <h3 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100">Aksi Pembaruan</h3>
         <div class="text-xs text-slate-500 space-y-2">
@@ -124,14 +151,7 @@
           </button>
           <a href="{{ route('lowongan.index') }}" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition">Batal</a>
         </div>
-      </div>
-
-      <div class="bg-rose-50/50 rounded-xl border border-rose-200 p-5 space-y-3">
-        <h4 class="font-bold text-rose-800 text-xs flex items-center gap-1.5">
-          <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600"></i> Zona Berbahaya
-        </h4>
-        <p class="text-[11px] text-rose-600 leading-relaxed">Tutup lowongan dengan mengubah status menjadi "Ditutup" agar tidak menerima pendaftar baru.</p>
-      </div>
+    </div>
     </div>
   </form>
 @endsection

@@ -3,196 +3,152 @@
 @section('title', 'Detail Lowongan - ' . $lowongan->judul_lowongan)
 
 @section('content')
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-    <div>
-      <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
-        <a href="{{ route('admin-blk.index') }}" class="hover:text-emerald-700 transition">Beranda</a>
-        <span>&gt;</span>
-        <a href="{{ route('lowongan.index') }}" class="hover:text-emerald-700 transition">Lowongan Magang</a>
-        <span>&gt;</span>
-        <span class="text-slate-600 font-medium">Detail Lowongan</span>
-      </div>
-      <h1 class="text-xl font-black text-slate-900 tracking-tight">Rincian Lowongan Magang Industri</h1>
-      <p class="text-xs text-slate-500 mt-0.5">Spesifikasi posisi, kualifikasi, dan informasi perusahaan mitra industri penerima magang.</p>
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+        <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
+            <a href="{{ route('admin-blk.index') }}" class="hover:text-emerald-700 transition">Beranda</a>
+            <span>&gt;</span>
+            <a href="{{ route('lowongan.index') }}" class="hover:text-emerald-700 transition">Lowongan Magang</a>
+            <span>&gt;</span>
+            <span class="text-slate-600 font-medium">Detail Lowongan</span>
+        </div>
+        <h1 class="text-xl font-black text-slate-900 tracking-tight">Rincian Lowongan Magang Industri</h1>
+        <p class="text-xs text-slate-500 mt-0.5">Spesifikasi posisi, kualifikasi, dan informasi perusahaan mitra industri penerima magang.</p>
+        </div>
+        <div class="flex items-center gap-2">
+        <a href="{{ route('lowongan.index') }}" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali
+        </a>
+        </div>
     </div>
-    <div class="flex items-center gap-2">
-      <a href="{{ route('lowongan.index') }}" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali
-      </a>
-    </div>
-  </div>
 
   <!-- Hero Banner -->
-  <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 relative overflow-hidden">
-    <div class="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-emerald-50/50 to-transparent pointer-events-none"></div>
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
-      <div class="flex items-center gap-5">
-        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-700 to-slate-900 text-white font-black text-2xl flex items-center justify-center shadow-md shrink-0">
-          {{ strtoupper(substr($lowongan->mitra->nama_perusahaan ?? 'M', 0, 2)) }}
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 relative overflow-hidden">
+        <div class="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-emerald-50/50 to-transparent pointer-events-none"></div>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
+        <div class="flex items-center gap-5">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-700 to-slate-900 text-white font-black text-2xl flex items-center justify-center shadow-md shrink-0">
+            {{ strtoupper(substr($lowongan->mitra->nama_perusahaan ?? 'M', 0, 2)) }}
+            </div>
+            <div>
+            <div class="flex items-center gap-2.5 flex-wrap">
+                <h2 class="text-lg font-extrabold text-slate-900">{{ $lowongan->judul_lowongan }}</h2>
+                <span class="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full">
+                #LWG-{{ str_pad((string)$lowongan->id_lowongan, 3, '0', STR_PAD_LEFT) }}
+                </span>
+            </div>
+            <div class="flex items-center gap-4 text-xs text-slate-500 mt-1.5 flex-wrap">
+                <span class="flex items-center gap-1.5"><i data-lucide="building-2" class="w-3.5 h-3.5 text-slate-400"></i> {{ $lowongan->mitra->nama_perusahaan ?? '-' }}</span>
+                <span class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i> {{ $lowongan->lokasi ?? 'Lokasi Fleksibel' }}</span>
+                <span class="flex items-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-400"></i> {{ $lowongan->tanggal_posting ? $lowongan->tanggal_posting->translatedFormat('d M Y') : '-' }}</span>
+            </div>
+            </div>
         </div>
-        <div>
-          <div class="flex items-center gap-2.5 flex-wrap">
-            <h2 class="text-lg font-extrabold text-slate-900">{{ $lowongan->judul_lowongan }}</h2>
-            <span class="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full">
-              #LWG-{{ str_pad((string)$lowongan->id_lowongan, 3, '0', STR_PAD_LEFT) }}
-            </span>
-          </div>
-          <div class="flex items-center gap-4 text-xs text-slate-500 mt-1.5 flex-wrap">
-            <span class="flex items-center gap-1.5"><i data-lucide="building-2" class="w-3.5 h-3.5 text-slate-400"></i> {{ $lowongan->mitra->nama_perusahaan ?? '-' }}</span>
-            <span class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i> {{ $lowongan->lokasi ?? 'Lokasi Fleksibel' }}</span>
-            <span class="flex items-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-400"></i> {{ $lowongan->tanggal_posting ? $lowongan->tanggal_posting->translatedFormat('d M Y') : '-' }}</span>
-          </div>
-        </div>
-      </div>
 
-      <div class="text-right sm:border-l sm:border-slate-100 sm:pl-6">
-        <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Status Lowongan</div>
-        <div class="text-xs font-bold mt-0.5 flex items-center gap-1.5 justify-end
-          {{ $lowongan->status === 'aktif' ? 'text-emerald-700' : ($lowongan->status === 'draft' ? 'text-amber-700' : 'text-slate-600') }}">
-          <span class="w-2 h-2 rounded-full {{ $lowongan->status === 'aktif' ? 'bg-emerald-500 animate-pulse' : ($lowongan->status === 'draft' ? 'bg-amber-400' : 'bg-slate-400') }}"></span>
-          {{ ucfirst($lowongan->status) }}
+        <div class="text-right sm:border-l sm:border-slate-100 sm:pl-6">
+            <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Status Lowongan</div>
+            <div class="text-xs font-bold mt-0.5 flex items-center gap-1.5 justify-end
+            {{ $lowongan->status === 'aktif' ? 'text-emerald-700' : ($lowongan->status === 'draft' ? 'text-amber-700' : 'text-slate-600') }}">
+            <span class="w-2 h-2 rounded-full {{ $lowongan->status === 'aktif' ? 'bg-emerald-500 animate-pulse' : ($lowongan->status === 'draft' ? 'bg-amber-400' : 'bg-slate-400') }}"></span>
+            {{ ucfirst($lowongan->status) }}
+            </div>
         </div>
-        @if($lowongan->lamaran)
-          <div class="text-[11px] text-slate-500 mt-1">{{ $lowongan->lamaran->count() }} pelamar</div>
-        @endif
-      </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Detail Content Grid -->
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <div class="lg:col-span-2 space-y-6">
-      <!-- Deskripsi -->
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-4">
-        <div class="flex items-center gap-2.5 pb-4 border-b border-slate-100">
-          <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-            <i data-lucide="file-text" class="w-4 h-4"></i>
-          </div>
-          <h3 class="font-bold text-slate-800 text-sm">Deskripsi Pekerjaan &amp; Tanggung Jawab</h3>
+    <!-- Foto Lowongan -->
+    @if ($lowongan->gambar_url)
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <img src="{{ $lowongan->gambar_url }}" alt="Foto {{ $lowongan->judul_lowongan }}" class="w-full max-h-80 object-cover">
         </div>
-        <div class="text-xs text-slate-700 leading-relaxed whitespace-pre-line bg-slate-50/70 p-4 rounded-xl border border-slate-100">
-          {{ $lowongan->deskripsi ?: 'Belum ada deskripsi pekerjaan yang ditambahkan.' }}
-        </div>
-      </div>
+    @endif
 
-      <!-- Kualifikasi -->
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-4">
-        <div class="flex items-center gap-2.5 pb-4 border-b border-slate-100">
-          <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
-            <i data-lucide="check-square" class="w-4 h-4"></i>
-          </div>
-          <h3 class="font-bold text-slate-800 text-sm">Kualifikasi &amp; Persyaratan Pendaftar</h3>
-        </div>
-        <div class="text-xs text-slate-700 leading-relaxed whitespace-pre-line bg-slate-50/70 p-4 rounded-xl border border-slate-100">
-          {{ $lowongan->kualifikasi ?: 'Belum ada kualifikasi yang dicantumkan.' }}
-        </div>
-      </div>
-
-      <!-- Daftar Pelamar (Admin & Mitra only) -->
-      @if(auth()->user() && in_array(auth()->user()->role, ['admin_blk', 'mitra']))
+    <!-- Detail Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 space-y-6">
+        <!-- Deskripsi -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-4">
-          <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-            <div class="flex items-center gap-2.5">
-              <div class="w-8 h-8 rounded-lg bg-violet-50 text-violet-700 flex items-center justify-center shrink-0">
-                <i data-lucide="users" class="w-4 h-4"></i>
-              </div>
-              <h3 class="font-bold text-slate-800 text-sm">Daftar Pelamar</h3>
+            <div class="flex items-center gap-2.5 pb-4 border-b border-slate-100">
+            <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+                <i data-lucide="file-text" class="w-4 h-4"></i>
             </div>
-            <span class="bg-violet-100 text-violet-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full">
-              {{ $lowongan->lamaran->count() }} Pelamar
-            </span>
-          </div>
-
-          @if($lowongan->lamaran->isEmpty())
-            <div class="text-center py-6 text-xs text-slate-400">
-              <i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2 text-slate-300"></i>
-              Belum ada pelamar yang mendaftar untuk posisi ini.
+            <h3 class="font-bold text-slate-800 text-sm">Deskripsi Pekerjaan &amp; Tanggung Jawab</h3>
             </div>
-          @else
-            <div class="overflow-x-auto">
-              <table class="w-full text-xs">
-                <thead>
-                  <tr class="border-b border-slate-100">
-                    <th class="text-left py-2 px-2 text-slate-500 font-semibold">Peserta</th>
-                    <th class="text-left py-2 px-2 text-slate-500 font-semibold">Nomor</th>
-                    <th class="text-left py-2 px-2 text-slate-500 font-semibold">Tanggal</th>
-                    <th class="text-left py-2 px-2 text-slate-500 font-semibold">Status</th>
-                    <th class="text-right py-2 px-2 text-slate-500 font-semibold">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-50">
-                  @foreach($lowongan->lamaran as $lam)
-                    <tr class="hover:bg-slate-50/50">
-                      <td class="py-2.5 px-2">
-                        <div class="font-semibold text-slate-800">{{ $lam->peserta->user->name ?? '-' }}</div>
-                        <div class="text-slate-400 text-[10px]">{{ $lam->peserta->user->email ?? '-' }}</div>
-                      </td>
-                      <td class="py-2.5 px-2 text-slate-600 font-mono">{{ $lam->peserta->nomor_peserta ?? '-' }}</td>
-                      <td class="py-2.5 px-2 text-slate-600">{{ $lam->tanggal_melamar?->translatedFormat('d M Y') ?? '-' }}</td>
-                      <td class="py-2.5 px-2">
-                        @php
-                          $statusColors = [
-                            'melamar'   => 'bg-blue-100 text-blue-800',
-                            'diproses'  => 'bg-amber-100 text-amber-800',
-                            'wawancara' => 'bg-violet-100 text-violet-800',
-                            'diterima'  => 'bg-emerald-100 text-emerald-800',
-                            'ditolak'   => 'bg-rose-100 text-rose-800',
-                          ];
-                        @endphp
-                        <span class="px-2 py-0.5 rounded-full font-semibold {{ $statusColors[$lam->status] ?? 'bg-slate-100 text-slate-600' }}">
-                          {{ ucfirst($lam->status) }}
-                        </span>
-                      </td>
-                      <td class="py-2.5 px-2 text-right">
-                        <form action="{{ route('lamaran.update-status', $lam->id_lamaran) }}" method="POST" class="inline-flex items-center gap-1">
-                          @csrf
-                          @method('PATCH')
-                          <select name="status" class="text-[11px] border border-slate-200 rounded-lg px-1.5 py-1 focus:outline-none focus:ring-1 focus:ring-emerald-600">
-                            <option value="melamar"   {{ $lam->status === 'melamar'   ? 'selected' : '' }}>Melamar</option>
-                            <option value="diproses"  {{ $lam->status === 'diproses'  ? 'selected' : '' }}>Diproses</option>
-                            <option value="wawancara" {{ $lam->status === 'wawancara' ? 'selected' : '' }}>Wawancara</option>
-                            <option value="diterima"  {{ $lam->status === 'diterima'  ? 'selected' : '' }}>Diterima</option>
-                            <option value="ditolak"   {{ $lam->status === 'ditolak'   ? 'selected' : '' }}>Ditolak</option>
-                          </select>
-                          <button type="submit" class="bg-emerald-800 hover:bg-emerald-900 text-white px-2 py-1 rounded-lg text-[11px] font-semibold transition">
-                            Simpan
-                          </button>
-                        </form>
-                      </td>
-                    </tr>
-                  @endforeach
-                </tbody>
-              </table>
+            <div class="text-xs text-slate-700 leading-relaxed whitespace-pre-line bg-slate-50/70 p-4 rounded-xl border border-slate-100">
+            {{ $lowongan->deskripsi ?: 'Belum ada deskripsi pekerjaan yang ditambahkan.' }}
             </div>
-          @endif
         </div>
-      @endif
-    </div>
 
-    <!-- Right sidebar -->
-    <div class="space-y-6">
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
-        <h4 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100">Info Mitra &amp; Perusahaan</h4>
-        <div class="space-y-3 text-xs">
-          <div>
-            <span class="text-slate-400 block mb-0.5">Perusahaan</span>
-            <span class="font-bold text-slate-800">{{ $lowongan->mitra->nama_perusahaan ?? '-' }}</span>
-          </div>
-          <div>
-            <span class="text-slate-400 block mb-0.5">Bidang Usaha</span>
-            <span class="font-semibold text-slate-700">{{ $lowongan->mitra->bidang_usaha ?? '-' }}</span>
-          </div>
-          <div>
-            <span class="text-slate-400 block mb-0.5">Wilayah</span>
-            <span class="font-semibold text-slate-700">{{ $lowongan->mitra->kota ?? '-' }}{{ $lowongan->mitra->provinsi ? ', ' . $lowongan->mitra->provinsi : '' }}</span>
-          </div>
-          <div>
-            <span class="text-slate-400 block mb-0.5">Tanggal Diposting</span>
-            <span class="font-semibold text-slate-700">{{ $lowongan->tanggal_posting ? $lowongan->tanggal_posting->translatedFormat('d F Y') : '-' }}</span>
-          </div>
+        <!-- Kualifikasi -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-4">
+            <div class="flex items-center gap-2.5 pb-4 border-b border-slate-100">
+            <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
+                <i data-lucide="check-square" class="w-4 h-4"></i>
+            </div>
+            <h3 class="font-bold text-slate-800 text-sm">Kualifikasi &amp; Persyaratan</h3>
+            </div>
+            <div class="text-xs text-slate-700 leading-relaxed whitespace-pre-line bg-slate-50/70 p-4 rounded-xl border border-slate-100">
+            {{ $lowongan->kualifikasi ?: 'Belum ada kualifikasi yang dicantumkan.' }}
+            </div>
         </div>
-      </div>
+        </div>
 
+        <!-- Right sidebar -->
+        <div class="space-y-6">
+        <!-- Info Mitra -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+            <h4 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100">Info Mitra &amp; Perusahaan</h4>
+            <div class="space-y-3 text-xs">
+            <div>
+                <span class="text-slate-400 block mb-0.5">Perusahaan</span>
+                <span class="font-bold text-slate-800">{{ $lowongan->mitra->nama_perusahaan ?? '-' }}</span>
+            </div>
+            <div>
+                <span class="text-slate-400 block mb-0.5">Bidang Usaha</span>
+                <span class="font-semibold text-slate-700">{{ $lowongan->mitra->bidang_usaha ?? '-' }}</span>
+            </div>
+            <div>
+                <span class="text-slate-400 block mb-0.5">Wilayah</span>
+                <span class="font-semibold text-slate-700">{{ $lowongan->mitra->kota ?? '-' }}{{ $lowongan->mitra->provinsi ? ', ' . $lowongan->mitra->provinsi : '' }}</span>
+            </div>
+            <div>
+                <span class="text-slate-400 block mb-0.5">Tanggal Diposting</span>
+                <span class="font-semibold text-slate-700">{{ $lowongan->tanggal_posting ? $lowongan->tanggal_posting->translatedFormat('d F Y') : '-' }}</span>
+            </div>
+            </div>
+        </div>
+
+        <!-- Kontak Perusahaan -->
+        @php
+            $telp  = $lowongan->mitra->no_telp ?? null;
+            $wa    = $telp ? preg_replace('/^0/', '62', preg_replace('/\D+/', '', $telp)) : null;
+            $email = $lowongan->mitra->user->email ?? null;
+        @endphp
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-3">
+            <h4 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100">Berminat? Hubungi Perusahaan</h4>
+            <p class="text-xs text-slate-500 leading-relaxed">
+            Lowongan ini bersifat informasi. Pendaftaran dilakukan langsung melalui kontak perusahaan di bawah.
+            </p>
+            <div class="space-y-2">
+            @if ($wa)
+                <a href="https://wa.me/{{ $wa }}" target="_blank" rel="noopener"
+                class="w-full px-3.5 py-2.5 bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold rounded-lg shadow-sm flex items-center justify-center gap-2 transition">
+                <i data-lucide="phone" class="w-4 h-4"></i> {{ $telp }}
+                </a>
+            @endif
+            @if ($email)
+                <a href="mailto:{{ $email }}?subject={{ rawurlencode('Minat Lowongan: ' . $lowongan->judul_lowongan) }}"
+                class="w-full px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg flex items-center justify-center gap-2 transition">
+                <i data-lucide="mail" class="w-4 h-4"></i> {{ $email }}
+                </a>
+            @endif
+            @if (!$wa && !$email)
+                <p class="text-xs text-slate-400">Kontak perusahaan belum dicantumkan.</p>
+            @endif
+            </div>
+        </div>
+
+      <!-- Aksi Administratif -->
       @if(auth()->user() && in_array(auth()->user()->role, ['admin_blk', 'mitra']))
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-3">
           <h4 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100">Aksi Administratif</h4>

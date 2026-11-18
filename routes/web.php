@@ -22,12 +22,18 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RuanganWorkshopController;
 
 Route::get('/', function () {
-    $pelatihans = DaftarPelatihan::all()->take(8);
-    $lowongans = DaftarLowongan::all()->take(6);
+    $pelatihans = DaftarPelatihan::latest('id_pelatihan')->take(8)->get();
+    $lowongans = DaftarLowongan::with('mitra.user')
+    ->where('status', 'aktif')
+    ->latest('id_lowongan')
+    ->take(6)
+    ->get();
     return view('welcome', compact('pelatihans', 'lowongans'));
 });
 Route::get('/program-pelatihan', [PublicPelatihanController::class, 'index'])->name('pelatihan.katalog');
 Route::get('/lowongan-kerja', [PublicLowonganController::class, 'index'])->name('lowongan.katalog');
+Route::get('/lowongan-kerja', [PublicLowonganController::class, 'index'])->name('lowongan.katalog');
+Route::get('/lowongan-kerja/{id}', [PublicLowonganController::class, 'show'])->whereNumber('id')->name('lowongan.detail');
 Route::view('/tentang-blk', 'public.tentang-blk')->name('tentang.index');
 
 // Route internal untuk data dinamis pada form jadwal pelatihan
@@ -69,8 +75,6 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('role:admin_blk,mitra')->group(function () {
         Route::resource('lowongan', DaftarLowonganController::class);
-        // Update status lamaran peserta
-        Route::patch('lamaran/{id}/update-status', [LamaranLowonganController::class, 'updateStatus'])->name('lamaran.update-status');
     });
 
     Route::middleware('role:admin_blk,mitra,peserta')->group(function () {

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class DaftarLowonganController extends Controller
 {
@@ -103,6 +104,7 @@ class DaftarLowonganController extends Controller
             'kualifikasi'     => 'required|string',
             'tanggal_posting' => 'nullable|date',
             'status'          => 'required|in:aktif,draft,ditutup',
+            'gambar'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ], [
             'judul_lowongan.required' => 'Judul posisi lowongan wajib diisi.',
             'judul_lowongan.unique'   => 'Perusahaan Anda sudah memiliki lowongan dengan judul tersebut.',
@@ -112,22 +114,27 @@ class DaftarLowonganController extends Controller
             'kualifikasi.required'    => 'Kualifikasi & persyaratan wajib diisi.',
             'status.in'               => 'Status lowongan harus aktif, draft, atau ditutup.',
             'judul_lowongan.regex'    => 'Judul lowongan tidak boleh mengandung simbol atau angka.',
+            'gambar.image'            => 'File harus berupa gambar.',
+            'gambar.mimes'            => 'Format gambar harus JPG, PNG, atau WEBP.',
+            'gambar.max'              => 'Ukuran gambar maksimal 2 MB.',
         ]);
 
         $validated['id_mitra'] = $mitra->id_mitra;
         if (empty($validated['tanggal_posting'])) {
             $validated['tanggal_posting'] = now()->format('Y-m-d');
         }
-
+        if ($request->hasFile('gambar')) {
+            $validated['gambar'] = $request->file('gambar')->store('lowongan', 'public');
+        }
         DaftarLowongan::create($validated);
         return redirect()->route('lowongan.index')->with('success', 'Lowongan magang industri berhasil dipublikasikan.');
     }
 
     public function show(int $id): View
-    {
-        $lowongan = DaftarLowongan::with(['mitra', 'lamaran.peserta.user'])->findOrFail($id);
-        return view('lowongan.show', compact('lowongan'));
-    }
+{
+    $lowongan = DaftarLowongan::with('mitra.user')->findOrFail($id);
+    return view('lowongan.show', compact('lowongan'));
+}
 
     public function edit(int $id)
     {
@@ -164,6 +171,7 @@ class DaftarLowonganController extends Controller
             'kualifikasi'     => 'required|string',
             'tanggal_posting' => 'nullable|date',
             'status'          => 'required|in:aktif,draft,ditutup',
+            'gambar'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ], [
             'judul_lowongan.required' => 'Judul posisi lowongan wajib diisi.',
             'judul_lowongan.unique'   => 'Perusahaan Anda sudah memiliki lowongan lain dengan judul tersebut.',
@@ -172,8 +180,20 @@ class DaftarLowonganController extends Controller
             'kualifikasi.required'    => 'Kualifikasi & persyaratan wajib diisi.',
             'status.in'               => 'Status lowongan harus aktif, draft, atau ditutup.',
             'judul_lowongan.regex'    => 'Judul lowongan hanya boleh berisi huruf dan spasi.',
+            'gambar.image'            => 'File harus berupa gambar.',
+            'gambar.mimes'            => 'Format gambar harus JPG, PNG, atau WEBP.',
+            'gambar.max'              => 'Ukuran gambar maksimal 2 MB.',
         ]);
 
+        if ($request->hasFile('gambar')) {
+            if ($lowongan->gambar) {
+                Storage::disk('public')->delete($lowongan->gambar);
+            }
+            $validated['gambar'] = $request->file('gambar')->store('lowongan', 'public');
+        } elseif ($request->boolean('hapus_gambar') && $lowongan->gambar) {
+            Storage::disk('public')->delete($lowongan->gambar);
+            $validated['gambar'] = null;
+        }
         $lowongan->update($validated);
         return redirect()->route('lowongan.index')->with('success', 'Lowongan magang industri berhasil diperbarui.');
     }
@@ -185,7 +205,9 @@ class DaftarLowonganController extends Controller
         if (Auth::user()->role === 'mitra' && $lowongan->id_mitra !== Auth::user()->mitra?->id_mitra) {
             return redirect()->route('lowongan.index')->with('error', 'Anda tidak memiliki izin untuk menghapus lowongan ini.');
         }
-
+        if ($lowongan->gambar) {
+            Storage::disk('public')->delete($lowongan->gambar);
+        }
         $lowongan->delete();
         return redirect()->route('lowongan.index')->with('success', 'Lowongan magang industri berhasil dihapus.');
     }
