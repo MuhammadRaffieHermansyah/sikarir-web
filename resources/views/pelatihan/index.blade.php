@@ -149,14 +149,16 @@
               </x-ui.table-cell>
 
               <x-ui.table-cell class="px-4 py-3">
+                @php($penanggungJawab = $pelatihan->instruktur?->nama ?? $pelatihan->admin?->user?->name ?? 'Belum Ditunjuk')
+
                 <div class="flex items-center gap-2">
                   <x-ui.avatar class="size-6">
                     <x-ui.avatar-fallback class="bg-muted text-[10px] font-bold text-muted-foreground">
-                      {{ strtoupper(substr($pelatihan->admin->user->name ?? 'A', 0, 1)) }}
+                      {{ strtoupper(substr($penanggungJawab, 0, 1)) }}
                     </x-ui.avatar-fallback>
                   </x-ui.avatar>
                   <span class="max-w-[150px] truncate text-xs font-medium text-foreground">
-                    {{ $pelatihan->admin->user->name ?? 'Admin BLK' }}
+                    {{ $penanggungJawab }}
                   </span>
                 </div>
               </x-ui.table-cell>

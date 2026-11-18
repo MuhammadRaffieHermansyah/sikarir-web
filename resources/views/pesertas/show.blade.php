@@ -189,11 +189,12 @@
                   </x-ui.table-cell>
 
                   <x-ui.table-cell class="px-4 py-3 text-muted-foreground">
-                    {{ $kelas->jadwal->instruktur ?? '-' }}
+                    {{ $kelas->jadwal?->instruktur?->nama ?? '-' }}
                   </x-ui.table-cell>
 
                   <x-ui.table-cell class="px-4 py-3 text-muted-foreground">
-                    {{ $kelas->jadwal->ruangan ?? '-' }} ({{ $kelas->jadwal->hari ?? '-' }})
+                    {{ $kelas->jadwal?->ruanganWorkshop?->nama_ruangan ?? '-' }}
+                    ({{ $kelas->jadwal?->tanggal_mulai?->translatedFormat('d M Y') ?? '-' }})
                   </x-ui.table-cell>
 
                   <x-ui.table-cell class="px-4 py-3">

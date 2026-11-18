@@ -87,9 +87,14 @@
 
               <x-ui.table-cell class="px-4 py-3">
                 <div class="flex items-center gap-3">
-                  <span class="grid size-9 shrink-0 place-items-center rounded-lg bg-muted text-xs font-black text-foreground">
-                    {{ strtoupper(substr($lowongan->mitra->nama_perusahaan ?? 'M', 0, 2)) }}
-                  </span>
+                  @if ($lowongan->gambar_url)
+                    <img src="{{ $lowongan->gambar_url }}" alt="{{ $lowongan->judul_lowongan }}"
+                      class="size-9 shrink-0 rounded-lg object-cover" loading="lazy">
+                  @else
+                    <span class="grid size-9 shrink-0 place-items-center rounded-lg bg-muted text-xs font-black text-foreground">
+                      {{ strtoupper(substr($lowongan->mitra->nama_perusahaan ?? 'M', 0, 2)) }}
+                    </span>
+                  @endif
                   <div class="min-w-0">
                     <a
                       href="{{ route('lowongan.show', $lowongan->id_lowongan) }}"

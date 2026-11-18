@@ -107,7 +107,7 @@
 
               <x-ui.table-cell class="px-4 py-3">
                 <div class="font-semibold text-foreground">{{ $item->jadwal->pelatihan->nama_pelatihan ?? '-' }}</div>
-                <div class="text-xs text-muted-foreground">Instruktur: {{ $item->jadwal->instruktur ?? '-' }}</div>
+                <div class="text-xs text-muted-foreground">Instruktur: {{ $item->jadwal?->instruktur?->nama ?? '-' }}</div>
               </x-ui.table-cell>
 
               <x-ui.table-cell class="px-4 py-3">

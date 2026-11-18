@@ -110,17 +110,17 @@
             </x-ui.field>
           </div>
 
-          <x-ui.field data-invalid="{{ $errors->has('id_admin') ? 'true' : 'false' }}">
-            <x-ui.field-label for="id_admin">Penanggung Jawab / Pembina Kejuruan</x-ui.field-label>
-            <x-ui.select name="id_admin" id="id_admin" native class="w-full" required>
-              <option value="">-- Pilih Instruktur / Admin BLK --</option>
-              @foreach ($admins as $admin)
-                <option value="{{ $admin->id_admin }}" @selected(old('id_admin', $pelatihan->id_admin) == $admin->id_admin)>
-                  {{ $admin->user->name ?? 'Admin BLK' }} (NIP: {{ $admin->nip ?? '-' }})
+          <x-ui.field data-invalid="{{ $errors->has('id_instruktur') ? 'true' : 'false' }}">
+            <x-ui.field-label for="id_instruktur">Instruktur Penanggung Jawab</x-ui.field-label>
+            <x-ui.select name="id_instruktur" id="id_instruktur" native class="w-full" required>
+              <option value="">-- Pilih Instruktur Penanggung Jawab --</option>
+              @foreach ($instrukturs as $instruktur)
+                <option value="{{ $instruktur->id }}" @selected(old('id_instruktur', $pelatihan->id_instruktur) == $instruktur->id)>
+                  {{ $instruktur->nama }} — {{ $instruktur->bidang_keahlian ?: 'Bidang belum diisi' }}
                 </option>
               @endforeach
             </x-ui.select>
-            <x-ui.field-error :messages="$errors->get('id_admin')" />
+            <x-ui.field-error :messages="$errors->get('id_instruktur')" />
           </x-ui.field>
 
           <x-ui.field data-invalid="{{ $errors->has('deskripsi_pelatihan') ? 'true' : 'false' }}">

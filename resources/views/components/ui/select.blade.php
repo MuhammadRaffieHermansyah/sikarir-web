@@ -72,6 +72,9 @@
         @if ($multiple) multiple @endif
         data-slot="select"
         data-size="{{ $size }}"
+        {{-- Penanda agar enhancer select global (resources/js/app.js) tidak membungkus
+             select native BlatUI; tampilan & perilakunya sudah ditangani komponen ini. --}}
+        data-select-dropdown
         @if ($style) style="{{ $style }}" @endif
         {{ $attributes->twMerge('blat-select '.($multiple ? 'h-auto min-h-9 py-1' : $nativeSize)) }}
     >

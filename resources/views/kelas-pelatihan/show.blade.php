@@ -57,7 +57,7 @@
           <div class="mt-2 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
             <span class="flex items-center gap-1.5">
               <x-lucide-user-check class="size-3.5" />
-              Instruktur: {{ $kelas->jadwal->instruktur ?? '-' }}
+              Instruktur: {{ $kelas->jadwal?->instruktur?->nama ?? '-' }}
             </span>
             <span class="flex items-center gap-1.5">
               <x-lucide-map-pin class="size-3.5" />
@@ -135,7 +135,7 @@
 
             <div>
               <span class="mb-1 block font-medium text-muted-foreground">Instruktur Pembimbing</span>
-              <span class="font-semibold text-foreground">{{ $kelas->jadwal->instruktur ?? 'Belum Ditunjuk' }}</span>
+              <span class="font-semibold text-foreground">{{ $kelas->jadwal?->instruktur?->nama ?? 'Belum Ditunjuk' }}</span>
             </div>
 
             <div>

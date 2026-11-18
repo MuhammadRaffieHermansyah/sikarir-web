@@ -107,9 +107,30 @@
 
             <x-ui.table-body>
               @forelse ($pelatihan->jadwal ?? [] as $jadwal)
+                @php
+                  $instruktur = $jadwal->instruktur;
+                  $namaInstruktur = is_object($instruktur) ? ($instruktur->nama ?? '-') : ($instruktur ?: '-');
+
+                  $ruangan = $jadwal->ruanganWorkshop;
+                  $namaRuangan = is_object($ruangan)
+                      ? ($ruangan->nama_ruangan ?? $ruangan->nama ?? '-')
+                      : ($ruangan ?: '-');
+                @endphp
                 <x-ui.table-row>
-                  <x-ui.table-cell class="px-4 py-3 font-bold text-foreground">{{ $jadwal->instruktur ?? '-' }}</x-ui.table-cell>
-                  <x-ui.table-cell class="px-4 py-3 font-medium text-muted-foreground">{{ $jadwal->ruangan ?? '-' }}</x-ui.table-cell>
+                  <x-ui.table-cell class="px-4 py-3">
+                    <div class="flex items-center gap-2.5">
+                      <span class="grid size-7 shrink-0 place-items-center rounded-full bg-muted text-[10px] font-bold text-muted-foreground">
+                        {{ strtoupper(substr($namaInstruktur, 0, 1)) }}
+                      </span>
+                      <div class="min-w-0">
+                        <div class="font-bold text-foreground">{{ $namaInstruktur }}</div>
+                        @if (is_object($instruktur) && ! empty($instruktur->bidang_keahlian))
+                          <div class="text-[11px] text-muted-foreground">{{ $instruktur->bidang_keahlian }}</div>
+                        @endif
+                      </div>
+                    </div>
+                  </x-ui.table-cell>
+                  <x-ui.table-cell class="px-4 py-3 font-medium text-muted-foreground">{{ $namaRuangan }}</x-ui.table-cell>
                   <x-ui.table-cell class="px-4 py-3 font-medium text-muted-foreground">
                     {{ $jadwal->hari ?? '-' }} <span class="text-muted-foreground/70">({{ $jadwal->jam ?? '-' }})</span>
                   </x-ui.table-cell>
@@ -165,6 +186,15 @@
             <span class="text-muted-foreground">Durasi Pelatihan:</span>
             <span class="font-bold text-foreground">{{ $pelatihan->durasi_label ?? '-' }}</span>
           </div>
+          <div class="flex items-start justify-between gap-3">
+            <span class="text-muted-foreground">Instruktur:</span>
+            <span class="text-right font-bold text-foreground">{{ $pelatihan->instruktur?->nama ?? '-' }}</span>
+          </div>
+          @if ($pelatihan->instruktur?->bidang_keahlian)
+            <div class="-mt-1 text-right text-[10px] font-semibold text-primary">
+              {{ $pelatihan->instruktur->bidang_keahlian }}
+            </div>
+          @endif
           <div class="flex items-center justify-between gap-3">
             <span class="text-muted-foreground">Target Kuota Siswa:</span>
             <x-ui.badge tone="success">{{ $pelatihan->kuota }} Siswa / Batch</x-ui.badge>

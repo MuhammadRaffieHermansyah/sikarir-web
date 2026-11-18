@@ -53,6 +53,7 @@ class DaftarPelatihanController extends Controller
     public function store(StoreDaftarPelatihanRequest $request): JsonResponse
     {
         $pelatihan = DaftarPelatihan::create($request->validated());
+
         return (new DaftarPelatihanResource($pelatihan))->response()->setStatusCode(201);
     }
 
@@ -62,7 +63,7 @@ class DaftarPelatihanController extends Controller
         tags: ['Pelatihan'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
             new OA\Response(response: 200, description: 'Detail pelatihan'),
@@ -72,6 +73,7 @@ class DaftarPelatihanController extends Controller
     public function show(int $id): JsonResponse
     {
         $pelatihan = DaftarPelatihan::with($this->relations())->findOrFail($id);
+
         return (new DaftarPelatihanResource($pelatihan))->response();
     }
 
@@ -81,7 +83,7 @@ class DaftarPelatihanController extends Controller
         tags: ['Pelatihan'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         requestBody: new OA\RequestBody(
             required: true,
@@ -104,6 +106,7 @@ class DaftarPelatihanController extends Controller
     {
         $pelatihan = DaftarPelatihan::findOrFail($id);
         $pelatihan->update($request->validated());
+
         return (new DaftarPelatihanResource($pelatihan->fresh()->load($this->relations())))->response();
     }
 
@@ -113,7 +116,7 @@ class DaftarPelatihanController extends Controller
         tags: ['Pelatihan'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
             new OA\Response(response: 200, description: 'Pelatihan berhasil dihapus'),
@@ -124,11 +127,12 @@ class DaftarPelatihanController extends Controller
     {
         $pelatihan = DaftarPelatihan::findOrFail($id);
         $pelatihan->delete();
+
         return response()->json(['message' => 'Data berhasil dihapus']);
     }
 
     protected function relations(): array
     {
-        return ['admin', 'durasi'];
+        return ['admin', 'instruktur', 'durasi'];
     }
 }

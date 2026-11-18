@@ -87,6 +87,13 @@
     </div>
   </x-ui.card>
 
+  @if ($lowongan->gambar_url)
+    <x-ui.card class="overflow-hidden p-0">
+      <img src="{{ $lowongan->gambar_url }}" alt="Foto {{ $lowongan->judul_lowongan }}"
+        class="max-h-80 w-full object-cover" loading="lazy">
+    </x-ui.card>
+  @endif
+
   <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
     <div class="space-y-6 lg:col-span-2">
       <x-ui.card variant="sectioned">
@@ -159,7 +166,6 @@
                     <x-ui.table-head class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Nomor</x-ui.table-head>
                     <x-ui.table-head class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Tanggal</x-ui.table-head>
                     <x-ui.table-head class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Status</x-ui.table-head>
-                    <x-ui.table-head class="px-4 text-end text-xs font-semibold uppercase tracking-wide text-muted-foreground">Aksi</x-ui.table-head>
                   </x-ui.table-row>
                 </x-ui.table-header>
 
@@ -192,29 +198,6 @@
 
                       <x-ui.table-cell class="px-4 py-3">
                         <x-ui.badge :tone="$lamaranTone">{{ ucfirst($lam->status) }}</x-ui.badge>
-                      </x-ui.table-cell>
-
-                      <x-ui.table-cell class="px-4 py-3">
-                        <form
-                          action="{{ route('lamaran.update-status', $lam->id_lamaran) }}"
-                          method="POST"
-                          class="flex items-center justify-end gap-2"
-                        >
-                          @csrf
-                          @method('PATCH')
-
-                          <x-ui.select name="status" native class="h-8 w-36 text-xs">
-                            <option value="melamar" @selected($lam->status === 'melamar')>Melamar</option>
-                            <option value="diproses" @selected($lam->status === 'diproses')>Diproses</option>
-                            <option value="wawancara" @selected($lam->status === 'wawancara')>Wawancara</option>
-                            <option value="diterima" @selected($lam->status === 'diterima')>Diterima</option>
-                            <option value="ditolak" @selected($lam->status === 'ditolak')>Ditolak</option>
-                          </x-ui.select>
-
-                          <x-ui.button type="submit" size="sm">
-                            Simpan
-                          </x-ui.button>
-                        </form>
                       </x-ui.table-cell>
                     </x-ui.table-row>
                   @endforeach

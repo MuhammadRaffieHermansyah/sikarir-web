@@ -38,7 +38,7 @@
           </span>
 
           <div>
-            <p class="text-2xl font-black leading-none text-white">85+</p>
+            <p class="text-2xl font-black leading-none text-white">{{ $totalMitra ?? 0 }}</p>
             <p class="mt-1 text-xs font-bold text-primary-foreground/90">Mitra Industri Aktif</p>
             <p class="text-[10px] text-primary-foreground/60">Terverifikasi Disnakertrans Jatim</p>
           </div>
@@ -50,78 +50,83 @@
   <div class="site-container space-y-8 py-10 md:py-14">
     {{-- SEARCH & FILTER --}}
     <x-ui.card>
-      <form method="GET" action="{{ route('lowongan.katalog') }}" class="flex flex-col gap-3 md:flex-row">
-        <div class="min-w-0 flex-1">
+      <form method="GET" action="{{ route('lowongan.katalog') }}" class="space-y-4">
+        <div class="flex flex-col gap-3 md:flex-row">
+          <div class="min-w-0 flex-1">
+            <x-ui.field>
+              <x-ui.field-label for="lowongan-q" class="sr-only">Cari lowongan</x-ui.field-label>
+              <x-ui.input
+                id="lowongan-q"
+                name="q"
+                type="search"
+                :value="request('q')"
+                placeholder="Cari nama jabatan, posisi spesifik, skill vokasi, atau nama perusahaan..."
+              >
+                <x-slot:leading>
+                  <x-lucide-search />
+                </x-slot:leading>
+              </x-ui.input>
+            </x-ui.field>
+          </div>
+
+          <x-ui.button type="submit" class="shrink-0">
+            <x-lucide-filter />
+            Cari Lowongan
+          </x-ui.button>
+        </div>
+
+        <div class="grid gap-4 border-t border-border pt-4 md:max-w-sm">
           <x-ui.field>
-            <x-ui.field-label for="lowongan-q" class="sr-only">Cari lowongan</x-ui.field-label>
-            <x-ui.input
-              id="lowongan-q"
-              name="q"
-              type="search"
-              :value="request('q')"
-              placeholder="Cari nama jabatan, posisi spesifik, skill vokasi, atau nama perusahaan..."
-            >
-              <x-slot:leading>
-                <x-lucide-search />
-              </x-slot:leading>
-            </x-ui.input>
+            <x-ui.field-label for="lowongan-wilayah" class="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+              Wilayah / Lokasi
+            </x-ui.field-label>
+            <x-ui.select name="wilayah" id="lowongan-wilayah" native class="w-full" onchange="this.form.submit()">
+              <option value="">Semua Lokasi Penempatan</option>
+              @foreach ($daftarLokasi ?? [] as $lokasi)
+                <option value="{{ $lokasi }}" @selected(request('wilayah') === $lokasi)>{{ $lokasi }}</option>
+              @endforeach
+            </x-ui.select>
           </x-ui.field>
         </div>
 
-        <x-ui.button type="submit" class="shrink-0">
-          <x-lucide-filter />
-          Cari Lowongan
-        </x-ui.button>
-      </form>
+        <div class="flex flex-col justify-between gap-3 border-t border-border pt-4 md:flex-row md:items-center">
+          <div class="flex flex-wrap items-center gap-2 text-xs">
+            @if (($daftarLokasi ?? collect())->isNotEmpty())
+              <span class="flex items-center gap-1 font-bold text-muted-foreground">
+                <x-lucide-map-pin class="size-3.5 text-primary" />
+                Lokasi:
+              </span>
 
-      <div class="mt-4 grid gap-4 border-t border-border pt-4 md:grid-cols-3">
-        <x-ui.field>
-          <x-ui.field-label for="lowongan-wilayah" class="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
-            Wilayah / Lokasi
-          </x-ui.field-label>
-          <x-ui.select name="wilayah" id="lowongan-wilayah" native class="w-full">
-            <option value="">Semua Lokasi Penempatan</option>
-          </x-ui.select>
-        </x-ui.field>
+              @foreach ($daftarLokasi->take(5) as $lokasi)
+                <x-ui.badge
+                  :href="route('lowongan.katalog', ['wilayah' => $lokasi])"
+                  variant="outline"
+                  size="lg"
+                  class="rounded-full"
+                >
+                  {{ $lokasi }}
+                </x-ui.badge>
+              @endforeach
+            @else
+              <span class="flex items-center gap-1 font-bold text-muted-foreground">
+                <x-lucide-sparkles class="size-3.5 text-primary" />
+                Populer:
+              </span>
 
-        <x-ui.field>
-          <x-ui.field-label for="lowongan-kejuruan" class="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
-            Kejuruan / Bidang BLK
-          </x-ui.field-label>
-          <x-ui.select name="kejuruan" id="lowongan-kejuruan" native class="w-full">
-            <option value="">Semua Kejuruan Vokasi</option>
-          </x-ui.select>
-        </x-ui.field>
+              @foreach (['Teknisi Las', 'Otomotif Roda 4', 'Operator Garmen', 'Web Developer', 'Barista Kopi'] as $tag)
+                <x-ui.badge :href="route('lowongan.katalog', ['q' => $tag])" variant="outline" size="lg" class="rounded-full">
+                  {{ $tag }}
+                </x-ui.badge>
+              @endforeach
+            @endif
+          </div>
 
-        <x-ui.field>
-          <x-ui.field-label for="lowongan-jenis" class="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
-            Jenis Hubungan Kerja
-          </x-ui.field-label>
-          <x-ui.select name="jenis" id="lowongan-jenis" native class="w-full">
-            <option value="">Semua Jenis Ikatan Kerja</option>
-          </x-ui.select>
-        </x-ui.field>
-      </div>
-
-      <div class="mt-4 flex flex-col justify-between gap-3 border-t border-border pt-4 md:flex-row md:items-center">
-        <div class="flex flex-wrap items-center gap-2 text-xs">
-          <span class="flex items-center gap-1 font-bold text-muted-foreground">
-            <x-lucide-sparkles class="size-3.5 text-primary" />
-            Populer:
-          </span>
-
-          @foreach (['Teknisi Las', 'Otomotif Roda 4', 'Operator Garmen', 'Web Developer', 'Barista Kopi'] as $tag)
-            <x-ui.badge :href="route('lowongan.katalog', ['q' => $tag])" variant="outline" size="lg" class="rounded-full">
-              {{ $tag }}
-            </x-ui.badge>
-          @endforeach
+          <x-ui.button href="{{ route('lowongan.katalog') }}" variant="link" size="sm" class="shrink-0 px-0 text-destructive">
+            <x-lucide-rotate-ccw />
+            Reset Filter
+          </x-ui.button>
         </div>
-
-        <x-ui.button href="{{ route('lowongan.katalog') }}" variant="link" size="sm" class="shrink-0 px-0 text-destructive">
-          <x-lucide-rotate-ccw />
-          Reset Filter
-        </x-ui.button>
-      </div>
+      </form>
     </x-ui.card>
 
     <div class="grid gap-8 lg:grid-cols-12">
@@ -131,7 +136,7 @@
           <p class="flex items-center gap-1.5 font-bold text-foreground">
             <x-lucide-briefcase class="size-4 text-primary" />
             Menampilkan
-            {{ is_object($lowongan) && method_exists($lowongan, 'total') ? $lowongan->total() : (($lowongan ?? collect())->count() ?: 7) }}
+            {{ is_object($lowongan) && method_exists($lowongan, 'total') ? $lowongan->total() : ($lowongan ?? collect())->count() }}
             Lowongan Aktif
           </p>
 
@@ -144,17 +149,32 @@
         <div class="space-y-4">
           @forelse ($lowongan ?? [] as $job)
             <x-ui.card class="space-y-3 p-5 transition hover:border-primary/40 hover:shadow-md">
-              <div class="flex items-start justify-between gap-3">
-                <div class="flex gap-3.5">
-                  <span class="grid size-12 shrink-0 place-items-center rounded-xl bg-accent text-accent-foreground">
-                    <x-lucide-building-2 class="size-6" />
-                  </span>
+              @php($tgl = $job->tanggal_posting ? $job->tanggal_posting->translatedFormat('d M Y') : '-')
 
-                  <div>
-                    <h3 class="text-sm font-bold leading-snug text-foreground md:text-base">{{ $job->posisi }}</h3>
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex min-w-0 gap-3.5">
+                  @if ($job->gambar_url)
+                    <img
+                      src="{{ $job->gambar_url }}"
+                      alt="{{ $job->judul_lowongan }}"
+                      class="size-14 shrink-0 rounded-xl border border-border object-cover"
+                      loading="lazy"
+                    >
+                  @else
+                    <span class="grid size-14 shrink-0 place-items-center rounded-xl bg-accent text-accent-foreground">
+                      <x-lucide-building-2 class="size-6" />
+                    </span>
+                  @endif
+
+                  <div class="min-w-0">
+                    <h3 class="text-sm font-bold leading-snug text-foreground md:text-base">
+                      <a href="{{ route('lowongan.detail', $job->id_lowongan) }}" class="transition hover:text-primary">
+                        {{ $job->judul_lowongan }}
+                      </a>
+                    </h3>
 
                     <p class="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs font-semibold text-muted-foreground">
-                      <span>{{ $job->mitra->nama ?? '-' }}</span>
+                      <span>{{ $job->mitra->nama_perusahaan ?? '-' }}</span>
                       <span class="text-border">•</span>
                       <span class="flex items-center gap-1 font-bold text-primary">
                         <x-lucide-circle-check-big class="size-3.5" />
@@ -164,8 +184,8 @@
                   </div>
                 </div>
 
-                <x-ui.badge variant="secondary" class="shrink-0 uppercase tracking-wide">
-                  {{ $job->tipe_kerja ?? 'Penuh Waktu' }}
+                <x-ui.badge variant="secondary" class="max-w-40 shrink-0 truncate uppercase tracking-wide">
+                  {{ $job->mitra->bidang_usaha ?? 'Lowongan' }}
                 </x-ui.badge>
               </div>
 
@@ -175,31 +195,26 @@
                   {{ $job->lokasi ?? '-' }}
                 </span>
 
-                <span class="flex items-center gap-1 font-bold text-foreground">
-                  <x-lucide-circle-dollar-sign class="size-3.5 text-primary" />
-                  {{ $job->estimasi_gaji ?? '-' }}
-                </span>
-
                 <span class="flex items-center gap-1 font-semibold text-primary">
                   <x-lucide-award class="size-3.5" />
-                  {{ $job->prioritas ?? 'Alumni BLK' }}
+                  Alumni BLK
                 </span>
 
-                <span class="ml-auto flex items-center gap-1 font-semibold text-destructive">
+                <span class="ml-auto flex items-center gap-1 font-semibold">
                   <x-lucide-calendar class="size-3.5" />
-                  Batas: {{ $job->batas_lamaran ?? '-' }}
+                  {{ $tgl }}
                 </span>
               </div>
 
-              <p class="line-clamp-2 text-xs leading-relaxed text-muted-foreground">{{ $job->deskripsi }}</p>
+              <p class="line-clamp-2 text-xs leading-relaxed text-muted-foreground">{{ $job->deskripsi ?: 'Tidak ada deskripsi.' }}</p>
 
               <div class="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-3">
                 <span class="text-[10px] font-medium text-muted-foreground">
-                  Dipublikasikan: {{ $job->dipublikasikan ?? '-' }}
+                  Dipublikasikan: {{ $tgl }}
                 </span>
 
                 <div class="flex items-center gap-2">
-                  <x-ui.button href="#" variant="outline" size="sm">
+                  <x-ui.button href="{{ route('lowongan.detail', $job->id_lowongan) }}" variant="outline" size="sm">
                     Detail Syarat
                   </x-ui.button>
 
@@ -235,26 +250,9 @@
         </div>
 
         {{-- PAGINATION --}}
-        @if (is_object($lowongan) && method_exists($lowongan, 'links'))
+        @if (is_object($lowongan) && method_exists($lowongan, 'hasPages') && $lowongan->hasPages())
           <div>
             {{ $lowongan->links('components.pagination') }}
-          </div>
-        @else
-          {{-- Fallback pagination untuk data array/collection biasa --}}
-          <div class="flex items-center justify-between rounded-xl border border-border bg-card px-6 py-4 text-xs font-medium text-muted-foreground">
-            <span>Menampilkan 1 sampai 7 dari 28 data</span>
-
-            <div class="flex gap-1">
-              <x-ui.button variant="outline" size="icon-sm" disabled aria-label="Halaman sebelumnya">
-                <x-lucide-chevron-left />
-              </x-ui.button>
-              <x-ui.button size="icon-sm" aria-label="Halaman 1">1</x-ui.button>
-              <x-ui.button variant="outline" size="icon-sm" aria-label="Halaman 2">2</x-ui.button>
-              <x-ui.button variant="outline" size="icon-sm" aria-label="Halaman 3">3</x-ui.button>
-              <x-ui.button variant="outline" size="icon-sm" aria-label="Halaman berikutnya">
-                <x-lucide-chevron-right />
-              </x-ui.button>
-            </div>
           </div>
         @endif
       </div>

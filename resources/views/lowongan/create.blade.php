@@ -47,7 +47,8 @@
     </x-ui.alert>
   @endif
 
-  <form action="{{ route('lowongan.store') }}" method="POST" class="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
+  <form action="{{ route('lowongan.store') }}" method="POST" enctype="multipart/form-data"
+    class="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
     @csrf
 
     <div class="space-y-6 lg:col-span-2">
@@ -151,6 +152,35 @@
       <x-ui.card variant="sectioned">
         <x-ui.card-header class="border-b">
           <x-ui.card-title class="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted-foreground">
+            <x-lucide-image class="size-4 text-primary" />
+            Foto Lowongan
+          </x-ui.card-title>
+        </x-ui.card-header>
+
+        <x-ui.card-content class="space-y-3">
+          <label for="gambar" id="dropzone"
+            class="relative flex h-44 w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-border bg-muted/40 transition hover:border-primary hover:bg-accent/40">
+            <span id="upload-placeholder" class="flex flex-col items-center gap-2 px-4 text-center">
+              <x-lucide-upload-cloud class="size-7 text-muted-foreground" />
+              <span class="text-xs font-semibold text-foreground">Klik untuk upload foto</span>
+              <span class="text-[11px] text-muted-foreground">JPG, PNG, WEBP. Maks 2 MB.</span>
+            </span>
+            <img id="upload-preview" src="" alt="Preview foto" class="absolute inset-0 hidden size-full object-cover" />
+            <input type="file" name="gambar" id="gambar" accept="image/png,image/jpeg,image/webp" class="hidden" />
+          </label>
+
+          <button type="button" id="remove-image"
+            class="hidden w-full rounded-lg bg-destructive/10 py-2 text-xs font-semibold text-destructive transition hover:bg-destructive/15">
+            Hapus gambar
+          </button>
+
+          <x-ui.field-error :messages="$errors->get('gambar')" />
+        </x-ui.card-content>
+      </x-ui.card>
+
+      <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+          <x-ui.card-title class="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted-foreground">
             <x-lucide-info class="size-4 text-primary" />
             Panduan Lowongan
           </x-ui.card-title>
@@ -175,3 +205,34 @@
     </div>
   </form>
 @endsection
+
+@push('scripts')
+  <script>
+      const gambarInput = document.getElementById('gambar');
+      const gambarPreview = document.getElementById('upload-preview');
+      const gambarPlaceholder = document.getElementById('upload-placeholder');
+      const gambarRemove = document.getElementById('remove-image');
+
+      gambarInput?.addEventListener('change', () => {
+          const file = gambarInput.files[0];
+          if (!file) return;
+          if (file.size > 2 * 1024 * 1024) {
+              alert('Ukuran gambar maksimal 2 MB.');
+              gambarInput.value = '';
+              return;
+          }
+          gambarPreview.src = URL.createObjectURL(file);
+          gambarPreview.classList.remove('hidden');
+          gambarPlaceholder.classList.add('hidden');
+          gambarRemove.classList.remove('hidden');
+      });
+
+      gambarRemove?.addEventListener('click', () => {
+          gambarInput.value = '';
+          gambarPreview.src = '';
+          gambarPreview.classList.add('hidden');
+          gambarPlaceholder.classList.remove('hidden');
+          gambarRemove.classList.add('hidden');
+      });
+  </script>
+@endpush

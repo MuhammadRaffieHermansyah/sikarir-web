@@ -214,38 +214,58 @@
 
       <div class="mt-8 grid gap-4 md:grid-cols-3">
         @forelse ($lowongans as $job)
-          <x-ui.card class="flex flex-col transition hover:border-primary/40 hover:shadow-md">
-            <div class="flex items-start justify-between gap-3">
-              <h3 class="text-base font-bold leading-snug text-foreground">{{ $job->judul_lowongan }}</h3>
-              <x-ui.badge tone="success" class="shrink-0 capitalize">{{ $job->status }}</x-ui.badge>
-            </div>
+          <x-ui.card class="flex flex-col overflow-hidden p-0 transition hover:border-primary/40 hover:shadow-md">
+            @if ($job->gambar_url)
+              <img
+                src="{{ $job->gambar_url }}"
+                alt="{{ $job->judul_lowongan }}"
+                class="aspect-[16/9] w-full object-cover"
+                loading="lazy"
+              >
+            @else
+              <div class="grid aspect-[16/9] w-full place-items-center bg-accent text-accent-foreground">
+                <x-lucide-building-2 class="size-8" />
+              </div>
+            @endif
 
-            <div class="mt-3 space-y-1.5 text-xs text-muted-foreground">
-              <p class="flex items-center gap-2">
-                <x-lucide-building-2 class="size-3.5 text-primary" />
-                {{ $job->mitra->nama_perusahaan ?? $job->mitra->nama ?? '-' }}
-              </p>
-              <p class="flex items-center gap-2">
-                <x-lucide-map-pin class="size-3.5 text-primary" />
-                {{ $job->lokasi ?? '-' }}
-              </p>
-            </div>
-
-            <p class="mt-4 line-clamp-3 text-xs leading-relaxed text-muted-foreground">
-              {{ $job->deskripsi ?? 'Tidak ada deskripsi.' }}
-            </p>
-
-            <div class="mt-auto flex items-center justify-between gap-3 border-t border-border pt-4">
-              <div class="text-[10px] text-muted-foreground">
-                Diposting
-                <span class="mt-0.5 block text-xs font-bold text-foreground">
-                  {{ $job->tanggal_posting ? \Carbon\Carbon::parse($job->tanggal_posting)->format('d M Y') : '-' }}
-                </span>
+            <div class="flex flex-1 flex-col p-5">
+              <div class="flex items-start justify-between gap-3">
+                <h3 class="text-base font-bold leading-snug text-foreground">
+                  <a href="{{ route('lowongan.detail', $job->id_lowongan) }}" class="transition hover:text-primary">
+                    {{ $job->judul_lowongan }}
+                  </a>
+                </h3>
+                <x-ui.badge tone="success" class="shrink-0 capitalize">{{ $job->status }}</x-ui.badge>
               </div>
 
-              <x-ui.button href="{{ route('lowongan.katalog') . '#' . $job->id_lowongan }}" size="sm">
-                Lihat posisi
-              </x-ui.button>
+              <div class="mt-3 space-y-1.5 text-xs text-muted-foreground">
+                <p class="flex items-center gap-2">
+                  <x-lucide-building-2 class="size-3.5 text-primary" />
+                  {{ $job->mitra->nama_perusahaan ?? '-' }}
+                </p>
+                <p class="flex items-center gap-2">
+                  <x-lucide-map-pin class="size-3.5 text-primary" />
+                  {{ $job->lokasi ?? '-' }}
+                </p>
+              </div>
+
+              <p class="mt-4 line-clamp-3 text-xs leading-relaxed text-muted-foreground">
+                {{ $job->deskripsi ?? 'Tidak ada deskripsi.' }}
+              </p>
+
+              <div class="mt-auto flex items-center justify-between gap-3 border-t border-border pt-4">
+                <div class="text-[10px] text-muted-foreground">
+                  Diposting
+                  <span class="mt-0.5 block text-xs font-bold text-foreground">
+                    {{ $job->tanggal_posting ? \Carbon\Carbon::parse($job->tanggal_posting)->format('d M Y') : '-' }}
+                  </span>
+                </div>
+
+                <x-ui.button href="{{ route('lowongan.detail', $job->id_lowongan) }}" size="sm">
+                  Lihat selengkapnya
+                  <x-lucide-arrow-right />
+                </x-ui.button>
+              </div>
             </div>
           </x-ui.card>
         @empty

@@ -11,22 +11,33 @@ class DaftarPelatihan extends Model
     use HasFactory;
 
     protected $table = 'daftar_pelatihan';
+
     protected $primaryKey = 'id_pelatihan';
-    protected $fillable = ['id_admin', 'nama_pelatihan', 'deskripsi_pelatihan', 'gambar', 'id_durasi', 'kuota'];
+
+    protected $fillable = ['id_admin', 'id_instruktur', 'nama_pelatihan', 'deskripsi_pelatihan', 'gambar', 'id_durasi', 'kuota'];
+
     protected $casts = ['kuota' => 'integer'];
 
     public function getIdAttribute()
     {
         return $this->getKey();
     }
+
     public function admin()
     {
         return $this->belongsTo(AdminBlk::class, 'id_admin');
     }
+
+    public function instruktur(): BelongsTo
+    {
+        return $this->belongsTo(Instruktur::class, 'id_instruktur');
+    }
+
     public function durasi(): BelongsTo
     {
         return $this->belongsTo(DurasiPelatihan::class, 'id_durasi');
     }
+
     public function jadwal()
     {
         return $this->hasMany(JadwalPelatihan::class, 'id_pelatihan');
@@ -36,16 +47,18 @@ class DaftarPelatihan extends Model
     {
         return $this->durasi?->durasi_label;
     }
+
     public function getGambarUrlAttribute(): ?string
-{
-    return $this->gambar ? asset('storage/' . $this->gambar) : null;
-}
+    {
+        return $this->gambar ? asset('storage/'.$this->gambar) : null;
+    }
+
     public function getJadwalTerdekatAttribute()
-{
-    return $this->jadwal
-        ->where('status', 'tersedia')
-        ->filter(fn ($j) => $j->tanggal_mulai->gte(now()->startOfDay()))
-        ->sortBy('tanggal_mulai')
-        ->first();
-}
+    {
+        return $this->jadwal
+            ->where('status', 'tersedia')
+            ->filter(fn ($j) => $j->tanggal_mulai->gte(now()->startOfDay()))
+            ->sortBy('tanggal_mulai')
+            ->first();
+    }
 }
