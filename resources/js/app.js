@@ -106,3 +106,101 @@ if (document.readyState === 'loading') {
 } else {
     setupDeleteConfirmation();
 }
+
+const setupSelectDropdowns = () => {
+    const closeAll = (except = null) => {
+        document.querySelectorAll('[data-global-select-dropdown].is-open').forEach((dropdown) => {
+            if (dropdown === except) return;
+            dropdown.classList.remove('is-open');
+            dropdown.querySelector('[data-select-trigger]')?.setAttribute('aria-expanded', 'false');
+        });
+    };
+
+    const enhance = (select) => {
+        if (select.dataset.selectEnhanced || select.multiple || select.closest('[data-select-dropdown]')) return;
+
+        select.dataset.selectEnhanced = 'true';
+        const dropdown = document.createElement('div');
+        const trigger = document.createElement('button');
+        const menu = document.createElement('div');
+
+        dropdown.className = 'select-dropdown';
+        dropdown.dataset.globalSelectDropdown = '';
+        trigger.type = 'button';
+        trigger.className = 'select-dropdown__trigger';
+        trigger.dataset.selectTrigger = '';
+        trigger.setAttribute('aria-haspopup', 'listbox');
+        trigger.setAttribute('aria-expanded', 'false');
+        menu.className = 'select-dropdown__menu';
+        menu.setAttribute('role', 'listbox');
+
+        select.parentNode.insertBefore(dropdown, select);
+        dropdown.appendChild(select);
+        dropdown.appendChild(trigger);
+        dropdown.appendChild(menu);
+        select.classList.add('select-dropdown__native');
+
+        const syncTrigger = () => {
+            const option = select.options[select.selectedIndex];
+            trigger.textContent = option?.textContent?.trim() || 'Pilih opsi';
+            trigger.classList.toggle('is-placeholder', !option?.value);
+            trigger.disabled = select.disabled;
+        };
+
+        const buildMenu = () => {
+            menu.replaceChildren();
+            [...select.options].forEach((option, index) => {
+                const item = document.createElement('button');
+                item.type = 'button';
+                item.className = 'select-dropdown__option';
+                item.setAttribute('role', 'option');
+                item.disabled = option.disabled;
+                item.textContent = option.textContent.trim();
+                item.classList.toggle('is-selected', option.selected);
+                item.classList.toggle('is-placeholder', !option.value);
+                item.addEventListener('click', () => {
+                    select.selectedIndex = index;
+                    select.dispatchEvent(new Event('input', { bubbles: true }));
+                    select.dispatchEvent(new Event('change', { bubbles: true }));
+                    syncTrigger();
+                    buildMenu();
+                    closeAll();
+                });
+                menu.appendChild(item);
+            });
+        };
+
+        trigger.addEventListener('click', () => {
+            const willOpen = !dropdown.classList.contains('is-open');
+            closeAll(dropdown);
+            dropdown.classList.toggle('is-open', willOpen);
+            trigger.setAttribute('aria-expanded', String(willOpen));
+        });
+
+        select.addEventListener('change', () => {
+            syncTrigger();
+            buildMenu();
+        });
+        new MutationObserver(() => {
+            syncTrigger();
+            buildMenu();
+        }).observe(select, { childList: true, subtree: true });
+
+        syncTrigger();
+        buildMenu();
+    };
+
+    document.querySelectorAll('select').forEach(enhance);
+    document.addEventListener('click', (event) => {
+        if (!event.target.closest('[data-global-select-dropdown]')) closeAll();
+    });
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') closeAll();
+    });
+};
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupSelectDropdowns);
+} else {
+    setupSelectDropdowns();
+}

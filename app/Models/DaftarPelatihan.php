@@ -12,7 +12,7 @@ class DaftarPelatihan extends Model
 
     protected $table = 'daftar_pelatihan';
     protected $primaryKey = 'id_pelatihan';
-    protected $fillable = ['id_admin', 'nama_pelatihan', 'deskripsi_pelatihan', 'gambar', 'id_durasi', 'kuota'];
+    protected $fillable = ['id_admin', 'id_instruktur', 'nama_pelatihan', 'deskripsi_pelatihan', 'gambar', 'id_durasi', 'kuota'];
     protected $casts = ['kuota' => 'integer'];
 
     public function getIdAttribute()
@@ -22,6 +22,10 @@ class DaftarPelatihan extends Model
     public function admin()
     {
         return $this->belongsTo(AdminBlk::class, 'id_admin');
+    }
+    public function instruktur(): BelongsTo
+    {
+        return $this->belongsTo(Instruktur::class, 'id_instruktur');
     }
     public function durasi(): BelongsTo
     {

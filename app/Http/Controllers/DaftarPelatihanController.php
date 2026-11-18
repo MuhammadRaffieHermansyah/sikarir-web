@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DaftarPelatihan;
 use App\Models\AdminBlk;
 use App\Models\DurasiPelatihan;
+use App\Models\Instruktur;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -14,7 +15,7 @@ class DaftarPelatihanController extends Controller
 {
     public function index(Request $request): View
 {
-    $query = DaftarPelatihan::with(['admin.user', 'jadwal', 'durasi']);
+    $query = DaftarPelatihan::with(['admin.user', 'instruktur', 'jadwal', 'durasi']);
 
     // Filter Pencarian Keyword (Nama Pelatihan atau Deskripsi)
     if ($request->filled('search')) {
@@ -35,22 +36,23 @@ class DaftarPelatihanController extends Controller
 
     public function create(): View
     {
-        $admins    = AdminBlk::with('user')->get();
+        $instrukturs = Instruktur::orderBy('nama')->get();
         $durations = DurasiPelatihan::orderBy('hari')->get();
-        return view('pelatihan.create', compact('admins', 'durations'));
+        return view('pelatihan.create', compact('instrukturs', 'durations'));
     }
 
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'id_admin'            => 'required|exists:admin_blks,id_admin',
+            'id_instruktur'       => 'required|exists:instruktur,id',
             'nama_pelatihan'      => 'required|unique:daftar_pelatihan,nama_pelatihan|string|max:70|regex:/^[a-zA-Z\s]+$/',
             'deskripsi_pelatihan' => 'nullable|string',
             'kuota'               => 'required|integer|min:1',
             'id_durasi'           => 'nullable|exists:durasi_pelatihan,id_durasi',
             'gambar'              => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ], [
-            'id_admin.required'       => 'Admin BLK penanggung jawab wajib dipilih.',
+            'id_instruktur.required'  => 'Instruktur penanggung jawab wajib dipilih.',
+            'id_instruktur.exists'    => 'Instruktur yang dipilih tidak terdaftar.',
             'nama_pelatihan.required' => 'Nama kejuruan / program pelatihan wajib diisi.',
             'nama_pelatihan.unique'   => 'Nama kejuruan / program pelatihan sudah ada.',
             'nama_pelatihan.max'      => 'Nama kejuruan / program pelatihan maksimal 40 karakter.',
@@ -71,16 +73,16 @@ class DaftarPelatihanController extends Controller
 
     public function show(int $id): View
     {
-        $pelatihan = DaftarPelatihan::with(['admin.user', 'durasi', 'jadwal.kelas.peserta.user'])->findOrFail($id);
+        $pelatihan = DaftarPelatihan::with(['admin.user', 'instruktur', 'durasi', 'jadwal.instruktur', 'jadwal.ruanganWorkshop', 'jadwal.kelas.peserta.user'])->findOrFail($id);
         return view('pelatihan.show', compact('pelatihan'));
     }
 
     public function edit(int $id): View
     {
-        $pelatihan = DaftarPelatihan::with('durasi')->findOrFail($id);
-        $admins    = AdminBlk::with('user')->get();
+        $pelatihan = DaftarPelatihan::with(['durasi', 'instruktur'])->findOrFail($id);
+        $instrukturs = Instruktur::orderBy('nama')->get();
         $durations = DurasiPelatihan::orderBy('hari')->get();
-        return view('pelatihan.edit', compact('pelatihan', 'admins', 'durations'));
+        return view('pelatihan.edit', compact('pelatihan', 'instrukturs', 'durations'));
     }
 
     public function update(Request $request, int $id): RedirectResponse
@@ -88,14 +90,15 @@ class DaftarPelatihanController extends Controller
         $pelatihan = DaftarPelatihan::findOrFail($id);
 
         $validated = $request->validate([
-            'id_admin'            => 'required|exists:admin_blks,id_admin',
+            'id_instruktur'       => 'required|exists:instruktur,id',
             'nama_pelatihan'      => 'required|string|max:70|regex:/^[a-zA-Z\s]+$/',
             'deskripsi_pelatihan' => 'nullable|string',
             'kuota'               => 'required|integer|min:1',
             'id_durasi'           => 'nullable|exists:durasi_pelatihan,id_durasi',
             'gambar'              => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ], [
-            'id_admin.required'       => 'Admin BLK penanggung jawab wajib dipilih.',
+            'id_instruktur.required'  => 'Instruktur penanggung jawab wajib dipilih.',
+            'id_instruktur.exists'    => 'Instruktur yang dipilih tidak terdaftar.',
             'nama_pelatihan.required' => 'Nama kejuruan / program pelatihan wajib diisi.',
             'nama_pelatihan.max'      => 'Nama kejuruan / program pelatihan maksimal 40 karakter.',
             'kuota.required'          => 'Kapasitas kuota peserta wajib ditentukan.',

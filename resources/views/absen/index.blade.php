@@ -13,14 +13,14 @@
       <p class="text-xs text-slate-500 mt-0.5">Kelola pencatatan kehadiran, izin, dan rekapitulasi absensi peserta pelatihan vokasi.</p>
     </div>
 
-    <div class="flex flex-wrap items-center gap-2 self-start md:self-auto">
+    <!-- <div class="flex flex-wrap items-center gap-2 self-start md:self-auto">
       <a href="{{ route('absen.rekap') }}" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
         <i data-lucide="bar-chart-3" class="w-4 h-4"></i> Rekapitulasi & Laporan
       </a>
       <a href="{{ route('absen.create') }}" class="bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
         <i data-lucide="plus" class="w-4 h-4"></i> Catat Absen
       </a>
-    </div>
+    </div> -->
   </div>
 
   <!-- Session Alerts -->
