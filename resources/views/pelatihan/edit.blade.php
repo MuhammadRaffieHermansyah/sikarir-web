@@ -3,219 +3,228 @@
 @section('title', 'Edit Program Pelatihan - ' . $pelatihan->nama_pelatihan)
 
 @section('content')
-  <!-- Title & Breadcrumbs -->
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-    <div>
-      <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
-        <a href="{{ route('admin-blk.index') }}" class="hover:text-emerald-700 transition">Beranda</a>
-        <span>&gt;</span>
-        <a href="{{ route('pelatihan.index') }}" class="hover:text-emerald-700 transition">Program Pelatihan</a>
-        <span>&gt;</span>
-        <span class="text-slate-600 font-medium">Edit Program</span>
-      </div>
-      <h1 class="text-xl font-black text-slate-900 tracking-tight">Edit Program Pelatihan</h1>
-      <p class="text-xs text-slate-500 mt-0.5">Perbarui kapasitas kuota, rincian jam pelajaran, penanggung jawab instruktur, atau deskripsi silabus kejuruan.</p>
-    </div>
+  <x-ui.page-header
+    title="Edit Program Pelatihan"
+    description="Perbarui kapasitas kuota, rincian jam pelajaran, penanggung jawab instruktur, atau deskripsi silabus kejuruan."
+  >
+    <x-slot:actions>
+      <x-ui.badge variant="secondary" class="gap-1.5 uppercase tracking-wide">
+        <span class="size-1.5 rounded-full bg-sikarir-lime"></span>
+        Pembaruan Kurikulum
+      </x-ui.badge>
 
-    <div class="flex items-center gap-2">
-      <a href="{{ route('pelatihan.show', $pelatihan->id_pelatihan) }}" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="eye" class="w-4 h-4"></i> Lihat Detail
-      </a>
-      <a href="{{ route('pelatihan.index') }}" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Daftar
-      </a>
-    </div>
-  </div>
+      <x-ui.button href="{{ route('pelatihan.show', $pelatihan->id_pelatihan) }}" variant="outline">
+        <x-lucide-eye />
+        Lihat Detail
+      </x-ui.button>
 
-  @if($errors->any())
-    <div class="bg-rose-50 border border-rose-200 text-rose-800 px-4 py-3 rounded-xl text-xs space-y-1 shadow-sm">
-      <div class="font-bold flex items-center gap-1.5">
-        <i data-lucide="alert-circle" class="w-4 h-4 text-rose-600"></i>
-        Mohon perbaiki beberapa kesalahan berikut:
-      </div>
-      <ul class="list-disc list-inside space-y-0.5 text-rose-700 pl-4">
-        @foreach($errors->all() as $error)
-          <li>{{ $error }}</li>
-        @endforeach
-      </ul>
-    </div>
+      <x-ui.button href="{{ route('pelatihan.index') }}" variant="outline">
+        <x-lucide-arrow-left />
+        Kembali
+      </x-ui.button>
+    </x-slot:actions>
+  </x-ui.page-header>
+
+  @if ($errors->any())
+    <x-ui.alert tone="danger">
+      <x-lucide-circle-alert />
+      <x-ui.alert-title>Periksa kembali beberapa input berikut:</x-ui.alert-title>
+      <x-ui.alert-description>
+        <ul class="list-inside list-disc space-y-1">
+          @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+          @endforeach
+        </ul>
+      </x-ui.alert-description>
+    </x-ui.alert>
   @endif
 
-  <!-- Form Layout: 2 Columns -->
-  <form action="{{ route('pelatihan.update', $pelatihan->id_pelatihan) }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+  <form action="{{ route('pelatihan.update', $pelatihan->id_pelatihan) }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
     @csrf
     @method('PUT')
 
-    <!-- Main Form Fields (2 Cols) -->
-    <div class="lg:col-span-2 space-y-6">
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-5">
-        <div class="border-b border-slate-100 pb-3 flex items-center justify-between gap-3 flex-wrap">
-          <div class="flex items-center gap-2">
-            <div class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-800 flex items-center justify-center">
-              <i data-lucide="book-open" class="w-4 h-4"></i>
+    <div class="space-y-6 lg:col-span-2">
+      <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <span class="grid size-9 shrink-0 place-items-center rounded-lg bg-accent text-accent-foreground">
+                <x-lucide-book-open class="size-4" />
+              </span>
+              <div>
+                <x-ui.card-title class="text-base font-bold">Informasi Kejuruan & Kurikulum</x-ui.card-title>
+                <x-ui.card-description>Sesuaikan kurikulum pelatihan vokasi BLK.</x-ui.card-description>
+              </div>
             </div>
-            <h2 class="font-bold text-slate-800 text-sm">Informasi Kejuruan &amp; Kurikulum</h2>
+
+            <x-ui.badge tone="success" class="font-mono">
+              #PLT-{{ str_pad((string) $pelatihan->id_pelatihan, 3, '0', STR_PAD_LEFT) }}
+            </x-ui.badge>
           </div>
-          <span class="font-mono text-[11px] text-slate-400">
-            #PLT-{{ str_pad((string) $pelatihan->id_pelatihan, 3, '0', STR_PAD_LEFT) }}
-          </span>
-        </div>
+        </x-ui.card-header>
 
-        <!-- Nama Program -->
-        <div>
-          <label for="nama_pelatihan" class="block text-xs font-semibold text-slate-700 mb-1.5">
-            Nama Program Kejuruan <span class="text-rose-500">*</span>
-          </label>
-          <input type="text" name="nama_pelatihan" id="nama_pelatihan"
-            value="{{ old('nama_pelatihan', $pelatihan->nama_pelatihan) }}"
-            class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent placeholder-slate-400 @error('nama_pelatihan') border-rose-400 bg-rose-50/50 @enderror" />
-          @error('nama_pelatihan')
-            <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
-          @enderror
-        </div>
+        <x-ui.card-content class="space-y-5">
+          <x-ui.field data-invalid="{{ $errors->has('nama_pelatihan') ? 'true' : 'false' }}">
+            <x-ui.field-label for="nama_pelatihan">Nama Program Kejuruan</x-ui.field-label>
+            <x-ui.input
+              id="nama_pelatihan"
+              name="nama_pelatihan"
+              type="text"
+              :value="old('nama_pelatihan', $pelatihan->nama_pelatihan)"
+              required
+            />
+            <x-ui.field-error :messages="$errors->get('nama_pelatihan')" />
+          </x-ui.field>
 
-        <!-- Kuota & Durasi -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label for="kuota" class="block text-xs font-semibold text-slate-700 mb-1.5">
-              Kapasitas Kuota Peserta <span class="text-rose-500">*</span>
-            </label>
-            <div class="relative">
-              <input type="number" name="kuota" id="kuota" value="{{ old('kuota', $pelatihan->kuota) }}" min="1"
-                class="w-full pl-3 pr-14 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('kuota') border-rose-400 bg-rose-50/50 @enderror" />
-              <span class="absolute right-3 top-2 text-xs text-slate-400 font-medium">Siswa</span>
-            </div>
-            @error('kuota')
-              <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
-            @enderror
+          <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <x-ui.field data-invalid="{{ $errors->has('kuota') ? 'true' : 'false' }}">
+              <x-ui.field-label for="kuota">Kapasitas Kuota Peserta</x-ui.field-label>
+              <div class="relative">
+                <x-ui.input
+                  id="kuota"
+                  name="kuota"
+                  type="number"
+                  :value="old('kuota', $pelatihan->kuota)"
+                  min="1"
+                  class="pr-16"
+                  required
+                />
+                <span class="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-3 text-xs font-semibold text-muted-foreground">
+                  Siswa
+                </span>
+              </div>
+              <x-ui.field-error :messages="$errors->get('kuota')" />
+            </x-ui.field>
+
+            <x-ui.field data-invalid="{{ $errors->has('id_durasi') ? 'true' : 'false' }}">
+              <x-ui.field-label for="id_durasi">Standar Durasi Belajar</x-ui.field-label>
+              <x-ui.select name="id_durasi" id="id_durasi" native class="w-full">
+                <option value="">-- Pilih Durasi Pelatihan --</option>
+                @foreach ($durations as $durasi)
+                  <option value="{{ $durasi->id_durasi }}" @selected(old('id_durasi', $pelatihan->id_durasi) == $durasi->id_durasi)>
+                    {{ $durasi->durasi_label }}
+                  </option>
+                @endforeach
+              </x-ui.select>
+              <x-ui.field-error :messages="$errors->get('id_durasi')" />
+            </x-ui.field>
           </div>
 
-          <div>
-            <label for="id_durasi" class="block text-xs font-semibold text-slate-700 mb-1.5">
-              Standar Durasi Belajar
-            </label>
-            <select name="id_durasi" id="id_durasi"
-              class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent cursor-pointer @error('id_durasi') border-rose-400 bg-rose-50/50 @enderror">
-              <option value="">-- Pilih Durasi Pelatihan --</option>
-              @foreach ($durations as $durasi)
-                <option value="{{ $durasi->id_durasi }}"
-                  {{ old('id_durasi', $pelatihan->id_durasi) == $durasi->id_durasi ? 'selected' : '' }}>
-                  {{ $durasi->durasi_label }}
+          <x-ui.field data-invalid="{{ $errors->has('id_admin') ? 'true' : 'false' }}">
+            <x-ui.field-label for="id_admin">Penanggung Jawab / Pembina Kejuruan</x-ui.field-label>
+            <x-ui.select name="id_admin" id="id_admin" native class="w-full" required>
+              <option value="">-- Pilih Instruktur / Admin BLK --</option>
+              @foreach ($admins as $admin)
+                <option value="{{ $admin->id_admin }}" @selected(old('id_admin', $pelatihan->id_admin) == $admin->id_admin)>
+                  {{ $admin->user->name ?? 'Admin BLK' }} (NIP: {{ $admin->nip ?? '-' }})
                 </option>
               @endforeach
-            </select>
-            @error('id_durasi')
-              <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
-            @enderror
-          </div>
-        </div>
+            </x-ui.select>
+            <x-ui.field-error :messages="$errors->get('id_admin')" />
+          </x-ui.field>
 
-        <!-- Penanggung Jawab -->
-        <div>
-          <label for="id_admin" class="block text-xs font-semibold text-slate-700 mb-1.5">
-            Penanggung Jawab / Pembina Kejuruan <span class="text-rose-500">*</span>
-          </label>
-          <select name="id_admin" id="id_admin"
-            class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent cursor-pointer @error('id_admin') border-rose-400 bg-rose-50/50 @enderror">
-            <option value="">-- Pilih Instruktur / Admin BLK --</option>
-            @foreach ($admins as $admin)
-              <option value="{{ $admin->id_admin }}"
-                {{ old('id_admin', $pelatihan->id_admin) == $admin->id_admin ? 'selected' : '' }}>
-                {{ $admin->user->name ?? 'Admin BLK' }} (NIP: {{ $admin->nip ?? '-' }})
-              </option>
-            @endforeach
-          </select>
-          @error('id_admin')
-            <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
-          @enderror
-        </div>
-
-        <!-- Deskripsi -->
-        <div>
-          <label for="deskripsi_pelatihan" class="block text-xs font-semibold text-slate-700 mb-1.5">
-            Deskripsi Silabus &amp; Output Kompetensi
-          </label>
-          <textarea name="deskripsi_pelatihan" id="deskripsi_pelatihan" rows="5"
-            class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent placeholder-slate-400 leading-relaxed @error('deskripsi_pelatihan') border-rose-400 bg-rose-50/50 @enderror">{{ old('deskripsi_pelatihan', $pelatihan->deskripsi_pelatihan) }}</textarea>
-          @error('deskripsi_pelatihan')
-            <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
-          @enderror
-        </div>
-      </div>
+          <x-ui.field data-invalid="{{ $errors->has('deskripsi_pelatihan') ? 'true' : 'false' }}">
+            <x-ui.field-label for="deskripsi_pelatihan">Deskripsi Silabus & Output Kompetensi</x-ui.field-label>
+            <x-ui.textarea
+              id="deskripsi_pelatihan"
+              name="deskripsi_pelatihan"
+              rows="5"
+              placeholder="Jelaskan ringkasan materi, standar kompetensi kerja, kurikulum kejuruan, dan sertifikasi BNSP..."
+            >{{ old('deskripsi_pelatihan', $pelatihan->deskripsi_pelatihan) }}</x-ui.textarea>
+            <x-ui.field-error :messages="$errors->get('deskripsi_pelatihan')" />
+          </x-ui.field>
+        </x-ui.card-content>
+      </x-ui.card>
     </div>
 
-    <!-- Right Column: Poster & Simpan -->
     <div class="space-y-6">
-      <!-- Upload Poster Card -->
-      @php $adaGambar = (bool) $pelatihan->gambar_url; @endphp
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
-        <h3 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100 flex items-center gap-2">
-          <i data-lucide="image" class="w-4 h-4 text-emerald-700"></i>
-          Poster Program
-        </h3>
+      <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+          <x-ui.card-title class="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted-foreground">
+            <x-lucide-save class="size-4 text-primary" />
+            Aksi Pembaruan
+          </x-ui.card-title>
+        </x-ui.card-header>
 
-        <label for="gambar" id="dropzone"
-          class="relative flex flex-col items-center justify-center w-full h-44 border-2 border-dashed border-slate-200 hover:border-emerald-500 bg-slate-50 hover:bg-emerald-50/40 rounded-lg cursor-pointer overflow-hidden transition @error('gambar') border-rose-400 @enderror">
-          <!-- Placeholder -->
-          <div id="upload-placeholder" class="{{ $adaGambar ? 'hidden' : 'flex' }} flex-col items-center gap-2 text-center px-4">
-            <i data-lucide="upload-cloud" class="w-7 h-7 text-slate-400"></i>
-            <p class="text-xs font-semibold text-slate-600">Klik untuk upload gambar</p>
-            <p class="text-[11px] text-slate-400">JPG, PNG, WEBP. Maks 2 MB.</p>
+        <x-ui.card-content class="space-y-4">
+          <div class="space-y-2 rounded-xl border border-border bg-muted/40 p-3.5 text-xs text-muted-foreground">
+            <div class="flex items-center justify-between gap-3">
+              <span>Dibuat:</span>
+              <span class="font-bold text-foreground">
+                {{ $pelatihan->created_at ? $pelatihan->created_at->translatedFormat('d M Y') : '-' }}
+              </span>
+            </div>
+            <div class="flex items-center justify-between gap-3">
+              <span>Terakhir diubah:</span>
+              <span class="font-bold text-foreground">
+                {{ $pelatihan->updated_at ? $pelatihan->updated_at->translatedFormat('d M Y') : '-' }}
+              </span>
+            </div>
           </div>
 
-          <!-- Preview (gambar lama kalau ada) -->
-          <img id="upload-preview" src="{{ $pelatihan->gambar_url }}" alt="Preview poster"
-            class="{{ $adaGambar ? '' : 'hidden' }} absolute inset-0 w-full h-full object-cover" />
+          <x-ui.button type="submit" size="lg" class="w-full bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
+            <x-lucide-check />
+            Simpan Perubahan
+          </x-ui.button>
 
-          <input type="file" name="gambar" id="gambar" accept="image/png,image/jpeg,image/webp" class="hidden" />
-        </label>
-
-        <!-- Penanda: 1 = hapus gambar lama -->
-        <input type="hidden" name="hapus_gambar" id="hapus_gambar" value="0">
-        <button type="button" id="remove-image"
-          class="{{ $adaGambar ? '' : 'hidden' }} w-full text-xs font-semibold text-rose-600 hover:text-rose-700 py-2 rounded-lg bg-rose-50 hover:bg-rose-100 transition">
-          Hapus gambar
-        </button>
-        @error('gambar')
-          <p class="text-rose-600 text-[11px]">{{ $message }}</p>
-        @enderror
-      </div>
-
-      <!-- Info & Simpan -->
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
-        <h3 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100 flex items-center gap-2">
-          <i data-lucide="info" class="w-4 h-4 text-emerald-700"></i>
-          Informasi Program
-        </h3>
-
-        <div class="p-3 bg-slate-50 rounded-lg border border-slate-100 space-y-2 text-[11px] text-slate-500">
-          <div class="flex items-center justify-between">
-            <span>Dibuat:</span>
-            <span class="font-bold text-slate-700">
-              {{ $pelatihan->created_at ? $pelatihan->created_at->translatedFormat('d M Y') : '-' }}
-            </span>
-          </div>
-          <div class="flex items-center justify-between">
-            <span>Terakhir diubah:</span>
-            <span class="font-bold text-slate-700">
-              {{ $pelatihan->updated_at ? $pelatihan->updated_at->translatedFormat('d M Y') : '-' }}
-            </span>
-          </div>
-        </div>
-
-        <div class="pt-2 space-y-2">
-          <button type="submit" class="w-full bg-emerald-900 hover:bg-emerald-950 text-white font-semibold text-xs py-2.5 px-4 rounded-lg shadow-sm flex items-center justify-center gap-2 transition cursor-pointer">
-            <i data-lucide="check" class="w-4 h-4"></i> Simpan Perubahan
-          </button>
-          <a href="{{ route('pelatihan.index') }}" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition">
+          <x-ui.button href="{{ route('pelatihan.index') }}" variant="outline" size="lg" class="w-full">
             Batal
-          </a>
-        </div>
-      </div>
+          </x-ui.button>
+        </x-ui.card-content>
+      </x-ui.card>
+
+      @php $adaGambar = (bool) $pelatihan->gambar_url; @endphp
+
+      <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+          <x-ui.card-title class="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted-foreground">
+            <x-lucide-image class="size-4 text-primary" />
+            Poster Program
+          </x-ui.card-title>
+        </x-ui.card-header>
+
+        <x-ui.card-content class="space-y-3">
+          <label
+            for="gambar"
+            id="dropzone"
+            class="relative flex h-48 w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-border bg-muted/40 transition hover:border-primary hover:bg-accent/50 @error('gambar') border-destructive @enderror"
+          >
+            <div id="upload-placeholder" class="{{ $adaGambar ? 'hidden' : 'flex' }} flex-col items-center gap-2 px-4 text-center">
+              <x-lucide-upload-cloud class="size-8 text-muted-foreground" />
+              <p class="text-xs font-bold text-foreground">Klik untuk upload gambar</p>
+              <p class="text-[11px] text-muted-foreground">JPG, PNG, WEBP. Maks 2 MB.</p>
+            </div>
+
+            <img
+              id="upload-preview"
+              src="{{ $pelatihan->gambar_url }}"
+              alt="Preview poster"
+              class="{{ $adaGambar ? '' : 'hidden' }} absolute inset-0 size-full object-cover"
+            >
+            <input type="file" name="gambar" id="gambar" accept="image/png,image/jpeg,image/webp" class="hidden">
+          </label>
+
+          <input type="hidden" name="hapus_gambar" id="hapus_gambar" value="0">
+
+          <x-ui.button
+            type="button"
+            id="remove-image"
+            variant="ghost"
+            size="sm"
+            class="{{ $adaGambar ? '' : 'hidden' }} w-full text-destructive hover:bg-destructive/10 hover:text-destructive"
+          >
+            Hapus gambar
+          </x-ui.button>
+
+          <x-ui.field-error :messages="$errors->get('gambar')" />
+        </x-ui.card-content>
+      </x-ui.card>
     </div>
   </form>
+@endsection
+
 @push('scripts')
-<script>
+  <script>
     const input = document.getElementById('gambar');
     const preview = document.getElementById('upload-preview');
     const placeholder = document.getElementById('upload-placeholder');
@@ -224,30 +233,29 @@
     const adaGambarLama = {{ $adaGambar ? 'true' : 'false' }};
 
     input.addEventListener('change', () => {
-        const file = input.files[0];
-        if (!file) return;
-        if (file.size > 2 * 1024 * 1024) {
-            alert('Ukuran gambar maksimal 2 MB.');
-            input.value = '';
-            return;
-        }
-        preview.src = URL.createObjectURL(file);
-        preview.classList.remove('hidden');
-        placeholder.classList.add('hidden');
-        placeholder.classList.remove('flex');
-        removeBtn.classList.remove('hidden');
-        hapusInput.value = '0';
+      const file = input.files[0];
+      if (!file) return;
+      if (file.size > 2 * 1024 * 1024) {
+        alert('Ukuran gambar maksimal 2 MB.');
+        input.value = '';
+        return;
+      }
+      preview.src = URL.createObjectURL(file);
+      preview.classList.remove('hidden');
+      placeholder.classList.add('hidden');
+      placeholder.classList.remove('flex');
+      removeBtn.classList.remove('hidden');
+      hapusInput.value = '0';
     });
 
     removeBtn.addEventListener('click', () => {
-        input.value = '';
-        preview.removeAttribute('src');
-        preview.classList.add('hidden');
-        placeholder.classList.remove('hidden');
-        placeholder.classList.add('flex');
-        removeBtn.classList.add('hidden');
-        hapusInput.value = adaGambarLama ? '1' : '0';
+      input.value = '';
+      preview.removeAttribute('src');
+      preview.classList.add('hidden');
+      placeholder.classList.remove('hidden');
+      placeholder.classList.add('flex');
+      removeBtn.classList.add('hidden');
+      hapusInput.value = adaGambarLama ? '1' : '0';
     });
-</script>
+  </script>
 @endpush
-@endsection

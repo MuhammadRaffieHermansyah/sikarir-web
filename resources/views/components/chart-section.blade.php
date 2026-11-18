@@ -1,128 +1,90 @@
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-  <!-- Chart Batang -->
-  <div class="lg:col-span-2 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-    <div class="flex items-center justify-between mb-4">
-      <div>
-        <h3 class="font-bold text-slate-800 text-sm">Tren Aktivitas & Log Presensi</h3>
-        <p class="text-xs text-slate-500">Tingkat kehadiran harian dan pengisian jurnal industri minggu berjalan</p>
-      </div>
-      <div class="flex items-center gap-4 text-xs">
-        <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-slate-800 rounded-sm"></span> Presensi Masuk</span>
-        <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-emerald-400 rounded-sm"></span> Jurnal Terkirim</span>
-      </div>
-    </div>
+<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+    <x-ui.card variant="sectioned" class="lg:col-span-2">
+        <x-ui.card-header>
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                    <x-ui.card-title class="text-base">Tren Aktivitas & Log Presensi</x-ui.card-title>
+                    <x-ui.card-description>Tingkat kehadiran harian dan pengisian jurnal industri minggu berjalan.</x-ui.card-description>
+                </div>
+                <div class="flex items-center gap-4 text-xs text-muted-foreground">
+                    <span class="flex items-center gap-1.5"><span class="size-3 rounded-sm bg-primary"></span> Presensi Masuk</span>
+                    <span class="flex items-center gap-1.5"><span class="size-3 rounded-sm bg-chart-2"></span> Jurnal Terkirim</span>
+                </div>
+            </div>
+        </x-ui.card-header>
 
-    <!-- Chart Visual -->
-    <div class="h-44 flex items-end justify-between px-4 pt-6 pb-2 border-b border-slate-100 gap-4">
-      <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-        <span class="text-[10px] text-slate-400">98%</span>
-        <div class="w-full max-w-[40px] flex gap-1 h-[85%] items-end">
-          <div class="bg-slate-800 w-1/2 h-[98%] rounded-t-sm"></div>
-          <div class="bg-emerald-400 w-1/2 h-[92%] rounded-t-sm"></div>
-        </div>
-        <span class="text-xs text-slate-500 font-medium">Senin</span>
-      </div>
-      <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-        <span class="text-[10px] text-slate-400">97%</span>
-        <div class="w-full max-w-[40px] flex gap-1 h-[85%] items-end">
-          <div class="bg-slate-800 w-1/2 h-[97%] rounded-t-sm"></div>
-          <div class="bg-emerald-400 w-1/2 h-[95%] rounded-t-sm"></div>
-        </div>
-        <span class="text-xs text-slate-500 font-medium">Selasa</span>
-      </div>
-      <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-        <span class="text-[10px] text-slate-400">96%</span>
-        <div class="w-full max-w-[40px] flex gap-1 h-[85%] items-end">
-          <div class="bg-slate-800 w-1/2 h-[96%] rounded-t-sm"></div>
-          <div class="bg-emerald-400 w-1/2 h-[90%] rounded-t-sm"></div>
-        </div>
-        <span class="text-xs text-slate-500 font-medium">Rabu</span>
-      </div>
-      <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-        <span class="text-[10px] text-slate-400">98%</span>
-        <div class="w-full max-w-[40px] flex gap-1 h-[85%] items-end">
-          <div class="bg-slate-800 w-1/2 h-[98%] rounded-t-sm"></div>
-          <div class="bg-emerald-400 w-1/2 h-[94%] rounded-t-sm"></div>
-        </div>
-        <span class="text-xs text-slate-500 font-medium">Kamis</span>
-      </div>
-      <div class="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-        <span class="text-[10px] text-slate-400">95%</span>
-        <div class="w-full max-w-[40px] flex gap-1 h-[85%] items-end">
-          <div class="bg-slate-800 w-1/2 h-[95%] rounded-t-sm"></div>
-          <div class="bg-emerald-400 w-1/2 h-[88%] rounded-t-sm"></div>
-        </div>
-        <span class="text-xs text-slate-500 font-medium">Jumat</span>
-      </div>
-    </div>
+        <x-ui.card-content>
+            <div class="flex h-44 items-end justify-between gap-4 border-b border-border px-4 pb-2 pt-6">
+                @foreach ([['Senin', 98, 92], ['Selasa', 97, 95], ['Rabu', 96, 90], ['Kamis', 98, 94], ['Jumat', 95, 88]] as [$day, $presensi, $jurnal])
+                    <div class="flex h-full flex-1 flex-col items-center justify-end gap-1">
+                        <span class="text-[10px] text-muted-foreground">{{ $presensi }}%</span>
+                        <div class="flex h-[85%] w-full max-w-10 items-end gap-1">
+                            <div class="h-[{{ $presensi }}%] w-1/2 rounded-t-sm bg-primary"></div>
+                            <div class="h-[{{ $jurnal }}%] w-1/2 rounded-t-sm bg-chart-2"></div>
+                        </div>
+                        <span class="text-xs font-medium text-muted-foreground">{{ $day }}</span>
+                    </div>
+                @endforeach
+            </div>
 
-    <div class="grid grid-cols-3 gap-2 mt-4 text-xs">
-      <div class="bg-slate-50 p-2.5 rounded-lg flex items-center gap-2">
-        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
-        <div>
-          <div class="text-[10px] text-slate-400">Rata-rata Presensi</div>
-          <div class="font-bold text-slate-800">96.8% Tepat Waktu</div>
-        </div>
-      </div>
-      <div class="bg-slate-50 p-2.5 rounded-lg flex items-center gap-2">
-        <i data-lucide="file-check" class="w-4 h-4 text-emerald-600"></i>
-        <div>
-          <div class="text-[10px] text-slate-400">Log Jurnal Masuk</div>
-          <div class="font-bold text-slate-800">821 dari 865</div>
-        </div>
-      </div>
-      <div class="bg-slate-50 p-2.5 rounded-lg flex items-center gap-2">
-        <i data-lucide="clock" class="w-4 h-4 text-emerald-600"></i>
-        <div>
-          <div class="text-[10px] text-slate-400">Total Jam Pelatihan</div>
-          <div class="font-bold text-slate-800">34,600 Jam</div>
-        </div>
-      </div>
-    </div>
-  </div>
+            <div class="mt-4 grid grid-cols-1 gap-2 text-xs sm:grid-cols-3">
+                <x-ui.item variant="muted" size="sm">
+                    <x-lucide-circle-check class="size-4 text-success" />
+                    <x-ui.item-content>
+                        <x-ui.item-description>Rata-rata Presensi</x-ui.item-description>
+                        <x-ui.item-title class="text-xs">96.8% Tepat Waktu</x-ui.item-title>
+                    </x-ui.item-content>
+                </x-ui.item>
+                <x-ui.item variant="muted" size="sm">
+                    <x-lucide-file-check class="size-4 text-success" />
+                    <x-ui.item-content>
+                        <x-ui.item-description>Log Jurnal Masuk</x-ui.item-description>
+                        <x-ui.item-title class="text-xs">821 dari 865</x-ui.item-title>
+                    </x-ui.item-content>
+                </x-ui.item>
+                <x-ui.item variant="muted" size="sm">
+                    <x-lucide-clock class="size-4 text-success" />
+                    <x-ui.item-content>
+                        <x-ui.item-description>Total Jam Pelatihan</x-ui.item-description>
+                        <x-ui.item-title class="text-xs">34,600 Jam</x-ui.item-title>
+                    </x-ui.item-content>
+                </x-ui.item>
+            </div>
+        </x-ui.card-content>
+    </x-ui.card>
 
-  <!-- Donut Chart Presensi -->
-  <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
-    <div>
-      <div class="flex items-center justify-between">
-        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Presensi Hari Ini
-        </h3>
-        <span class="text-[10px] text-slate-400">Per 09:30 WIB</span>
-      </div>
+    <x-ui.card variant="sectioned">
+        <x-ui.card-header>
+            <div class="flex items-center justify-between">
+                <x-ui.card-title class="flex items-center gap-2 text-base">
+                    <span class="size-2 rounded-full bg-success"></span> Presensi Hari Ini
+                </x-ui.card-title>
+                <span class="text-[10px] text-muted-foreground">Per 09:30 WIB</span>
+            </div>
+        </x-ui.card-header>
 
-      <!-- Gauge Container -->
-      <div class="relative w-36 h-36 mx-auto my-4 flex items-center justify-center">
-        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-          <path class="text-slate-100" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-          <path class="text-emerald-800" stroke-dasharray="96.8, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-        </svg>
-        <div class="absolute text-center">
-          <span class="text-xl font-black text-slate-800 block leading-none">96.8%</span>
-          <span class="text-[9px] font-bold text-emerald-700 tracking-tight">HADIR TERVERIFIKASI</span>
-        </div>
-      </div>
+        <x-ui.card-content class="flex flex-col items-center gap-6">
+            <x-ui.progress circular :value="96.8" :size="144" :thickness="12" show-value />
 
-      
+            <div class="grid w-full grid-cols-3 gap-2 rounded-lg bg-muted p-3 text-center text-xs">
+                <div>
+                    <div class="text-[10px] text-muted-foreground">Terlambat</div>
+                    <div class="font-bold text-foreground">18</div>
+                </div>
+                <div class="border-x border-border">
+                    <div class="text-[10px] text-muted-foreground">Izin / Sakit</div>
+                    <div class="font-bold text-foreground">9</div>
+                </div>
+                <div>
+                    <div class="text-[10px] text-muted-foreground">Alpha</div>
+                    <div class="font-bold text-foreground">0</div>
+                </div>
+            </div>
 
-      <div class="grid grid-cols-3 gap-2 text-center text-xs bg-slate-50 p-2 rounded-lg">
-        <div>
-          <div class="text-[10px] text-slate-400">Terlambat</div>
-          <div class="font-bold text-slate-800">18</div>
-        </div>
-        <div class="border-x border-slate-200">
-          <div class="text-[10px] text-slate-400">Izin / Sakit</div>
-          <div class="font-bold text-slate-800">9</div>
-        </div>
-        <div>
-          <div class="text-[10px] text-slate-400">Alpha</div>
-          <div class="font-bold text-slate-800">0</div>
-        </div>
-      </div>
-    </div>
-
-    <a href="#" class="text-xs text-center text-emerald-700 font-semibold hover:underline block mt-2">
-      Lihat Detail Presensi Real-Time &rarr;
-    </a>
-  </div>
+            <x-ui.button variant="link" href="#" class="text-xs">
+                Lihat Detail Presensi Real-Time
+                <x-lucide-arrow-right />
+            </x-ui.button>
+        </x-ui.card-content>
+    </x-ui.card>
 </div>

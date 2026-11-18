@@ -1,146 +1,197 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Instruktur - BLK CONNECT')
+@section('title', 'Detail Instruktur - SiKarir BLK')
 
 @section('content')
-  <!-- Title & Breadcrumbs -->
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-    <div>
-      <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
-        <a href="{{ route('admin-blk.index') }}" class="hover:text-emerald-700 transition">Beranda</a>
-        <span>&gt;</span>
-        <a href="{{ route('instruktur.index') }}" class="hover:text-emerald-700 transition">Instruktur</a>
-        <span>&gt;</span>
-        <span class="text-slate-600 font-medium">Detail Instruktur</span>
-      </div>
-      <h1 class="text-xl font-black text-slate-900 tracking-tight">Detail Instruktur</h1>
-      <p class="text-xs text-slate-500 mt-0.5">Informasi lengkap instruktur beserta jadwal & kelas yang diampu.</p>
-    </div>
+  <x-ui.page-header
+    title="Detail Instruktur"
+    description="Informasi lengkap instruktur beserta jadwal & kelas yang diampu."
+  >
+    <x-slot:breadcrumb>
+      <x-ui.breadcrumb>
+        <x-ui.breadcrumb-list>
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-link href="{{ route('admin-blk.index') }}">Beranda</x-ui.breadcrumb-link>
+          </x-ui.breadcrumb-item>
+          <x-ui.breadcrumb-separator />
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-link href="{{ route('instruktur.index') }}">Instruktur</x-ui.breadcrumb-link>
+          </x-ui.breadcrumb-item>
+          <x-ui.breadcrumb-separator />
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-page>Detail Instruktur</x-ui.breadcrumb-page>
+          </x-ui.breadcrumb-item>
+        </x-ui.breadcrumb-list>
+      </x-ui.breadcrumb>
+    </x-slot:breadcrumb>
 
-    <div class="flex items-center gap-2">
-      <a href="{{ route('instruktur.edit', $instruktur->id) }}" class="bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="edit-3" class="w-4 h-4"></i> Edit Instruktur
-      </a>
-      <a href="{{ route('instruktur.index') }}" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali
-      </a>
-    </div>
-  </div>
+    <x-slot:actions>
+      <x-ui.button href="{{ route('instruktur.edit', $instruktur->id) }}" class="bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
+        <x-lucide-pencil />
+        Edit Instruktur
+      </x-ui.button>
 
-  <!-- Header Card -->
-  <div class="bg-gradient-to-br from-emerald-900 via-teal-900 to-slate-900 rounded-2xl text-white p-6 shadow-sm flex flex-col md:flex-row justify-between gap-4">
-    <div>
-      <div class="text-[10px] text-emerald-300 uppercase font-bold tracking-wider mb-1">Master Instruktur</div>
-      <div class="flex items-center gap-2.5 flex-wrap">
-        <h2 class="text-lg font-extrabold">{{ $instruktur->nama }}</h2>
-        <span class="bg-emerald-500/20 text-emerald-200 text-[11px] font-bold px-2.5 py-0.5 rounded-full border border-emerald-400/30">
-          ID: #INS-{{ str_pad((string)$instruktur->id, 3, '0', STR_PAD_LEFT) }}
-        </span>
-      </div>
-      <div class="flex items-center gap-4 text-xs text-emerald-100/70 mt-1.5">
-        <span class="flex items-center gap-1.5"><i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i> {{ $instruktur->bidang_keahlian }}</span>
-      </div>
-    </div>
-    <div class="text-right md:border-l md:border-emerald-800/50 md:pl-6 flex md:block items-center justify-between gap-3">
-      <div class="text-[10px] text-emerald-300 uppercase font-bold tracking-wider">Jadwal Diampu</div>
-      <div class="text-2xl font-black mt-0.5">{{ count($instruktur->jadwal ?? []) }} Jadwal</div>
-    </div>
-  </div>
+      <x-ui.button href="{{ route('instruktur.index') }}" variant="outline">
+        <x-lucide-arrow-left />
+        Kembali
+      </x-ui.button>
+    </x-slot:actions>
+  </x-ui.page-header>
 
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- Metadata -->
-    <div class="space-y-6 lg:col-span-1">
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
-        <h4 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100">Metadata</h4>
-        <div class="space-y-3 text-xs">
-          <div class="flex items-center justify-between text-slate-700">
-            <span class="text-slate-400">Nama:</span>
-            <span class="font-semibold">{{ $instruktur->nama }}</span>
-          </div>
-          <div class="flex items-center justify-between text-slate-700">
-            <span class="text-slate-400">Bidang Keahlian:</span>
-            <span class="font-semibold">{{ $instruktur->bidang_keahlian }}</span>
-          </div>
-          <div class="flex items-center justify-between text-slate-700">
-            <span class="text-slate-400">Dibuat pada:</span>
-            <span class="font-semibold">{{ $instruktur->created_at ? $instruktur->created_at->translatedFormat('d M Y') : '-' }}</span>
-          </div>
-          <div class="flex items-center justify-between text-slate-700">
-            <span class="text-slate-400">Diperbarui:</span>
-            <span class="font-semibold">{{ $instruktur->updated_at ? $instruktur->updated_at->translatedFormat('d M Y') : '-' }}</span>
-          </div>
+  <x-ui.card class="border-primary/30 bg-gradient-to-br from-primary via-[#0d4335] to-[#0a2f26] text-primary-foreground">
+    <div class="flex flex-col justify-between gap-4 md:flex-row">
+      <div>
+        <div class="text-[10px] font-bold uppercase tracking-wider text-sikarir-lime">Master Instruktur</div>
+        <div class="mt-1 flex flex-wrap items-center gap-2.5">
+          <h2 class="text-lg font-extrabold text-white">{{ $instruktur->nama }}</h2>
+          <x-ui.badge class="border-primary-foreground/25 bg-primary-foreground/10 font-mono text-primary-foreground">
+            ID: #INS-{{ str_pad((string) $instruktur->id, 3, '0', STR_PAD_LEFT) }}
+          </x-ui.badge>
+        </div>
+        <div class="mt-2 flex items-center gap-4 text-xs text-primary-foreground/70">
+          <span class="flex items-center gap-1.5">
+            <x-lucide-graduation-cap class="size-3.5" />
+            {{ $instruktur->bidang_keahlian }}
+          </span>
         </div>
       </div>
 
-      <!-- Danger Zone -->
-      <div class="bg-rose-50/50 rounded-xl border border-rose-200 shadow-sm p-5 space-y-3">
-        <h4 class="font-bold text-rose-800 text-xs flex items-center gap-1.5">
-          <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600"></i> Zona Berbahaya
-        </h4>
-        <p class="text-[11px] text-rose-600 leading-relaxed">
-          Menghapus instruktur ini akan membuat jadwal & kelas terkait kehilangan penugasan instruktur (tidak dihapus).
-        </p>
-        <form action="{{ route('instruktur.destroy', $instruktur->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus instruktur ini?')">
-          @csrf
-          @method('DELETE')
-          <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs py-2 px-4 rounded-lg transition">
-            Hapus Instruktur
-          </button>
-        </form>
+      <div class="flex items-center justify-between gap-3 text-right md:block md:border-l md:border-primary-foreground/20 md:pl-6">
+        <div class="text-[10px] font-bold uppercase tracking-wider text-sikarir-lime">Jadwal Diampu</div>
+        <div class="mt-0.5 text-2xl font-black text-white">{{ count($instruktur->jadwal ?? []) }} Jadwal</div>
       </div>
     </div>
+  </x-ui.card>
 
-    <!-- Jadwal & Kelas Terkait -->
+  <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
+    <div class="space-y-6">
+      <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+          <x-ui.card-title class="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted-foreground">
+            <x-lucide-info class="size-4 text-primary" />
+            Metadata
+          </x-ui.card-title>
+        </x-ui.card-header>
+
+        <x-ui.card-content class="space-y-3 text-xs">
+          <div class="flex items-center justify-between gap-3">
+            <span class="text-muted-foreground">Nama:</span>
+            <span class="font-bold text-foreground">{{ $instruktur->nama }}</span>
+          </div>
+          <div class="flex items-center justify-between gap-3">
+            <span class="text-muted-foreground">Bidang Keahlian:</span>
+            <span class="font-bold text-foreground">{{ $instruktur->bidang_keahlian }}</span>
+          </div>
+          <div class="flex items-center justify-between gap-3">
+            <span class="text-muted-foreground">Dibuat pada:</span>
+            <span class="font-bold text-foreground">
+              {{ $instruktur->created_at ? $instruktur->created_at->translatedFormat('d M Y') : '-' }}
+            </span>
+          </div>
+          <div class="flex items-center justify-between gap-3">
+            <span class="text-muted-foreground">Diperbarui:</span>
+            <span class="font-bold text-foreground">
+              {{ $instruktur->updated_at ? $instruktur->updated_at->translatedFormat('d M Y') : '-' }}
+            </span>
+          </div>
+        </x-ui.card-content>
+      </x-ui.card>
+
+      <x-ui.card variant="sectioned" class="border-destructive/30 bg-destructive/5">
+        <x-ui.card-header class="border-b border-destructive/20">
+          <x-ui.card-title class="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-destructive">
+            <x-lucide-triangle-alert class="size-4" />
+            Zona Berbahaya
+          </x-ui.card-title>
+        </x-ui.card-header>
+
+        <x-ui.card-content class="space-y-3">
+          <p class="text-xs leading-relaxed text-muted-foreground">
+            Menghapus instruktur ini akan membuat jadwal & kelas terkait kehilangan penugasan instruktur (tidak dihapus).
+          </p>
+
+          <form
+            action="{{ route('instruktur.destroy', $instruktur->id) }}"
+            method="POST"
+            onsubmit="return confirm('Apakah Anda yakin ingin menghapus instruktur ini?')"
+          >
+            @csrf
+            @method('DELETE')
+
+            <x-ui.button type="submit" variant="destructive" class="w-full">
+              <x-lucide-trash-2 />
+              Hapus Instruktur
+            </x-ui.button>
+          </form>
+        </x-ui.card-content>
+      </x-ui.card>
+    </div>
+
     <div class="lg:col-span-2">
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="p-5 border-b border-slate-100">
-          <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-            <i data-lucide="calendar-clock" class="w-4 h-4 text-emerald-700"></i>
+      <x-ui.card variant="sectioned" class="gap-0 overflow-hidden">
+        <x-ui.card-header class="border-b pb-5">
+          <x-ui.card-title class="flex items-center gap-2 text-base font-bold">
+            <x-lucide-calendar-clock class="size-4 text-primary" />
             Jadwal & Kelas Diampu
-          </h2>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead>
-              <tr class="bg-slate-50 text-slate-500 border-b border-slate-200 text-[11px] uppercase tracking-wider">
-                <th class="px-5 py-3 font-semibold">Program</th>
-                <th class="px-5 py-3 font-semibold">Periode</th>
-                <th class="px-5 py-3 font-semibold">Status</th>
-                <th class="px-5 py-3 font-semibold text-right">Aksi</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100 text-slate-700">
-              @forelse($instruktur->jadwal ?? [] as $jadwal)
-                <tr class="hover:bg-slate-50/80 transition">
-                  <td class="px-5 py-3.5 font-bold text-slate-800">{{ $jadwal->pelatihan?->nama_pelatihan ?? 'Program dihapus' }}</td>
-                  <td class="px-5 py-3.5">
-                    <span class="text-[11px] font-semibold text-slate-600">
-                      {{ $jadwal->tanggal_mulai?->format('d M Y') }} &mdash; {{ $jadwal->tanggal_selesai?->format('d M Y') }}
-                    </span>
-                  </td>
-                  <td class="px-5 py-3.5">
-                    <span class="bg-blue-50 text-blue-700 font-semibold px-2 py-0.5 rounded text-[11px]">{{ ucfirst($jadwal->status) }}</span>
-                  </td>
-                  <td class="px-5 py-3.5 text-right">
-                    <a href="{{ route('jadwal-pelatihan.show', $jadwal->id_jadwal) }}" class="text-emerald-700 hover:underline font-semibold">Detail</a>
-                  </td>
-                </tr>
-              @empty
-                <tr>
-                  <td colspan="4" class="px-5 py-10 text-center text-slate-400">
-                    <div class="flex flex-col items-center justify-center gap-2">
-                      <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-                        <i data-lucide="calendar-clock" class="w-6 h-6"></i>
-                      </div>
-                      <p class="text-xs font-medium text-slate-600">Instruktur ini belum ditugaskan pada jadwal & kelas</p>
+          </x-ui.card-title>
+        </x-ui.card-header>
+
+        <x-ui.card-content class="px-0">
+          <x-ui.table>
+            <x-ui.table-header>
+              <x-ui.table-row class="bg-muted/50 hover:bg-muted/50">
+                <x-ui.table-head class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Program</x-ui.table-head>
+                <x-ui.table-head class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Periode</x-ui.table-head>
+                <x-ui.table-head class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Status</x-ui.table-head>
+                <x-ui.table-head class="px-4 text-end text-xs font-semibold uppercase tracking-wide text-muted-foreground">Aksi</x-ui.table-head>
+              </x-ui.table-row>
+            </x-ui.table-header>
+
+            <x-ui.table-body>
+              @forelse ($instruktur->jadwal ?? [] as $jadwal)
+                <x-ui.table-row>
+                  <x-ui.table-cell class="px-4 py-3 font-bold text-foreground">
+                    {{ $jadwal->pelatihan?->nama_pelatihan ?? 'Program dihapus' }}
+                  </x-ui.table-cell>
+
+                  <x-ui.table-cell class="px-4 py-3 text-xs font-semibold text-muted-foreground">
+                    {{ $jadwal->tanggal_mulai?->format('d M Y') }} &mdash; {{ $jadwal->tanggal_selesai?->format('d M Y') }}
+                  </x-ui.table-cell>
+
+                  <x-ui.table-cell class="px-4 py-3">
+                    <x-ui.badge variant="secondary">{{ ucfirst($jadwal->status) }}</x-ui.badge>
+                  </x-ui.table-cell>
+
+                  <x-ui.table-cell class="px-4 py-3">
+                    <div class="flex justify-end">
+                      <x-ui.button href="{{ route('jadwal-pelatihan.show', $jadwal->id_jadwal) }}" variant="link" size="sm">
+                        Detail
+                        <x-lucide-chevron-right />
+                      </x-ui.button>
                     </div>
-                  </td>
-                </tr>
+                  </x-ui.table-cell>
+                </x-ui.table-row>
+              @empty
+                <x-ui.table-row class="hover:bg-transparent">
+                  <x-ui.table-cell colspan="4" class="p-0">
+                    <x-ui.empty class="border-0">
+                      <x-ui.empty-header>
+                        <x-ui.empty-media variant="icon">
+                          <x-lucide-calendar-clock />
+                        </x-ui.empty-media>
+                        <x-ui.empty-title class="text-base">Belum Ada Penugasan</x-ui.empty-title>
+                        <x-ui.empty-description>
+                          Instruktur ini belum ditugaskan pada jadwal & kelas.
+                        </x-ui.empty-description>
+                      </x-ui.empty-header>
+                    </x-ui.empty>
+                  </x-ui.table-cell>
+                </x-ui.table-row>
               @endforelse
-            </tbody>
-          </table>
-        </div>
-      </div>
+            </x-ui.table-body>
+          </x-ui.table>
+        </x-ui.card-content>
+      </x-ui.card>
     </div>
   </div>
 @endsection

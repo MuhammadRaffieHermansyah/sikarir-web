@@ -1,149 +1,154 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Presensi Peserta - BLK')
+@section('title', 'Edit Presensi Peserta - SiKarir BLK')
 
 @section('content')
-  <!-- Title & Action Bar -->
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-    <div>
-      <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
-        <a href="{{ route('absen.index') }}" class="hover:text-emerald-700 transition">Daftar Absensi</a> &gt;
-        <span class="text-slate-600 font-medium">Edit Presensi</span>
-      </div>
-      <h1 class="text-xl font-black text-slate-900 tracking-tight">Edit Presensi Peserta</h1>
-      <p class="text-xs text-slate-500 mt-0.5">Perbarui data pencatatan kehadiran atau keterangan presensi harian.</p>
-    </div>
+  <x-ui.page-header
+    title="Edit Presensi Peserta"
+    description="Perbarui data pencatatan kehadiran atau keterangan presensi harian."
+  >
+    <x-slot:breadcrumb>
+      <x-ui.breadcrumb>
+        <x-ui.breadcrumb-list>
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-link href="{{ route('absen.index') }}">Daftar Absensi</x-ui.breadcrumb-link>
+          </x-ui.breadcrumb-item>
+          <x-ui.breadcrumb-separator />
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-page>Edit Presensi</x-ui.breadcrumb-page>
+          </x-ui.breadcrumb-item>
+        </x-ui.breadcrumb-list>
+      </x-ui.breadcrumb>
+    </x-slot:breadcrumb>
 
-    <a href="{{ route('absen.index') }}" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3.5 py-2 rounded-lg flex items-center gap-1.5 transition self-start md:self-auto">
-      <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali
-    </a>
-  </div>
+    <x-slot:actions>
+      <x-ui.button href="{{ route('absen.index') }}" variant="outline">
+        <x-lucide-arrow-left />
+        Kembali
+      </x-ui.button>
+    </x-slot:actions>
+  </x-ui.page-header>
 
-  <!-- Form Card -->
-  <div class="max-w-3xl mx-auto">
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-      <div class="p-5 border-b border-slate-100 flex items-center gap-2.5 bg-slate-50/50">
-        <div class="p-2 bg-amber-50 text-amber-700 rounded-lg">
-          <i data-lucide="edit-3" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <h2 class="font-bold text-slate-800 text-sm">Formulir Perubahan Presensi</h2>
-          <p class="text-[11px] text-slate-500">ID Absen: #ABS-{{ str_pad($absen->id_absen, 4, '0', STR_PAD_LEFT) }}</p>
-        </div>
-      </div>
-
-      <form method="POST" action="{{ route('absen.update', $absen->id_absen) }}" class="p-6 space-y-5">
-        @csrf
-        @method('PUT')
-
-        <!-- Global Error Alert -->
-        @if($errors->any())
-          <div class="p-4 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 space-y-1">
-            <div class="font-bold flex items-center gap-1.5">
-              <i data-lucide="alert-circle" class="w-4 h-4"></i> Gagal memperbarui data:
-            </div>
-            <ul class="list-disc list-inside pl-1 space-y-0.5 text-slate-600">
-              @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-              @endforeach
-            </ul>
-          </div>
-        @endif
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <!-- Peserta Select -->
-          <div class="md:col-span-1 space-y-1">
-            <label class="block text-xs font-semibold text-slate-700">
-              Peserta <span class="text-rose-500">*</span>
-            </label>
-            <select name="id_peserta"  class="w-full bg-white border @error('id_peserta') border-rose-500 @else border-slate-200 @enderror rounded-lg px-3 py-2 text-xs font-medium text-slate-700 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 shadow-sm">
-              <option value="">-- Pilih Peserta --</option>
-              @foreach($pesertas as $p)
-                <option value="{{ $p->id_peserta }}" {{ old('id_peserta', $absen->id_peserta) == $p->id_peserta ? 'selected' : '' }}>
-                  {{ $p->user->name ?? 'Peserta #'.$p->id_peserta }} {{ isset($p->nomor_peserta) ? '('.$p->nomor_peserta.')' : '' }}
-                </option>
-              @endforeach
-            </select>
-            @error('id_peserta')
-              <p class="text-[10px] text-rose-500 font-medium">{{ $message }}</p>
-            @enderror
-          </div>
-
-          <!-- Jadwal Select -->
-          <div class="md:col-span-1 space-y-1">
-            <label class="block text-xs font-semibold text-slate-700">
-              Jadwal & Kelas <span class="text-rose-500">*</span>
-            </label>
-            <select name="id_jadwal"  class="w-full bg-white border @error('id_jadwal') border-rose-500 @else border-slate-200 @enderror rounded-lg px-3 py-2 text-xs font-medium text-slate-700 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 shadow-sm">
-              <option value="">-- Pilih Jadwal --</option>
-              @foreach($jadwals as $j)
-                <option value="{{ $j->id_jadwal }}" {{ old('id_jadwal', $absen->id_jadwal) == $j->id_jadwal ? 'selected' : '' }}>
-                  {{ $j->pelatihan->nama_pelatihan ?? '-' }}
-                </option>
-              @endforeach
-            </select>
-            @error('id_jadwal')
-              <p class="text-[10px] text-rose-500 font-medium">{{ $message }}</p>
-            @enderror
+  <div class="mx-auto max-w-3xl">
+    <x-ui.card variant="sectioned">
+      <x-ui.card-header class="border-b">
+        <div class="flex items-center gap-3">
+          <span class="grid size-9 shrink-0 place-items-center rounded-lg bg-accent text-accent-foreground">
+            <x-lucide-pencil class="size-4" />
+          </span>
+          <div>
+            <x-ui.card-title class="text-base font-bold">Formulir Perubahan Presensi</x-ui.card-title>
+            <x-ui.card-description>
+              ID Absen: #ABS-{{ str_pad($absen->id_absen, 4, '0', STR_PAD_LEFT) }}
+            </x-ui.card-description>
           </div>
         </div>
+      </x-ui.card-header>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <!-- Tanggal -->
-          <div class="space-y-1">
-            <label class="block text-xs font-semibold text-slate-700">
-              Tanggal Presensi <span class="text-rose-500">*</span>
-            </label>
-            <input type="date" name="tanggal" value="{{ old('tanggal', \Carbon\Carbon::parse($absen->tanggal)->format('Y-m-d')) }}"  class="w-full bg-white border @error('tanggal') border-rose-500 @else border-slate-200 @enderror rounded-lg px-3 py-2 text-xs font-medium text-slate-700 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 shadow-sm">
-            @error('tanggal')
-              <p class="text-[10px] text-rose-500 font-medium">{{ $message }}</p>
-            @enderror
+      <x-ui.card-content>
+        <form method="POST" action="{{ route('absen.update', $absen->id_absen) }}" class="space-y-5">
+          @csrf
+          @method('PUT')
+
+          @if ($errors->any())
+            <x-ui.alert tone="danger">
+              <x-lucide-circle-alert />
+              <x-ui.alert-title>Gagal memperbarui data:</x-ui.alert-title>
+              <x-ui.alert-description>
+                <ul class="list-inside list-disc space-y-1">
+                  @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                  @endforeach
+                </ul>
+              </x-ui.alert-description>
+            </x-ui.alert>
+          @endif
+
+          <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+            <x-ui.field data-invalid="{{ $errors->has('id_peserta') ? 'true' : 'false' }}">
+              <x-ui.field-label for="id_peserta">Peserta <span class="text-destructive">*</span></x-ui.field-label>
+              <x-ui.select name="id_peserta" id="id_peserta" native class="w-full">
+                <option value="">-- Pilih Peserta --</option>
+                @foreach ($pesertas as $p)
+                  <option value="{{ $p->id_peserta }}" @selected(old('id_peserta', $absen->id_peserta) == $p->id_peserta)>
+                    {{ $p->user->name ?? 'Peserta #' . $p->id_peserta }} {{ isset($p->nomor_peserta) ? '(' . $p->nomor_peserta . ')' : '' }}
+                  </option>
+                @endforeach
+              </x-ui.select>
+              <x-ui.field-error :messages="$errors->get('id_peserta')" />
+            </x-ui.field>
+
+            <x-ui.field data-invalid="{{ $errors->has('id_jadwal') ? 'true' : 'false' }}">
+              <x-ui.field-label for="id_jadwal">Jadwal & Kelas <span class="text-destructive">*</span></x-ui.field-label>
+              <x-ui.select name="id_jadwal" id="id_jadwal" native class="w-full">
+                <option value="">-- Pilih Jadwal --</option>
+                @foreach ($jadwals as $j)
+                  <option value="{{ $j->id_jadwal }}" @selected(old('id_jadwal', $absen->id_jadwal) == $j->id_jadwal)>
+                    {{ $j->pelatihan->nama_pelatihan ?? '-' }}
+                  </option>
+                @endforeach
+              </x-ui.select>
+              <x-ui.field-error :messages="$errors->get('id_jadwal')" />
+            </x-ui.field>
           </div>
 
-          <!-- Jam Hadir -->
-          <div class="space-y-1">
-            <label class="block text-xs font-semibold text-slate-700">Jam Masuk / Hadir</label>
-            <input type="time" name="jam_hadir" value="{{ old('jam_hadir', $absen->jam_hadir ? \Carbon\Carbon::parse($absen->jam_hadir)->format('H:i') : '') }}" class="w-full bg-white border @error('jam_hadir') border-rose-500 @else border-slate-200 @enderror rounded-lg px-3 py-2 text-xs font-medium text-slate-700 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 shadow-sm">
-            @error('jam_hadir')
-              <p class="text-[10px] text-rose-500 font-medium">{{ $message }}</p>
-            @enderror
+          <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+            <x-ui.field data-invalid="{{ $errors->has('tanggal') ? 'true' : 'false' }}">
+              <x-ui.field-label for="tanggal">Tanggal Presensi <span class="text-destructive">*</span></x-ui.field-label>
+              <x-ui.input
+                id="tanggal"
+                name="tanggal"
+                type="date"
+                :value="old('tanggal', \Carbon\Carbon::parse($absen->tanggal)->format('Y-m-d'))"
+              />
+              <x-ui.field-error :messages="$errors->get('tanggal')" />
+            </x-ui.field>
+
+            <x-ui.field data-invalid="{{ $errors->has('jam_hadir') ? 'true' : 'false' }}">
+              <x-ui.field-label for="jam_hadir">Jam Masuk / Hadir</x-ui.field-label>
+              <x-ui.input
+                id="jam_hadir"
+                name="jam_hadir"
+                type="time"
+                :value="old('jam_hadir', $absen->jam_hadir ? \Carbon\Carbon::parse($absen->jam_hadir)->format('H:i') : '')"
+              />
+              <x-ui.field-error :messages="$errors->get('jam_hadir')" />
+            </x-ui.field>
+
+            <x-ui.field data-invalid="{{ $errors->has('status_kehadiran') ? 'true' : 'false' }}">
+              <x-ui.field-label for="status_kehadiran">Status <span class="text-destructive">*</span></x-ui.field-label>
+              <x-ui.select name="status_kehadiran" id="status_kehadiran" native class="w-full">
+                @foreach (['hadir' => 'Hadir', 'izin' => 'Izin', 'sakit' => 'Sakit', 'alpha' => 'Alpha'] as $key => $label)
+                  <option value="{{ $key }}" @selected(old('status_kehadiran', $absen->status_kehadiran ?? $absen->status) === $key)>{{ $label }}</option>
+                @endforeach
+              </x-ui.select>
+              <x-ui.field-error :messages="$errors->get('status_kehadiran')" />
+            </x-ui.field>
           </div>
 
-          <!-- Status Kehadiran -->
-          <div class="space-y-1">
-            <label class="block text-xs font-semibold text-slate-700">
-              Status <span class="text-rose-500">*</span>
-            </label>
-            <select name="status_kehadiran"  class="w-full bg-white border @error('status_kehadiran') border-rose-500 @else border-slate-200 @enderror rounded-lg px-3 py-2 text-xs font-medium text-slate-700 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 shadow-sm">
-              @foreach(['hadir' => 'Hadir', 'izin' => 'Izin', 'sakit' => 'Sakit', 'alpha' => 'Alpha'] as $key => $label)
-                <option value="{{ $key }}" {{ old('status_kehadiran', $absen->status_kehadiran ?? $absen->status) === $key ? 'selected' : '' }}>{{ $label }}</option>
-              @endforeach
-            </select>
-            @error('status_kehadiran')
-              <p class="text-[10px] text-rose-500 font-medium">{{ $message }}</p>
-            @enderror
+          <x-ui.field data-invalid="{{ $errors->has('keterangan') ? 'true' : 'false' }}">
+            <x-ui.field-label for="keterangan">Keterangan / Catatan</x-ui.field-label>
+            <x-ui.textarea
+              id="keterangan"
+              name="keterangan"
+              rows="3"
+              placeholder="Catatan tambahan..."
+            >{{ old('keterangan', $absen->keterangan) }}</x-ui.textarea>
+            <x-ui.field-error :messages="$errors->get('keterangan')" />
+          </x-ui.field>
+
+          <div class="flex items-center justify-end gap-2 border-t border-border pt-4">
+            <x-ui.button href="{{ route('absen.index') }}" variant="outline">
+              Batal
+            </x-ui.button>
+
+            <x-ui.button type="submit" class="bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
+              <x-lucide-check />
+              Perbarui Presensi
+            </x-ui.button>
           </div>
-        </div>
-
-        <!-- Keterangan -->
-        <div class="space-y-1">
-          <label class="block text-xs font-semibold text-slate-700">Keterangan / Catatan</label>
-          <textarea name="keterangan" rows="3" placeholder="Catatan tambahan..." class="w-full bg-white border border-slate-200 rounded-lg p-3 text-xs font-medium text-slate-700 focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 shadow-sm">{{ old('keterangan', $absen->keterangan) }}</textarea>
-          @error('keterangan')
-            <p class="text-[10px] text-rose-500 font-medium">{{ $message }}</p>
-          @enderror
-        </div>
-
-        <!-- Submit & Cancel Buttons -->
-        <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
-          <a href="{{ route('absen.index') }}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition">
-            Batal
-          </a>
-          <button type="submit" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-lg shadow-sm transition flex items-center gap-1.5">
-            <i data-lucide="check" class="w-4 h-4"></i> Perbarui Presensi
-          </button>
-        </div>
-      </form>
-    </div>
+        </form>
+      </x-ui.card-content>
+    </x-ui.card>
   </div>
 @endsection

@@ -1,154 +1,165 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Status Kelas Pelatihan - Disnaker BLK')
+@section('title', 'Edit Status Kelas Pelatihan - SiKarir BLK')
 
 @section('content')
-  <!-- Title & Breadcrumbs -->
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-    <div>
-      <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
-        <a href="{{ route('admin-blk.index') }}" class="hover:text-emerald-700 transition">Beranda</a>
-        <span>&gt;</span>
-        <a href="{{ route('kelas-pelatihan.index') }}" class="hover:text-emerald-700 transition">Kelas Pelatihan</a>
-        <span>&gt;</span>
-        <span class="text-slate-600 font-medium">Edit Penempatan</span>
-      </div>
-      <h1 class="text-xl font-black text-slate-900 tracking-tight">Perbarui Status Siswa di Kelas</h1>
-      <p class="text-xs text-slate-500 mt-0.5">Ubah status keaktifan, kelulusan, atau pemindahan batch kelas.</p>
-    </div>
+  <x-ui.page-header
+    title="Perbarui Status Siswa di Kelas"
+    description="Ubah status keaktifan, kelulusan, atau pemindahan batch kelas."
+  >
+    <x-slot:breadcrumb>
+      <x-ui.breadcrumb>
+        <x-ui.breadcrumb-list>
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-link href="{{ route('admin-blk.index') }}">Beranda</x-ui.breadcrumb-link>
+          </x-ui.breadcrumb-item>
+          <x-ui.breadcrumb-separator />
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-link href="{{ route('kelas-pelatihan.index') }}">Kelas Pelatihan</x-ui.breadcrumb-link>
+          </x-ui.breadcrumb-item>
+          <x-ui.breadcrumb-separator />
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-page>Edit Penempatan</x-ui.breadcrumb-page>
+          </x-ui.breadcrumb-item>
+        </x-ui.breadcrumb-list>
+      </x-ui.breadcrumb>
+    </x-slot:breadcrumb>
 
-    <div class="flex items-center gap-2">
-      <a href="{{ route('kelas-pelatihan.show', $kelas->id_kelas) }}" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="eye" class="w-4 h-4"></i> Lihat Detail
-      </a>
-      <a href="{{ route('kelas-pelatihan.index') }}" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali
-      </a>
-    </div>
-  </div>
+    <x-slot:actions>
+      <x-ui.button href="{{ route('kelas-pelatihan.show', $kelas->id_kelas) }}" variant="outline">
+        <x-lucide-eye />
+        Lihat Detail
+      </x-ui.button>
 
-  @if($errors->any())
-    <div class="bg-rose-50 border border-rose-200 text-rose-800 px-4 py-3 rounded-xl text-xs space-y-1 shadow-sm">
-      <div class="font-bold flex items-center gap-1.5">
-        <i data-lucide="alert-circle" class="w-4 h-4 text-rose-600"></i>
-        Mohon perbaiki beberapa kesalahan berikut:
-      </div>
-      <ul class="list-disc list-inside space-y-0.5 text-rose-700 pl-4">
-        @foreach($errors->all() as $error)
-          <li>{{ $error }}</li>
-        @endforeach
-      </ul>
-    </div>
+      <x-ui.button href="{{ route('kelas-pelatihan.index') }}" variant="outline">
+        <x-lucide-arrow-left />
+        Kembali
+      </x-ui.button>
+    </x-slot:actions>
+  </x-ui.page-header>
+
+  @if ($errors->any())
+    <x-ui.alert tone="danger">
+      <x-lucide-circle-alert />
+      <x-ui.alert-title>Mohon perbaiki beberapa kesalahan berikut:</x-ui.alert-title>
+      <x-ui.alert-description>
+        <ul class="list-inside list-disc space-y-1">
+          @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+          @endforeach
+        </ul>
+      </x-ui.alert-description>
+    </x-ui.alert>
   @endif
 
-  <!-- Form Layout: 2 Columns -->
-  <form action="{{ route('kelas-pelatihan.update', $kelas->id_kelas) }}" method="POST" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <form action="{{ route('kelas-pelatihan.update', $kelas->id_kelas) }}" method="POST" class="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
     @csrf
     @method('PUT')
 
-    <!-- Main Form Fields (2 Cols) -->
-    <div class="lg:col-span-2 space-y-6">
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-5">
-        <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <div class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-800 flex items-center justify-center">
-              <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+    <div class="space-y-6 lg:col-span-2">
+      <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <span class="grid size-9 shrink-0 place-items-center rounded-lg bg-accent text-accent-foreground">
+                <x-lucide-graduation-cap class="size-4" />
+              </span>
+              <x-ui.card-title class="text-base font-bold">Informasi Penempatan Siswa</x-ui.card-title>
             </div>
-            <h2 class="font-bold text-slate-800 text-sm">Informasi Penempatan Siswa</h2>
-          </div>
-          <span class="text-xs font-mono font-bold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md">
-            ID: #KLS-{{ str_pad((string)$kelas->id_kelas, 3, '0', STR_PAD_LEFT) }}
-          </span>
-        </div>
 
-        <div class="space-y-4">
-          <div>
-            <label for="id_peserta" class="block text-xs font-semibold text-slate-700 mb-1.5">
-              Siswa Peserta <span class="text-rose-500">*</span>
-            </label>
-            <select name="id_peserta" id="id_peserta"  class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('id_peserta') border-rose-400 bg-rose-50/50 @enderror">
-              @foreach($pesertas as $peserta)
-                <option value="{{ $peserta->id_peserta }}" {{ old('id_peserta', $kelas->id_peserta) == $peserta->id_peserta ? 'selected' : '' }}>
+            <x-ui.badge variant="secondary" class="font-mono">
+              ID: #KLS-{{ str_pad((string) $kelas->id_kelas, 3, '0', STR_PAD_LEFT) }}
+            </x-ui.badge>
+          </div>
+        </x-ui.card-header>
+
+        <x-ui.card-content class="space-y-5">
+          <x-ui.field data-invalid="{{ $errors->has('id_peserta') ? 'true' : 'false' }}">
+            <x-ui.field-label for="id_peserta">Siswa Peserta <span class="text-destructive">*</span></x-ui.field-label>
+            <x-ui.select name="id_peserta" id="id_peserta" native class="w-full" required>
+              @foreach ($pesertas as $peserta)
+                <option value="{{ $peserta->id_peserta }}" @selected(old('id_peserta', $kelas->id_peserta) == $peserta->id_peserta)>
                   {{ $peserta->user->name ?? 'Peserta' }} (NIS: {{ $peserta->nomor_peserta }})
                 </option>
               @endforeach
-            </select>
-            @error('id_peserta')
-              <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
-            @enderror
-          </div>
+            </x-ui.select>
+            <x-ui.field-error :messages="$errors->get('id_peserta')" />
+          </x-ui.field>
 
-          <div>
-            <label for="id_jadwal" class="block text-xs font-semibold text-slate-700 mb-1.5">
-              Batch Jadwal & Kelas <span class="text-rose-500">*</span>
-            </label>
-            <select name="id_jadwal" id="id_jadwal"  class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('id_jadwal') border-rose-400 bg-rose-50/50 @enderror">
-              @foreach($jadwals as $jadwal)
-                <option value="{{ $jadwal->id_jadwal }}" {{ old('id_jadwal', $kelas->id_jadwal) == $jadwal->id_jadwal ? 'selected' : '' }}>
-                  {{ $jadwal->pelatihan->nama_pelatihan ?? 'Pelatihan' }} - [Batch: #JDW-{{ str_pad((string)$jadwal->id_jadwal, 3, '0', STR_PAD_LEFT) }}]
+          <x-ui.field data-invalid="{{ $errors->has('id_jadwal') ? 'true' : 'false' }}">
+            <x-ui.field-label for="id_jadwal">Batch Jadwal & Kelas <span class="text-destructive">*</span></x-ui.field-label>
+            <x-ui.select name="id_jadwal" id="id_jadwal" native class="w-full" required>
+              @foreach ($jadwals as $jadwal)
+                <option value="{{ $jadwal->id_jadwal }}" @selected(old('id_jadwal', $kelas->id_jadwal) == $jadwal->id_jadwal)>
+                  {{ $jadwal->pelatihan->nama_pelatihan ?? 'Pelatihan' }} - [Batch: #JDW-{{ str_pad((string) $jadwal->id_jadwal, 3, '0', STR_PAD_LEFT) }}]
                 </option>
               @endforeach
-            </select>
-            @error('id_jadwal')
-              <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
-            @enderror
-          </div>
+            </x-ui.select>
+            <x-ui.field-error :messages="$errors->get('id_jadwal')" />
+          </x-ui.field>
 
-          <div>
-            <label for="status" class="block text-xs font-semibold text-slate-700 mb-1.5">
-              Status Kelulusan / Keaktifan Siswa <span class="text-rose-500">*</span>
-            </label>
-            <select name="status" id="status"  class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:border-transparent @error('status') border-rose-400 bg-rose-50/50 @enderror">
-              <option value="terdaftar" {{ old('status', $kelas->status) == 'terdaftar' ? 'selected' : '' }}>Terdaftar (Menunggu Mulai)</option>
-              <option value="aktif" {{ old('status', $kelas->status) == 'aktif' ? 'selected' : '' }}>Aktif (Sedang Mengikuti)</option>
-              <option value="lulus" {{ old('status', $kelas->status) == 'lulus' ? 'selected' : '' }}>Lulus (Telah Menyelesaikan)</option>
-              <option value="tidak lulus" {{ old('status', $kelas->status) == 'tidak lulus' ? 'selected' : '' }}>Tidak Lulus (Drop Out / Tidak Memenuhi Syarat)</option>
-            </select>
-            @error('status')
-              <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
-            @enderror
-          </div>
-        </div>
-      </div>
+          <x-ui.field data-invalid="{{ $errors->has('status') ? 'true' : 'false' }}">
+            <x-ui.field-label for="status">Status Kelulusan / Keaktifan Siswa <span class="text-destructive">*</span></x-ui.field-label>
+            <x-ui.select name="status" id="status" native class="w-full" required>
+              <option value="terdaftar" @selected(old('status', $kelas->status) == 'terdaftar')>Terdaftar (Menunggu Mulai)</option>
+              <option value="aktif" @selected(old('status', $kelas->status) == 'aktif')>Aktif (Sedang Mengikuti)</option>
+              <option value="lulus" @selected(old('status', $kelas->status) == 'lulus')>Lulus (Telah Menyelesaikan)</option>
+              <option value="tidak lulus" @selected(old('status', $kelas->status) == 'tidak lulus')>Tidak Lulus (Drop Out / Tidak Memenuhi Syarat)</option>
+            </x-ui.select>
+            <x-ui.field-error :messages="$errors->get('status')" />
+          </x-ui.field>
+        </x-ui.card-content>
+      </x-ui.card>
     </div>
 
-    <!-- Right Column: Status & Simpan -->
     <div class="space-y-6">
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
-        <h3 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100 flex items-center gap-2">
-          <i data-lucide="save" class="w-4 h-4 text-emerald-700"></i>
-          Aksi Pembaruan
-        </h3>
+      <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+          <x-ui.card-title class="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted-foreground">
+            <x-lucide-save class="size-4 text-primary" />
+            Aksi Pembaruan
+          </x-ui.card-title>
+        </x-ui.card-header>
 
-        <div class="text-xs text-slate-500 space-y-2">
-          <div class="flex items-center justify-between">
-            <span>Didaftarkan:</span>
-            <span class="font-semibold text-slate-700">{{ $kelas->created_at ? $kelas->created_at->translatedFormat('d M Y') : '-' }}</span>
+        <x-ui.card-content class="space-y-4">
+          <div class="space-y-2 rounded-xl border border-border bg-muted/40 p-3.5 text-xs text-muted-foreground">
+            <div class="flex items-center justify-between gap-3">
+              <span>Didaftarkan:</span>
+              <span class="font-bold text-foreground">
+                {{ $kelas->created_at ? $kelas->created_at->translatedFormat('d M Y') : '-' }}
+              </span>
+            </div>
+            <div class="flex items-center justify-between gap-3">
+              <span>Status Saat Ini:</span>
+              <x-ui.badge variant="secondary" class="uppercase">{{ $kelas->status }}</x-ui.badge>
+            </div>
           </div>
-          <div class="flex items-center justify-between">
-            <span>Status Saat Ini:</span>
-            <span class="font-semibold text-emerald-800 uppercase text-[10px]">{{ $kelas->status }}</span>
-          </div>
-        </div>
 
-        <div class="pt-2 space-y-2">
-          <button type="submit" class="w-full bg-emerald-900 hover:bg-emerald-950 text-white font-semibold text-xs py-2.5 px-4 rounded-lg shadow-sm flex items-center justify-center gap-2 transition">
-            <i data-lucide="check" class="w-4 h-4"></i> Simpan Perubahan
-          </button>
-          <a href="{{ route('kelas-pelatihan.index') }}" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition">
+          <x-ui.button type="submit" size="lg" class="w-full bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
+            <x-lucide-check />
+            Simpan Perubahan
+          </x-ui.button>
+
+          <x-ui.button href="{{ route('kelas-pelatihan.index') }}" variant="outline" size="lg" class="w-full">
             Batal
-          </a>
-        </div>
-      </div>
+          </x-ui.button>
+        </x-ui.card-content>
+      </x-ui.card>
 
-      <div class="bg-rose-50/50 rounded-xl border border-rose-200 shadow-sm p-5 space-y-3">
-        <h4 class="font-bold text-rose-800 text-xs flex items-center gap-1.5">
-          <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600"></i> Hapus dari Kelas
-        </h4>
-        <p class="text-[11px] text-rose-600 leading-relaxed">
-          Mengeluarkan siswa dari kelas akan membatalkan status keikutsertaan dalam batch ini.
-        </p>
-      </div>
+      <x-ui.card variant="sectioned" class="border-destructive/30 bg-destructive/5">
+        <x-ui.card-header class="border-b border-destructive/20">
+          <x-ui.card-title class="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-destructive">
+            <x-lucide-triangle-alert class="size-4" />
+            Hapus dari Kelas
+          </x-ui.card-title>
+        </x-ui.card-header>
+
+        <x-ui.card-content>
+          <p class="text-xs leading-relaxed text-muted-foreground">
+            Mengeluarkan siswa dari kelas akan membatalkan status keikutsertaan dalam batch ini.
+          </p>
+        </x-ui.card-content>
+      </x-ui.card>
     </div>
   </form>
 @endsection

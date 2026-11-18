@@ -39,8 +39,10 @@
       align-items: center;
       gap: 6px;
     }
-    .btn-primary { background: #065f46; color: white; }
+    .btn-primary { background: #064e3b; color: #d9f99d; }
+    .btn-primary:hover { background: #053f30; }
     .btn-secondary { background: #e2e8f0; color: #334155; }
+    .btn-secondary:hover { background: #cbd5e1; }
 
     .paper {
       background: #ffffff;

@@ -1,64 +1,97 @@
 <section>
-    <header>
-        <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Profile Information') }}
-        </h2>
+    <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+            <x-ui.card-title class="text-base font-bold">Informasi Profil</x-ui.card-title>
+            <x-ui.card-description>Perbarui nama dan alamat email yang digunakan pada akun Anda.</x-ui.card-description>
+        </x-ui.card-header>
 
-        <p class="mt-1 text-sm text-gray-600">
-            {{ __("Update your account's profile information and email address.") }}
-        </p>
-    </header>
+        <x-ui.card-content>
+            <form id="send-verification" method="post" action="{{ route('verification.send') }}">
+                @csrf
+            </form>
 
-    <form id="send-verification" method="post" action="{{ route('verification.send') }}">
-        @csrf
-    </form>
+            <form method="post" action="{{ route('profile.update') }}" class="space-y-5">
+                @csrf
+                @method('patch')
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
-        @csrf
-        @method('patch')
+                <x-ui.field data-invalid="{{ $errors->has('name') ? 'true' : 'false' }}">
+                    <x-ui.field-label for="name">Nama Lengkap</x-ui.field-label>
+                    <x-ui.input
+                        id="name"
+                        name="name"
+                        type="text"
+                        :value="old('name', $user->name)"
+                        required
+                        autofocus
+                        autocomplete="name"
+                        placeholder="Masukkan nama lengkap"
+                    >
+                        <x-slot:leading>
+                            <x-lucide-user />
+                        </x-slot:leading>
+                    </x-ui.input>
+                    <x-ui.field-error :messages="$errors->get('name')" />
+                </x-ui.field>
 
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
-            <x-input-error class="mt-2" :messages="$errors->get('name')" />
-        </div>
+                <x-ui.field data-invalid="{{ $errors->has('email') ? 'true' : 'false' }}">
+                    <x-ui.field-label for="email">Alamat Email</x-ui.field-label>
+                    <x-ui.input
+                        id="email"
+                        name="email"
+                        type="email"
+                        :value="old('email', $user->email)"
+                        required
+                        autocomplete="username"
+                        placeholder="nama@email.com"
+                    >
+                        <x-slot:leading>
+                            <x-lucide-mail />
+                        </x-slot:leading>
+                    </x-ui.input>
+                    <x-ui.field-error :messages="$errors->get('email')" />
 
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
-
-            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
-                <div>
-                    <p class="text-sm mt-2 text-gray-800">
-                        {{ __('Your email address is unverified.') }}
-
-                        <button form="send-verification" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            {{ __('Click here to re-send the verification email.') }}
-                        </button>
-                    </p>
+                    @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
+                        <x-ui.alert tone="warning" class="mt-1">
+                            <x-lucide-triangle-alert />
+                            <x-ui.alert-description>
+                                Alamat email Anda belum diverifikasi.
+                                <x-ui.button type="submit" form="send-verification" variant="link" size="xs" class="h-auto p-0 text-xs font-semibold">
+                                    Kirim ulang email verifikasi.
+                                </x-ui.button>
+                            </x-ui.alert-description>
+                        </x-ui.alert>
+                    @endif
 
                     @if (session('status') === 'verification-link-sent')
-                        <p class="mt-2 font-medium text-sm text-green-600">
-                            {{ __('A new verification link has been sent to your email address.') }}
+                        <x-ui.alert tone="success" class="mt-1">
+                            <x-lucide-circle-check-big />
+                            <x-ui.alert-description>
+                                Tautan verifikasi baru telah dikirim ke alamat email Anda.
+                            </x-ui.alert-description>
+                        </x-ui.alert>
+                    @endif
+                </x-ui.field>
+
+                <div class="flex flex-wrap items-center gap-3 border-t border-border pt-5">
+                    <x-ui.button type="submit">
+                        <x-lucide-save />
+                        Simpan Perubahan
+                    </x-ui.button>
+
+                    @if (session('status') === 'profile-updated')
+                        <p
+                            x-data="{ show: true }"
+                            x-show="show"
+                            x-transition
+                            x-init="setTimeout(() => show = false, 2500)"
+                            class="inline-flex items-center gap-1.5 text-xs font-semibold text-success"
+                        >
+                            <x-lucide-circle-check-big class="size-3.5" />
+                            Perubahan tersimpan.
                         </p>
                     @endif
                 </div>
-            @endif
-        </div>
-
-        <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
-
-            @if (session('status') === 'profile-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600"
-                >{{ __('Saved.') }}</p>
-            @endif
-        </div>
-    </form>
+            </form>
+        </x-ui.card-content>
+    </x-ui.card>
 </section>

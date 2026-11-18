@@ -3,135 +3,192 @@
 @section('title', 'Edit Lowongan - ' . $lowongan->judul_lowongan)
 
 @section('content')
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-    <div>
-      <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
-        <a href="{{ route('admin-blk.index') }}" class="hover:text-emerald-700 transition">Beranda</a>
-        <span>&gt;</span>
-        <a href="{{ route('lowongan.index') }}" class="hover:text-emerald-700 transition">Lowongan Magang</a>
-        <span>&gt;</span>
-        <span class="text-slate-600 font-medium">Edit Lowongan</span>
-      </div>
-      <h1 class="text-xl font-black text-slate-900 tracking-tight">Perbarui Informasi Lowongan Magang</h1>
-      <p class="text-xs text-slate-500 mt-0.5">Ubah deskripsi posisi, kualifikasi, lokasi, atau status publikasi lowongan.</p>
-    </div>
-    <div class="flex items-center gap-2">
-      <a href="{{ route('lowongan.show', $lowongan->id_lowongan) }}" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="eye" class="w-4 h-4"></i> Lihat Detail
-      </a>
-      <a href="{{ route('lowongan.index') }}" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali
-      </a>
-    </div>
-  </div>
+  <x-ui.page-header
+    title="Perbarui Informasi Lowongan Magang"
+    description="Ubah deskripsi posisi, kualifikasi, lokasi, atau status publikasi lowongan."
+  >
+    <x-slot:breadcrumb>
+      <x-ui.breadcrumb>
+        <x-ui.breadcrumb-list>
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-link href="{{ route('admin-blk.index') }}">Beranda</x-ui.breadcrumb-link>
+          </x-ui.breadcrumb-item>
+          <x-ui.breadcrumb-separator />
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-link href="{{ route('lowongan.index') }}">Lowongan Magang</x-ui.breadcrumb-link>
+          </x-ui.breadcrumb-item>
+          <x-ui.breadcrumb-separator />
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-page>Edit Lowongan</x-ui.breadcrumb-page>
+          </x-ui.breadcrumb-item>
+        </x-ui.breadcrumb-list>
+      </x-ui.breadcrumb>
+    </x-slot:breadcrumb>
 
-  @if($errors->any())
-    <div class="bg-rose-50 border border-rose-200 text-rose-800 px-4 py-3 rounded-xl text-xs space-y-1 shadow-sm">
-      <div class="font-bold flex items-center gap-1.5"><i data-lucide="alert-circle" class="w-4 h-4 text-rose-600"></i> Mohon perbaiki kesalahan berikut:</div>
-      <ul class="list-disc list-inside space-y-0.5 text-rose-700 pl-4">
-        @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
-      </ul>
-    </div>
+    <x-slot:actions>
+      <x-ui.button href="{{ route('lowongan.show', $lowongan->id_lowongan) }}" variant="outline">
+        <x-lucide-eye />
+        Lihat Detail
+      </x-ui.button>
+
+      <x-ui.button href="{{ route('lowongan.index') }}" variant="outline">
+        <x-lucide-arrow-left />
+        Kembali
+      </x-ui.button>
+    </x-slot:actions>
+  </x-ui.page-header>
+
+  @if ($errors->any())
+    <x-ui.alert tone="danger">
+      <x-lucide-circle-alert />
+      <x-ui.alert-title>Mohon perbaiki beberapa kesalahan berikut:</x-ui.alert-title>
+      <x-ui.alert-description>
+        <ul class="list-inside list-disc space-y-1">
+          @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+          @endforeach
+        </ul>
+      </x-ui.alert-description>
+    </x-ui.alert>
   @endif
 
-  <form action="{{ route('lowongan.update', $lowongan->id_lowongan) }}" method="POST" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <form
+    action="{{ route('lowongan.update', $lowongan->id_lowongan) }}"
+    method="POST"
+    class="grid grid-cols-1 items-start gap-6 lg:grid-cols-3"
+  >
     @csrf
     @method('PUT')
 
-    <div class="lg:col-span-2 space-y-6">
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-5">
-        <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <div class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-800 flex items-center justify-center">
-              <i data-lucide="briefcase" class="w-4 h-4"></i>
+    <div class="space-y-6 lg:col-span-2">
+      <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <span class="grid size-9 shrink-0 place-items-center rounded-lg bg-accent text-accent-foreground">
+                <x-lucide-briefcase class="size-4" />
+              </span>
+              <x-ui.card-title class="text-base font-bold">Informasi Posisi & Perusahaan</x-ui.card-title>
             </div>
-            <h2 class="font-bold text-slate-800 text-sm">Informasi Posisi & Perusahaan</h2>
-          </div>
-          <span class="text-xs font-mono font-bold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md">
-            ID: #LWG-{{ str_pad((string)$lowongan->id_lowongan, 3, '0', STR_PAD_LEFT) }}
-          </span>
-        </div>
 
-        <div class="space-y-4">
-          <!-- Info Mitra -->
-          <div class="p-3.5 bg-emerald-50/60 border border-emerald-100 rounded-lg flex items-center gap-3">
-            <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-center shrink-0">
+            <x-ui.badge variant="secondary" class="font-mono">
+              ID: #LWG-{{ str_pad((string) $lowongan->id_lowongan, 3, '0', STR_PAD_LEFT) }}
+            </x-ui.badge>
+          </div>
+        </x-ui.card-header>
+
+        <x-ui.card-content class="space-y-5">
+          <div class="flex items-center gap-3 rounded-lg border border-border bg-accent/40 p-3.5">
+            <span class="grid size-8 shrink-0 place-items-center rounded-lg bg-primary text-xs font-bold uppercase text-primary-foreground">
               {{ strtoupper(substr($lowongan->mitra->nama_perusahaan ?? 'M', 0, 2)) }}
-            </div>
+            </span>
             <div>
-              <div class="text-[11px] text-slate-400 font-medium">Perusahaan Penerbit Lowongan</div>
-              <div class="text-xs font-bold text-slate-800">{{ $lowongan->mitra->nama_perusahaan ?? '-' }} ({{ $lowongan->mitra->bidang_usaha ?? 'Mitra DU/DI' }})</div>
+              <div class="text-xs font-medium text-muted-foreground">Perusahaan Penerbit Lowongan</div>
+              <div class="text-xs font-bold text-foreground">
+                {{ $lowongan->mitra->nama_perusahaan ?? '-' }} ({{ $lowongan->mitra->bidang_usaha ?? 'Mitra DU/DI' }})
+              </div>
             </div>
           </div>
 
-          <div>
-            <label for="judul_lowongan" class="block text-xs font-semibold text-slate-700 mb-1.5">Judul Posisi Lowongan <span class="text-rose-500">*</span></label>
-            <input type="text" name="judul_lowongan" id="judul_lowongan" value="{{ old('judul_lowongan', $lowongan->judul_lowongan) }}"  class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('judul_lowongan') border-rose-400 @enderror" />
-            @error('judul_lowongan')<p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>@enderror
+          <x-ui.field data-invalid="{{ $errors->has('judul_lowongan') ? 'true' : 'false' }}">
+            <x-ui.field-label for="judul_lowongan">Judul Posisi Lowongan <span class="text-destructive">*</span></x-ui.field-label>
+            <x-ui.input
+              id="judul_lowongan"
+              name="judul_lowongan"
+              type="text"
+              :value="old('judul_lowongan', $lowongan->judul_lowongan)"
+            />
+            <x-ui.field-error :messages="$errors->get('judul_lowongan')" />
+          </x-ui.field>
+
+          <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <x-ui.field data-invalid="{{ $errors->has('lokasi') ? 'true' : 'false' }}">
+              <x-ui.field-label for="lokasi">Lokasi Penempatan</x-ui.field-label>
+              <x-ui.input id="lokasi" name="lokasi" type="text" :value="old('lokasi', $lowongan->lokasi)" />
+              <x-ui.field-error :messages="$errors->get('lokasi')" />
+            </x-ui.field>
+
+            <x-ui.field data-invalid="{{ $errors->has('tanggal_posting') ? 'true' : 'false' }}">
+              <x-ui.field-label for="tanggal_posting">Tanggal Posting</x-ui.field-label>
+              <x-ui.input
+                id="tanggal_posting"
+                name="tanggal_posting"
+                type="date"
+                :value="old('tanggal_posting', $lowongan->tanggal_posting ? $lowongan->tanggal_posting->format('Y-m-d') : '')"
+              />
+              <x-ui.field-error :messages="$errors->get('tanggal_posting')" />
+            </x-ui.field>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label for="lokasi" class="block text-xs font-semibold text-slate-700 mb-1.5">Lokasi Penempatan</label>
-              <input type="text" name="lokasi" id="lokasi" value="{{ old('lokasi', $lowongan->lokasi) }}" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('lokasi') border-rose-400 @enderror" />
-              @error('lokasi')<p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>@enderror
-            </div>
+          <x-ui.field data-invalid="{{ $errors->has('status') ? 'true' : 'false' }}">
+            <x-ui.field-label for="status">Status Publikasi <span class="text-destructive">*</span></x-ui.field-label>
+            <x-ui.select name="status" id="status" native class="w-full">
+              <option value="aktif" @selected(old('status', $lowongan->status) == 'aktif')>Aktif</option>
+              <option value="draft" @selected(old('status', $lowongan->status) == 'draft')>Draft</option>
+              <option value="ditutup" @selected(old('status', $lowongan->status) == 'ditutup')>Ditutup</option>
+            </x-ui.select>
+            <x-ui.field-error :messages="$errors->get('status')" />
+          </x-ui.field>
 
-            <div>
-              <label for="tanggal_posting" class="block text-xs font-semibold text-slate-700 mb-1.5">Tanggal Posting</label>
-              <input type="date" name="tanggal_posting" id="tanggal_posting" value="{{ old('tanggal_posting', $lowongan->tanggal_posting ? $lowongan->tanggal_posting->format('Y-m-d') : '') }}" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('tanggal_posting') border-rose-400 @enderror" />
-              @error('tanggal_posting')<p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>@enderror
-            </div>
-          </div>
+          <x-ui.field data-invalid="{{ $errors->has('deskripsi') ? 'true' : 'false' }}">
+            <x-ui.field-label for="deskripsi">Deskripsi Pekerjaan</x-ui.field-label>
+            <x-ui.textarea id="deskripsi" name="deskripsi" rows="4">{{ old('deskripsi', $lowongan->deskripsi) }}</x-ui.textarea>
+            <x-ui.field-error :messages="$errors->get('deskripsi')" />
+          </x-ui.field>
 
-          <div>
-            <label for="status" class="block text-xs font-semibold text-slate-700 mb-1.5">Status Publikasi <span class="text-rose-500">*</span></label>
-            <select name="status" id="status"  class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('status') border-rose-400 @enderror">
-              <option value="aktif" {{ old('status', $lowongan->status) == 'aktif' ? 'selected' : '' }}>Aktif</option>
-              <option value="draft" {{ old('status', $lowongan->status) == 'draft' ? 'selected' : '' }}>Draft</option>
-              <option value="ditutup" {{ old('status', $lowongan->status) == 'ditutup' ? 'selected' : '' }}>Ditutup</option>
-            </select>
-            @error('status')<p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>@enderror
-          </div>
-
-          <div>
-            <label for="deskripsi" class="block text-xs font-semibold text-slate-700 mb-1.5">Deskripsi Pekerjaan</label>
-            <textarea name="deskripsi" id="deskripsi" rows="4" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('deskripsi') border-rose-400 @enderror">{{ old('deskripsi', $lowongan->deskripsi) }}</textarea>
-            @error('deskripsi')<p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>@enderror
-          </div>
-
-          <div>
-            <label for="kualifikasi" class="block text-xs font-semibold text-slate-700 mb-1.5">Kualifikasi & Persyaratan</label>
-            <textarea name="kualifikasi" id="kualifikasi" rows="4" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('kualifikasi') border-rose-400 @enderror">{{ old('kualifikasi', $lowongan->kualifikasi) }}</textarea>
-            @error('kualifikasi')<p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>@enderror
-          </div>
-        </div>
-      </div>
+          <x-ui.field data-invalid="{{ $errors->has('kualifikasi') ? 'true' : 'false' }}">
+            <x-ui.field-label for="kualifikasi">Kualifikasi & Persyaratan</x-ui.field-label>
+            <x-ui.textarea id="kualifikasi" name="kualifikasi" rows="4">{{ old('kualifikasi', $lowongan->kualifikasi) }}</x-ui.textarea>
+            <x-ui.field-error :messages="$errors->get('kualifikasi')" />
+          </x-ui.field>
+        </x-ui.card-content>
+      </x-ui.card>
     </div>
 
     <div class="space-y-6">
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
-        <h3 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100">Aksi Pembaruan</h3>
-        <div class="text-xs text-slate-500 space-y-2">
-          <div class="flex items-center justify-between">
-            <span>Diposting:</span>
-            <span class="font-semibold text-slate-700">{{ $lowongan->created_at ? $lowongan->created_at->translatedFormat('d M Y') : '-' }}</span>
-          </div>
-        </div>
-        <div class="pt-2 space-y-2">
-          <button type="submit" class="w-full bg-emerald-900 hover:bg-emerald-950 text-white font-semibold text-xs py-2.5 px-4 rounded-lg shadow-sm flex items-center justify-center gap-2 transition">
-            <i data-lucide="check" class="w-4 h-4"></i> Simpan Perubahan
-          </button>
-          <a href="{{ route('lowongan.index') }}" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition">Batal</a>
-        </div>
-      </div>
+      <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+          <x-ui.card-title class="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted-foreground">
+            <x-lucide-save class="size-4 text-primary" />
+            Aksi Pembaruan
+          </x-ui.card-title>
+        </x-ui.card-header>
 
-      <div class="bg-rose-50/50 rounded-xl border border-rose-200 p-5 space-y-3">
-        <h4 class="font-bold text-rose-800 text-xs flex items-center gap-1.5">
-          <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600"></i> Zona Berbahaya
-        </h4>
-        <p class="text-[11px] text-rose-600 leading-relaxed">Tutup lowongan dengan mengubah status menjadi "Ditutup" agar tidak menerima pendaftar baru.</p>
-      </div>
+        <x-ui.card-content class="space-y-4">
+          <div class="space-y-2 rounded-xl border border-border bg-muted/40 p-3.5 text-xs text-muted-foreground">
+            <div class="flex items-center justify-between gap-3">
+              <span>Diposting:</span>
+              <span class="font-bold text-foreground">
+                {{ $lowongan->created_at ? $lowongan->created_at->translatedFormat('d M Y') : '-' }}
+              </span>
+            </div>
+          </div>
+
+          <x-ui.button type="submit" size="lg" class="w-full bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
+            <x-lucide-check />
+            Simpan Perubahan
+          </x-ui.button>
+
+          <x-ui.button href="{{ route('lowongan.index') }}" variant="outline" size="lg" class="w-full">
+            Batal
+          </x-ui.button>
+        </x-ui.card-content>
+      </x-ui.card>
+
+      <x-ui.card variant="sectioned" class="border-destructive/30 bg-destructive/5">
+        <x-ui.card-header class="border-b border-destructive/20">
+          <x-ui.card-title class="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-destructive">
+            <x-lucide-triangle-alert class="size-4" />
+            Zona Berbahaya
+          </x-ui.card-title>
+        </x-ui.card-header>
+
+        <x-ui.card-content>
+          <p class="text-xs leading-relaxed text-muted-foreground">
+            Tutup lowongan dengan mengubah status menjadi "Ditutup" agar tidak menerima pendaftar baru.
+          </p>
+        </x-ui.card-content>
+      </x-ui.card>
     </div>
   </form>
 @endsection

@@ -1,29 +1,77 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
-                </div>
-            </div>
+@section('title', 'Profil Akun - SiKarir')
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
-                </div>
-            </div>
+@section('content')
+  <x-ui.page-header
+    title="Profil Akun"
+    description="Kelola informasi pribadi, keamanan kata sandi, dan status akun Anda."
+  >
+    <x-slot:actions>
+      @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && $user->hasVerifiedEmail())
+        <x-ui.badge tone="success" class="gap-1.5">
+          <x-lucide-badge-check class="size-3.5" />
+          Email Terverifikasi
+        </x-ui.badge>
+      @else
+        <x-ui.badge tone="warning" class="gap-1.5">
+          <x-lucide-triangle-alert class="size-3.5" />
+          Email Belum Terverifikasi
+        </x-ui.badge>
+      @endif
+    </x-slot:actions>
+  </x-ui.page-header>
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
-                </div>
-            </div>
-        </div>
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+    <div class="space-y-6 lg:col-span-2">
+      @include('profile.partials.update-profile-information-form')
+      @include('profile.partials.update-password-form')
     </div>
-</x-app-layout>
+
+    <div class="space-y-6">
+      <x-ui.card>
+        <div class="flex items-center gap-4">
+          <x-ui.avatar class="size-14">
+            <x-ui.avatar-fallback class="bg-primary/10 text-lg font-bold text-primary">
+              {{ mb_strtoupper(mb_substr($user->name, 0, 1)) }}
+            </x-ui.avatar-fallback>
+          </x-ui.avatar>
+
+          <div class="min-w-0">
+            <div class="truncate text-sm font-bold text-foreground">{{ $user->name }}</div>
+            <div class="truncate text-xs text-muted-foreground">{{ $user->email }}</div>
+          </div>
+        </div>
+
+        <x-ui.separator class="my-4" />
+
+        <div class="mt-4 space-y-2">
+          <div class="flex items-center justify-between gap-3 text-xs">
+            <span class="text-muted-foreground">Peran Akun</span>
+            <x-ui.badge variant="secondary" size="sm">
+              {{ match ($user->role) {
+                  'admin_blk' => 'Admin BLK',
+                  'mitra' => 'Mitra DU/DI',
+                  default => 'Pengguna',
+              } }}
+            </x-ui.badge>
+          </div>
+          <div class="flex items-center justify-between gap-3 text-xs">
+            <span class="text-muted-foreground">Status Email</span>
+            <span class="font-semibold text-foreground">
+              {{ $user->hasVerifiedEmail() ? 'Terverifikasi' : 'Belum Terverifikasi' }}
+            </span>
+          </div>
+          <div class="flex items-center justify-between gap-3 text-xs">
+            <span class="text-muted-foreground">Terdaftar Sejak</span>
+            <span class="font-semibold text-foreground">
+              {{ $user->created_at?->translatedFormat('d M Y') ?? '—' }}
+            </span>
+          </div>
+        </div>
+      </x-ui.card>
+
+      @include('profile.partials.delete-user-form')
+    </div>
+  </div>
+@endsection

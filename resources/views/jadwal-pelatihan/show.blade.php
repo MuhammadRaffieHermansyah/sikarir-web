@@ -3,202 +3,242 @@
 @section('title', 'Detail Batch Jadwal - ' . ($jadwal->pelatihan->nama_pelatihan ?? 'Jadwal'))
 
 @section('content')
-  <!-- Title & Breadcrumbs -->
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-    <div>
-      <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
-        <a href="{{ route('admin-blk.index') }}" class="hover:text-emerald-700 transition">Beranda</a>
-        <span>&gt;</span>
-        <a href="{{ route('jadwal-pelatihan.index') }}" class="hover:text-emerald-700 transition">Jadwal & Kelas</a>
-        <span>&gt;</span>
-        <span class="text-slate-600 font-medium">Detail Batch</span>
-      </div>
-      <h1 class="text-xl font-black text-slate-900 tracking-tight">Rincian Pelaksanaan & Roster Kelas</h1>
-      <p class="text-xs text-slate-500 mt-0.5">Informasi periode waktu, alokasi ruangan laboratorium/bengkel, dan daftar siswa yang terdaftar.</p>
-    </div>
+  <x-ui.page-header
+    title="Rincian Pelaksanaan & Roster Kelas"
+    description="Informasi periode waktu, alokasi ruangan laboratorium/bengkel, dan daftar siswa yang terdaftar."
+  >
+    <x-slot:breadcrumb>
+      <x-ui.breadcrumb>
+        <x-ui.breadcrumb-list>
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-link href="{{ route('admin-blk.index') }}">Beranda</x-ui.breadcrumb-link>
+          </x-ui.breadcrumb-item>
+          <x-ui.breadcrumb-separator />
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-link href="{{ route('jadwal-pelatihan.index') }}">Jadwal &amp; Kelas</x-ui.breadcrumb-link>
+          </x-ui.breadcrumb-item>
+          <x-ui.breadcrumb-separator />
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-page>Detail Batch</x-ui.breadcrumb-page>
+          </x-ui.breadcrumb-item>
+        </x-ui.breadcrumb-list>
+      </x-ui.breadcrumb>
+    </x-slot:breadcrumb>
 
-    <div class="flex items-center gap-2 flex-wrap">
-      <a href="{{ route('jadwal-pelatihan.index') }}" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali
-      </a>
-      <a href="{{ route('jadwal-pelatihan.edit', $jadwal->id_jadwal) }}" class="bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold px-3.5 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="edit-3" class="w-4 h-4"></i> Edit Jadwal
-      </a>
-    </div>
-  </div>
+    <x-slot:actions>
+      <x-ui.button href="{{ route('jadwal-pelatihan.index') }}" variant="outline">
+        <x-lucide-arrow-left />
+        Kembali
+      </x-ui.button>
 
-  <!-- Hero Profile Banner Card -->
-  <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 relative overflow-hidden">
-    <div class="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-emerald-50/50 to-transparent pointer-events-none"></div>
+      <x-ui.button href="{{ route('jadwal-pelatihan.edit', $jadwal->id_jadwal) }}" class="bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
+        <x-lucide-pencil />
+        Edit Jadwal
+      </x-ui.button>
+    </x-slot:actions>
+  </x-ui.page-header>
 
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
+  <x-ui.card variant="sectioned">
+    <div class="flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
       <div class="flex items-center gap-5">
-        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-800 text-white font-black text-2xl flex items-center justify-center shadow-md shrink-0">
-          <i data-lucide="calendar" class="w-8 h-8"></i>
-        </div>
+        <span class="grid size-16 shrink-0 place-items-center rounded-2xl bg-primary text-primary-foreground">
+          <x-lucide-calendar class="size-8" />
+        </span>
+
         <div>
-          <div class="flex items-center gap-2.5 flex-wrap">
-            <h2 class="text-lg font-extrabold text-slate-900">{{ $jadwal->pelatihan->nama_pelatihan ?? 'Kejuruan Vokasi' }}</h2>
-            <span class="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full">
-              Batch: #JDW-{{ str_pad((string)$jadwal->id_jadwal, 3, '0', STR_PAD_LEFT) }}
+          <div class="flex flex-wrap items-center gap-2.5">
+            <h2 class="text-lg font-extrabold text-foreground">{{ $jadwal->pelatihan->nama_pelatihan ?? 'Kejuruan Vokasi' }}</h2>
+            <x-ui.badge variant="secondary" class="font-mono">
+              Batch: #JDW-{{ str_pad((string) $jadwal->id_jadwal, 3, '0', STR_PAD_LEFT) }}
+            </x-ui.badge>
+          </div>
+
+          <div class="mt-2 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+            <span class="flex items-center gap-1.5">
+              <x-lucide-user class="size-3.5" />
+              Instruktur: {{ $jadwal->instruktur?->nama ?? 'Belum Ditunjuk' }}
+            </span>
+            <span class="flex items-center gap-1.5">
+              <x-lucide-map-pin class="size-3.5" />
+              {{ $jadwal->ruanganWorkshop?->nama_ruangan ?? '-' }}
+            </span>
+            <span class="flex items-center gap-1.5">
+              <x-lucide-clock class="size-3.5" />
+              {{ $jadwal->jam_mulai ? \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') : '08:00' }} -
+              {{ $jadwal->jam_selesai ? \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') : '15:30' }}
             </span>
           </div>
-          <div class="flex items-center gap-4 text-xs text-slate-500 mt-1.5 flex-wrap">
-            <span class="flex items-center gap-1.5"><i data-lucide="user" class="w-3.5 h-3.5 text-slate-400"></i> Instruktur: {{ $jadwal->instruktur?->nama ?? 'Belum Ditunjuk' }}</span>
-            <span class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i> Ruangan Workshop: {{ $jadwal->ruanganWorkshop?->nama_ruangan ?? '-' }} </span>
-            <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i> Jam: {{ $jadwal->jam_mulai ? \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') : '08:00' }} - {{ $jadwal->jam_selesai ? \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') : '15:30' }}</span>
-          </div>
         </div>
       </div>
 
-      <div class="text-right sm:border-l sm:border-slate-100 sm:pl-6">
-        <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Status Pelaksanaan</div>
-        <div class="text-xs font-bold text-emerald-700 flex items-center gap-1.5 mt-0.5 justify-end">
-          @if($jadwal->status === 'tersedia')
-            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-            Pendaftaran Tersedia
-          @elseif($jadwal->status === 'berlangsung')
-            <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-            Kelas Berlangsung
+      <div class="text-right sm:border-l sm:border-border sm:pl-6">
+        <div class="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Status Pelaksanaan</div>
+        <div class="mt-1 flex items-center justify-end gap-1.5 text-xs font-bold">
+          @if ($jadwal->status === 'tersedia')
+            <span class="size-2 rounded-full bg-emerald-500"></span>
+            <span class="text-primary">Pendaftaran Tersedia</span>
+          @elseif ($jadwal->status === 'berlangsung')
+            <span class="size-2 animate-pulse rounded-full bg-blue-500"></span>
+            <span class="text-blue-600">Kelas Berlangsung</span>
           @else
-            <span class="w-2 h-2 rounded-full bg-slate-400"></span>
-            Selesai
+            <span class="size-2 rounded-full bg-muted-foreground"></span>
+            <span class="text-muted-foreground">Selesai</span>
           @endif
         </div>
       </div>
     </div>
+  </x-ui.card>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+    <x-ui.stat label="Siswa Terdaftar" :value="count($jadwal->kelas ?? []) . ' / ' . ($jadwal->pelatihan->kuota ?? '16') . ' Peserta'" icon="users" />
+    <x-ui.stat label="Catatan Presensi" :value="count($jadwal->absensi ?? []) . ' Kehadiran'" icon="check-square" />
+    <x-ui.stat label="Sertifikat Diterbitkan" :value="count($jadwal->sertifikat ?? []) . ' Lembar'" icon="award" />
   </div>
 
-  <!-- Quick Stat Cards -->
-  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-3.5">
-      <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-        <i data-lucide="users" class="w-5 h-5"></i>
-      </div>
-      <div>
-        <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Siswa Terdaftar</div>
-        <div class="text-lg font-black text-slate-900 mt-0.5">
-          {{ count($jadwal->kelas ?? []) }} / {{ $jadwal->pelatihan->kuota ?? '16' }} Peserta
-        </div>
-      </div>
-    </div>
-
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-3.5">
-      <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
-        <i data-lucide="check-square" class="w-5 h-5"></i>
-      </div>
-      <div>
-        <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Catatan Presensi</div>
-        <div class="text-lg font-black text-slate-900 mt-0.5">{{ count($jadwal->absensi ?? []) }} Kehadiran</div>
-      </div>
-    </div>
-
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-3.5">
-      <div class="w-11 h-11 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center shrink-0">
-        <i data-lucide="award" class="w-5 h-5"></i>
-      </div>
-      <div>
-        <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Sertifikat Diterbitkan</div>
-        <div class="text-lg font-black text-slate-900 mt-0.5">{{ count($jadwal->sertifikat ?? []) }} Lembar</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Detail Content Grid -->
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- Left 2 Cols: Siswa Terdaftar di Kelas -->
-    <div class="lg:col-span-2 space-y-6">
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="p-5 border-b border-slate-100 flex items-center justify-between">
-          <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-              <i data-lucide="users" class="w-4 h-4"></i>
+  <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
+    <div class="space-y-6 lg:col-span-2">
+      <x-ui.card variant="sectioned" class="gap-0 overflow-hidden">
+        <x-ui.card-header class="border-b pb-5">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <span class="grid size-9 shrink-0 place-items-center rounded-lg bg-accent text-accent-foreground">
+                <x-lucide-users class="size-4" />
+              </span>
+              <div>
+                <x-ui.card-title class="text-base font-bold">Daftar Roster Siswa Kelas Ini</x-ui.card-title>
+                <x-ui.card-description>Siswa vokasi yang terdaftar pada batch jadwal ini.</x-ui.card-description>
+              </div>
             </div>
-            <div>
-              <h3 class="font-bold text-slate-800 text-sm">Daftar Roster Siswa Kelas Ini</h3>
-              <p class="text-xs text-slate-500">Siswa vokasi yang terdaftar pada batch jadwal ini.</p>
-            </div>
+
+            <x-ui.button href="{{ route('kelas-pelatihan.create') }}" variant="link" size="sm" class="px-0">
+              <x-lucide-user-plus />
+              Masukkan Siswa
+            </x-ui.button>
           </div>
-          <a href="{{ route('kelas-pelatihan.create') }}" class="text-xs text-emerald-700 font-semibold hover:underline flex items-center gap-1">
-            <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Masukkan Siswa
-          </a>
-        </div>
+        </x-ui.card-header>
 
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead>
-              <tr class="bg-slate-50 text-slate-400 border-b border-slate-100 text-[11px] uppercase">
-                <th class="px-5 py-3 font-semibold">NIS</th>
-                <th class="px-5 py-3 font-semibold">Nama Siswa</th>
-                <th class="px-5 py-3 font-semibold">Kontak / Email</th>
-                <th class="px-5 py-3 font-semibold">Status Kelas</th>
-                <th class="px-5 py-3 font-semibold text-right">Aksi</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100 text-slate-700">
-              @forelse($jadwal->kelas ?? [] as $kelas)
-                <tr class="hover:bg-slate-50/80">
-                  <td class="px-5 py-3 font-mono font-bold text-slate-500">{{ $kelas->peserta->nomor_peserta ?? '-' }}</td>
-                  <td class="px-5 py-3 font-bold text-slate-800">{{ $kelas->peserta->user->name ?? '-' }}</td>
-                  <td class="px-5 py-3 text-slate-600">{{ $kelas->peserta->nomor_wa ?? $kelas->peserta->user->email ?? '-' }}</td>
-                  <td class="px-5 py-3">
-                    <span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full capitalize">
-                      {{ $kelas->status_kelulusan ?? 'Terdaftar' }}
-                    </span>
-                  </td>
-                  <td class="px-5 py-3 text-right">
-                    <a href="{{ route('pesertas.show', $kelas->id_peserta) }}" class="text-emerald-700 hover:underline font-semibold">Lihat Siswa</a>
-                  </td>
-                </tr>
+        <x-ui.card-content class="px-0">
+          <x-ui.table>
+            <x-ui.table-header>
+              <x-ui.table-row class="bg-muted/50 hover:bg-muted/50">
+                <x-ui.table-head class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">NIS</x-ui.table-head>
+                <x-ui.table-head class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Nama Siswa</x-ui.table-head>
+                <x-ui.table-head class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Kontak / Email</x-ui.table-head>
+                <x-ui.table-head class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Status Kelas</x-ui.table-head>
+                <x-ui.table-head class="px-4 text-end text-xs font-semibold uppercase tracking-wide text-muted-foreground">Aksi</x-ui.table-head>
+              </x-ui.table-row>
+            </x-ui.table-header>
+
+            <x-ui.table-body>
+              @forelse ($jadwal->kelas ?? [] as $kelas)
+                <x-ui.table-row>
+                  <x-ui.table-cell class="px-4 py-3 font-mono text-xs font-bold text-muted-foreground">
+                    {{ $kelas->peserta->nomor_peserta ?? '-' }}
+                  </x-ui.table-cell>
+
+                  <x-ui.table-cell class="px-4 py-3 font-bold text-foreground">
+                    {{ $kelas->peserta->user->name ?? '-' }}
+                  </x-ui.table-cell>
+
+                  <x-ui.table-cell class="px-4 py-3 text-muted-foreground">
+                    {{ $kelas->peserta->nomor_wa ?? $kelas->peserta->user->email ?? '-' }}
+                  </x-ui.table-cell>
+
+                  <x-ui.table-cell class="px-4 py-3">
+                    <x-ui.badge tone="success" class="capitalize">{{ $kelas->status_kelulusan ?? 'Terdaftar' }}</x-ui.badge>
+                  </x-ui.table-cell>
+
+                  <x-ui.table-cell class="px-4 py-3">
+                    <div class="flex justify-end">
+                      <x-ui.button href="{{ route('pesertas.show', $kelas->id_peserta) }}" variant="link" size="sm">
+                        Lihat Siswa
+                        <x-lucide-chevron-right />
+                      </x-ui.button>
+                    </div>
+                  </x-ui.table-cell>
+                </x-ui.table-row>
               @empty
-                <tr>
-                  <td colspan="5" class="px-5 py-6 text-center text-slate-400">Belum ada peserta yang dimasukkan ke dalam batch ini.</td>
-                </tr>
+                <x-ui.table-row class="hover:bg-transparent">
+                  <x-ui.table-cell colspan="5" class="p-0">
+                    <x-ui.empty class="border-0">
+                      <x-ui.empty-header>
+                        <x-ui.empty-media variant="icon">
+                          <x-lucide-users />
+                        </x-ui.empty-media>
+                        <x-ui.empty-title class="text-base">Belum Ada Peserta</x-ui.empty-title>
+                        <x-ui.empty-description>
+                          Belum ada peserta yang dimasukkan ke dalam batch ini.
+                        </x-ui.empty-description>
+                      </x-ui.empty-header>
+                    </x-ui.empty>
+                  </x-ui.table-cell>
+                </x-ui.table-row>
               @endforelse
-            </tbody>
-          </table>
-        </div>
-      </div>
+            </x-ui.table-body>
+          </x-ui.table>
+        </x-ui.card-content>
+      </x-ui.card>
     </div>
 
-    <!-- Right 1 Col: Info Periode & Tindakan -->
     <div class="space-y-6">
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
-        <h4 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100">Rincian Periode</h4>
-        <div class="space-y-3 text-xs">
-          <div class="flex items-center justify-between text-slate-700">
-            <span class="text-slate-400">Mulai:</span>
+      <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+          <x-ui.card-title class="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted-foreground">
+            <x-lucide-calendar-days class="size-4 text-primary" />
+            Rincian Periode
+          </x-ui.card-title>
+        </x-ui.card-header>
+
+        <x-ui.card-content class="space-y-3 text-xs">
+          <div class="flex items-center justify-between text-foreground">
+            <span class="text-muted-foreground">Mulai:</span>
             <span class="font-semibold">{{ $jadwal->tanggal_mulai ? $jadwal->tanggal_mulai->translatedFormat('d M Y') : '-' }}</span>
           </div>
-          <div class="flex items-center justify-between text-slate-700">
-            <span class="text-slate-400">Selesai:</span>
+          <div class="flex items-center justify-between text-foreground">
+            <span class="text-muted-foreground">Selesai:</span>
             <span class="font-semibold">{{ $jadwal->tanggal_selesai ? $jadwal->tanggal_selesai->translatedFormat('d M Y') : '-' }}</span>
           </div>
-          <div class="flex items-center justify-between text-slate-700">
-            <span class="text-slate-400">Durasi Silabus:</span>
+          <div class="flex items-center justify-between text-foreground">
+            <span class="text-muted-foreground">Durasi Silabus:</span>
             <span class="font-semibold">{{ $jadwal->pelatihan->durasi_label ?? '-' }}</span>
           </div>
-        </div>
-      </div>
+        </x-ui.card-content>
+      </x-ui.card>
 
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-3">
-        <h4 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100">Aksi Administratif</h4>
-        <div class="space-y-2">
-          <a href="{{ route('absen.index') }}" class="w-full px-3.5 py-2.5 bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold rounded-lg shadow-sm flex items-center justify-center gap-2 transition">
-            <i data-lucide="check-square" class="w-4 h-4"></i> Rekap Presensi Siswa
-          </a>
-          <a href="{{ route('jadwal-pelatihan.edit', $jadwal->id_jadwal) }}" class="w-full px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg flex items-center justify-center gap-2 transition">
-            <i data-lucide="edit-3" class="w-4 h-4"></i> Edit Jadwal
-          </a>
-          <form action="{{ route('jadwal-pelatihan.destroy', $jadwal->id_jadwal) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus batch jadwal ini?')">
+      <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+          <x-ui.card-title class="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted-foreground">
+            <x-lucide-sliders-horizontal class="size-4 text-primary" />
+            Aksi Administratif
+          </x-ui.card-title>
+        </x-ui.card-header>
+
+        <x-ui.card-content class="space-y-2.5">
+          <x-ui.button href="{{ route('absen.index') }}" class="w-full bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
+            <x-lucide-check-square />
+            Rekap Presensi Siswa
+          </x-ui.button>
+
+          <x-ui.button href="{{ route('jadwal-pelatihan.edit', $jadwal->id_jadwal) }}" variant="secondary" class="w-full">
+            <x-lucide-pencil />
+            Edit Jadwal
+          </x-ui.button>
+
+          <form
+            action="{{ route('jadwal-pelatihan.destroy', $jadwal->id_jadwal) }}"
+            method="POST"
+            onsubmit="return confirm('Apakah Anda yakin ingin menghapus batch jadwal ini?')"
+          >
             @csrf
             @method('DELETE')
-            <button type="submit" class="w-full px-3.5 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold rounded-lg flex items-center justify-center gap-2 transition">
-              <i data-lucide="trash-2" class="w-4 h-4 text-rose-600"></i> Hapus Jadwal
-            </button>
+
+            <x-ui.button type="submit" variant="destructive" class="w-full">
+              <x-lucide-trash-2 />
+              Hapus Jadwal
+            </x-ui.button>
           </form>
-        </div>
-      </div>
+        </x-ui.card-content>
+      </x-ui.card>
     </div>
   </div>
 @endsection
