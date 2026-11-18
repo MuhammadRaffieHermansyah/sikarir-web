@@ -3,290 +3,306 @@
 @section('title', 'Detail Profil Administrator BLK - ' . ($admin->user->name ?? 'Admin'))
 
 @section('content')
-  <!-- Title & Breadcrumbs -->
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-    <div>
-      <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
-        <a href="{{ route('admin-blk.index') }}" class="hover:text-emerald-700 transition">Beranda</a>
-        <span>&gt;</span>
-        <a href="{{ route('admin-blk.index') }}" class="hover:text-emerald-700 transition">Admin BLK</a>
-        <span>&gt;</span>
-        <span class="text-slate-600 font-medium">Detail Profil</span>
-      </div>
-      <h1 class="text-xl font-black text-slate-900 tracking-tight">Detail Profil Administrator BLK</h1>
-      <p class="text-xs text-slate-500 mt-0.5">Informasi lengkap data personel, hak akses kewenangan sistem, dan riwayat kegiatan operasional.</p>
-    </div>
+  <x-ui.page-header
+    title="Detail Profil Administrator BLK"
+    description="Informasi lengkap data personel, hak akses kewenangan sistem, dan riwayat kegiatan operasional."
+  >
+    <x-slot:breadcrumb>
+      <x-ui.breadcrumb>
+        <x-ui.breadcrumb-list>
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-link href="{{ route('admin-blk.index') }}">Beranda</x-ui.breadcrumb-link>
+          </x-ui.breadcrumb-item>
+          <x-ui.breadcrumb-separator />
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-link href="{{ route('admin-blk.index') }}">Admin BLK</x-ui.breadcrumb-link>
+          </x-ui.breadcrumb-item>
+          <x-ui.breadcrumb-separator />
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-page>Detail Profil</x-ui.breadcrumb-page>
+          </x-ui.breadcrumb-item>
+        </x-ui.breadcrumb-list>
+      </x-ui.breadcrumb>
+    </x-slot:breadcrumb>
 
-    <div class="flex items-center gap-2 flex-wrap">
-      <a href="{{ route('admin-blk.index') }}" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali
-      </a>
-      <a href="{{ route('admin-blk.edit', $admin->id_admin) }}" class="bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold px-3.5 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="edit-3" class="w-4 h-4"></i> Edit Profil
-      </a>
-    </div>
-  </div>
+    <x-slot:actions>
+      <x-ui.button href="{{ route('admin-blk.index') }}" variant="outline">
+        <x-lucide-arrow-left />
+        Kembali
+      </x-ui.button>
 
-  <!-- Hero Profile Banner Card -->
-  <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 relative overflow-hidden">
-    <div class="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-emerald-50/50 to-transparent pointer-events-none"></div>
+      <x-ui.button href="{{ route('admin-blk.edit', $admin->id_admin) }}" class="bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
+        <x-lucide-pencil />
+        Edit Profil
+      </x-ui.button>
+    </x-slot:actions>
+  </x-ui.page-header>
 
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
+  <x-ui.card variant="sectioned">
+    <div class="flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
       <div class="flex items-center gap-5">
-        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-700 to-teal-950 text-white font-black text-2xl flex items-center justify-center shadow-md shrink-0">
+        <span class="grid size-16 shrink-0 place-items-center rounded-2xl bg-primary text-2xl font-black text-primary-foreground">
           {{ strtoupper(substr($admin->user->name ?? 'A', 0, 2)) }}
-        </div>
+        </span>
+
         <div>
-          <div class="flex items-center gap-2.5 flex-wrap">
-            <h2 class="text-lg font-extrabold text-slate-900">{{ $admin->user->name ?? 'Tanpa Nama' }}</h2>
-            <span class="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2.5 py-0.5 rounded-full">
+          <div class="flex flex-wrap items-center gap-2.5">
+            <h2 class="text-lg font-extrabold text-foreground">{{ $admin->user->name ?? 'Tanpa Nama' }}</h2>
+            <x-ui.badge variant="secondary" class="font-mono">
               ID: #BLK-{{ str_pad($admin->id_admin, 3, '0', STR_PAD_LEFT) }}
-            </span>
-            <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Super Administrator Balai
-            </span>
+            </x-ui.badge>
+            <x-ui.badge tone="success" class="gap-1">
+              <span class="size-1.5 rounded-full bg-current"></span>
+              Super Administrator Balai
+            </x-ui.badge>
           </div>
-          <div class="flex items-center gap-4 text-xs text-slate-500 mt-1.5 flex-wrap">
+
+          <div class="mt-2 flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
             <span class="flex items-center gap-1.5">
-              <i data-lucide="mail" class="w-3.5 h-3.5 text-slate-400"></i>
+              <x-lucide-mail class="size-3.5" />
               {{ $admin->user->email ?? '-' }}
             </span>
             <span class="flex items-center gap-1.5">
-              <i data-lucide="building-2" class="w-3.5 h-3.5 text-slate-400"></i>
+              <x-lucide-building-2 class="size-3.5" />
               BLK Pusat Vokasi & Pelatihan Kerja
             </span>
             <span class="flex items-center gap-1.5">
-              <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-400"></i>
+              <x-lucide-calendar class="size-3.5" />
               Bergabung sejak {{ $admin->created_at ? $admin->created_at->translatedFormat('d F Y') : '-' }}
             </span>
           </div>
         </div>
       </div>
 
-      <div class="flex items-center gap-2 self-start sm:self-center">
-        <div class="text-right sm:border-l sm:border-slate-100 sm:pl-6">
-          <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Status Akun</div>
-          <div class="text-xs font-bold text-emerald-700 flex items-center gap-1.5 mt-0.5 justify-end">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            Aktif & Terverifikasi
-          </div>
+      <div class="text-right sm:border-l sm:border-border sm:pl-6">
+        <div class="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Status Akun</div>
+        <div class="mt-1 flex items-center justify-end gap-1.5 text-xs font-bold text-primary">
+          <span class="size-2 animate-pulse rounded-full bg-emerald-500"></span>
+          Aktif & Terverifikasi
         </div>
       </div>
     </div>
+  </x-ui.card>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <x-ui.stat label="Program Pelatihan" :value="count($admin->pelatihan ?? []) . ' Program'" icon="book-open" />
+    <x-ui.stat label="Lowongan Magang" :value="count($admin->lowongan ?? []) . ' Lowongan'" icon="briefcase" />
+    <x-ui.stat label="Peserta Dibina" :value="count($admin->peserta ?? []) . ' Peserta'" icon="users" />
+    <x-ui.stat label="Sertifikat Validasi" :value="count($admin->sertifikat ?? []) . ' Diterbitkan'" icon="award" />
   </div>
 
-  <!-- Quick Stat Cards -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-    <!-- Stat 1 -->
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-3.5">
-      <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-        <i data-lucide="book-open" class="w-5 h-5"></i>
-      </div>
-      <div>
-        <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Program Pelatihan</div>
-        <div class="text-lg font-black text-slate-900 mt-0.5">{{ count($admin->pelatihan ?? []) }} Program</div>
-      </div>
-    </div>
-
-    <!-- Stat 2 -->
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-3.5">
-      <div class="w-11 h-11 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center shrink-0">
-        <i data-lucide="briefcase" class="w-5 h-5"></i>
-      </div>
-      <div>
-        <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Lowongan Magang</div>
-        <div class="text-lg font-black text-slate-900 mt-0.5">{{ count($admin->lowongan ?? []) }} Lowongan</div>
-      </div>
-    </div>
-
-    <!-- Stat 3 -->
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-3.5">
-      <div class="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center shrink-0">
-        <i data-lucide="users" class="w-5 h-5"></i>
-      </div>
-      <div>
-        <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Peserta Dibina</div>
-        <div class="text-lg font-black text-slate-900 mt-0.5">{{ count($admin->peserta ?? []) }} Peserta</div>
-      </div>
-    </div>
-
-    <!-- Stat 4 -->
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-3.5">
-      <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
-        <i data-lucide="award" class="w-5 h-5"></i>
-      </div>
-      <div>
-        <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Sertifikat Validasi</div>
-        <div class="text-lg font-black text-slate-900 mt-0.5">{{ count($admin->sertifikat ?? []) }} Diterbitkan</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Detail Content Grid -->
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- Left 2 Cols: Account Info & Program List -->
-    <div class="lg:col-span-2 space-y-6">
-      <!-- Card: Informasi Rinci Kepegawaian -->
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-5">
-        <div class="flex items-center justify-between pb-4 border-b border-slate-100">
-          <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-              <i data-lucide="id-card" class="w-4 h-4"></i>
+  <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
+    <div class="space-y-6 lg:col-span-2">
+      <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <span class="grid size-9 shrink-0 place-items-center rounded-lg bg-accent text-accent-foreground">
+                <x-lucide-id-card class="size-4" />
+              </span>
+              <div>
+                <x-ui.card-title class="text-base font-bold">Informasi Data Administrator</x-ui.card-title>
+                <x-ui.card-description>Rincian identitas akun dan penugasan balai kerja.</x-ui.card-description>
+              </div>
             </div>
+
+            <x-ui.button href="{{ route('admin-blk.edit', $admin->id_admin) }}" variant="link" size="sm" class="px-0">
+              <x-lucide-pencil />
+              Edit
+            </x-ui.button>
+          </div>
+        </x-ui.card-header>
+
+        <x-ui.card-content>
+          <div class="grid grid-cols-1 gap-x-6 gap-y-4 text-xs sm:grid-cols-2">
             <div>
-              <h3 class="font-bold text-slate-800 text-sm">Informasi Data Administrator</h3>
-              <p class="text-xs text-slate-500">Rincian identitas akun dan penugasan balai kerja.</p>
+              <span class="mb-1 block font-medium text-muted-foreground">Nama Lengkap</span>
+              <span class="text-sm font-bold text-foreground">{{ $admin->user->name ?? '-' }}</span>
             </div>
-          </div>
-          <a href="{{ route('admin-blk.edit', $admin->id_admin) }}" class="text-xs font-semibold text-emerald-700 hover:underline flex items-center gap-1">
-            <i data-lucide="edit" class="w-3.5 h-3.5"></i> Edit
-          </a>
-        </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6 text-xs">
-          <div>
-            <span class="text-slate-400 font-medium block mb-1">Nama Lengkap</span>
-            <span class="text-slate-800 font-bold text-sm">{{ $admin->user->name ?? '-' }}</span>
-          </div>
-
-          <div>
-            <span class="text-slate-400 font-medium block mb-1">Alamat Email</span>
-            <span class="text-slate-800 font-semibold">{{ $admin->user->email ?? '-' }}</span>
-          </div>
-
-          <div>
-            <span class="text-slate-400 font-medium block mb-1">ID Administrator BLK</span>
-            <span class="font-mono text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded w-fit inline-block">
-              #BLK-{{ str_pad($admin->id_admin, 3, '0', STR_PAD_LEFT) }}
-            </span>
-          </div>
-
-          <div>
-            <span class="text-slate-400 font-medium block mb-1">Role Akun Sistem</span>
-            <span class="text-slate-700 font-semibold capitalize">{{ $admin->user->role ?? 'admin_blk' }}</span>
-          </div>
-
-          <div>
-            <span class="text-slate-400 font-medium block mb-1">Unit Balai Kerja</span>
-            <span class="text-slate-800 font-semibold">BLK Pusat Vokasi</span>
-          </div>
-
-          <div>
-            <span class="text-slate-400 font-medium block mb-1">Waktu Pendaftaran</span>
-            <span class="text-slate-700 font-semibold">{{ $admin->created_at ? $admin->created_at->translatedFormat('d F Y, H:i') : '-' }} WIB</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card: Program Pelatihan Terkait -->
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <div class="p-5 border-b border-slate-100 flex items-center justify-between">
-          <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-              <i data-lucide="layers" class="w-4 h-4"></i>
-            </div>
             <div>
-              <h3 class="font-bold text-slate-800 text-sm">Program Pelatihan Dikelola</h3>
-              <p class="text-xs text-slate-500">Program kejuruan yang berada di bawah wewenang administrator ini.</p>
+              <span class="mb-1 block font-medium text-muted-foreground">Alamat Email</span>
+              <span class="font-semibold text-foreground">{{ $admin->user->email ?? '-' }}</span>
+            </div>
+
+            <div>
+              <span class="mb-1 block font-medium text-muted-foreground">ID Administrator BLK</span>
+              <x-ui.badge variant="secondary" class="w-fit font-mono">
+                #BLK-{{ str_pad($admin->id_admin, 3, '0', STR_PAD_LEFT) }}
+              </x-ui.badge>
+            </div>
+
+            <div>
+              <span class="mb-1 block font-medium text-muted-foreground">Role Akun Sistem</span>
+              <span class="font-semibold capitalize text-foreground">{{ $admin->user->role ?? 'admin_blk' }}</span>
+            </div>
+
+            <div>
+              <span class="mb-1 block font-medium text-muted-foreground">Unit Balai Kerja</span>
+              <span class="font-semibold text-foreground">BLK Pusat Vokasi</span>
+            </div>
+
+            <div>
+              <span class="mb-1 block font-medium text-muted-foreground">Waktu Pendaftaran</span>
+              <span class="font-semibold text-foreground">
+                {{ $admin->created_at ? $admin->created_at->translatedFormat('d F Y, H:i') : '-' }} WIB
+              </span>
             </div>
           </div>
-          <a href="{{ route('pelatihan.index') }}" class="text-xs text-emerald-700 font-semibold hover:underline">
-            Semua Program &rarr;
-          </a>
-        </div>
+        </x-ui.card-content>
+      </x-ui.card>
 
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead>
-              <tr class="bg-slate-50 text-slate-400 border-b border-slate-100 text-[11px] uppercase">
-                <th class="px-5 py-3 font-semibold">Nama Program</th>
-                <th class="px-5 py-3 font-semibold">Durasi</th>
-                <th class="px-5 py-3 font-semibold">Kuota Peserta</th>
-                <th class="px-5 py-3 font-semibold text-right">Aksi</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100 text-slate-700">
-              @forelse($admin->pelatihan ?? [] as $pelatihan)
-                <tr class="hover:bg-slate-50/80">
-                  <td class="px-5 py-3 font-bold text-slate-800">{{ $pelatihan->nama_pelatihan }}</td>
-                  <td class="px-5 py-3 text-slate-600">{{ $pelatihan->durasi_label ?? '-' }}</td>
-                  <td class="px-5 py-3 font-semibold text-emerald-700">{{ $pelatihan->kuota }} Kuota</td>
-                  <td class="px-5 py-3 text-right">
-                    <a href="{{ route('pelatihan.show', $pelatihan->id_pelatihan) }}" class="text-emerald-700 hover:underline font-semibold">Detail</a>
-                  </td>
-                </tr>
+      <x-ui.card variant="sectioned" class="gap-0 overflow-hidden">
+        <x-ui.card-header class="border-b pb-5">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <span class="grid size-9 shrink-0 place-items-center rounded-lg bg-accent text-accent-foreground">
+                <x-lucide-layers class="size-4" />
+              </span>
+              <div>
+                <x-ui.card-title class="text-base font-bold">Program Pelatihan Dikelola</x-ui.card-title>
+                <x-ui.card-description>Program kejuruan yang berada di bawah wewenang administrator ini.</x-ui.card-description>
+              </div>
+            </div>
+
+            <x-ui.button href="{{ route('pelatihan.index') }}" variant="link" size="sm" class="px-0">
+              Semua Program
+              <x-lucide-arrow-right />
+            </x-ui.button>
+          </div>
+        </x-ui.card-header>
+
+        <x-ui.card-content class="px-0">
+          <x-ui.table>
+            <x-ui.table-header>
+              <x-ui.table-row class="bg-muted/50 hover:bg-muted/50">
+                <x-ui.table-head class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Nama Program</x-ui.table-head>
+                <x-ui.table-head class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Durasi</x-ui.table-head>
+                <x-ui.table-head class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Kuota Peserta</x-ui.table-head>
+                <x-ui.table-head class="px-4 text-end text-xs font-semibold uppercase tracking-wide text-muted-foreground">Aksi</x-ui.table-head>
+              </x-ui.table-row>
+            </x-ui.table-header>
+
+            <x-ui.table-body>
+              @forelse ($admin->pelatihan ?? [] as $pelatihan)
+                <x-ui.table-row>
+                  <x-ui.table-cell class="px-4 py-3 font-bold text-foreground">
+                    {{ $pelatihan->nama_pelatihan }}
+                  </x-ui.table-cell>
+
+                  <x-ui.table-cell class="px-4 py-3 text-muted-foreground">
+                    {{ $pelatihan->durasi_label ?? '-' }}
+                  </x-ui.table-cell>
+
+                  <x-ui.table-cell class="px-4 py-3">
+                    <x-ui.badge tone="success">{{ $pelatihan->kuota }} Kuota</x-ui.badge>
+                  </x-ui.table-cell>
+
+                  <x-ui.table-cell class="px-4 py-3">
+                    <div class="flex justify-end">
+                      <x-ui.button href="{{ route('pelatihan.show', $pelatihan->id_pelatihan) }}" variant="link" size="sm">
+                        Detail
+                        <x-lucide-chevron-right />
+                      </x-ui.button>
+                    </div>
+                  </x-ui.table-cell>
+                </x-ui.table-row>
               @empty
-                <tr>
-                  <td colspan="4" class="px-5 py-6 text-center text-slate-400">Belum ada program pelatihan yang ditautkan ke administrator ini.</td>
-                </tr>
+                <x-ui.table-row class="hover:bg-transparent">
+                  <x-ui.table-cell colspan="4" class="p-0">
+                    <x-ui.empty class="border-0">
+                      <x-ui.empty-header>
+                        <x-ui.empty-media variant="icon">
+                          <x-lucide-layers />
+                        </x-ui.empty-media>
+                        <x-ui.empty-title class="text-base">Belum Ada Program Pelatihan</x-ui.empty-title>
+                        <x-ui.empty-description>
+                          Belum ada program pelatihan yang ditautkan ke administrator ini.
+                        </x-ui.empty-description>
+                      </x-ui.empty-header>
+                    </x-ui.empty>
+                  </x-ui.table-cell>
+                </x-ui.table-row>
               @endforelse
-            </tbody>
-          </table>
-        </div>
-      </div>
+            </x-ui.table-body>
+          </x-ui.table>
+        </x-ui.card-content>
+      </x-ui.card>
     </div>
 
-    <!-- Right 1 Col: Otoritas & Tindakan -->
     <div class="space-y-6">
-      <!-- Hak Otoritas Sistem -->
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
-        <div class="flex items-center gap-2 text-slate-800 font-bold text-xs pb-3 border-b border-slate-100">
-          <i data-lucide="shield-alert" class="w-4 h-4 text-emerald-700"></i>
-          <span>Otoritas Operasional Balai</span>
-        </div>
+      <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+          <x-ui.card-title class="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted-foreground">
+            <x-lucide-shield-alert class="size-4 text-primary" />
+            Otoritas Operasional Balai
+          </x-ui.card-title>
+        </x-ui.card-header>
 
-        <div class="space-y-3 text-xs">
+        <x-ui.card-content class="space-y-3 text-xs">
           <div class="flex items-start gap-2.5">
-            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+            <x-lucide-circle-check-big class="mt-0.5 size-4 shrink-0 text-primary" />
             <div>
-              <div class="font-bold text-slate-800">Verifikasi Jurnal Harian</div>
-              <p class="text-[11px] text-slate-500">Mengesahkan catatan kegiatan & presensi magang.</p>
+              <div class="font-bold text-foreground">Verifikasi Jurnal Harian</div>
+              <p class="text-muted-foreground">Mengesahkan catatan kegiatan & presensi magang.</p>
             </div>
           </div>
 
           <div class="flex items-start gap-2.5">
-            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+            <x-lucide-circle-check-big class="mt-0.5 size-4 shrink-0 text-primary" />
             <div>
-              <div class="font-bold text-slate-800">Penerbitan Sertifikat Resmi</div>
-              <p class="text-[11px] text-slate-500">Menandatangani & menerbitkan e-sertifikat kompetensi.</p>
+              <div class="font-bold text-foreground">Penerbitan Sertifikat Resmi</div>
+              <p class="text-muted-foreground">Menandatangani & menerbitkan e-sertifikat kompetensi.</p>
             </div>
           </div>
 
           <div class="flex items-start gap-2.5">
-            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+            <x-lucide-circle-check-big class="mt-0.5 size-4 shrink-0 text-primary" />
             <div>
-              <div class="font-bold text-slate-800">Manajemen Mitra Industri</div>
-              <p class="text-[11px] text-slate-500">Menyetujui pendaftaran dan kuota lowongan DU/DI.</p>
+              <div class="font-bold text-foreground">Manajemen Mitra Industri</div>
+              <p class="text-muted-foreground">Menyetujui pendaftaran dan kuota lowongan DU/DI.</p>
             </div>
           </div>
 
           <div class="flex items-start gap-2.5">
-            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
+            <x-lucide-circle-check-big class="mt-0.5 size-4 shrink-0 text-primary" />
             <div>
-              <div class="font-bold text-slate-800">Manajemen Kurikulum & Kelas</div>
-              <p class="text-[11px] text-slate-500">Menyusun jadwal dan instruktur pelatihan vokasi.</p>
+              <div class="font-bold text-foreground">Manajemen Kurikulum & Kelas</div>
+              <p class="text-muted-foreground">Menyusun jadwal dan instruktur pelatihan vokasi.</p>
             </div>
           </div>
-        </div>
-      </div>
+        </x-ui.card-content>
+      </x-ui.card>
 
-      <!-- Tindakan Akun -->
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-3">
-        <h4 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100">Tindakan Cepat</h4>
-        <div class="space-y-2">
-          <a href="{{ route('admin-blk.edit', $admin->id_admin) }}" class="w-full px-3.5 py-2.5 bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold rounded-lg shadow-sm flex items-center justify-center gap-2 transition">
-            <i data-lucide="edit-3" class="w-4 h-4"></i> Edit Data Administrator
-          </a>
-          <form action="{{ route('admin-blk.destroy', $admin->id_admin) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data administrator ini?')">
+      <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+          <x-ui.card-title class="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted-foreground">
+            <x-lucide-sliders-horizontal class="size-4 text-primary" />
+            Tindakan Cepat
+          </x-ui.card-title>
+        </x-ui.card-header>
+
+        <x-ui.card-content class="space-y-2.5">
+          <x-ui.button href="{{ route('admin-blk.edit', $admin->id_admin) }}" class="w-full bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
+            <x-lucide-pencil />
+            Edit Data Administrator
+          </x-ui.button>
+
+          <form
+            action="{{ route('admin-blk.destroy', $admin->id_admin) }}"
+            method="POST"
+            onsubmit="return confirm('Apakah Anda yakin ingin menghapus data administrator ini?')"
+          >
             @csrf
             @method('DELETE')
-            <button type="submit" class="w-full px-3.5 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold rounded-lg flex items-center justify-center gap-2 transition">
-              <i data-lucide="trash-2" class="w-4 h-4 text-rose-600"></i> Hapus Administrator
-            </button>
+
+            <x-ui.button type="submit" variant="destructive" class="w-full">
+              <x-lucide-trash-2 />
+              Hapus Administrator
+            </x-ui.button>
           </form>
-        </div>
-      </div>
+        </x-ui.card-content>
+      </x-ui.card>
     </div>
   </div>
 @endsection
-

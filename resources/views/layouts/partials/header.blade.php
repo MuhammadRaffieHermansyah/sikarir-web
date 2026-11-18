@@ -5,53 +5,77 @@
         'peserta' => 'Peserta',
         default => 'Mitra DU/DI',
     };
+    $initial = mb_strtoupper(mb_substr($user?->name ?? 'U', 0, 1));
 @endphp
 
-<header class="h-[72px] shrink-0 border-b border-[#dfe8dc] bg-[#fbfcf8]/95 px-3 backdrop-blur sm:px-5 lg:px-7">
-    <div class="flex h-full items-center gap-3 sm:gap-4">
-        <button id="sidebarToggle" type="button"
-            class="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-[#d9e4d4] bg-white text-[#1d4939] shadow-sm transition hover:-translate-y-0.5 hover:border-[#a9c786] hover:bg-[#f1f6e7] active:translate-y-0 md:hidden"
-            aria-label="Buka menu" aria-controls="sidebar" aria-expanded="false">
-            <i data-lucide="menu" class="h-5 w-5"></i>
-        </button>
+<header class="flex h-[var(--app-header-height)] shrink-0 items-center gap-3 border-b border-border bg-background/95 px-4 backdrop-blur sm:px-6 lg:px-8">
+    <x-ui.sidebar-trigger label="Buka atau tutup menu navigasi"
+        class="size-9 shrink-0 rounded-lg border border-border bg-background text-muted-foreground shadow-xs hover:bg-muted hover:text-foreground md:size-8" />
 
-        <div class="hidden min-w-0 lg:block">
-            <p class="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#6d8b74]">Ruang kerja</p>
-            <p class="mt-0.5 truncate text-sm font-extrabold tracking-tight text-[#173f31]">siKarir Dashboard</p>
-        </div>
+    <div class="hidden min-w-0 lg:block">
+        <p class="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">Ruang kerja</p>
+        <p class="mt-0.5 truncate text-sm font-bold tracking-tight text-foreground">siKarir Dashboard</p>
+    </div>
 
-        <form class="relative min-w-0 flex-1 sm:max-w-md lg:ml-2" role="search">
-            <label class="sr-only" for="dashboard-search">Cari di dashboard</label>
-            <i data-lucide="search" class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#74907a]"></i>
-            <input id="dashboard-search" type="search" placeholder="Cari peserta, kelas, atau lowongan..."
-                class="h-11 w-full rounded-xl border border-[#dfe8dc] bg-white py-2 pl-10 pr-4 text-xs font-medium text-[#244638] outline-none transition placeholder:text-[#91a298] focus:border-[#83a968] focus:ring-4 focus:ring-[#dff0c7]/70">
-        </form>
+    <form class="relative min-w-0 flex-1 sm:max-w-md lg:ml-2" role="search">
+        <label class="sr-only" for="dashboard-search">Cari di dashboard</label>
+        <x-ui.input id="dashboard-search" type="search" placeholder="Cari peserta, kelas, atau lowongan..." class="h-10 pl-10">
+            <x-slot:leading>
+                <x-lucide-search />
+            </x-slot:leading>
+        </x-ui.input>
+    </form>
 
-        <div class="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
-            <div class="hidden items-center gap-2 rounded-full border border-[#d3e4bc] bg-[#eff7df] px-3 py-2 text-[10px] font-extrabold uppercase tracking-[0.08em] text-[#3e6a45] sm:flex">
-                <span class="h-1.5 w-1.5 rounded-full bg-[#78a744]"></span>
-                Gelombang II 2025
-            </div>
+    <div class="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
+        <x-ui.badge variant="secondary" class="hidden gap-1.5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide sm:inline-flex">
+            <span class="size-1.5 rounded-full bg-primary"></span>
+            Gelombang II 2025
+        </x-ui.badge>
 
-            <button type="button"
-                class="relative grid h-10 w-10 place-items-center rounded-xl border border-[#dfe8dc] bg-white text-[#486556] shadow-sm transition hover:-translate-y-0.5 hover:border-[#a9c786] hover:bg-[#f1f6e7] hover:text-[#1d4939] active:translate-y-0"
-                aria-label="Notifikasi">
-                <i data-lucide="bell" class="h-4 w-4"></i>
-                <span class="absolute right-2.5 top-2.5 h-1.5 w-1.5 rounded-full bg-[#a7c748] ring-2 ring-white"></span>
-            </button>
+        <x-ui.button variant="outline" size="icon" aria-label="Notifikasi" class="relative">
+            <x-lucide-bell />
+            <span class="absolute right-2.5 top-2.5 size-1.5 rounded-full bg-primary ring-2 ring-background"></span>
+        </x-ui.button>
 
-            <a href="{{ route('profile.edit') }}"
-                class="group flex min-w-0 items-center gap-2 rounded-xl border border-transparent py-1.5 pl-1.5 pr-2 transition hover:border-[#d3e4bc] hover:bg-[#f1f6e7] sm:gap-2.5 sm:pr-3"
-                aria-label="Buka profil {{ $user?->name }}">
-                <span class="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#164637] text-xs font-black text-[#d8f36a] shadow-sm transition group-hover:scale-105">
-                    <i data-lucide="user-round" class="h-4 w-4"></i>
-                </span>
-                <span class="hidden min-w-0 sm:block">
-                    <span class="block max-w-28 truncate text-xs font-extrabold leading-tight text-[#173f31]">{{ $user?->name }}</span>
-                    <span class="mt-0.5 block text-[10px] font-semibold text-[#71877a]">{{ $roleLabel }}</span>
-                </span>
-                <i data-lucide="chevron-down" class="hidden h-3.5 w-3.5 text-[#789080] sm:block"></i>
-            </a>
-        </div>
+        <x-ui.dropdown-menu>
+            <x-ui.dropdown-menu-trigger>
+                <x-ui.button variant="ghost" class="h-auto gap-2 px-2 py-1.5" aria-label="Buka profil {{ $user?->name }}">
+                    <x-ui.avatar class="size-9 rounded-xl">
+                        <x-ui.avatar-fallback class="rounded-xl bg-primary text-xs font-bold text-primary-foreground">
+                            {{ $initial }}
+                        </x-ui.avatar-fallback>
+                    </x-ui.avatar>
+                    <span class="hidden min-w-0 text-left sm:block">
+                        <span class="block max-w-32 truncate text-xs font-bold leading-tight text-foreground">{{ $user?->name }}</span>
+                        <span class="mt-0.5 block text-[10px] font-medium text-muted-foreground">{{ $roleLabel }}</span>
+                    </span>
+                    <x-lucide-chevron-down class="hidden size-3.5 text-muted-foreground sm:block" />
+                </x-ui.button>
+            </x-ui.dropdown-menu-trigger>
+
+            <x-ui.dropdown-menu-content align="end" class="w-56">
+                <x-ui.dropdown-menu-label>
+                    <span class="block truncate font-semibold">{{ $user?->name }}</span>
+                    <span class="block truncate text-xs font-normal text-muted-foreground">{{ $user?->email }}</span>
+                </x-ui.dropdown-menu-label>
+                <x-ui.dropdown-menu-separator />
+                <x-ui.dropdown-menu-item href="{{ route('profile.edit') }}">
+                    <x-lucide-user-round />
+                    Profil Saya
+                </x-ui.dropdown-menu-item>
+                <x-ui.dropdown-menu-item href="{{ url('/api/documentation') }}" target="_blank">
+                    <x-lucide-file-code />
+                    Dokumentasi API
+                </x-ui.dropdown-menu-item>
+                <x-ui.dropdown-menu-separator />
+                <form method="POST" action="{{ route('logout') }}" data-confirm-action="logout">
+                    @csrf
+                    <x-ui.dropdown-menu-item type="submit" variant="destructive">
+                        <x-lucide-log-out />
+                        Keluar
+                    </x-ui.dropdown-menu-item>
+                </form>
+            </x-ui.dropdown-menu-content>
+        </x-ui.dropdown-menu>
     </div>
 </header>

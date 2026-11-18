@@ -3,178 +3,226 @@
 @section('title', 'Edit Administrator BLK - ' . ($admin->user->name ?? 'Admin'))
 
 @section('content')
-  <!-- Title & Breadcrumbs -->
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-    <div>
-      <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
-        <a href="{{ route('admin-blk.index') }}" class="hover:text-emerald-700 transition">Beranda</a>
-        <span>&gt;</span>
-        <a href="{{ route('admin-blk.index') }}" class="hover:text-emerald-700 transition">Admin BLK</a>
-        <span>&gt;</span>
-        <span class="text-slate-600 font-medium">Edit Data #BLK-{{ str_pad($admin->id_admin, 3, '0', STR_PAD_LEFT) }}</span>
-      </div>
-      <h1 class="text-xl font-black text-slate-900 tracking-tight">Edit Data Administrator BLK</h1>
-      <p class="text-xs text-slate-500 mt-0.5">Perbarui informasi akun, penugasan balai, atau alokasi kewenangan personel pengelola.</p>
-    </div>
+  <x-ui.page-header
+    title="Edit Data Administrator BLK"
+    description="Perbarui informasi akun, penugasan balai, atau alokasi kewenangan personel pengelola."
+  >
+    <x-slot:breadcrumb>
+      <x-ui.breadcrumb>
+        <x-ui.breadcrumb-list>
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-link href="{{ route('admin-blk.index') }}">Beranda</x-ui.breadcrumb-link>
+          </x-ui.breadcrumb-item>
+          <x-ui.breadcrumb-separator />
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-link href="{{ route('admin-blk.index') }}">Admin BLK</x-ui.breadcrumb-link>
+          </x-ui.breadcrumb-item>
+          <x-ui.breadcrumb-separator />
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-page>Edit Data #BLK-{{ str_pad($admin->id_admin, 3, '0', STR_PAD_LEFT) }}</x-ui.breadcrumb-page>
+          </x-ui.breadcrumb-item>
+        </x-ui.breadcrumb-list>
+      </x-ui.breadcrumb>
+    </x-slot:breadcrumb>
 
-    <div class="flex items-center gap-2">
-      <a href="{{ route('admin-blk.show', $admin->id_admin) }}" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="eye" class="w-4 h-4 text-emerald-700"></i> Lihat Profil
-      </a>
-      <a href="{{ route('admin-blk.index') }}" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali
-      </a>
-    </div>
-  </div>
+    <x-slot:actions>
+      <x-ui.button href="{{ route('admin-blk.show', $admin->id_admin) }}" variant="outline">
+        <x-lucide-eye />
+        Lihat Profil
+      </x-ui.button>
 
-  <!-- Profile Banner Summary -->
-  <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <x-ui.button href="{{ route('admin-blk.index') }}" variant="outline">
+        <x-lucide-arrow-left />
+        Kembali
+      </x-ui.button>
+    </x-slot:actions>
+  </x-ui.page-header>
+
+  <x-ui.card variant="sectioned">
+    <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
       <div class="flex items-center gap-4">
-        <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-700 to-teal-900 text-white font-black text-lg flex items-center justify-center shadow-sm shrink-0">
+        <span class="grid size-14 shrink-0 place-items-center rounded-xl bg-primary text-lg font-black text-primary-foreground shadow-sm">
           {{ strtoupper(substr($admin->user->name ?? 'A', 0, 2)) }}
+        </span>
+
+        <div>
+          <div class="flex flex-wrap items-center gap-2">
+            <h2 class="text-base font-bold text-foreground">{{ $admin->user->name ?? 'Tanpa Nama' }}</h2>
+            <x-ui.badge variant="secondary" class="font-mono">
+              ID Admin: #BLK-{{ str_pad($admin->id_admin, 3, '0', STR_PAD_LEFT) }}
+            </x-ui.badge>
+            <x-ui.badge tone="success">Aktif Bertugas</x-ui.badge>
+          </div>
+
+          <div class="mt-1 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+            <span class="flex items-center gap-1">
+              <x-lucide-mail class="size-3.5" />
+              {{ $admin->user->email ?? '-' }}
+            </span>
+            <span class="flex items-center gap-1">
+              <x-lucide-building-2 class="size-3.5" />
+              BLK Pusat Vokasi
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-end justify-between gap-1 border-t border-border pt-3 text-xs text-muted-foreground sm:flex-col sm:border-t-0 sm:pt-0">
+        <div>
+          Terdaftar:
+          <span class="font-medium text-foreground">
+            {{ $admin->created_at ? $admin->created_at->translatedFormat('d M Y') : '-' }}
+          </span>
         </div>
         <div>
-          <div class="flex items-center gap-2 flex-wrap">
-            <h2 class="text-base font-bold text-slate-900">{{ $admin->user->name ?? 'Tanpa Nama' }}</h2>
-            <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full">
-              ID Admin: #BLK-{{ str_pad($admin->id_admin, 3, '0', STR_PAD_LEFT) }}
-            </span>
-            <span class="bg-indigo-50 text-indigo-700 text-[10px] font-semibold px-2 py-0.5 rounded-full">
-              Aktif Bertugas
-            </span>
-          </div>
-          <div class="flex items-center gap-3 text-xs text-slate-500 mt-1 flex-wrap">
-            <span class="flex items-center gap-1"><i data-lucide="mail" class="w-3.5 h-3.5 text-slate-400"></i> {{ $admin->user->email ?? '-' }}</span>
-            <span class="flex items-center gap-1"><i data-lucide="building-2" class="w-3.5 h-3.5 text-slate-400"></i> BLK Pusat Vokasi</span>
-          </div>
+          Pembaruan Terakhir:
+          <span class="font-medium text-foreground">
+            {{ $admin->updated_at ? $admin->updated_at->diffForHumans() : '-' }}
+          </span>
         </div>
       </div>
-
-      <div class="text-xs text-slate-400 flex sm:flex-col items-end justify-between gap-1 border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-100">
-        <div>Terdaftar: <span class="text-slate-700 font-medium">{{ $admin->created_at ? $admin->created_at->translatedFormat('d M Y') : '-' }}</span></div>
-        <div>Pembaruan Terakhir: <span class="text-slate-700 font-medium">{{ $admin->updated_at ? $admin->updated_at->diffForHumans() : '-' }}</span></div>
-      </div>
     </div>
-  </div>
+  </x-ui.card>
 
-  <!-- Edit Form Grid -->
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- Left Column (Form) -->
-    <div class="lg:col-span-2 space-y-6">
-      <form method="POST" action="{{ route('admin-blk.update', $admin->id_admin) }}" class="space-y-6">
-        @csrf
-        @method('PUT')
+  @if ($errors->any())
+    <x-ui.alert tone="danger">
+      <x-lucide-circle-alert />
+      <x-ui.alert-title>Mohon perbaiki beberapa kesalahan berikut:</x-ui.alert-title>
+      <x-ui.alert-description>
+        <ul class="list-inside list-disc space-y-1">
+          @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+          @endforeach
+        </ul>
+      </x-ui.alert-description>
+    </x-ui.alert>
+  @endif
 
-        @if($errors->any())
-          <div class="bg-rose-50 border border-rose-200 text-rose-800 px-4 py-3 rounded-xl text-xs space-y-1 shadow-sm">
-            <div class="font-bold">Mohon perbaiki kesalahan berikut:</div>
-            <ul class="list-disc list-inside space-y-0.5 text-rose-700 pl-4">
-              @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
-            </ul>
-          </div>
-        @endif
+  <form action="{{ route('admin-blk.update', $admin->id_admin) }}" method="POST" class="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
+    @csrf
+    @method('PUT')
 
-        <!-- Card: Pilih Akun Pengguna -->
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-5">
-          <div class="flex items-center gap-2.5 pb-4 border-b border-slate-100">
-            <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-              <i data-lucide="user-cog" class="w-4 h-4"></i>
-            </div>
+    <div class="space-y-6 lg:col-span-2">
+      <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+          <div class="flex items-center gap-3">
+            <span class="grid size-9 shrink-0 place-items-center rounded-lg bg-accent text-accent-foreground">
+              <x-lucide-user-cog class="size-4" />
+            </span>
             <div>
-              <h3 class="font-bold text-slate-800 text-sm">Pengaturan Akun Pengguna</h3>
-              <p class="text-xs text-slate-500">Tentukan tautan akun pengguna untuk administrator ini.</p>
+              <x-ui.card-title class="text-base font-bold">Pengaturan Akun Pengguna</x-ui.card-title>
+              <x-ui.card-description>Tentukan tautan akun pengguna untuk administrator ini.</x-ui.card-description>
             </div>
           </div>
+        </x-ui.card-header>
 
-          <div>
-            <label for="id_user" class="block text-xs font-semibold text-slate-700 mb-1.5">
-              Akun Pengguna Terkait <span class="text-rose-500">*</span>
-            </label>
-            <select name="id_user" id="id_user" required class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
-              @foreach($users ?? [] as $user)
-                <option value="{{ $user->id }}" {{ (old('id_user', $admin->id_user) == $user->id) ? 'selected' : '' }}>
+        <x-ui.card-content class="space-y-5">
+          <x-ui.field data-invalid="{{ $errors->has('id_user') ? 'true' : 'false' }}">
+            <x-ui.field-label for="id_user">Akun Pengguna Terkait <span class="text-destructive">*</span></x-ui.field-label>
+            <x-ui.select name="id_user" id="id_user" native class="w-full" required>
+              @foreach ($users ?? [] as $user)
+                <option value="{{ $user->id }}" @selected(old('id_user', $admin->id_user) == $user->id)>
                   {{ $user->name }} ({{ $user->email }}) - Role: {{ $user->role ?? 'User' }}
                 </option>
               @endforeach
-            </select>
-            @error('id_user')
-              <p class="text-rose-600 text-xs mt-1.5 flex items-center gap-1">
-                <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> {{ $message }}
-              </p>
-            @enderror
-          </div>
+            </x-ui.select>
+            <x-ui.field-error :messages="$errors->get('id_user')" />
+          </x-ui.field>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+          <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Unit Balai Kerja</label>
-              <input type="text" value="BLK Pusat Vokasi & Pelatihan Kerja" readonly class="w-full bg-slate-100 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-600 font-medium cursor-not-allowed">
+              <x-ui.field-label for="unit_balai">Unit Balai Kerja</x-ui.field-label>
+              <x-ui.input
+                id="unit_balai"
+                type="text"
+                value="BLK Pusat Vokasi & Pelatihan Kerja"
+                readonly
+                class="bg-muted text-muted-foreground"
+              />
             </div>
+
             <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Peran Otoritas</label>
-              <input type="text" value="Super Administrator BLK" readonly class="w-full bg-slate-100 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-600 font-medium cursor-not-allowed">
+              <x-ui.field-label for="peran_otoritas">Peran Otoritas</x-ui.field-label>
+              <x-ui.input
+                id="peran_otoritas"
+                type="text"
+                value="Super Administrator BLK"
+                readonly
+                class="bg-muted text-muted-foreground"
+              />
             </div>
           </div>
-        </div>
+        </x-ui.card-content>
+      </x-ui.card>
 
-        <!-- Action Buttons -->
-        <div class="flex items-center justify-end gap-3 pt-2">
-          <a href="{{ route('admin-blk.index') }}" class="px-5 py-2.5 bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-lg hover:bg-slate-50 transition shadow-sm">
-            Batalkan
-          </a>
-          <button type="submit" class="px-6 py-2.5 bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold rounded-lg shadow-sm flex items-center gap-2 transition">
-            <i data-lucide="check" class="w-4 h-4"></i>
-            <span>Simpan Perubahan</span>
-          </button>
-        </div>
-      </form>
+      <div class="flex items-center justify-end gap-2">
+        <x-ui.button href="{{ route('admin-blk.index') }}" variant="outline">
+          Batalkan
+        </x-ui.button>
+
+        <x-ui.button type="submit" class="bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
+          <x-lucide-check />
+          Simpan Perubahan
+        </x-ui.button>
+      </div>
     </div>
 
-    <!-- Right Column: Status & Actions -->
     <div class="space-y-6">
-      <!-- Status & Authority Card -->
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
-        <div class="flex items-center gap-2 text-slate-800 font-bold text-xs pb-3 border-b border-slate-100">
-          <i data-lucide="shield-check" class="w-4 h-4 text-emerald-700"></i>
-          <span>Status Akses Administrator</span>
-        </div>
+      <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+          <x-ui.card-title class="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted-foreground">
+            <x-lucide-shield-check class="size-4 text-primary" />
+            Status Akses Administrator
+          </x-ui.card-title>
+        </x-ui.card-header>
 
-        <div class="space-y-2.5 text-xs">
-          <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-lg">
-            <span class="text-slate-600">Status Operasional</span>
-            <span class="font-semibold text-emerald-700 flex items-center gap-1">
-              <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Aktif
+        <x-ui.card-content class="space-y-2.5 text-xs">
+          <div class="flex items-center justify-between rounded-lg bg-muted/40 p-2.5">
+            <span class="text-muted-foreground">Status Operasional</span>
+            <span class="flex items-center gap-1 font-semibold text-primary">
+              <span class="size-2 rounded-full bg-emerald-500"></span>
+              Aktif
             </span>
           </div>
-          <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-lg">
-            <span class="text-slate-600">Hak Persetujuan Jurnal</span>
-            <span class="font-semibold text-slate-800">Ya (Penuh)</span>
+          <div class="flex items-center justify-between rounded-lg bg-muted/40 p-2.5">
+            <span class="text-muted-foreground">Hak Persetujuan Jurnal</span>
+            <span class="font-semibold text-foreground">Ya (Penuh)</span>
           </div>
-          <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-lg">
-            <span class="text-slate-600">Hak Terbit Sertifikat</span>
-            <span class="font-semibold text-slate-800">Ya (Penuh)</span>
+          <div class="flex items-center justify-between rounded-lg bg-muted/40 p-2.5">
+            <span class="text-muted-foreground">Hak Terbit Sertifikat</span>
+            <span class="font-semibold text-foreground">Ya (Penuh)</span>
           </div>
-        </div>
-      </div>
+        </x-ui.card-content>
+      </x-ui.card>
 
-      <!-- Danger Zone: Delete Action -->
-      <div class="bg-rose-50/50 border border-rose-200 rounded-xl p-5 space-y-3">
-        <div class="flex items-center gap-2 text-rose-800 font-bold text-xs">
-          <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600"></i>
-          <span>Hapus Administrator</span>
-        </div>
-        <p class="text-[11px] text-rose-700 leading-relaxed">
-          Tindakan ini akan mencabut hak akses administrator BLK untuk akun pengguna ini. Data pelatihan atau sertifikat yang pernah divalidasi akan tetap tersimpan di riwayat sistem.
-        </p>
-        <form action="{{ route('admin-blk.destroy', $admin->id_admin) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus administrator ini?')">
-          @csrf
-          @method('DELETE')
-          <button type="submit" class="w-full mt-2 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-lg shadow-sm flex items-center justify-center gap-2 transition">
-            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Hapus Administrator
-          </button>
-        </form>
-      </div>
+      <x-ui.card variant="sectioned" class="border-destructive/30 bg-destructive/5">
+        <x-ui.card-header class="border-b border-destructive/20">
+          <x-ui.card-title class="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-destructive">
+            <x-lucide-triangle-alert class="size-4" />
+            Hapus Administrator
+          </x-ui.card-title>
+        </x-ui.card-header>
+
+        <x-ui.card-content class="space-y-3">
+          <p class="text-xs leading-relaxed text-muted-foreground">
+            Tindakan ini akan mencabut hak akses administrator BLK untuk akun pengguna ini. Data pelatihan atau sertifikat yang pernah divalidasi akan tetap tersimpan di riwayat sistem.
+          </p>
+
+          <form
+            action="{{ route('admin-blk.destroy', $admin->id_admin) }}"
+            method="POST"
+            onsubmit="return confirm('Apakah Anda yakin ingin menghapus administrator ini?')"
+          >
+            @csrf
+            @method('DELETE')
+
+            <x-ui.button type="submit" variant="destructive" class="w-full">
+              <x-lucide-trash-2 />
+              Hapus Administrator
+            </x-ui.button>
+          </form>
+        </x-ui.card-content>
+      </x-ui.card>
     </div>
-  </div>
+  </form>
 @endsection
-

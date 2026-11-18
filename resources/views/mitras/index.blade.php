@@ -1,211 +1,224 @@
 @extends('layouts.app')
 
-@section('title', 'Mitra Industri DU/DI - BLK CONNECT')
+@section('title', 'Mitra Industri DU/DI - SiKarir BLK')
 
 @section('content')
-  <!-- Title & Action Bar -->
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-    <div>
-      <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
-        <a href="{{ route('admin-blk.index') }}" class="hover:text-emerald-700 transition">Beranda</a>
-        <span>&gt;</span>
-        <span class="text-slate-600 font-medium">Mitra Industri DU/DI</span>
-      </div>
-      <h1 class="text-xl font-black text-slate-900 tracking-tight">Kemitraan Dunia Usaha & Industri (DU/DI)</h1>
-      <p class="text-xs text-slate-500 mt-0.5">Kelola kerjasama perusahaan mitra vokasi, ketersediaan kuota magang, dan penempatan kerja peserta.</p>
-    </div>
+  <x-ui.page-header
+    title="Kemitraan Dunia Usaha & Industri (DU/DI)"
+    description="Kelola kerjasama perusahaan mitra vokasi, ketersediaan kuota magang, dan penempatan kerja peserta."
+  >
+    <x-slot:breadcrumb>
+      <x-ui.breadcrumb>
+        <x-ui.breadcrumb-list>
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-link href="{{ route('admin-blk.index') }}">Beranda</x-ui.breadcrumb-link>
+          </x-ui.breadcrumb-item>
+          <x-ui.breadcrumb-separator />
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-page>Mitra Industri DU/DI</x-ui.breadcrumb-page>
+          </x-ui.breadcrumb-item>
+        </x-ui.breadcrumb-list>
+      </x-ui.breadcrumb>
+    </x-slot:breadcrumb>
 
-    <div class="flex items-center gap-2">
-      <a href="{{ route('mitras.create') }}" class="bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold px-3.5 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="plus-circle" class="w-4 h-4"></i> Tambah Mitra DU/DI
-      </a>
-    </div>
-  </div>
+    <x-slot:actions>
+      <x-ui.button href="{{ route('mitras.create') }}" class="bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
+        <x-lucide-plus-circle />
+        Tambah Mitra DU/DI
+      </x-ui.button>
+    </x-slot:actions>
+  </x-ui.page-header>
 
-  <!-- Session Alerts -->
-  @if(session('success'))
-    <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs px-4 py-3 rounded-xl flex items-center justify-between shadow-sm">
-      <div class="flex items-center gap-2.5">
-        <div class="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
-          <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-700"></i>
-        </div>
-        <span class="font-medium">{{ session('success') }}</span>
-      </div>
-      <button onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700 p-1">
-        <i data-lucide="x" class="w-4 h-4"></i>
-      </button>
-    </div>
+  @if (session('success'))
+    <x-ui.alert tone="success">
+      <x-lucide-circle-check-big />
+      <x-ui.alert-description>{{ session('success') }}</x-ui.alert-description>
+    </x-ui.alert>
   @endif
 
-  <!-- Top Metrics -->
-  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-3.5">
-      <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-        <i data-lucide="building-2" class="w-5 h-5"></i>
-      </div>
-      <div>
-        <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Total Mitra DU/DI</div>
-        <div class="text-lg font-black text-slate-900 mt-0.5">{{ isset($mitras) ? $mitras->total() : 0 }} Perusahaan</div>
-      </div>
-    </div>
-
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-3.5">
-      <div class="w-11 h-11 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center shrink-0">
-        <i data-lucide="briefcase" class="w-5 h-5"></i>
-      </div>
-      <div>
-        <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Status Kerjasama</div>
-        <div class="text-lg font-black text-emerald-700 mt-0.5">100% Aktif</div>
-      </div>
-    </div>
-
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-3.5">
-      <div class="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center shrink-0">
-        <i data-lucide="check-check" class="w-5 h-5"></i>
-      </div>
-      <div>
-        <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Verifikasi Industri</div>
-        <div class="text-lg font-black text-slate-900 mt-0.5">Terstandarisasi BLK</div>
-      </div>
-    </div>
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+    <x-ui.stat label="Total Mitra DU/DI" :value="(isset($mitras) ? $mitras->total() : 0) . ' Perusahaan'" icon="building-2" />
+    <x-ui.stat label="Status Kerjasama" value="100% Aktif" icon="briefcase" />
+    <x-ui.stat label="Verifikasi Industri" value="Terstandarisasi BLK" icon="check-check" />
   </div>
 
-  <!-- Table Card -->
-  <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-    
-    <!-- Table Header & Search Filter Bar -->
-    <div class="p-5 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-      <div>
-        <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-          <span>Daftar Perusahaan & Industri Rekanan</span>
-          <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full">
-            {{ isset($mitras) ? $mitras->total() : 0 }} Rekanan
-          </span>
-        </h2>
-        <p class="text-xs text-slate-500 mt-0.5">Daftar mitra industri tempat pelaksanaan program magang bersertifikat.</p>
+  <x-ui.card variant="sectioned" class="gap-0 overflow-hidden">
+    <x-ui.card-header class="border-b pb-5">
+      <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div class="space-y-1">
+          <div class="flex flex-wrap items-center gap-2.5">
+            <x-ui.card-title class="text-lg font-bold">Daftar Perusahaan & Industri Rekanan</x-ui.card-title>
+            <x-ui.badge variant="secondary">{{ isset($mitras) ? $mitras->total() : 0 }} Rekanan</x-ui.badge>
+          </div>
+          <x-ui.card-description>
+            Daftar mitra industri tempat pelaksanaan program magang bersertifikat.
+          </x-ui.card-description>
+        </div>
+
+        <x-search-filter
+          :action="route('mitras.index')"
+          search-placeholder="Cari perusahaan, kota, PIC..."
+          status-name="jenis_mitra"
+          status-placeholder="Semua Jenis Mitra"
+          :status-options="collect($jenisMitraList)->mapWithKeys(fn ($item) => [$item => $item])->toArray()"
+        />
       </div>
+    </x-ui.card-header>
 
-      <!-- FORM PENCARIAN & FILTER (Component) -->
-      <x-search-filter 
-        :action="route('mitras.index')" 
-        search-placeholder="Cari perusahaan, kota, PIC..." 
-        status-name="jenis_mitra"
-        status-placeholder="Semua Jenis Mitra"
-        :status-options="collect($jenisMitraList)->mapWithKeys(fn($item) => [$item => $item])->toArray()" 
-      />
-    </div>
+    <x-ui.card-content class="px-0">
+      <x-ui.table>
+        <x-ui.table-header>
+          <x-ui.table-row class="bg-muted/50 hover:bg-muted/50">
+            <x-ui.table-head class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Perusahaan & Industri</x-ui.table-head>
+            <x-ui.table-head class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Bidang Usaha</x-ui.table-head>
+            <x-ui.table-head class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Wilayah / Lokasi</x-ui.table-head>
+            <x-ui.table-head class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Kontak & PIC</x-ui.table-head>
+            <x-ui.table-head class="px-4 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground">Lowongan</x-ui.table-head>
+            <x-ui.table-head class="px-4 text-end text-xs font-semibold uppercase tracking-wide text-muted-foreground">Aksi</x-ui.table-head>
+          </x-ui.table-row>
+        </x-ui.table-header>
 
-    <div class="overflow-x-auto">
-      <table class="w-full text-left text-xs">
-        <thead>
-          <tr class="bg-slate-50 text-slate-500 border-b border-slate-200 text-[11px] uppercase tracking-wider">
-            <th class="px-5 py-3 font-semibold">Perusahaan & Industri</th>
-            <th class="px-5 py-3 font-semibold">Bidang Usaha</th>
-            <th class="px-5 py-3 font-semibold">Wilayah / Lokasi</th>
-            <th class="px-5 py-3 font-semibold">Kontak & PIC</th>
-            <th class="px-5 py-3 font-semibold text-center">Lowongan</th>
-            <th class="px-5 py-3 font-semibold text-right">Aksi</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100 text-slate-700">
-          @forelse($mitras ?? [] as $mitra)
-            <tr class="hover:bg-slate-50/80 transition">
-              <td class="px-5 py-3.5">
+        <x-ui.table-body>
+          @forelse ($mitras ?? [] as $mitra)
+            <x-ui.table-row class="group">
+              <x-ui.table-cell class="px-4 py-3">
                 <div class="flex items-center gap-3.5">
-                  {{-- Logo / Avatar --}}
-                  @if($mitra->logo_perusahaan)
-                    <div class="w-11 h-11 rounded-xl bg-white border border-slate-200 shadow-md flex items-center justify-center shrink-0 overflow-hidden">
-                      <img src="{{ Storage::url($mitra->logo_perusahaan) }}"
-                           alt="Logo {{ $mitra->nama_perusahaan }}"
-                           class="w-full h-full object-cover"
-                           onerror="this.parentElement.innerHTML='<span class=\'text-xs font-bold text-white\'></span>'; this.parentElement.className='w-11 h-11 rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 text-white font-bold flex items-center justify-center text-xs shadow-sm shrink-0';">
+                  @if ($mitra->logo_perusahaan)
+                    <div class="size-11 shrink-0 overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+                      <img
+                        src="{{ Storage::url($mitra->logo_perusahaan) }}"
+                        alt="Logo {{ $mitra->nama_perusahaan }}"
+                        class="size-full object-cover"
+                        onerror="this.style.display='none';"
+                      >
                     </div>
                   @else
-                    <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 text-white font-bold flex items-center justify-center text-xs shadow-sm shrink-0 ring-2 ring-white ring-offset-1">
+                    <span class="grid size-11 shrink-0 place-items-center rounded-xl bg-primary text-xs font-bold text-primary-foreground">
                       {{ strtoupper(substr($mitra->nama_perusahaan, 0, 2)) }}
-                    </div>
+                    </span>
                   @endif
-                  <div>
-                    <a href="{{ route('mitras.show', $mitra->id_mitra) }}" class="font-bold text-slate-900 hover:text-emerald-700 transition">
+
+                  <div class="min-w-0">
+                    <a
+                      href="{{ route('mitras.show', $mitra->id_mitra) }}"
+                      class="font-bold text-foreground transition group-hover:text-primary"
+                    >
                       {{ $mitra->nama_perusahaan }}
                     </a>
-                    <div class="text-[10px] text-slate-400">
-                      ID: #MTR-{{ str_pad((string)$mitra->id_mitra, 3, '0', STR_PAD_LEFT) }} • {{ $mitra->jenis_mitra ?? 'Perusahaan Swasta' }}
+                    <div class="text-xs text-muted-foreground">
+                      ID: #MTR-{{ str_pad((string) $mitra->id_mitra, 3, '0', STR_PAD_LEFT) }} • {{ $mitra->jenis_mitra ?? 'Perusahaan Swasta' }}
                     </div>
                   </div>
                 </div>
-              </td>
-              <td class="px-5 py-3.5">
-                <span class="bg-slate-100 text-slate-700 font-medium px-2 py-0.5 rounded text-[11px]">
-                  {{ $mitra->bidang_usaha ?? 'Umum' }}
-                </span>
-              </td>
-              <td class="px-5 py-3.5">
-                <div class="font-medium text-slate-800 flex items-center gap-1">
-                  <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i>
+              </x-ui.table-cell>
+
+              <x-ui.table-cell class="px-4 py-3">
+                <x-ui.badge variant="secondary">{{ $mitra->bidang_usaha ?? 'Umum' }}</x-ui.badge>
+              </x-ui.table-cell>
+
+              <x-ui.table-cell class="px-4 py-3">
+                <div class="flex items-center gap-1 font-medium text-foreground">
+                  <x-lucide-map-pin class="size-3.5 text-muted-foreground" />
                   <span>{{ $mitra->kota ?? 'Kota Tidak Tercatat' }}</span>
                 </div>
-                <div class="text-[10px] text-slate-400">{{ $mitra->provinsi ?? '-' }}</div>
-              </td>
-              <td class="px-5 py-3.5">
-                <div class="font-medium text-slate-800 flex items-center gap-1">
-                  <i data-lucide="phone" class="w-3.5 h-3.5 text-slate-400"></i>
+                <div class="text-xs text-muted-foreground">{{ $mitra->provinsi ?? '-' }}</div>
+              </x-ui.table-cell>
+
+              <x-ui.table-cell class="px-4 py-3">
+                <div class="flex items-center gap-1 font-medium text-foreground">
+                  <x-lucide-phone class="size-3.5 text-muted-foreground" />
                   <span>{{ $mitra->no_telp ?? $mitra->telepon ?? '-' }}</span>
                 </div>
-                <div class="text-[10px] text-slate-400">{{ $mitra->jabatan_pic ?? 'PIC Industri' }}</div>
-              </td>
-              <td class="px-5 py-3.5 text-center">
-                <span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded text-[11px]">
-                  <i data-lucide="briefcase" class="w-3 h-3"></i> {{ count($mitra->lowongan ?? []) }}
-                </span>
-              </td>
-              <td class="px-5 py-3.5 text-right">
-                <div class="inline-flex items-center gap-1.5">
-                  <a href="{{ route('mitras.show', $mitra->id_mitra) }}" class="p-1.5 text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition" title="Detail">
-                    <i data-lucide="eye" class="w-4 h-4"></i>
-                  </a>
-                  <a href="{{ route('mitras.edit', $mitra->id_mitra) }}" class="p-1.5 text-slate-500 hover:text-amber-700 hover:bg-amber-50 rounded-lg transition" title="Edit">
-                    <i data-lucide="edit-3" class="w-4 h-4"></i>
-                  </a>
-                  <form action="{{ route('mitras.destroy', $mitra->id_mitra) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus mitra ini?')">
+                <div class="text-xs text-muted-foreground">{{ $mitra->jabatan_pic ?? 'PIC Industri' }}</div>
+              </x-ui.table-cell>
+
+              <x-ui.table-cell class="px-4 py-3 text-center">
+                <x-ui.badge tone="success" class="gap-1">
+                  <x-lucide-briefcase class="size-3" />
+                  {{ count($mitra->lowongan ?? []) }}
+                </x-ui.badge>
+              </x-ui.table-cell>
+
+              <x-ui.table-cell class="px-4 py-3">
+                <div class="flex items-center justify-end gap-1">
+                  <x-ui.button
+                    href="{{ route('mitras.show', $mitra->id_mitra) }}"
+                    variant="ghost"
+                    size="icon-sm"
+                    title="Detail"
+                    aria-label="Lihat detail mitra {{ $mitra->nama_perusahaan }}"
+                  >
+                    <x-lucide-eye />
+                  </x-ui.button>
+
+                  <x-ui.button
+                    href="{{ route('mitras.edit', $mitra->id_mitra) }}"
+                    variant="ghost"
+                    size="icon-sm"
+                    title="Edit"
+                    aria-label="Edit mitra {{ $mitra->nama_perusahaan }}"
+                  >
+                    <x-lucide-pencil />
+                  </x-ui.button>
+
+                  <form
+                    action="{{ route('mitras.destroy', $mitra->id_mitra) }}"
+                    method="POST"
+                    class="inline"
+                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus mitra ini?')"
+                  >
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="p-1.5 text-slate-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition" title="Hapus">
-                      <i data-lucide="trash-2" class="w-4 h-4"></i>
-                    </button>
+
+                    <x-ui.button
+                      type="submit"
+                      variant="ghost"
+                      size="icon-sm"
+                      class="text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                      title="Hapus"
+                      aria-label="Hapus mitra {{ $mitra->nama_perusahaan }}"
+                    >
+                      <x-lucide-trash-2 />
+                    </x-ui.button>
                   </form>
                 </div>
-              </td>
-            </tr>
+              </x-ui.table-cell>
+            </x-ui.table-row>
           @empty
-            <tr>
-              <td colspan="6" class="px-5 py-10 text-center text-slate-400">
-                <div class="flex flex-col items-center justify-center gap-2">
-                  <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-                    <i data-lucide="building-2" class="w-6 h-6"></i>
-                  </div>
-                  <p class="text-xs font-medium text-slate-600">Belum ada data Mitra DU/DI yang ditemukan</p>
-                  @if(request('search') || request('jenis_mitra'))
-                    <a href="{{ route('mitras.index') }}" class="text-xs text-emerald-700 hover:underline font-semibold flex items-center gap-1">
-                      <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Reset Filter Pencarian
-                    </a>
-                  @else
-                    <a href="{{ route('mitras.create') }}" class="text-xs text-emerald-700 hover:underline font-semibold flex items-center gap-1">
-                      <i data-lucide="plus" class="w-3.5 h-3.5"></i> Tambahkan Mitra Pertama
-                    </a>
-                  @endif
-                </div>
-              </td>
-            </tr>
-          @endforelse
-        </tbody>
-      </table>
-    </div>
+            <x-ui.table-row class="hover:bg-transparent">
+              <x-ui.table-cell colspan="6" class="p-0">
+                <x-ui.empty class="border-0">
+                  <x-ui.empty-header>
+                    <x-ui.empty-media variant="icon">
+                      <x-lucide-building-2 />
+                    </x-ui.empty-media>
+                    <x-ui.empty-title class="text-base">Belum Ada Data Mitra DU/DI</x-ui.empty-title>
+                    <x-ui.empty-description>Belum ada data Mitra DU/DI yang ditemukan.</x-ui.empty-description>
+                  </x-ui.empty-header>
 
-    @if(isset($mitras) && $mitras->hasPages())
-      <div class="p-4 border-t border-slate-100 bg-slate-50/50 flex items-center justify-between">
+                  @if (request('search') || request('jenis_mitra'))
+                    <x-ui.button href="{{ route('mitras.index') }}" variant="outline" size="sm">
+                      <x-lucide-rotate-ccw />
+                      Reset Filter Pencarian
+                    </x-ui.button>
+                  @else
+                    <x-ui.button href="{{ route('mitras.create') }}" class="bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
+                      <x-lucide-plus />
+                      Tambahkan Mitra Pertama
+                    </x-ui.button>
+                  @endif
+                </x-ui.empty>
+              </x-ui.table-cell>
+            </x-ui.table-row>
+          @endforelse
+        </x-ui.table-body>
+      </x-ui.table>
+    </x-ui.card-content>
+
+    @if (isset($mitras) && $mitras->hasPages())
+      <div class="border-t border-border px-6 pt-5">
         {{ $mitras->withQueryString()->links('components.pagination') }}
       </div>
     @endif
-  </div>
+  </x-ui.card>
 @endsection

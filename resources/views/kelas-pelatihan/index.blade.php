@@ -1,225 +1,224 @@
 @extends('layouts.app')
 
-@section('title', 'Manajemen Kelas Pelatihan Vokasi - Disnaker BLK')
+@section('title', 'Manajemen Kelas Pelatihan Vokasi - SiKarir BLK')
 
 @section('content')
-  <!-- Title & Breadcrumbs -->
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-    <div>
-      <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
-        <a href="{{ route('admin-blk.index') }}" class="hover:text-emerald-700 transition">Beranda</a>
-        <span>&gt;</span>
-        <span class="text-slate-600 font-medium">Kelas Pelatihan</span>
-      </div>
-      <h1 class="text-xl font-black text-slate-900 tracking-tight">Roster & Peserta Kelas Vokasi</h1>
-      <p class="text-xs text-slate-500 mt-0.5">Penetapan penempatan siswa ke dalam batch kejuruan pelatihan kerja aktif.</p>
-    </div>
+  <x-ui.page-header
+    title="Roster & Peserta Kelas Vokasi"
+    description="Penetapan penempatan siswa ke dalam batch kejuruan pelatihan kerja aktif."
+  >
+    <x-slot:breadcrumb>
+      <x-ui.breadcrumb>
+        <x-ui.breadcrumb-list>
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-link href="{{ route('admin-blk.index') }}">Beranda</x-ui.breadcrumb-link>
+          </x-ui.breadcrumb-item>
+          <x-ui.breadcrumb-separator />
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-page>Kelas Pelatihan</x-ui.breadcrumb-page>
+          </x-ui.breadcrumb-item>
+        </x-ui.breadcrumb-list>
+      </x-ui.breadcrumb>
+    </x-slot:breadcrumb>
 
-    <div class="flex items-center gap-2">
-      <a href="{{ route('jadwal-pelatihan.index') }}" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="calendar" class="w-4 h-4"></i> Jadwal Batch
-      </a>
-      <a href="{{ route('kelas-pelatihan.create') }}" class="bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold px-3.5 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="user-plus" class="w-4 h-4"></i> Masukkan Siswa ke Kelas
-      </a>
-    </div>
-  </div>
+    <x-slot:actions>
+      <x-ui.button href="{{ route('jadwal-pelatihan.index') }}" variant="outline">
+        <x-lucide-calendar />
+        Jadwal Batch
+      </x-ui.button>
 
-  @if(session('success'))
-    <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-xl text-xs font-medium flex items-center justify-between shadow-sm">
-      <div class="flex items-center gap-2">
-        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
-        <span>{{ session('success') }}</span>
-      </div>
-      <button onclick="this.parentElement.remove()" class="text-emerald-600 hover:text-emerald-900">
-        <i data-lucide="x" class="w-4 h-4"></i>
-      </button>
-    </div>
+      <x-ui.button href="{{ route('kelas-pelatihan.create') }}" class="bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
+        <x-lucide-user-plus />
+        Masukkan Siswa ke Kelas
+      </x-ui.button>
+    </x-slot:actions>
+  </x-ui.page-header>
+
+  @if (session('success'))
+    <x-ui.alert tone="success">
+      <x-lucide-circle-check-big />
+      <x-ui.alert-description>{{ session('success') }}</x-ui.alert-description>
+    </x-ui.alert>
   @endif
 
-  <!-- Metrics / KPI Cards -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-3.5">
-      <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-        <i data-lucide="graduation-cap" class="w-5 h-5"></i>
-      </div>
-      <div>
-        <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Total Terdaftar</div>
-        <div class="text-xl font-black text-slate-900 mt-0.5">{{ $kelas->total() }} Peserta</div>
-      </div>
-    </div>
-
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-3.5">
-      <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
-        <i data-lucide="user-check" class="w-5 h-5"></i>
-      </div>
-      <div>
-        <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Status Terdaftar</div>
-        <div class="text-xl font-black text-slate-900 mt-0.5">
-          {{ $kelas->where('status', 'terdaftar')->count() }} Siswa
-        </div>
-      </div>
-    </div>
-
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-3.5">
-      <div class="w-11 h-11 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center shrink-0">
-        <i data-lucide="activity" class="w-5 h-5"></i>
-      </div>
-      <div>
-        <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Kelas Aktif</div>
-        <div class="text-xl font-black text-slate-900 mt-0.5">
-          {{ $kelas->where('status', 'aktif')->count() }} Siswa
-        </div>
-      </div>
-    </div>
-
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-3.5">
-      <div class="w-11 h-11 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center shrink-0">
-        <i data-lucide="award" class="w-5 h-5"></i>
-      </div>
-      <div>
-        <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide">Kelulusan Vokasi</div>
-        <div class="text-xl font-black text-slate-900 mt-0.5">
-          {{ $kelas->where('status', 'lulus')->count() }} Lulus
-        </div>
-      </div>
-    </div>
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <x-ui.stat label="Total Terdaftar" :value="$kelas->total() . ' Peserta'" icon="graduation-cap" />
+    <x-ui.stat label="Status Terdaftar" :value="$kelas->where('status', 'terdaftar')->count() . ' Siswa'" icon="user-check" />
+    <x-ui.stat label="Kelas Aktif" :value="$kelas->where('status', 'aktif')->count() . ' Siswa'" icon="activity" />
+    <x-ui.stat label="Kelulusan Vokasi" :value="$kelas->where('status', 'lulus')->count() . ' Lulus'" icon="award" />
   </div>
 
-  <!-- Table Card -->
-  <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-    <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50/50">
-      <div>
-        <h3 class="font-bold text-slate-800 text-sm">Daftar Roster Penempatan Siswa</h3>
-        <p class="text-xs text-slate-500">Siswa yang dialokasikan ke masing-masing batch kejuruan.</p>
-      </div>
+  <x-ui.card variant="sectioned" class="gap-0 overflow-hidden">
+    <x-ui.card-header class="border-b pb-5">
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div class="space-y-1">
+          <x-ui.card-title class="text-lg font-bold">Daftar Roster Penempatan Siswa</x-ui.card-title>
+          <x-ui.card-description>Siswa yang dialokasikan ke masing-masing batch kejuruan.</x-ui.card-description>
+        </div>
 
-      <div class="flex items-center gap-2">
-        <div class="relative">
-          <input type="text" placeholder="Cari siswa / kejuruan..." class="bg-white border border-slate-200 text-slate-700 text-xs rounded-lg pl-8 pr-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-700 w-48 sm:w-60 shadow-sm" />
-          <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5"></i>
+        <div class="w-full sm:w-64">
+          <x-ui.input type="text" placeholder="Cari siswa / kejuruan..." aria-label="Cari siswa atau kejuruan">
+            <x-slot:leading>
+              <x-lucide-search />
+            </x-slot:leading>
+          </x-ui.input>
         </div>
       </div>
-    </div>
+    </x-ui.card-header>
 
-    <div class="overflow-x-auto">
-      <table class="w-full text-left text-xs">
-        <thead>
-          <tr class="bg-slate-50 text-slate-400 border-b border-slate-100 uppercase tracking-wider text-[11px]">
-            <th class="px-5 py-3.5 font-semibold">ID Kelas</th>
-            <th class="px-5 py-3.5 font-semibold">Siswa Peserta</th>
-            <th class="px-5 py-3.5 font-semibold">Program Kejuruan</th>
-            <th class="px-5 py-3.5 font-semibold">Batch & Jadwal</th>
-            <th class="px-5 py-3.5 font-semibold">Status Siswa</th>
-            <th class="px-5 py-3.5 font-semibold text-right">Aksi</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100 text-slate-700">
-          @forelse($kelas as $item)
-            <tr class="hover:bg-slate-50/80 transition group">
-              <td class="px-5 py-4 font-mono font-bold text-slate-500">
-                #KLS-{{ str_pad((string)$item->id_kelas, 3, '0', STR_PAD_LEFT) }}
-              </td>
+    <x-ui.card-content class="px-0">
+      <x-ui.table>
+        <x-ui.table-header>
+          <x-ui.table-row class="bg-muted/50 hover:bg-muted/50">
+            <x-ui.table-head class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">ID Kelas</x-ui.table-head>
+            <x-ui.table-head class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Siswa Peserta</x-ui.table-head>
+            <x-ui.table-head class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Program Kejuruan</x-ui.table-head>
+            <x-ui.table-head class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Batch & Jadwal</x-ui.table-head>
+            <x-ui.table-head class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Status Siswa</x-ui.table-head>
+            <x-ui.table-head class="px-4 text-end text-xs font-semibold uppercase tracking-wide text-muted-foreground">Aksi</x-ui.table-head>
+          </x-ui.table-row>
+        </x-ui.table-header>
 
-              <td class="px-5 py-4">
+        <x-ui.table-body>
+          @forelse ($kelas as $item)
+            <x-ui.table-row class="group">
+              <x-ui.table-cell class="px-4 py-3 font-mono text-xs font-bold text-muted-foreground">
+                #KLS-{{ str_pad((string) $item->id_kelas, 3, '0', STR_PAD_LEFT) }}
+              </x-ui.table-cell>
+
+              <x-ui.table-cell class="px-4 py-3">
                 <div class="flex items-center gap-3">
-                  <div class="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-800 font-black flex items-center justify-center text-xs shrink-0">
+                  <span class="grid size-9 shrink-0 place-items-center rounded-lg bg-accent text-xs font-black text-accent-foreground">
                     {{ strtoupper(substr($item->peserta->user->name ?? 'P', 0, 2)) }}
-                  </div>
-                  <div>
-                    <a href="{{ route('pesertas.show', $item->id_peserta) }}" class="font-bold text-slate-900 group-hover:text-emerald-700 transition">
+                  </span>
+                  <div class="min-w-0">
+                    <a
+                      href="{{ route('pesertas.show', $item->id_peserta) }}"
+                      class="font-bold text-foreground transition group-hover:text-primary"
+                    >
                       {{ $item->peserta->user->name ?? 'Peserta Tidak Ditemukan' }}
                     </a>
-                    <div class="text-[11px] text-slate-400">
+                    <div class="text-xs text-muted-foreground">
                       NIS: {{ $item->peserta->nomor_peserta ?? '-' }}
                     </div>
                   </div>
                 </div>
-              </td>
+              </x-ui.table-cell>
 
-              <td class="px-5 py-4">
-                <div class="font-semibold text-slate-800">
-                  {{ $item->jadwal->pelatihan->nama_pelatihan ?? '-' }}
-                </div>
-                <div class="text-[11px] text-slate-400">
-                  Instruktur: {{ $item->jadwal->instruktur ?? '-' }}
-                </div>
-              </td>
+              <x-ui.table-cell class="px-4 py-3">
+                <div class="font-semibold text-foreground">{{ $item->jadwal->pelatihan->nama_pelatihan ?? '-' }}</div>
+                <div class="text-xs text-muted-foreground">Instruktur: {{ $item->jadwal?->instruktur?->nama ?? '-' }}</div>
+              </x-ui.table-cell>
 
-              <td class="px-5 py-4">
-                <div class="flex items-center gap-1.5 text-slate-700 font-medium">
-                  <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-400"></i>
+              <x-ui.table-cell class="px-4 py-3">
+                <div class="flex items-center gap-1.5 text-xs font-medium text-foreground">
+                  <x-lucide-calendar class="size-3.5 text-muted-foreground" />
                   {{ $item->jadwal->tanggal_mulai ? $item->jadwal->tanggal_mulai->translatedFormat('d M') : '-' }} - {{ $item->jadwal->tanggal_selesai ? $item->jadwal->tanggal_selesai->translatedFormat('d M Y') : '-' }}
                 </div>
-                <div class="text-[11px] text-slate-400 mt-0.5">
+                <div class="mt-0.5 text-xs text-muted-foreground">
                   Lokasi: {{ $item->jadwal->tempat ?? 'Workshop BLK' }}
                 </div>
-              </td>
+              </x-ui.table-cell>
 
-              <td class="px-5 py-4">
-                @if($item->status === 'lulus')
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <x-ui.table-cell class="px-4 py-3">
+                @if ($item->status === 'lulus')
+                  <x-ui.badge tone="success" class="gap-1.5">
+                    <span class="size-1.5 rounded-full bg-current"></span>
                     Lulus
-                  </span>
-                @elseif($item->status === 'aktif')
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                  </x-ui.badge>
+                @elseif ($item->status === 'aktif')
+                  <x-ui.badge tone="info" class="gap-1.5">
+                    <span class="size-1.5 animate-pulse rounded-full bg-current"></span>
                     Aktif
-                  </span>
-                @elseif($item->status === 'tidak lulus')
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
-                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                  </x-ui.badge>
+                @elseif ($item->status === 'tidak lulus')
+                  <x-ui.badge tone="danger" class="gap-1.5">
+                    <span class="size-1.5 rounded-full bg-current"></span>
                     Tidak Lulus
-                  </span>
+                  </x-ui.badge>
                 @else
-                  <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-700">
-                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                  <x-ui.badge variant="secondary" class="gap-1.5">
+                    <span class="size-1.5 rounded-full bg-muted-foreground"></span>
                     Terdaftar
-                  </span>
+                  </x-ui.badge>
                 @endif
-              </td>
+              </x-ui.table-cell>
 
-              <td class="px-5 py-4 text-right">
-                <div class="flex items-center justify-end gap-1.5">
-                  <a href="{{ route('kelas-pelatihan.show', $item->id_kelas) }}" class="p-1.5 text-slate-500 hover:text-emerald-700 hover:bg-slate-100 rounded-lg transition" title="Lihat Detail">
-                    <i data-lucide="eye" class="w-4 h-4"></i>
-                  </a>
-                  <a href="{{ route('kelas-pelatihan.edit', $item->id_kelas) }}" class="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-slate-100 rounded-lg transition" title="Edit Status">
-                    <i data-lucide="edit-3" class="w-4 h-4"></i>
-                  </a>
-                  <form action="{{ route('kelas-pelatihan.destroy', $item->id_kelas) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus peserta ini dari kelas?')">
+              <x-ui.table-cell class="px-4 py-3">
+                <div class="flex items-center justify-end gap-1">
+                  <x-ui.button
+                    href="{{ route('kelas-pelatihan.show', $item->id_kelas) }}"
+                    variant="ghost"
+                    size="icon-sm"
+                    title="Lihat Detail"
+                    aria-label="Lihat detail kelas {{ $item->peserta->user->name ?? '' }}"
+                  >
+                    <x-lucide-eye />
+                  </x-ui.button>
+
+                  <x-ui.button
+                    href="{{ route('kelas-pelatihan.edit', $item->id_kelas) }}"
+                    variant="ghost"
+                    size="icon-sm"
+                    title="Edit Status"
+                    aria-label="Edit status kelas {{ $item->peserta->user->name ?? '' }}"
+                  >
+                    <x-lucide-pencil />
+                  </x-ui.button>
+
+                  <form
+                    action="{{ route('kelas-pelatihan.destroy', $item->id_kelas) }}"
+                    method="POST"
+                    class="inline"
+                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus peserta ini dari kelas?')"
+                  >
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition" title="Hapus Dari Kelas">
-                      <i data-lucide="trash-2" class="w-4 h-4"></i>
-                    </button>
+
+                    <x-ui.button
+                      type="submit"
+                      variant="ghost"
+                      size="icon-sm"
+                      class="text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                      title="Hapus Dari Kelas"
+                      aria-label="Hapus peserta dari kelas"
+                    >
+                      <x-lucide-trash-2 />
+                    </x-ui.button>
                   </form>
                 </div>
-              </td>
-            </tr>
+              </x-ui.table-cell>
+            </x-ui.table-row>
           @empty
-            <tr>
-              <td colspan="6" class="px-5 py-12 text-center text-slate-400">
-                <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
-                  <i data-lucide="graduation-cap" class="w-6 h-6"></i>
-                </div>
-                <div class="font-bold text-slate-700 text-sm">Belum Ada Siswa Didaftarkan ke Kelas</div>
-                <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">Alokasikan siswa terdaftar ke batch jadwal yang sesuai untuk memulai kegiatan pelatihan.</p>
-                <a href="{{ route('kelas-pelatihan.create') }}" class="inline-flex items-center gap-1.5 mt-3 bg-emerald-900 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-sm">
-                  <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Masukkan Siswa
-                </a>
-              </td>
-            </tr>
-          @endforelse
-        </tbody>
-      </table>
-    </div>
+            <x-ui.table-row class="hover:bg-transparent">
+              <x-ui.table-cell colspan="6" class="p-0">
+                <x-ui.empty class="border-0">
+                  <x-ui.empty-header>
+                    <x-ui.empty-media variant="icon">
+                      <x-lucide-graduation-cap />
+                    </x-ui.empty-media>
+                    <x-ui.empty-title>Belum Ada Siswa Didaftarkan ke Kelas</x-ui.empty-title>
+                    <x-ui.empty-description>
+                      Alokasikan siswa terdaftar ke batch jadwal yang sesuai untuk memulai kegiatan pelatihan.
+                    </x-ui.empty-description>
+                  </x-ui.empty-header>
 
-    @if($kelas->hasPages())
-      <div class="p-4 border-t border-slate-100">
-        {{ $kelas->links() }}
+                  <x-ui.button href="{{ route('kelas-pelatihan.create') }}" class="bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
+                    <x-lucide-user-plus />
+                    Masukkan Siswa
+                  </x-ui.button>
+                </x-ui.empty>
+              </x-ui.table-cell>
+            </x-ui.table-row>
+          @endforelse
+        </x-ui.table-body>
+      </x-ui.table>
+    </x-ui.card-content>
+
+    @if ($kelas->hasPages())
+      <div class="border-t border-border px-6 pt-5">
+        {{ $kelas->links('components.pagination') }}
       </div>
     @endif
-  </div>
+  </x-ui.card>
 @endsection

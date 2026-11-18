@@ -1,32 +1,31 @@
-<div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4">
-  <div class="flex items-center justify-between mb-3">
-    <h3 class="font-bold text-slate-800 text-xs">Agenda & Tenggat BLK</h3>
-    <i data-lucide="calendar" class="w-4 h-4 text-slate-400"></i>
-  </div>
-
-  <div class="space-y-3">
-    <div class="p-2.5 rounded-lg border border-slate-100 bg-slate-50/50 flex gap-3 items-start">
-      <div class="bg-slate-800 text-white text-center rounded p-1 min-w-[36px]">
-        <div class="text-[9px] uppercase font-bold tracking-wider">JUL</div>
-        <div class="text-sm font-black leading-none">28</div>
-      </div>
-      <div>
-        <div class="font-bold text-slate-800 text-xs">Uji Sertifikasi BNSP Gelombang II</div>
-        <div class="text-[10px] text-slate-500 mt-0.5">Ruang Lab Uji BLK Pusat • 120 Peserta</div>
-        <div class="text-[10px] font-bold text-rose-600 mt-1">Tersisa 4 Hari</div>
-      </div>
+<x-ui.card variant="sectioned" class="p-4">
+    <div class="flex items-center justify-between">
+        <x-ui.card-title class="text-sm">Agenda & Tenggat BLK</x-ui.card-title>
+        <x-lucide-calendar class="size-4 text-muted-foreground" />
     </div>
 
-    <div class="p-2.5 rounded-lg border border-slate-100 bg-slate-50/50 flex gap-3 items-start">
-      <div class="bg-slate-400 text-white text-center rounded p-1 min-w-[36px]">
-        <div class="text-[9px] uppercase font-bold tracking-wider">AGS</div>
-        <div class="text-sm font-black leading-none">05</div>
-      </div>
-      <div>
-        <div class="font-bold text-slate-800 text-xs">Penutupan Laporan Akhir Magang</div>
-        <div class="text-[10px] text-slate-500 mt-0.5">Semester Ganjil 2024/2025</div>
-        <div class="text-[10px] text-slate-400 mt-1">Batas Unggah Nilai Industri</div>
-      </div>
+    <div class="space-y-2">
+        <x-ui.item size="sm" class="border-border">
+            <div class="flex min-w-9 flex-col items-center rounded-md bg-primary px-1 py-1 text-center text-primary-foreground">
+                <span class="text-[9px] font-bold uppercase tracking-wider">JUL</span>
+                <span class="text-sm font-black leading-none">28</span>
+            </div>
+            <x-ui.item-content>
+                <x-ui.item-title class="text-xs">Uji Sertifikasi BNSP Gelombang II</x-ui.item-title>
+                <x-ui.item-description class="text-[10px]">Ruang Lab Uji BLK Pusat • 120 Peserta</x-ui.item-description>
+                <x-ui.badge tone="danger" size="sm" class="mt-1">Tersisa 4 Hari</x-ui.badge>
+            </x-ui.item-content>
+        </x-ui.item>
+
+        <x-ui.item size="sm" class="border-border">
+            <div class="flex min-w-9 flex-col items-center rounded-md bg-muted px-1 py-1 text-center text-muted-foreground">
+                <span class="text-[9px] font-bold uppercase tracking-wider">AGS</span>
+                <span class="text-sm font-black leading-none">05</span>
+            </div>
+            <x-ui.item-content>
+                <x-ui.item-title class="text-xs">Penutupan Laporan Akhir Magang</x-ui.item-title>
+                <x-ui.item-description class="text-[10px]">Semester Ganjil 2024/2025 • Batas unggah nilai industri</x-ui.item-description>
+            </x-ui.item-content>
+        </x-ui.item>
     </div>
-  </div>
-</div>
+</x-ui.card>

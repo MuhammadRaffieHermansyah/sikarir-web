@@ -1,4 +1,4 @@
-
+import "./blatui.js";
 
 import Alpine from 'alpinejs';
 
@@ -51,7 +51,9 @@ const setupDeleteConfirmation = () => {
         lastTrigger?.focus();
     };
 
-    forms.forEach((form) => {
+    const wireForm = (form) => {
+        if (form.dataset.confirmationType) return;
+
         const inlineHandler = form.getAttribute('onsubmit') || '';
         const matches = inlineHandler.match(/confirm\(['"]([^'"]+)['"]\)/);
         const isLogout = form.dataset.confirmAction === 'logout';
@@ -82,6 +84,24 @@ const setupDeleteConfirmation = () => {
             document.body.classList.add('delete-confirmation-open');
             cancelButton.focus();
         });
+    };
+
+    const matchesConfirmationForm = (form) => form.matches('form[onsubmit*="confirm("], form[data-confirm-action]');
+
+    forms.forEach(wireForm);
+
+    // The mobile sidebar drawer is cloned from a <template> the first time it opens, so its
+    // logout form is not in the document yet. Wire forms that appear later as they submit.
+    document.addEventListener('submit', (event) => {
+        const form = event.target;
+
+        if (!(form instanceof HTMLFormElement) || form.dataset.confirmationType || !matchesConfirmationForm(form)) {
+            return;
+        }
+
+        event.preventDefault();
+        wireForm(form);
+        form.requestSubmit();
     });
 
     confirmation.querySelectorAll('[data-delete-cancel]').forEach((button) => button.addEventListener('click', close));

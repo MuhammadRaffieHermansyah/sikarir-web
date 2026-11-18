@@ -1,4 +1,5 @@
-@import 'tailwindcss';
+﻿@import 'tailwindcss';
+@import "./blatui.css";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -11,6 +12,60 @@
     --color-sikarir-mist: #edf4e8;
     --color-sikarir-lime: #d8f36a;
     --color-sikarir-paper: #f8faf6;
+}
+
+/* -------------------------------------------------------------------------- */
+/*  siKarir brand tokens â€” override the BlatUI/shadcn defaults.               */
+/*  Lives after the imports so these values win over :root in blatui.css.      */
+/* -------------------------------------------------------------------------- */
+:root {
+    --radius: 0.75rem;
+    --tracking-normal: 0em;
+    --app-header-height: 72px;
+
+    --background: #f8faf6;
+    --foreground: #133d30;
+    --card: #ffffff;
+    --card-foreground: #133d30;
+    --popover: #ffffff;
+    --popover-foreground: #133d30;
+
+    --primary: #145642;
+    --primary-foreground: #f8faf6;
+    --secondary: #edf4e8;
+    --secondary-foreground: #133d30;
+    --muted: #f1f6e7;
+    --muted-foreground: #637a6c;
+    --accent: #eaf4dd;
+    --accent-foreground: #145642;
+
+    --destructive: #dc2626;
+    --destructive-foreground: #ffffff;
+    --success: #2f7a4f;
+    --success-foreground: #f8faf6;
+    --warning: #b45309;
+    --warning-foreground: #fffbeb;
+    --info: #0369a1;
+    --info-foreground: #f0f9ff;
+
+    --border: #dce8d8;
+    --input: #d9e4d4;
+    --ring: #86a969;
+
+    --chart-1: #145642;
+    --chart-2: #78a744;
+    --chart-3: #d8f36a;
+    --chart-4: #2f7a4f;
+    --chart-5: #86a969;
+
+    --sidebar: #fcfdf9;
+    --sidebar-foreground: #173f31;
+    --sidebar-primary: #145642;
+    --sidebar-primary-foreground: #f8faf6;
+    --sidebar-accent: #eaf4dd;
+    --sidebar-accent-foreground: #174c39;
+    --sidebar-border: #dce8d8;
+    --sidebar-ring: #86a969;
 }
 
 @layer base {
@@ -198,30 +253,6 @@
             var(--color-sikarir-paper);
     }
 
-    #sidebar {
-        border-color: #dce8d8;
-        background: #fcfdf9;
-    }
-
-    #sidebar nav > div > div:first-child {
-        color: #73907d;
-        letter-spacing: .13em;
-    }
-
-    #sidebar nav a {
-        border-radius: .8rem;
-    }
-
-    #sidebar nav a[class*='bg-emerald-50'] {
-        background: #eaf4dd;
-        color: #174c39;
-        box-shadow: none;
-    }
-
-    #sidebar nav a[class*='bg-emerald-50'] i {
-        color: #39734e;
-    }
-
     .admin-shell main::-webkit-scrollbar {
         width: .55rem;
     }
@@ -369,292 +400,6 @@
         .delete-confirmation__actions { flex-direction: column-reverse; }
     }
 
-    .pelatihan-admin .pelatihan-page-header {
-        padding: .7rem 0 1.5rem;
-    }
-
-    .pelatihan-admin .pelatihan-page-header::after { content: none; }
-
-    .pelatihan-admin .pelatihan-page-header h1 {
-        color: #0f172a;
-        font-size: clamp(1.9rem, 3vw, 2.5rem);
-        letter-spacing: -.05em;
-    }
-
-    .pelatihan-admin .pelatihan-page-header p {
-        color: #61738f;
-        font-size: .95rem;
-    }
-
-    .pelatihan-admin .pelatihan-page-header .pelatihan-breadcrumb {
-        display: flex;
-        align-items: center;
-        gap: .6rem;
-        margin: 0 0 .45rem;
-        color: #8298b5;
-        font-size: .82rem;
-        font-weight: 700;
-    }
-
-    .pelatihan-admin .pelatihan-page-header .pelatihan-breadcrumb span {
-        color: #a6b6ca;
-    }
-
-    .pelatihan-admin .pelatihan-page-header > div:first-child > .inline-flex { display: none; }
-
-    .pelatihan-admin .pelatihan-header-actions a {
-        border-color: #dce8d8;
-        background: #fff;
-        color: #426453;
-        box-shadow: 0 4px 12px rgb(20 61 48 / .05);
-    }
-
-    .pelatihan-admin .pelatihan-header-actions a:hover {
-        border-color: #a8c4a4;
-        background: #f2f8ee;
-        color: #145642;
-    }
-
-    .pelatihan-admin .pelatihan-header-actions .pelatihan-header-primary {
-        border-color: #145642;
-        background: #145642;
-        color: #fff;
-        box-shadow: 0 10px 22px rgb(20 86 66 / .18);
-    }
-
-    .pelatihan-admin .pelatihan-header-actions .pelatihan-header-primary:hover {
-        background: #0f4636;
-        color: #fff;
-    }
-
-    .pelatihan-admin .bg-white.rounded-3xl {
-        border-color: #dfe9dc;
-        border-radius: 1.25rem;
-        box-shadow: 0 12px 28px rgb(20 61 48 / .055);
-    }
-
-    .pelatihan-admin .bg-white.rounded-2xl {
-        border-color: #dfe9dc;
-        box-shadow: 0 10px 24px rgb(20 61 48 / .045);
-    }
-
-    .pelatihan-admin input:not([type='file']),
-    .pelatihan-admin select,
-    .pelatihan-admin textarea {
-        border-color: #dce8d8 !important;
-        background-color: #fbfcf8;
-    }
-
-    .pelatihan-admin input:not([type='file']):focus,
-    .pelatihan-admin select:focus,
-    .pelatihan-admin textarea:focus {
-        border-color: #368162 !important;
-        box-shadow: 0 0 0 4px rgb(20 86 66 / .14) !important;
-    }
-
-    .pelatihan-admin .bg-slate-50\/80 { background: #f4f8f1; }
-
-    @media (max-width: 640px) {
-        .pelatihan-admin .pelatihan-header-actions { width: 100%; }
-        .pelatihan-admin .pelatihan-header-actions a { flex: 1; justify-content: center; }
-    }
-
-    .public-page {
-        background: var(--color-sikarir-paper);
-    }
-
-    .public-hero {
-        position: relative;
-        display: flex;
-        min-height: min(760px, calc(100vh - 72px));
-        align-items: center;
-        overflow: hidden;
-        border-bottom: 1px solid rgb(216 243 106 / .20);
-        background:
-            radial-gradient(ellipse 62% 72% at 91% 42%, rgb(16 126 83 / .48) 0%, transparent 70%),
-            radial-gradient(circle at 69% 104%, rgb(216 243 106 / .13) 0%, transparent 26rem),
-            linear-gradient(112deg, #042d23 0%, #063c2e 48%, #07543d 100%);
-        color: white;
-    }
-
-    .public-hero::before {
-        position: absolute;
-        inset: 0;
-        background:
-            linear-gradient(90deg, rgb(2 35 27 / .72) 0%, rgb(3 49 37 / .44) 48%, transparent 82%),
-            radial-gradient(rgb(216 243 106 / .26) 1px, transparent 1.25px);
-        background-position: center, right 8% bottom 11%;
-        background-size: auto, 17px 17px;
-        content: '';
-        pointer-events: none;
-    }
-
-    .public-hero::after {
-        position: absolute;
-        right: clamp(-7rem, 4vw, 4rem);
-        bottom: clamp(-12rem, -7vw, -4rem);
-        width: min(43vw, 38rem);
-        aspect-ratio: 1;
-        border: 1px solid rgb(216 243 106 / .38);
-        border-radius: 50%;
-        box-shadow:
-            0 0 0 2.5rem rgb(216 243 106 / .045),
-            0 0 0 7rem rgb(216 243 106 / .035),
-            0 0 0 12rem rgb(216 243 106 / .025);
-        content: '';
-        opacity: .9;
-        pointer-events: none;
-    }
-
-    .public-hero > .max-w-7xl {
-        position: relative;
-        z-index: 1;
-        padding-top: 4.75rem;
-        padding-bottom: 6.5rem;
-    }
-
-    .public-page .max-w-7xl {
-        width: min(1160px, calc(100% - 2rem));
-    }
-
-    .public-hero h1 {
-        max-width: 50rem;
-        font-family: var(--font-sans);
-        font-size: clamp(3.25rem, 7.2vw, 6.5rem);
-        font-weight: 800;
-        letter-spacing: -.075em;
-        line-height: .9;
-    }
-
-    .public-hero h1 .text-emerald-400,
-    .public-hero h1 .public-hero-accent {
-        color: var(--color-sikarir-lime);
-    }
-
-    .public-hero p {
-        max-width: 36rem;
-        font-size: clamp(.9375rem, 1.5vw, 1.125rem);
-        line-height: 1.7;
-    }
-
-    .public-hero .public-kicker {
-        display: inline-flex;
-        align-items: center;
-        gap: .5rem;
-        border: 1px solid rgb(216 243 106 / .38);
-        border-radius: 999px;
-        background: rgb(216 243 106 / .10);
-        padding: .25rem .75rem;
-        color: var(--color-sikarir-lime);
-        font-size: .65rem;
-        font-weight: 800;
-        letter-spacing: .08em;
-        text-transform: uppercase;
-        backdrop-filter: blur(6px);
-    }
-
-    .public-hero-aside {
-        display: none;
-    }
-
-    .public-page .public-card,
-    .public-page .bg-white.rounded-2xl.border {
-        border-color: #dfe9dc;
-        box-shadow: 0 12px 26px rgb(20 61 48 / .055);
-    }
-
-    .public-page .public-card:hover,
-    .public-page .bg-white.rounded-2xl.border:hover {
-        border-color: #bbd49e;
-        box-shadow: 0 18px 32px rgb(20 61 48 / .09);
-    }
-
-    .public-page .public-soft-section,
-    .public-page .bg-slate-50\/80 {
-        border-color: #dfe9dc;
-        background: #eef4e8;
-    }
-
-    .public-page .public-filter {
-        border-color: #d9e7d5;
-        background: rgb(255 255 255 / .95);
-        box-shadow: 0 16px 34px rgb(20 61 48 / .07);
-    }
-
-    .public-page input,
-    .public-page select {
-        border-color: #dce8d8 !important;
-        background-color: #fbfcf8 !important;
-    }
-
-    .public-page input:focus,
-    .public-page select:focus {
-        border-color: #86a969 !important;
-        box-shadow: 0 0 0 4px rgb(216 243 106 / .30) !important;
-    }
-
-    .public-page .bg-emerald-900 {
-        background-color: var(--color-sikarir-emerald);
-    }
-
-    .public-page .hover\:bg-emerald-950:hover {
-        background-color: #0f4636;
-    }
-
-    .public-page .text-emerald-400 {
-        color: var(--color-sikarir-lime);
-    }
-
-    .public-page .bg-emerald-50 {
-        background-color: #eef5e7;
-    }
-
-    .public-page .border-emerald-200\/80,
-    .public-page .border-emerald-200 {
-        border-color: #cee1bb;
-    }
-
-    .public-page .text-purple-700 {
-        color: #39734e;
-    }
-
-    .public-page .bg-purple-50 {
-        background-color: #eef5e7;
-    }
-
-    .public-page .border-purple-100 {
-        border-color: #cee1bb;
-    }
-
-    @media (max-width: 640px) {
-        .public-page .max-w-7xl {
-            width: min(100% - 2rem, 520px);
-        }
-
-        .public-hero h1 {
-            font-size: clamp(3.1rem, 14vw, 4.4rem);
-        }
-
-        .public-hero {
-            min-height: 720px;
-            align-items: flex-start;
-        }
-
-        .public-hero > .max-w-7xl {
-            padding-top: 5rem;
-            padding-bottom: 8rem;
-        }
-
-        .public-hero::before {
-            background-position: center, right -4rem bottom 5rem;
-        }
-
-        .public-hero::after {
-            right: -8rem;
-            bottom: -3rem;
-            width: 22rem;
-        }
-    }
 }
 
 @utility scrollbar-none {

@@ -1,235 +1,293 @@
 @extends('layouts.app')
 
-@section('title', 'Tambah Mitra Industri DU/DI - BLK CONNECT')
+@section('title', 'Tambah Mitra Industri DU/DI - SiKarir BLK')
 
 @section('content')
-  <!-- Title & Breadcrumbs -->
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-    <div>
-      <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
-        <a href="{{ route('admin-blk.index') }}" class="hover:text-emerald-700 transition">Beranda</a>
-        <span>&gt;</span>
-        <a href="{{ route('mitras.index') }}" class="hover:text-emerald-700 transition">Mitra DU/DI</a>
-        <span>&gt;</span>
-        <span class="text-slate-600 font-medium">Tambah Mitra Baru</span>
-      </div>
-      <h1 class="text-xl font-black text-slate-900 tracking-tight">Registrasi Kemitraan Industri (DU/DI)</h1>
-      <p class="text-xs text-slate-500 mt-0.5">Daftarkan perusahaan rekanan untuk penempatan magang vokasi dan rekrutmen lulusan balai.</p>
-    </div>
+  <x-ui.page-header
+    title="Registrasi Kemitraan Industri (DU/DI)"
+    description="Daftarkan perusahaan rekanan untuk penempatan magang vokasi dan rekrutmen lulusan balai."
+  >
+    <x-slot:breadcrumb>
+      <x-ui.breadcrumb>
+        <x-ui.breadcrumb-list>
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-link href="{{ route('admin-blk.index') }}">Beranda</x-ui.breadcrumb-link>
+          </x-ui.breadcrumb-item>
+          <x-ui.breadcrumb-separator />
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-link href="{{ route('mitras.index') }}">Mitra DU/DI</x-ui.breadcrumb-link>
+          </x-ui.breadcrumb-item>
+          <x-ui.breadcrumb-separator />
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-page>Tambah Mitra Baru</x-ui.breadcrumb-page>
+          </x-ui.breadcrumb-item>
+        </x-ui.breadcrumb-list>
+      </x-ui.breadcrumb>
+    </x-slot:breadcrumb>
 
-    <div class="flex items-center gap-2">
-      <a href="{{ route('mitras.index') }}" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3.5 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Daftar
-      </a>
-    </div>
-  </div>
+    <x-slot:actions>
+      <x-ui.button href="{{ route('mitras.index') }}" variant="outline">
+        <x-lucide-arrow-left />
+        Kembali ke Daftar
+      </x-ui.button>
+    </x-slot:actions>
+  </x-ui.page-header>
 
-  <!-- Form Grid -->
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- Left Column (Form) -->
-    <div class="lg:col-span-2 space-y-6">
-      <form method="POST" action="{{ route('mitras.store') }}" enctype="multipart/form-data" class="space-y-6">
-        @csrf
+  @if ($errors->any())
+    <x-ui.alert tone="danger">
+      <x-lucide-circle-alert />
+      <x-ui.alert-title>Mohon perbaiki beberapa kesalahan berikut:</x-ui.alert-title>
+      <x-ui.alert-description>
+        <ul class="list-inside list-disc space-y-1">
+          @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+          @endforeach
+        </ul>
+      </x-ui.alert-description>
+    </x-ui.alert>
+  @endif
 
-        @if($errors->any())
-          <div class="bg-rose-50 border border-rose-200 text-rose-800 px-4 py-3 rounded-xl text-xs space-y-1 shadow-sm">
-            <div class="font-bold">Mohon perbaiki kesalahan berikut:</div>
-            <ul class="list-disc list-inside space-y-0.5 text-rose-700 pl-4">
-              @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
-            </ul>
-          </div>
-        @endif
+  <form action="{{ route('mitras.store') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
+    @csrf
 
-        <!-- Card 1: Data Identitas Perusahaan -->
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-4">
-          <div class="flex items-center gap-2.5 pb-4 border-b border-slate-100">
-            <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-              <i data-lucide="building-2" class="w-4 h-4"></i>
-            </div>
+    <div class="space-y-6 lg:col-span-2">
+      <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+          <div class="flex items-center gap-3">
+            <span class="grid size-9 shrink-0 place-items-center rounded-lg bg-accent text-accent-foreground">
+              <x-lucide-building-2 class="size-4" />
+            </span>
             <div>
-              <h2 class="font-bold text-slate-800 text-sm">Identitas Perusahaan / Industri</h2>
-              <p class="text-xs text-slate-500">Informasi resmi badan usaha atau instansi rekanan.</p>
+              <x-ui.card-title class="text-base font-bold">Identitas Perusahaan / Industri</x-ui.card-title>
+              <x-ui.card-description>Informasi resmi badan usaha atau instansi rekanan.</x-ui.card-description>
             </div>
           </div>
+        </x-ui.card-header>
 
-          {{-- Logo Upload --}}
-          <div class="flex flex-col sm:flex-row items-start gap-5">
-            {{-- Preview Area --}}
-            <div id="logo-preview-wrap" class="w-24 h-24 rounded-xl border-2 border-dashed border-slate-300 shrink-0 overflow-hidden relative bg-gradient-to-br from-slate-100 to-slate-200">
-              <span id="logo-placeholder" class="absolute inset-0 flex items-center justify-center text-slate-400"><i data-lucide="image" class="w-7 h-7"></i></span>
-              <img id="logo-preview-img" src="" alt="Preview Logo" class="w-full h-full object-cover hidden absolute inset-0">
+        <x-ui.card-content class="space-y-5">
+          <div class="flex flex-col items-start gap-5 sm:flex-row">
+            <div id="logo-preview-wrap" class="relative size-24 shrink-0 overflow-hidden rounded-xl border-2 border-dashed border-border bg-muted">
+              <span id="logo-placeholder" class="absolute inset-0 flex items-center justify-center text-muted-foreground">
+                <x-lucide-image class="size-7" />
+              </span>
+              <img id="logo-preview-img" src="" alt="Preview Logo" class="absolute inset-0 hidden size-full object-cover">
             </div>
-            {{-- Upload Input --}}
-            <div class="flex-1 w-full">
-              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Logo Perusahaan <span class="text-rose-500">*</span></label>
-              <label for="logo_perusahaan" class="flex items-center gap-3 w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 cursor-pointer hover:border-emerald-500 hover:bg-emerald-50/30 transition group">
-                <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 group-hover:bg-emerald-200 transition">
-                  <i data-lucide="upload-cloud" class="w-4 h-4"></i>
+
+            <div class="w-full flex-1">
+              <x-ui.field-label for="logo_perusahaan">Logo Perusahaan <span class="text-destructive">*</span></x-ui.field-label>
+              <label
+                for="logo_perusahaan"
+                class="mt-1.5 flex w-full cursor-pointer items-center gap-3 rounded-lg border border-border bg-muted/40 px-3.5 py-2.5 transition hover:border-primary/40 hover:bg-accent/40"
+              >
+                <span class="grid size-8 shrink-0 place-items-center rounded-lg bg-accent text-accent-foreground">
+                  <x-lucide-upload-cloud class="size-4" />
                 </span>
                 <div>
-                  <div class="text-xs font-semibold text-slate-700" id="logo-filename">Klik untuk pilih file logo</div>
-                  <div class="text-[11px] text-slate-400">PNG, JPG, WEBP, SVG · Maks. 2MB</div>
+                  <div id="logo-filename" class="text-xs font-semibold text-foreground">Klik untuk pilih file logo</div>
+                  <div class="text-xs text-muted-foreground">PNG, JPG, WEBP, SVG · Maks. 2MB</div>
                 </div>
               </label>
               <input type="file" id="logo_perusahaan" name="logo_perusahaan" accept="image/*" class="sr-only" onchange="previewLogo(this)">
-              @error('logo_perusahaan')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
+              <x-ui.field-error :messages="$errors->get('logo_perusahaan')" />
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="sm:col-span-2">
-              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Nama Perusahaan / PT / CV <span class="text-rose-500">*</span></label>
-              <input type="text" name="nama_perusahaan" value="{{ old('nama_perusahaan') }}"  placeholder="Contoh: PT Astra Honda Motor" class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
-              @error('nama_perusahaan')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
+          <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <x-ui.field class="sm:col-span-2" data-invalid="{{ $errors->has('nama_perusahaan') ? 'true' : 'false' }}">
+              <x-ui.field-label for="nama_perusahaan">Nama Perusahaan / PT / CV <span class="text-destructive">*</span></x-ui.field-label>
+              <x-ui.input
+                id="nama_perusahaan"
+                name="nama_perusahaan"
+                type="text"
+                :value="old('nama_perusahaan')"
+                placeholder="Contoh: PT Astra Honda Motor"
+              />
+              <x-ui.field-error :messages="$errors->get('nama_perusahaan')" />
+            </x-ui.field>
 
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Bidang Usaha / Sektor</label>
-              <input type="text" name="bidang_usaha" value="{{ old('bidang_usaha') }}" placeholder="Contoh: Otomotif & Manufaktur" class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
-              @error('bidang_usaha')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
+            <x-ui.field data-invalid="{{ $errors->has('bidang_usaha') ? 'true' : 'false' }}">
+              <x-ui.field-label for="bidang_usaha">Bidang Usaha / Sektor</x-ui.field-label>
+              <x-ui.input
+                id="bidang_usaha"
+                name="bidang_usaha"
+                type="text"
+                :value="old('bidang_usaha')"
+                placeholder="Contoh: Otomotif & Manufaktur"
+              />
+              <x-ui.field-error :messages="$errors->get('bidang_usaha')" />
+            </x-ui.field>
 
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Jenis Kemitraan</label>
-              <select name="jenis_mitra" class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
+            <x-ui.field data-invalid="{{ $errors->has('jenis_mitra') ? 'true' : 'false' }}">
+              <x-ui.field-label for="jenis_mitra">Jenis Kemitraan</x-ui.field-label>
+              <x-ui.select name="jenis_mitra" id="jenis_mitra" native class="w-full">
                 <option value="BUMN / BUMD">BUMN / BUMD</option>
                 <option value="Perusahaan Swasta Nasional" selected>Perusahaan Swasta Nasional</option>
                 <option value="PMA / Multinasional">PMA / Multinasional</option>
                 <option value="Instansi Pemerintah / Lembaga">Instansi Pemerintah / Lembaga</option>
                 <option value="UMKM / Startup">UMKM / Startup</option>
-              </select>
-              @error('jenis_mitra')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
+              </x-ui.select>
+              <x-ui.field-error :messages="$errors->get('jenis_mitra')" />
+            </x-ui.field>
 
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Nomor Izin Usaha / NIB</label>
-              <input type="text" name="no_izin" value="{{ old('no_izin') }}" placeholder="Nomor NIB / Legalitas" class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
-              @error('no_izin')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
+            <x-ui.field data-invalid="{{ $errors->has('no_izin') ? 'true' : 'false' }}">
+              <x-ui.field-label for="no_izin">Nomor Izin Usaha / NIB</x-ui.field-label>
+              <x-ui.input
+                id="no_izin"
+                name="no_izin"
+                type="text"
+                :value="old('no_izin')"
+                placeholder="Nomor NIB / Legalitas"
+              />
+              <x-ui.field-error :messages="$errors->get('no_izin')" />
+            </x-ui.field>
 
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Tautkan Akun User (Opsional)</label>
-              <select name="id_user" class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
+            <x-ui.field data-invalid="{{ $errors->has('id_user') ? 'true' : 'false' }}">
+              <x-ui.field-label for="id_user">Tautkan Akun User (Opsional)</x-ui.field-label>
+              <x-ui.select name="id_user" id="id_user" native class="w-full">
                 <option value="">-- Tanpa Akun Pengguna Khusus --</option>
-                @foreach($users ?? [] as $user)
-                  <option value="{{ $user->id }}" {{ old('id_user') == $user->id ? 'selected' : '' }}>{{ $user->name }} ({{ $user->email }})</option>
+                @foreach ($users ?? [] as $user)
+                  <option value="{{ $user->id }}" @selected(old('id_user') == $user->id)>
+                    {{ $user->name }} ({{ $user->email }})
+                  </option>
                 @endforeach
-              </select>
-              @error('id_user')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
+              </x-ui.select>
+              <x-ui.field-error :messages="$errors->get('id_user')" />
+            </x-ui.field>
+          </div>
+        </x-ui.card-content>
+      </x-ui.card>
+
+      <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+          <div class="flex items-center gap-3">
+            <span class="grid size-9 shrink-0 place-items-center rounded-lg bg-accent text-accent-foreground">
+              <x-lucide-map-pin class="size-4" />
+            </span>
+            <div>
+              <x-ui.card-title class="text-base font-bold">Lokasi & Penanggung Jawab (PIC)</x-ui.card-title>
+              <x-ui.card-description>Alamat operasional kantor dan kontak representatif HRD / Pembimbing Industri.</x-ui.card-description>
             </div>
           </div>
-        </div>
+        </x-ui.card-header>
 
-        <!-- Card 2: Lokasi & Kontak PIC -->
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-4">
-          <div class="flex items-center gap-2.5 pb-4 border-b border-slate-100">
-            <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
-              <i data-lucide="map-pin" class="w-4 h-4"></i>
-            </div>
-            <div>
-              <h2 class="font-bold text-slate-800 text-sm">Lokasi & Penanggung Jawab (PIC)</h2>
-              <p class="text-xs text-slate-500">Alamat operasional kantor dan kontak representatif HRD / Pembimbing Industri.</p>
-            </div>
+        <x-ui.card-content>
+          <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <x-ui.field data-invalid="{{ $errors->has('kota') ? 'true' : 'false' }}">
+              <x-ui.field-label for="kota">Kota / Kabupaten</x-ui.field-label>
+              <x-ui.input id="kota" name="kota" type="text" :value="old('kota')" placeholder="Contoh: Jakarta Pusat" />
+              <x-ui.field-error :messages="$errors->get('kota')" />
+            </x-ui.field>
+
+            <x-ui.field data-invalid="{{ $errors->has('provinsi') ? 'true' : 'false' }}">
+              <x-ui.field-label for="provinsi">Provinsi</x-ui.field-label>
+              <x-ui.input id="provinsi" name="provinsi" type="text" :value="old('provinsi')" placeholder="Contoh: DKI Jakarta" />
+              <x-ui.field-error :messages="$errors->get('provinsi')" />
+            </x-ui.field>
+
+            <x-ui.field data-invalid="{{ $errors->has('no_telp') ? 'true' : 'false' }}">
+              <x-ui.field-label for="no_telp">Nomor Telepon / WhatsApp Kantor</x-ui.field-label>
+              <x-ui.input
+                id="no_telp"
+                name="no_telp"
+                type="text"
+                :value="old('no_telp')"
+                placeholder="Contoh: 021-5551234 atau 08123456789"
+              />
+              <x-ui.field-error :messages="$errors->get('no_telp')" />
+            </x-ui.field>
+
+            <x-ui.field data-invalid="{{ $errors->has('jabatan_pic') ? 'true' : 'false' }}">
+              <x-ui.field-label for="jabatan_pic">Jabatan PIC / HRD</x-ui.field-label>
+              <x-ui.input
+                id="jabatan_pic"
+                name="jabatan_pic"
+                type="text"
+                :value="old('jabatan_pic')"
+                placeholder="Contoh: HR & People Development Head"
+              />
+              <x-ui.field-error :messages="$errors->get('jabatan_pic')" />
+            </x-ui.field>
+
+            <x-ui.field class="sm:col-span-2" data-invalid="{{ $errors->has('alamat') ? 'true' : 'false' }}">
+              <x-ui.field-label for="alamat">Alamat Lengkap Perusahaan</x-ui.field-label>
+              <x-ui.textarea id="alamat" name="alamat" rows="3" placeholder="Jl. Jendral Sudirman Kav. XX, Gedung...">{{ old('alamat') }}</x-ui.textarea>
+              <x-ui.field-error :messages="$errors->get('alamat')" />
+            </x-ui.field>
           </div>
+        </x-ui.card-content>
+      </x-ui.card>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Kota / Kabupaten</label>
-              <input type="text" name="kota" value="{{ old('kota') }}" placeholder="Contoh: Jakarta Pusat" class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
-              @error('kota')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
+      <div class="flex items-center justify-end gap-2">
+        <x-ui.button href="{{ route('mitras.index') }}" variant="outline">
+          Batalkan
+        </x-ui.button>
 
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Provinsi</label>
-              <input type="text" name="provinsi" value="{{ old('provinsi') }}" placeholder="Contoh: DKI Jakarta" class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
-              @error('provinsi')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Nomor Telepon / WhatsApp Kantor</label>
-              <input type="text" name="no_telp" value="{{ old('no_telp') }}" placeholder="Contoh: 021-5551234 atau 08123456789" class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
-              @error('no_telp')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Jabatan PIC / HRD</label>
-              <input type="text" name="jabatan_pic" value="{{ old('jabatan_pic') }}" placeholder="Contoh: HR & People Development Head" class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">
-              @error('jabatan_pic')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-
-            <div class="sm:col-span-2">
-              <label class="block text-xs font-semibold text-slate-700 mb-1.5">Alamat Lengkap Perusahaan</label>
-              <textarea name="alamat" rows="3" placeholder="Jl. Jendral Sudirman Kav. XX, Gedung..." class="w-full bg-slate-50/50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition">{{ old('alamat') }}</textarea>
-              @error('alamat')<p class="text-rose-600 text-xs mt-1">{{ $message }}</p>@enderror
-            </div>
-          </div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="flex items-center justify-end gap-3 pt-2">
-          <a href="{{ route('mitras.index') }}" class="px-5 py-2.5 bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-lg hover:bg-slate-50 transition shadow-sm">
-            Batalkan
-          </a>
-          <button type="submit" class="px-6 py-2.5 bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold rounded-lg shadow-sm flex items-center gap-2 transition">
-            <i data-lucide="save" class="w-4 h-4"></i>
-            <span>Simpan Data Mitra</span>
-          </button>
-        </div>
-      </form>
+        <x-ui.button type="submit" class="bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
+          <x-lucide-save />
+          Simpan Data Mitra
+        </x-ui.button>
+      </div>
     </div>
 
-    <!-- Side Guidance (Right Column) -->
     <div class="space-y-6">
-      <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
-        <div class="flex items-center gap-2 text-slate-800 font-bold text-xs pb-3 border-b border-slate-100">
-          <i data-lucide="info" class="w-4 h-4 text-emerald-700"></i>
-          <span>Ketentuan Kemitraan DU/DI</span>
-        </div>
-        <ul class="text-xs text-slate-600 space-y-3">
-          <li class="flex items-start gap-2">
-            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
-            <span>Mitra yang terdaftar berhak mempublikasikan lowongan magang industri di portal.</span>
-          </li>
-          <li class="flex items-start gap-2">
-            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
-            <span>Peserta pelatihan vokasi dapat ditempatkan sesuai kesesuaian kurikulum kejuruan.</span>
-          </li>
-          <li class="flex items-start gap-2">
-            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 shrink-0 mt-0.5"></i>
-            <span>Evaluasi dan monitoring jurnal harian terintegrasi dengan pembimbing industri.</span>
-          </li>
-        </ul>
-      </div>
+      <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+          <x-ui.card-title class="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted-foreground">
+            <x-lucide-info class="size-4 text-primary" />
+            Ketentuan Kemitraan DU/DI
+          </x-ui.card-title>
+        </x-ui.card-header>
 
-      <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-xl p-5 shadow-sm space-y-3">
-        <div class="flex items-center gap-2 text-emerald-400 font-bold text-xs">
-          <i data-lucide="handshake" class="w-4 h-4"></i>
+        <x-ui.card-content>
+          <ul class="space-y-3 text-xs text-muted-foreground">
+            <li class="flex items-start gap-2">
+              <x-lucide-circle-check-big class="mt-0.5 size-4 shrink-0 text-primary" />
+              <span>Mitra yang terdaftar berhak mempublikasikan lowongan magang industri di portal.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <x-lucide-circle-check-big class="mt-0.5 size-4 shrink-0 text-primary" />
+              <span>Peserta pelatihan vokasi dapat ditempatkan sesuai kesesuaian kurikulum kejuruan.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <x-lucide-circle-check-big class="mt-0.5 size-4 shrink-0 text-primary" />
+              <span>Evaluasi dan monitoring jurnal harian terintegrasi dengan pembimbing industri.</span>
+            </li>
+          </ul>
+        </x-ui.card-content>
+      </x-ui.card>
+
+      <x-ui.card class="border-primary/30 bg-gradient-to-br from-primary to-[#0a2f26] text-primary-foreground">
+        <div class="flex items-center gap-2 text-xs font-bold text-sikarir-lime">
+          <x-lucide-handshake class="size-4" />
           <span>Link and Match Vokasi</span>
         </div>
-        <p class="text-[11px] text-slate-300 leading-relaxed">
+        <p class="mt-3 text-xs leading-relaxed text-primary-foreground/80">
           Kerjasama industri menjamin kompetensi lulusan BLK sesuai kebutuhan riil pasar kerja nasional dan global.
         </p>
-      </div>
+      </x-ui.card>
     </div>
-  </div>
+  </form>
 @endsection
 
 @push('scripts')
-<script>
-function previewLogo(input) {
-    const img = document.getElementById('logo-preview-img');
-    const placeholder = document.getElementById('logo-placeholder');
-    const filename = document.getElementById('logo-filename');
-    if (input.files && input.files[0]) {
+  <script>
+    function previewLogo(input) {
+      const img = document.getElementById('logo-preview-img');
+      const placeholder = document.getElementById('logo-placeholder');
+      const filename = document.getElementById('logo-filename');
+
+      if (input.files && input.files[0]) {
         const reader = new FileReader();
-        reader.onload = e => {
-            img.src = e.target.result;
-            img.classList.remove('hidden');
-            placeholder.classList.add('hidden');
+
+        reader.onload = (event) => {
+          img.src = event.target.result;
+          img.classList.remove('hidden');
+          placeholder.classList.add('hidden');
         };
+
         reader.readAsDataURL(input.files[0]);
         filename.textContent = input.files[0].name;
+      }
     }
-}
-</script>
+  </script>
 @endpush

@@ -1,215 +1,238 @@
 @extends('layouts.app')
 
-@section('title', 'Buka Lowongan Magang - Disnaker BLK')
+@section('title', 'Buka Lowongan Magang - SiKarir BLK')
 
 @section('content')
-    <!-- Title & Breadcrumbs -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-            <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
-                <a href="{{ route('admin-blk.index') }}" class="hover:text-emerald-700 transition">Beranda</a>
-                <span>&gt;</span>
-                <a href="{{ route('lowongan.index') }}" class="hover:text-emerald-700 transition">Lowongan Magang</a>
-                <span>&gt;</span>
-                <span class="text-slate-600 font-medium">Tambah Lowongan</span>
+  <x-ui.page-header
+    title="Publikasikan Lowongan Magang Industri"
+    description="Buat posting lowongan baru dari mitra DU/DI untuk penyaluran siswa lulusan vokasi BLK."
+  >
+    <x-slot:breadcrumb>
+      <x-ui.breadcrumb>
+        <x-ui.breadcrumb-list>
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-link href="{{ route('admin-blk.index') }}">Beranda</x-ui.breadcrumb-link>
+          </x-ui.breadcrumb-item>
+          <x-ui.breadcrumb-separator />
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-link href="{{ route('lowongan.index') }}">Lowongan Magang</x-ui.breadcrumb-link>
+          </x-ui.breadcrumb-item>
+          <x-ui.breadcrumb-separator />
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-page>Tambah Lowongan</x-ui.breadcrumb-page>
+          </x-ui.breadcrumb-item>
+        </x-ui.breadcrumb-list>
+      </x-ui.breadcrumb>
+    </x-slot:breadcrumb>
+
+    <x-slot:actions>
+      <x-ui.button href="{{ route('lowongan.index') }}" variant="outline">
+        <x-lucide-arrow-left />
+        Kembali ke Daftar
+      </x-ui.button>
+    </x-slot:actions>
+  </x-ui.page-header>
+
+  @if ($errors->any())
+    <x-ui.alert tone="danger">
+      <x-lucide-circle-alert />
+      <x-ui.alert-title>Mohon perbaiki beberapa kesalahan berikut:</x-ui.alert-title>
+      <x-ui.alert-description>
+        <ul class="list-inside list-disc space-y-1">
+          @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+          @endforeach
+        </ul>
+      </x-ui.alert-description>
+    </x-ui.alert>
+  @endif
+
+  <form action="{{ route('lowongan.store') }}" method="POST" enctype="multipart/form-data"
+    class="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
+    @csrf
+
+    <div class="space-y-6 lg:col-span-2">
+      <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+          <div class="flex items-center gap-3">
+            <span class="grid size-9 shrink-0 place-items-center rounded-lg bg-accent text-accent-foreground">
+              <x-lucide-briefcase class="size-4" />
+            </span>
+            <x-ui.card-title class="text-base font-bold">Informasi Posisi & Perusahaan</x-ui.card-title>
+          </div>
+        </x-ui.card-header>
+
+        <x-ui.card-content class="space-y-5">
+          <div class="flex items-center gap-3 rounded-lg border border-border bg-accent/40 p-3.5">
+            <span class="grid size-8 shrink-0 place-items-center rounded-lg bg-primary text-xs font-bold uppercase text-primary-foreground">
+              {{ strtoupper(substr($mitra->nama_perusahaan ?? 'M', 0, 2)) }}
+            </span>
+            <div>
+              <div class="text-xs font-medium text-muted-foreground">Perusahaan Penerbit Lowongan</div>
+              <div class="text-xs font-bold text-foreground">
+                {{ $mitra->nama_perusahaan ?? '-' }} ({{ $mitra->bidang_usaha ?? 'Mitra DU/DI' }})
+              </div>
             </div>
-            <h1 class="text-xl font-black text-slate-900 tracking-tight">Publikasikan Lowongan Magang Industri</h1>
-            <p class="text-xs text-slate-500 mt-0.5">Buat posting lowongan baru dari mitra DU/DI untuk penyaluran siswa
-                lulusan vokasi BLK.</p>
-        </div>
-        <a href="{{ route('lowongan.index') }}"
-            class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-            <i data-lucide="arrow-left" class="w-4 h-4"></i> Kembali ke Daftar
-        </a>
+          </div>
+
+          <x-ui.field data-invalid="{{ $errors->has('judul_lowongan') ? 'true' : 'false' }}">
+            <x-ui.field-label for="judul_lowongan">Judul Posisi Lowongan <span class="text-destructive">*</span></x-ui.field-label>
+            <x-ui.input
+              id="judul_lowongan"
+              name="judul_lowongan"
+              type="text"
+              :value="old('judul_lowongan')"
+              placeholder="Contoh: Teknisi Mesin CNC / Staff Administrasi Gudang"
+            />
+            <x-ui.field-error :messages="$errors->get('judul_lowongan')" />
+          </x-ui.field>
+
+          <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <x-ui.field data-invalid="{{ $errors->has('lokasi') ? 'true' : 'false' }}">
+              <x-ui.field-label for="lokasi">Lokasi Penempatan</x-ui.field-label>
+              <x-ui.input
+                id="lokasi"
+                name="lokasi"
+                type="text"
+                :value="old('lokasi')"
+                placeholder="Contoh: Bandung, Jawa Barat"
+              />
+              <x-ui.field-error :messages="$errors->get('lokasi')" />
+            </x-ui.field>
+
+            <x-ui.field data-invalid="{{ $errors->has('tanggal_posting') ? 'true' : 'false' }}">
+              <x-ui.field-label for="tanggal_posting">Tanggal Posting</x-ui.field-label>
+              <x-ui.input
+                id="tanggal_posting"
+                name="tanggal_posting"
+                type="date"
+                min="{{ date('Y-m-d') }}"
+                :value="old('tanggal_posting', date('Y-m-d'))"
+              />
+              <x-ui.field-error :messages="$errors->get('tanggal_posting')" />
+            </x-ui.field>
+          </div>
+
+          <x-ui.field data-invalid="{{ $errors->has('status') ? 'true' : 'false' }}">
+            <x-ui.field-label for="status">Status Publikasi <span class="text-destructive">*</span></x-ui.field-label>
+            <x-ui.select name="status" id="status" native class="w-full" required>
+              <option value="aktif" @selected(old('status', 'aktif') == 'aktif')>Aktif (Langsung Dipublikasikan)</option>
+              <option value="draft" @selected(old('status') == 'draft')>Draft (Belum Dipublikasikan)</option>
+              <option value="ditutup" @selected(old('status') == 'ditutup')>Ditutup (Tidak Menerima Pendaftar)</option>
+            </x-ui.select>
+            <x-ui.field-error :messages="$errors->get('status')" />
+          </x-ui.field>
+
+          <x-ui.field data-invalid="{{ $errors->has('deskripsi') ? 'true' : 'false' }}">
+            <x-ui.field-label for="deskripsi">Deskripsi Pekerjaan & Tanggung Jawab</x-ui.field-label>
+            <x-ui.textarea
+              id="deskripsi"
+              name="deskripsi"
+              rows="4"
+              placeholder="Jelaskan peran, tanggung jawab, dan manfaat magang di perusahaan ini..."
+            >{{ old('deskripsi') }}</x-ui.textarea>
+            <x-ui.field-error :messages="$errors->get('deskripsi')" />
+          </x-ui.field>
+
+          <x-ui.field data-invalid="{{ $errors->has('kualifikasi') ? 'true' : 'false' }}">
+            <x-ui.field-label for="kualifikasi">Kualifikasi & Persyaratan Peserta</x-ui.field-label>
+            <x-ui.textarea
+              id="kualifikasi"
+              name="kualifikasi"
+              rows="4"
+              placeholder="Contoh: Minimal lulus program las, mampu membaca gambar teknik, sehat jasmani/rohani..."
+            >{{ old('kualifikasi') }}</x-ui.textarea>
+            <x-ui.field-error :messages="$errors->get('kualifikasi')" />
+          </x-ui.field>
+        </x-ui.card-content>
+      </x-ui.card>
     </div>
 
-    @if ($errors->any())
-        <div class="bg-rose-50 border border-rose-200 text-rose-800 px-4 py-3 rounded-xl text-xs space-y-1 shadow-sm">
-            <div class="font-bold flex items-center gap-1.5"><i data-lucide="alert-circle"
-                    class="w-4 h-4 text-rose-600"></i> Mohon perbaiki kesalahan berikut:</div>
-            <ul class="list-disc list-inside space-y-0.5 text-rose-700 pl-4">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+    <div class="space-y-6">
+      <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+          <x-ui.card-title class="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted-foreground">
+            <x-lucide-image class="size-4 text-primary" />
+            Foto Lowongan
+          </x-ui.card-title>
+        </x-ui.card-header>
 
-    <form action="{{ route('lowongan.store') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        @csrf
+        <x-ui.card-content class="space-y-3">
+          <label for="gambar" id="dropzone"
+            class="relative flex h-44 w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-2 border-dashed border-border bg-muted/40 transition hover:border-primary hover:bg-accent/40">
+            <span id="upload-placeholder" class="flex flex-col items-center gap-2 px-4 text-center">
+              <x-lucide-upload-cloud class="size-7 text-muted-foreground" />
+              <span class="text-xs font-semibold text-foreground">Klik untuk upload foto</span>
+              <span class="text-[11px] text-muted-foreground">JPG, PNG, WEBP. Maks 2 MB.</span>
+            </span>
+            <img id="upload-preview" src="" alt="Preview foto" class="absolute inset-0 hidden size-full object-cover" />
+            <input type="file" name="gambar" id="gambar" accept="image/png,image/jpeg,image/webp" class="hidden" />
+          </label>
 
-        <div class="lg:col-span-2 space-y-6">
-            <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 space-y-5">
-                <div class="border-b border-slate-100 pb-3 flex items-center gap-2">
-                    <div class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-800 flex items-center justify-center">
-                        <i data-lucide="briefcase" class="w-4 h-4"></i>
-                    </div>
-                    <h2 class="font-bold text-slate-800 text-sm">Informasi Posisi & Perusahaan</h2>
-                </div>
+          <button type="button" id="remove-image"
+            class="hidden w-full rounded-lg bg-destructive/10 py-2 text-xs font-semibold text-destructive transition hover:bg-destructive/15">
+            Hapus gambar
+          </button>
 
-                <div class="space-y-4">
-                    <!-- Info Mitra Yang Login -->
-                    <div class="p-3.5 bg-emerald-50/60 border border-emerald-100 rounded-lg flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-center shrink-0">
-                            {{ strtoupper(substr($mitra->nama_perusahaan ?? 'M', 0, 2)) }}
-                        </div>
-                        <div>
-                            <div class="text-[11px] text-slate-400 font-medium">Perusahaan Penerbit Lowongan</div>
-                            <div class="text-xs font-bold text-slate-800">{{ $mitra->nama_perusahaan ?? '-' }} ({{ $mitra->bidang_usaha ?? 'Mitra DU/DI' }})</div>
-                        </div>
-                    </div>
+          <x-ui.field-error :messages="$errors->get('gambar')" />
+        </x-ui.card-content>
+      </x-ui.card>
 
-                    <div>
-                        <label for="judul_lowongan" class="block text-xs font-semibold text-slate-700 mb-1.5">
-                            Judul Posisi Lowongan <span class="text-rose-500">*</span>
-                        </label>
-                        <input type="text" name="judul_lowongan" id="judul_lowongan" value="{{ old('judul_lowongan') }}"
-                            placeholder="Contoh: Teknisi Mesin CNC / Staff Administrasi Gudang"
-                            class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('judul_lowongan') border-rose-400 bg-rose-50/50 @enderror" />
-                        @error('judul_lowongan')
-                            <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
+      <x-ui.card variant="sectioned">
+        <x-ui.card-header class="border-b">
+          <x-ui.card-title class="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted-foreground">
+            <x-lucide-info class="size-4 text-primary" />
+            Panduan Lowongan
+          </x-ui.card-title>
+        </x-ui.card-header>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label for="lokasi" class="block text-xs font-semibold text-slate-700 mb-1.5">Lokasi
-                                Penempatan</label>
-                            <input type="text" name="lokasi" id="lokasi" value="{{ old('lokasi') }}"
-                                placeholder="Contoh: Bandung, Jawa Barat"
-                                class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('lokasi') border-rose-400 bg-rose-50/50 @enderror" />
-                            @error('lokasi')
-                                <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
+        <x-ui.card-content class="space-y-3">
+          <p class="text-xs leading-relaxed text-muted-foreground">
+            Pastikan mitra DU/DI sudah terdaftar di sistem sebelum membuka lowongan. Lowongan akan langsung tampil
+            di portal jika statusnya <strong class="text-foreground">Aktif</strong>.
+          </p>
 
-                        <div>
-                            <label for="tanggal_posting" class="block text-xs font-semibold text-slate-700 mb-1.5">Tanggal
-                                Posting</label>
-                            <input type="date" min="{{ date('Y-m-d') }}" name="tanggal_posting" id="tanggal_posting"
-                                value="{{ old('tanggal_posting', date('Y-m-d')) }}"
-                                class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('tanggal_posting') border-rose-400 bg-rose-50/50 @enderror" />
-                            @error('tanggal_posting')
-                                <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
+          <x-ui.button type="submit" size="lg" class="w-full bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
+            <x-lucide-save />
+            Publikasikan Lowongan
+          </x-ui.button>
 
-                    <div>
-                        <label for="status" class="block text-xs font-semibold text-slate-700 mb-1.5">Status Publikasi
-                            <span class="text-rose-500">*</span></label>
-                        <select name="status" id="status" required
-                            class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('status') border-rose-400 bg-rose-50/50 @enderror">
-                            <option value="aktif" {{ old('status', 'aktif') == 'aktif' ? 'selected' : '' }}>Aktif
-                                (Langsung Dipublikasikan)</option>
-                            <option value="draft" {{ old('status') == 'draft' ? 'selected' : '' }}>Draft (Belum
-                                Dipublikasikan)</option>
-                            <option value="ditutup" {{ old('status') == 'ditutup' ? 'selected' : '' }}>Ditutup (Tidak
-                                Menerima Pendaftar)</option>
-                        </select>
-                        @error('status')
-                            <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="deskripsi" class="block text-xs font-semibold text-slate-700 mb-1.5">Deskripsi Pekerjaan
-                            & Tanggung Jawab</label>
-                        <textarea name="deskripsi" id="deskripsi" rows="4"
-                            placeholder="Jelaskan peran, tanggung jawab, dan manfaat magang di perusahaan ini..."
-                            class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('deskripsi') border-rose-400 bg-rose-50/50 @enderror">{{ old('deskripsi') }}</textarea>
-                        @error('deskripsi')
-                            <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="kualifikasi" class="block text-xs font-semibold text-slate-700 mb-1.5">Kualifikasi &
-                            Persyaratan Peserta</label>
-                        <textarea name="kualifikasi" id="kualifikasi" rows="4"
-                            placeholder="Contoh: Minimal lulus program las, mampu membaca gambar teknik, sehat jasmani/rohani..."
-                            class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-700 @error('kualifikasi') border-rose-400 bg-rose-50/50 @enderror">{{ old('kualifikasi') }}</textarea>
-                        @error('kualifikasi')
-                            <p class="text-rose-600 text-[11px] mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Right Column -->
-        <div class="space-y-6">
-            <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
-                <h3 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100 flex items-center gap-2">
-                    <i data-lucide="image" class="w-4 h-4 text-emerald-700"></i> Foto Lowongan
-                </h3>
-
-                <label for="gambar" id="dropzone"
-                    class="relative flex flex-col items-center justify-center w-full h-44 border-2 border-dashed border-slate-200 hover:border-emerald-500 bg-slate-50 hover:bg-emerald-50/40 rounded-lg cursor-pointer overflow-hidden transition @error('gambar') border-rose-400 @enderror">
-                    <div id="upload-placeholder" class="flex flex-col items-center gap-2 text-center px-4">
-                        <i data-lucide="upload-cloud" class="w-7 h-7 text-slate-400"></i>
-                        <p class="text-xs font-semibold text-slate-600">Klik untuk upload foto</p>
-                        <p class="text-[11px] text-slate-400">JPG, PNG, WEBP. Maks 2 MB.</p>
-                    </div>
-                    <img id="upload-preview" src="" alt="Preview foto" class="hidden absolute inset-0 w-full h-full object-cover" />
-                    <input type="file" name="gambar" id="gambar" accept="image/png,image/jpeg,image/webp" class="hidden" />
-                </label>
-
-                <button type="button" id="remove-image"
-                    class="hidden w-full text-xs font-semibold text-rose-600 hover:text-rose-700 py-2 rounded-lg bg-rose-50 hover:bg-rose-100 transition">
-                    Hapus gambar
-                </button>
-                @error('gambar')
-                    <p class="text-rose-600 text-[11px]">{{ $message }}</p>
-                @enderror
-            </div>
-            <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
-                <h3 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100 flex items-center gap-2">
-                    <i data-lucide="info" class="w-4 h-4 text-emerald-700"></i> Panduan Lowongan
-                </h3>
-                <p class="text-xs text-slate-600 leading-relaxed">
-                    Pastikan mitra DU/DI sudah terdaftar di sistem sebelum membuka lowongan. Lowongan akan langsung tampil
-                    di portal jika statusnya <strong>Aktif</strong>.
-                </p>
-                <div class="pt-2 space-y-2">
-                    <button type="submit"
-                        class="w-full bg-emerald-900 hover:bg-emerald-950 text-white font-semibold text-xs py-2.5 px-4 rounded-lg shadow-sm flex items-center justify-center gap-2 transition">
-                        <i data-lucide="save" class="w-4 h-4"></i> Publikasikan Lowongan
-                    </button>
-                    <a href="{{ route('lowongan.index') }}"
-                        class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition">Batal</a>
-                </div>
-            </div>
-        </div>
-    </form>
-    @push('scripts')
-<script>
-    const input = document.getElementById('gambar');
-    const preview = document.getElementById('upload-preview');
-    const placeholder = document.getElementById('upload-placeholder');
-    const removeBtn = document.getElementById('remove-image');
-
-    input.addEventListener('change', () => {
-        const file = input.files[0];
-        if (!file) return;
-        if (file.size > 2 * 1024 * 1024) {
-            alert('Ukuran gambar maksimal 2 MB.');
-            input.value = '';
-            return;
-        }
-        preview.src = URL.createObjectURL(file);
-        preview.classList.remove('hidden');
-        placeholder.classList.add('hidden');
-        removeBtn.classList.remove('hidden');
-    });
-
-    removeBtn.addEventListener('click', () => {
-        input.value = '';
-        preview.src = '';
-        preview.classList.add('hidden');
-        placeholder.classList.remove('hidden');
-        removeBtn.classList.add('hidden');
-    });
-</script>
-@endpush
+          <x-ui.button href="{{ route('lowongan.index') }}" variant="outline" size="lg" class="w-full">
+            Batal
+          </x-ui.button>
+        </x-ui.card-content>
+      </x-ui.card>
+    </div>
+  </form>
 @endsection
+
+@push('scripts')
+  <script>
+      const gambarInput = document.getElementById('gambar');
+      const gambarPreview = document.getElementById('upload-preview');
+      const gambarPlaceholder = document.getElementById('upload-placeholder');
+      const gambarRemove = document.getElementById('remove-image');
+
+      gambarInput?.addEventListener('change', () => {
+          const file = gambarInput.files[0];
+          if (!file) return;
+          if (file.size > 2 * 1024 * 1024) {
+              alert('Ukuran gambar maksimal 2 MB.');
+              gambarInput.value = '';
+              return;
+          }
+          gambarPreview.src = URL.createObjectURL(file);
+          gambarPreview.classList.remove('hidden');
+          gambarPlaceholder.classList.add('hidden');
+          gambarRemove.classList.remove('hidden');
+      });
+
+      gambarRemove?.addEventListener('click', () => {
+          gambarInput.value = '';
+          gambarPreview.src = '';
+          gambarPreview.classList.add('hidden');
+          gambarPlaceholder.classList.remove('hidden');
+          gambarRemove.classList.add('hidden');
+      });
+  </script>
+@endpush

@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\DaftarLowongan;
-use App\Models\LamaranLowongan;
 use App\Models\Mitra;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Storage;
 
 class DaftarLowonganController extends Controller
 {
@@ -50,8 +49,8 @@ class DaftarLowonganController extends Controller
             $baseMetricsQuery->where('id_mitra', $mitra ? $mitra->id_mitra : null);
         }
 
-        $countAktif   = (clone $baseMetricsQuery)->where('status', 'aktif')->count();
-        $countDraft   = (clone $baseMetricsQuery)->where('status', 'draft')->count();
+        $countAktif = (clone $baseMetricsQuery)->where('status', 'aktif')->count();
+        $countDraft = (clone $baseMetricsQuery)->where('status', 'draft')->count();
         $countDitutup = (clone $baseMetricsQuery)->where('status', 'ditutup')->count();
 
         $lowongans = $query->latest('id_lowongan')
@@ -73,7 +72,7 @@ class DaftarLowonganController extends Controller
         }
 
         $mitra = Auth::user()->mitra;
-        if (!$mitra) {
+        if (! $mitra) {
             return redirect()->route('dashboard')->with('error', 'Profil mitra Anda belum terdaftar.');
         }
 
@@ -87,36 +86,36 @@ class DaftarLowonganController extends Controller
         }
 
         $mitra = Auth::user()->mitra;
-        if (!$mitra) {
+        if (! $mitra) {
             return redirect()->back()->with('error', 'Profil mitra tidak ditemukan.');
         }
 
         $validated = $request->validate([
-            'judul_lowongan'  => [
+            'judul_lowongan' => [
                 'required', 'string', 'max:100',
                 'regex:/^[a-zA-Z\s]+$/',
                 Rule::unique('daftar_lowongan', 'judul_lowongan')->where(function ($query) use ($mitra) {
                     return $query->where('id_mitra', $mitra->id_mitra);
                 }),
             ],
-            'lokasi'          => 'required|string|max:255',
-            'deskripsi'       => 'required|string',
-            'kualifikasi'     => 'required|string',
+            'lokasi' => 'required|string|max:255',
+            'deskripsi' => 'required|string',
+            'kualifikasi' => 'required|string',
             'tanggal_posting' => 'nullable|date',
-            'status'          => 'required|in:aktif,draft,ditutup',
-            'gambar'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'status' => 'required|in:aktif,draft,ditutup',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ], [
             'judul_lowongan.required' => 'Judul posisi lowongan wajib diisi.',
-            'judul_lowongan.unique'   => 'Perusahaan Anda sudah memiliki lowongan dengan judul tersebut.',
-            'judul_lowongan.max'      => 'Judul posisi lowongan maksimal 100 karakter.',
-            'lokasi.required'         => 'Lokasi penempatan wajib diisi.',
-            'deskripsi.required'      => 'Deskripsi pekerjaan wajib diisi.',
-            'kualifikasi.required'    => 'Kualifikasi & persyaratan wajib diisi.',
-            'status.in'               => 'Status lowongan harus aktif, draft, atau ditutup.',
-            'judul_lowongan.regex'    => 'Judul lowongan tidak boleh mengandung simbol atau angka.',
-            'gambar.image'            => 'File harus berupa gambar.',
-            'gambar.mimes'            => 'Format gambar harus JPG, PNG, atau WEBP.',
-            'gambar.max'              => 'Ukuran gambar maksimal 2 MB.',
+            'judul_lowongan.unique' => 'Perusahaan Anda sudah memiliki lowongan dengan judul tersebut.',
+            'judul_lowongan.max' => 'Judul posisi lowongan maksimal 100 karakter.',
+            'lokasi.required' => 'Lokasi penempatan wajib diisi.',
+            'deskripsi.required' => 'Deskripsi pekerjaan wajib diisi.',
+            'kualifikasi.required' => 'Kualifikasi & persyaratan wajib diisi.',
+            'status.in' => 'Status lowongan harus aktif, draft, atau ditutup.',
+            'judul_lowongan.regex' => 'Judul lowongan tidak boleh mengandung simbol atau angka.',
+            'gambar.image' => 'File harus berupa gambar.',
+            'gambar.mimes' => 'Format gambar harus JPG, PNG, atau WEBP.',
+            'gambar.max' => 'Ukuran gambar maksimal 2 MB.',
         ]);
 
         $validated['id_mitra'] = $mitra->id_mitra;
@@ -127,14 +126,16 @@ class DaftarLowonganController extends Controller
             $validated['gambar'] = $request->file('gambar')->store('lowongan', 'public');
         }
         DaftarLowongan::create($validated);
+
         return redirect()->route('lowongan.index')->with('success', 'Lowongan magang industri berhasil dipublikasikan.');
     }
 
     public function show(int $id): View
-{
-    $lowongan = DaftarLowongan::with('mitra.user')->findOrFail($id);
-    return view('lowongan.show', compact('lowongan'));
-}
+    {
+        $lowongan = DaftarLowongan::with('mitra.user')->findOrFail($id);
+
+        return view('lowongan.show', compact('lowongan'));
+    }
 
     public function edit(int $id)
     {
@@ -145,6 +146,7 @@ class DaftarLowonganController extends Controller
         }
 
         $mitra = $lowongan->mitra;
+
         return view('lowongan.edit', compact('lowongan', 'mitra'));
     }
 
@@ -157,7 +159,7 @@ class DaftarLowonganController extends Controller
         }
 
         $validated = $request->validate([
-            'judul_lowongan'  => [
+            'judul_lowongan' => [
                 'required', 'string', 'max:255',
                 'regex:/^[a-zA-Z\s]+$/',
                 Rule::unique('daftar_lowongan', 'judul_lowongan')
@@ -166,23 +168,23 @@ class DaftarLowonganController extends Controller
                     })
                     ->ignore($lowongan->id_lowongan, 'id_lowongan'),
             ],
-            'lokasi'          => 'required|string|max:255',
-            'deskripsi'       => 'required|string',
-            'kualifikasi'     => 'required|string',
+            'lokasi' => 'required|string|max:255',
+            'deskripsi' => 'required|string',
+            'kualifikasi' => 'required|string',
             'tanggal_posting' => 'nullable|date',
-            'status'          => 'required|in:aktif,draft,ditutup',
-            'gambar'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'status' => 'required|in:aktif,draft,ditutup',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ], [
             'judul_lowongan.required' => 'Judul posisi lowongan wajib diisi.',
-            'judul_lowongan.unique'   => 'Perusahaan Anda sudah memiliki lowongan lain dengan judul tersebut.',
-            'lokasi.required'         => 'Lokasi penempatan wajib diisi.',
-            'deskripsi.required'      => 'Deskripsi pekerjaan wajib diisi.',
-            'kualifikasi.required'    => 'Kualifikasi & persyaratan wajib diisi.',
-            'status.in'               => 'Status lowongan harus aktif, draft, atau ditutup.',
-            'judul_lowongan.regex'    => 'Judul lowongan hanya boleh berisi huruf dan spasi.',
-            'gambar.image'            => 'File harus berupa gambar.',
-            'gambar.mimes'            => 'Format gambar harus JPG, PNG, atau WEBP.',
-            'gambar.max'              => 'Ukuran gambar maksimal 2 MB.',
+            'judul_lowongan.unique' => 'Perusahaan Anda sudah memiliki lowongan lain dengan judul tersebut.',
+            'lokasi.required' => 'Lokasi penempatan wajib diisi.',
+            'deskripsi.required' => 'Deskripsi pekerjaan wajib diisi.',
+            'kualifikasi.required' => 'Kualifikasi & persyaratan wajib diisi.',
+            'status.in' => 'Status lowongan harus aktif, draft, atau ditutup.',
+            'judul_lowongan.regex' => 'Judul lowongan hanya boleh berisi huruf dan spasi.',
+            'gambar.image' => 'File harus berupa gambar.',
+            'gambar.mimes' => 'Format gambar harus JPG, PNG, atau WEBP.',
+            'gambar.max' => 'Ukuran gambar maksimal 2 MB.',
         ]);
 
         if ($request->hasFile('gambar')) {
@@ -195,6 +197,7 @@ class DaftarLowonganController extends Controller
             $validated['gambar'] = null;
         }
         $lowongan->update($validated);
+
         return redirect()->route('lowongan.index')->with('success', 'Lowongan magang industri berhasil diperbarui.');
     }
 
@@ -209,6 +212,7 @@ class DaftarLowonganController extends Controller
             Storage::disk('public')->delete($lowongan->gambar);
         }
         $lowongan->delete();
+
         return redirect()->route('lowongan.index')->with('success', 'Lowongan magang industri berhasil dihapus.');
     }
 }

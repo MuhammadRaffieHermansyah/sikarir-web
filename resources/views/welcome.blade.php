@@ -3,370 +3,426 @@
 @section('title', 'siKarir — Skill baru, peluang baru | UPT BLK Jember')
 
 @section('content')
-@php
+  @php
     $pelatihans = $pelatihans ?? [];
     $lowongans = $lowongans ?? [];
     $berita = $berita ?? [];
     $alumni = $alumni ?? [];
-@endphp
+  @endphp
 
-<style>
-    .sikarir-home {
-        --sk-ink: #12372e;
-        --sk-green: #0d4939;
-        --sk-lime: #d8f36a;
-        --sk-paper: #f7f8f3;
-        --sk-line: #e3e8df;
-        --sk-hero-bg: url('/images/hero-image.webp');
-        background: var(--sk-paper);
-        color: var(--sk-ink);
-    }
-    .sikarir-home * { box-sizing: border-box; }
-    .sk-wrap { width: min(1160px, calc(100% - 48px)); margin-inline: auto; }
-    .sk-eyebrow { display: inline-flex; align-items: center; gap: 9px; color: #47705d; font-size: 11px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
-    .sk-eyebrow::before { width: 8px; height: 8px; border-radius: 99px; background: #a7c748; content: ''; }
-    .sk-title { margin: 10px 0 0; color: #14382f; font-size: clamp(32px, 4.3vw, 54px); font-weight: 800; letter-spacing: -.055em; line-height: .99; }
-    .sk-copy { color: #61736b; font-size: 15px; line-height: 1.75; }
-    .sk-hero { position: relative; isolation: isolate; display: flex; min-height: min(760px, calc(100vh - 72px)); align-items: center; overflow: hidden; background-color: #083d30; background-image: linear-gradient(90deg, rgba(4, 40, 31, .97) 0%, rgba(4, 40, 31, .9) 40%, rgba(4, 40, 31, .25) 76%, rgba(4, 40, 31, .08) 100%), var(--sk-hero-bg, url('/images/hero-image.webp')); background-position: center right; background-size: cover; }
-    .sk-hero::after { position: absolute; z-index: -1; right: 6%; bottom: 9%; width: 100px; height: 100px; border: 1px solid rgba(216, 243, 106, .48); border-radius: 50%; content: ''; }
-    .sk-hero-inner { width: min(1160px, calc(100% - 48px)); margin: 0 auto; padding: 76px 0 104px; }
-    .sk-hero .sk-eyebrow { color: #d8f36a; }
-    .sk-hero h1 { max-width: 790px; margin: 22px 0 0; color: #fff; font-size: clamp(48px, 8.2vw, 104px); font-weight: 800; letter-spacing: -.075em; line-height: .9; }
-    .sk-hero h1 em { color: var(--sk-lime); font-style: normal; }
-    .sk-hero p { max-width: 570px; margin: 24px 0 0; color: rgba(239, 247, 239, .83); font-size: clamp(15px, 1.5vw, 18px); line-height: 1.7; }
-    .sk-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
-    .sk-btn { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; gap: 10px; padding: 0 20px; border: 1px solid transparent; border-radius: 999px; font-size: 13px; font-weight: 800; text-decoration: none; transition: transform .18s ease, background-color .18s ease, color .18s ease, border-color .18s ease; }
-    .sk-btn:hover { transform: translateY(-2px); }
-    .sk-btn:active { transform: translateY(1px); }
-    .sk-btn-lime { background: var(--sk-lime); color: #183a2b; }
-    .sk-btn-lime:hover { background: #e5ff83; }
-    .sk-btn-glass { border-color: rgba(255,255,255,.35); color: #fff; background: rgba(255,255,255,.08); }
-    .sk-btn-glass:hover { background: rgba(255,255,255,.16); }
-    .sk-search { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: end; margin-top: -44px; padding: 16px; border: 1px solid #e5e9e3; border-radius: 22px; background: #fff; box-shadow: 0 18px 50px rgba(20, 49, 39, .12); }
-    .sk-search label { display: block; margin: 0 0 7px 4px; color: #65766c; font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
-    .sk-search-field { display: flex; min-height: 50px; align-items: center; gap: 10px; padding: 0 14px; border: 1px solid #e4e9e2; border-radius: 14px; background: #f8faf6; }
-    .sk-search-field i { color: #718579; }
-    .sk-search input { width: 100%; border: 0; outline: 0; background: transparent; color: #183c30; font-size: 14px; }
-    .sk-search input::placeholder { color: #96a39a; }
-    .sk-search .sk-btn { min-height: 50px; border-radius: 14px; background: var(--sk-green); color: white; }
-    .sk-search .sk-btn:hover { background: #08392d; }
-    .sk-stats { padding: 36px 0 56px; }
-    .sk-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); overflow: hidden; border: 1px solid var(--sk-line); border-radius: 20px; background: #fff; }
-    .sk-stat { padding: 23px 24px; border-right: 1px solid var(--sk-line); }
-    .sk-stat:last-child { border-right: 0; }
-    .sk-stat strong { display: block; color: var(--sk-ink); font-size: clamp(24px, 3vw, 34px); font-weight: 800; letter-spacing: -.06em; }
-    .sk-stat span { display: block; margin-top: 3px; color: #708077; font-size: 12px; line-height: 1.5; }
-    .sk-section { padding: 78px 0; }
-    .sk-section-soft { border-block: 1px solid var(--sk-line); background: #f0f3ec; }
-    .sk-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 30px; }
-    .sk-head .sk-title { max-width: 650px; }
-    .sk-link { display: inline-flex; align-items: center; gap: 8px; color: #28634e; font-size: 13px; font-weight: 800; text-decoration: none; }
-    .sk-link:hover { color: #102f26; }
-    .sk-grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-    .sk-service { min-height: 205px; padding: 24px; border: 1px solid var(--sk-line); border-radius: 20px; background: #fff; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
-    .sk-service:hover, .sk-program:hover, .sk-job:hover { transform: translateY(-3px); border-color: #c3d5a5; box-shadow: 0 16px 30px rgba(18,55,46,.08); }
-    .sk-icon { display: grid; width: 44px; height: 44px; place-items: center; border-radius: 14px; background: #eff5e6; color: #28634e; }
-    .sk-service h3 { margin: 21px 0 7px; color: #183b30; font-size: 17px; font-weight: 800; letter-spacing: -.03em; }
-    .sk-service p { margin: 0; color: #718077; font-size: 13px; line-height: 1.7; }
-    .sk-program-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-    .sk-program { display: flex; min-width: 0; flex-direction: column; overflow: hidden; border: 1px solid var(--sk-line); border-radius: 20px; background: #fff; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
-    .sk-program-media { position: relative; height: 168px; overflow: hidden; background: #e8eee4; }
-    .sk-program-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s ease; }
-    .sk-program:hover .sk-program-media img { transform: scale(1.03); }
-    .sk-chip { position: absolute; top: 12px; left: 12px; padding: 7px 10px; border: 1px solid rgba(255,255,255,.6); border-radius: 999px; background: rgba(15, 56, 43, .85); color: #fff; font-size: 10px; font-weight: 800; backdrop-filter: blur(8px); }
-    .sk-program-body { display: flex; flex: 1; flex-direction: column; padding: 18px; }
-    .sk-program-body .sk-category { color: #56806a; font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
-    .sk-program-body h3 { margin: 8px 0; color: #183b30; font-size: 16px; font-weight: 800; line-height: 1.35; }
-    .sk-program-body p { display: -webkit-box; overflow: hidden; margin: 0; color: #718077; font-size: 12px; line-height: 1.65; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; }
-    .sk-card-actions { display: flex; gap: 8px; margin-top: auto; padding-top: 18px; }
-    .sk-card-actions a { display: inline-flex; min-height: 40px; flex: 1; align-items: center; justify-content: center; border: 1px solid #dfe6dc; border-radius: 12px; color: #305745; font-size: 11px; font-weight: 800; text-decoration: none; }
-    .sk-card-actions a:last-child { border-color: var(--sk-green); background: var(--sk-green); color: #fff; }
-    .sk-card-actions a:hover { border-color: #94aa8a; }
-    .sk-job-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-    .sk-job-media { height: 140px; margin: -22px -22px 16px; overflow: hidden; border-radius: 20px 20px 0 0; background: #e8eee4; }
-    .sk-job-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s ease; }
-    .sk-job:hover .sk-job-media img { transform: scale(1.03); }
-    .sk-job { display: flex; min-height: 235px; flex-direction: column; padding: 22px; border: 1px solid var(--sk-line); border-radius: 20px; background: #fff; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
-    .sk-job-top { display: flex; align-items: start; justify-content: space-between; gap: 12px; }
-    .sk-job h3 { margin: 0; color: #183b30; font-size: 17px; font-weight: 800; line-height: 1.35; }
-    .sk-status { flex: none; padding: 6px 9px; border-radius: 99px; background: #eff5e6; color: #376749; font-size: 10px; font-weight: 800; }
-    .sk-job-company, .sk-job-location { display: flex; align-items: center; gap: 8px; margin: 13px 0 0; color: #75847b; font-size: 12px; }
-    .sk-job-desc { margin: 16px 0; color: #718077; font-size: 12px; line-height: 1.7; }
-    .sk-job-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 14px; border-top: 1px solid #edf0eb; }
-    .sk-job-foot small { color: #8a978f; font-size: 10px; }
-    .sk-job-foot strong { display: block; margin-top: 4px; color: #345141; font-size: 12px; }
-    .sk-job-foot a { padding: 10px 14px; border-radius: 12px; background: var(--sk-green); color: #fff; font-size: 11px; font-weight: 800; text-decoration: none; }
-        .sk-job-meta { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; color: #75847b; font-size: 11px; }
-    .sk-job-meta span { display: flex; align-items: center; gap: 7px; }
-    .sk-more { display: inline-flex; width: 100%; min-height: 40px; align-items: center; justify-content: center; gap: 6px; border: 1px solid var(--sk-green); border-radius: 12px; background: var(--sk-green); color: #fff; font: inherit; font-size: 11px; font-weight: 800; cursor: pointer; transition: background .2s ease; }
-    .sk-more:hover { background: #08392d; }
+  {{-- Hero --}}
+  <section class="relative isolate overflow-hidden bg-primary text-primary-foreground">
+    <img
+      src="{{ asset('images/hero-image.webp') }}"
+      alt=""
+      class="absolute inset-0 size-full object-cover object-center opacity-40"
+    >
+    <div class="absolute inset-0 bg-gradient-to-r from-[#04281f]/95 via-[#04281f]/85 to-[#04281f]/25"></div>
+    <div class="pointer-events-none absolute -bottom-24 right-[6%] size-32 rounded-full border border-sikarir-lime/40"></div>
 
-    .sk-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin-top: 38px; }
-    .sk-step { position: relative; padding: 0 24px 0 0; }
-    .sk-step:not(:last-child)::after { position: absolute; top: 22px; left: 50px; width: calc(100% - 64px); height: 1px; background: #cdd9c8; content: ''; }
-    .sk-step-number { position: relative; z-index: 1; display: grid; width: 46px; height: 46px; place-items: center; border: 1px solid #cdd9c8; border-radius: 50%; background: var(--sk-paper); color: #315d47; font-size: 12px; font-weight: 800; }
-    .sk-step h3 { margin: 19px 0 8px; color: #183b30; font-size: 16px; font-weight: 800; }
-    .sk-step p { margin: 0; color: #718077; font-size: 12px; line-height: 1.7; }
-    .sk-story-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 54px; }
-    .sk-story-list { display: grid; gap: 12px; }
-    .sk-story { display: flex; gap: 15px; padding: 13px; border: 1px solid var(--sk-line); border-radius: 17px; background: #fff; }
-    .sk-story img { width: 94px; height: 82px; flex: none; border-radius: 12px; object-fit: cover; }
-    .sk-story h3 { margin: 6px 0; color: #183b30; font-size: 14px; font-weight: 800; line-height: 1.4; }
-    .sk-story p { margin: 0; color: #718077; font-size: 11px; line-height: 1.6; }
-    .sk-story-meta { color: #64816e; font-size: 9px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
-    .sk-alumni { display: grid; gap: 12px; }
-    .sk-quote { padding: 20px; border: 1px solid var(--sk-line); border-radius: 18px; background: #fff; }
-    .sk-quote-person { display: flex; align-items: center; gap: 11px; margin-bottom: 12px; }
-    .sk-quote-person img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; }
-    .sk-quote-person strong { display: block; color: #183b30; font-size: 12px; }
-    .sk-quote-person span { display: block; margin-top: 3px; color: #7e8c83; font-size: 10px; }
-    .sk-quote blockquote { margin: 0; color: #566a5e; font-size: 12px; line-height: 1.75; }
-    .sk-about { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 17px 19px; border-radius: 16px; background: #eaf1df; }
-    .sk-about strong { color: #183b30; font-size: 12px; }
-    .sk-about p { margin: 4px 0 0; color: #718077; font-size: 11px; line-height: 1.55; }
-    .sk-about a { flex: none; color: #28634e; font-size: 11px; font-weight: 800; text-decoration: none; }
-    .sk-cta { padding: 42px; border-radius: 26px; background: #103e32; color: white; }
-    .sk-cta-inner { display: flex; align-items: center; justify-content: space-between; gap: 28px; }
-    .sk-cta h2 { max-width: 580px; margin: 13px 0 0; color: #fff; font-size: clamp(30px, 4vw, 47px); font-weight: 800; letter-spacing: -.06em; line-height: 1; }
-    .sk-cta p { max-width: 570px; margin: 14px 0 0; color: rgba(239,247,239,.76); font-size: 13px; line-height: 1.7; }
-    .sk-empty { grid-column: 1 / -1; padding: 38px 20px; border: 1px dashed #cbd6c8; border-radius: 18px; color: #7d8c81; text-align: center; font-size: 13px; }
-    @media (max-width: 900px) {
-        .sk-program-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .sk-story-grid { gap: 30px; }
-        .sk-cta-inner { align-items: start; flex-direction: column; }
-    }
-    @media (max-width: 640px) {
-        .sk-wrap, .sk-hero-inner { width: min(100% - 36px, 520px); }
-        .sk-hero { min-height: 720px; align-items: start; background-image: linear-gradient(90deg, rgba(4, 40, 31, .93), rgba(4, 40, 31, .72)), var(--sk-hero-bg, url('/images/hero-image.webp')); background-position: 58% center; }
-        .sk-hero-inner { padding: 80px 0 130px; }
-        .sk-hero h1 { font-size: clamp(49px, 14vw, 70px); }
-        .sk-hero::after { right: 9%; bottom: 5%; width: 58px; height: 58px; }
-        .sk-search { grid-template-columns: 1fr; margin-top: -84px; padding: 12px; border-radius: 18px; }
-        .sk-search .sk-btn { width: 100%; }
-        .sk-stats { padding: 28px 0 36px; }
-        .sk-stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        .sk-stat { padding: 17px; border-bottom: 1px solid var(--sk-line); }
-        .sk-stat:nth-child(2) { border-right: 0; }
-        .sk-stat:nth-child(n+3) { border-bottom: 0; }
-        .sk-section { padding: 56px 0; }
-        .sk-head { align-items: start; flex-direction: column; margin-bottom: 22px; }
-        .sk-grid-3, .sk-job-grid { grid-template-columns: 1fr; }
-        .sk-service { min-height: 0; }
-        .sk-program-grid { gap: 12px; }
-        .sk-program-media { height: 130px; }
-        .sk-program-body { padding: 14px; }
-        .sk-program-body h3 { font-size: 14px; }
-        .sk-program-body p { font-size: 11px; }
-        .sk-card-actions { flex-direction: column; padding-top: 13px; }
-        .sk-card-actions a { min-height: 37px; }
-        .sk-steps { grid-template-columns: 1fr; gap: 24px; margin-top: 26px; }
-        .sk-step { display: grid; grid-template-columns: 46px 1fr; column-gap: 15px; padding: 0; }
-        .sk-step:not(:last-child)::after { top: 48px; left: 22px; width: 1px; height: calc(100% - 22px); }
-        .sk-step-number { grid-row: span 2; }
-        .sk-step h3 { margin: 2px 0 5px; }
-        .sk-story-grid { grid-template-columns: 1fr; gap: 38px; }
-        .sk-cta { padding: 26px 21px; border-radius: 20px; }
-        .sk-cta .sk-actions { width: 100%; }
-        .sk-cta .sk-btn { width: 100%; }
-        .sk-story img { width: 82px; height: 76px; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-        .sk-btn, .sk-service, .sk-program, .sk-job, .sk-program-media img { transition: none; }
-        .sk-btn:hover, .sk-service:hover, .sk-program:hover, .sk-job:hover { transform: none; }
-    }
-</style>
+    <div class="site-container relative py-20 md:py-28">
+      <x-ui.badge class="gap-2 border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground">
+        <span class="size-2 rounded-full bg-sikarir-lime"></span>
+        Portal resmi UPT BLK Jember
+      </x-ui.badge>
 
-<div class="sikarir-home">
-    {{-- Hero: portal dan aksi utama --}}
-    <section class="sk-hero" style="--sk-hero-bg: url('{{ asset('images/hero-image.webp') }}');">
-        <div class="sk-hero-inner">
-            <span class="sk-eyebrow">Portal resmi UPT BLK Jember</span>
-            <h1>Skill baru.<br><em>Peluang baru.</em></h1>
-            <p>Temukan pelatihan vokasi, sertifikasi kompetensi, dan peluang kerja yang terhubung dengan industri bersama UPT BLK Jember.</p>
-            <div class="sk-actions">
-                <a href="{{ route('pelatihan.katalog') }}" class="sk-btn sk-btn-lime">Jelajahi pelatihan <i data-lucide="arrow-up-right" class="w-4 h-4"></i></a>
-                <a href="{{ route('lowongan.katalog') }}" class="sk-btn sk-btn-glass">Cari lowongan <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
-            </div>
-        </div>
-    </section>
+      <h1 class="mt-5 max-w-3xl text-5xl font-black leading-[0.9] tracking-[-0.075em] text-white sm:text-6xl lg:text-7xl">
+        Skill baru.<br>
+        <span class="text-sikarir-lime">Peluang baru.</span>
+      </h1>
 
-    {{-- Pencarian cepat --}}
-    <div class="sk-wrap">
-        <form method="GET" action="{{ route('pelatihan.katalog') }}" class="sk-search">
-            <div>
-                <label for="home-search">Cari pelatihan atau kejuruan</label>
-                <div class="sk-search-field"><i data-lucide="search" class="w-4 h-4"></i><input id="home-search" type="search" name="q" placeholder="Contoh: otomotif, las, tata boga..."></div>
-            </div>
-            <button type="submit" class="sk-btn">Temukan program <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
-        </form>
+      <p class="mt-6 max-w-xl text-sm leading-relaxed text-primary-foreground/80 sm:text-base">
+        Temukan pelatihan vokasi, sertifikasi kompetensi, dan peluang kerja yang terhubung dengan industri bersama UPT BLK Jember.
+      </p>
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        <x-ui.button href="{{ route('pelatihan.katalog') }}" size="lg" class="bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
+          Jelajahi pelatihan
+          <x-lucide-arrow-up-right />
+        </x-ui.button>
+
+        <x-ui.button href="{{ route('lowongan.katalog') }}" size="lg" variant="outline" class="border-primary-foreground/35 bg-primary-foreground/5 text-primary-foreground hover:bg-primary-foreground/15 hover:text-primary-foreground">
+          Cari lowongan
+          <x-lucide-arrow-right />
+        </x-ui.button>
+      </div>
+    </div>
+  </section>
+
+  {{-- Quick search --}}
+  <div class="site-container relative z-10 -mt-10">
+    <form method="GET" action="{{ route('pelatihan.katalog') }}" class="grid gap-3 rounded-2xl border border-border bg-card p-4 shadow-xl shadow-primary/10 sm:grid-cols-[1fr_auto] sm:items-end">
+      <x-ui.field>
+        <x-ui.field-label for="home-search" class="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+          Cari pelatihan atau kejuruan
+        </x-ui.field-label>
+        <x-ui.input id="home-search" name="q" type="search" placeholder="Contoh: otomotif, las, tata boga...">
+          <x-slot:leading>
+            <x-lucide-search />
+          </x-slot:leading>
+        </x-ui.input>
+      </x-ui.field>
+
+      <x-ui.button type="submit" size="lg" class="font-bold">
+        Temukan program
+        <x-lucide-arrow-right />
+      </x-ui.button>
+    </form>
+  </div>
+
+  {{-- Stats --}}
+  <section class="site-container py-10">
+    <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      @foreach ([
+          ['icon' => 'book-open', 'value' => '12+', 'label' => 'Kejuruan pelatihan'],
+          ['icon' => 'trending-up', 'value' => '94%', 'label' => 'Lulusan terserap kerja & wirausaha'],
+          ['icon' => 'wallet', 'value' => 'Gratis', 'label' => 'Program dibiayai APBD & APBN'],
+          ['icon' => 'award', 'value' => 'BNSP', 'label' => 'Sertifikasi standar kompetensi'],
+      ] as $stat)
+        <x-ui.stat
+          :label="$stat['label']"
+          :value="$stat['value']"
+          :icon="$stat['icon']"
+        />
+      @endforeach
+    </div>
+  </section>
+
+  {{-- Layanan --}}
+  <section class="border-y border-border bg-muted/40 py-16 md:py-20">
+    <div class="site-container">
+      <div class="max-w-2xl">
+        <x-ui.badge variant="secondary" class="gap-2 uppercase tracking-wide">
+          <span class="size-1.5 rounded-full bg-sikarir-lime"></span>
+          Dari belajar sampai kerja
+        </x-ui.badge>
+        <h2 class="mt-4 text-3xl font-black tracking-tight text-foreground sm:text-4xl">
+          Satu tempat buat<br>naik level.
+        </h2>
+      </div>
+
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        @foreach ([
+            ['icon' => 'user-round-check', 'title' => 'Pendaftaran pelatihan', 'desc' => 'Pelatihan Reguler Berbasis Kompetensi (PBK) dan Mobile Training Unit (MTU) pedesaan.'],
+            ['icon' => 'briefcase-business', 'title' => 'Bursa kerja khusus', 'desc' => 'Peluang kerja terverifikasi bagi alumni vokasi dan pencari kerja umum.'],
+            ['icon' => 'badge-check', 'title' => 'Sertifikasi kompetensi', 'desc' => 'Uji kompetensi profesi melalui LSP-P1 BLK Jember berlisensi BNSP.'],
+            ['icon' => 'messages-square', 'title' => 'Konsultasi karir', 'desc' => 'Bimbingan jabatan bersama instruktur dan tenaga konseling ketenagakerjaan.'],
+            ['icon' => 'building-2', 'title' => 'Magang & kemitraan', 'desc' => 'Program on-the-job training bersama Dunia Usaha dan Dunia Industri (DUDI).'],
+            ['icon' => 'file-check-2', 'title' => 'Verifikasi sertifikat', 'desc' => 'Cek keaslian sertifikat kelulusan BLK dan e-Sertifikat kompetensi.'],
+        ] as $layanan)
+          <x-ui.card class="transition hover:border-primary/40 hover:shadow-md">
+            <span class="grid size-11 place-items-center rounded-xl bg-accent text-accent-foreground">
+              <x-dynamic-component :component="'lucide-'.$layanan['icon']" class="size-5" />
+            </span>
+            <h3 class="mt-4 text-base font-bold text-foreground">{{ $layanan['title'] }}</h3>
+            <p class="mt-1.5 text-sm leading-relaxed text-muted-foreground">{{ $layanan['desc'] }}</p>
+          </x-ui.card>
+        @endforeach
+      </div>
+    </div>
+  </section>
+
+  {{-- Program pelatihan --}}
+  <section class="site-container py-16 md:py-20">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <x-ui.badge variant="secondary" class="gap-2 uppercase tracking-wide">
+          <span class="size-1.5 rounded-full bg-sikarir-lime"></span>
+          Belajar yang kepake
+        </x-ui.badge>
+        <h2 class="mt-4 text-3xl font-black tracking-tight text-foreground sm:text-4xl">
+          Pilih skill.<br>Mulai dari sini.
+        </h2>
+      </div>
+
+      <x-ui.button href="{{ route('pelatihan.katalog') }}" variant="ghost" class="font-bold text-primary">
+        Semua pelatihan
+        <x-lucide-arrow-up-right />
+      </x-ui.button>
     </div>
 
-    {{-- Statistik yang sudah digunakan di halaman --}}
-    <section class="sk-stats">
-        <div class="sk-wrap sk-stats-grid">
-            <div class="sk-stat"><strong>12+</strong><span>Kejuruan pelatihan</span></div>
-            <div class="sk-stat"><strong>94%</strong><span>Lulusan terserap kerja &amp; wirausaha</span></div>
-            <div class="sk-stat"><strong>Gratis</strong><span>Program dibiayai APBD &amp; APBN</span></div>
-            <div class="sk-stat"><strong>BNSP</strong><span>Sertifikasi standar kompetensi</span></div>
-        </div>
-    </section>
+    <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      @forelse ($pelatihans as $item)
+        <x-ui.card class="flex flex-col overflow-hidden p-0 transition hover:border-primary/40 hover:shadow-md">
+          <div class="relative h-40 overflow-hidden bg-muted">
+            <img
+              src="{{ $item->gambar_url ?? asset('images/hero-image.webp') }}"
+              alt="{{ $item->nama_pelatihan }}"
+              loading="lazy"
+              class="size-full object-cover"
+            >
+            <x-ui.badge class="absolute left-3 top-3 bg-primary/90 text-primary-foreground backdrop-blur">
+              {{ $item->sumber_dana ?? 'Program pelatihan' }}
+            </x-ui.badge>
+          </div>
 
-    {{-- Layanan --}}
-    <section class="sk-section sk-section-soft">
-        <div class="sk-wrap">
-            <div class="sk-head">
-                <div><span class="sk-eyebrow">Dari belajar sampai kerja</span><h2 class="sk-title">Satu tempat buat<br>naik level.</h2></div>
-            </div>
-            <div class="sk-grid-3">
-                @foreach ([
-                    ['icon' => 'user-round-check', 'title' => 'Pendaftaran pelatihan', 'desc' => 'Pelatihan Reguler Berbasis Kompetensi (PBK) dan Mobile Training Unit (MTU) pedesaan.'],
-                    ['icon' => 'briefcase-business', 'title' => 'Bursa kerja khusus', 'desc' => 'Peluang kerja terverifikasi bagi alumni vokasi dan pencari kerja umum.'],
-                    ['icon' => 'badge-check', 'title' => 'Sertifikasi kompetensi', 'desc' => 'Uji kompetensi profesi melalui LSP-P1 BLK Jember berlisensi BNSP.'],
-                    ['icon' => 'messages-square', 'title' => 'Konsultasi karir', 'desc' => 'Bimbingan jabatan bersama instruktur dan tenaga konseling ketenagakerjaan.'],
-                    ['icon' => 'building-2', 'title' => 'Magang & kemitraan', 'desc' => 'Program on-the-job training bersama Dunia Usaha dan Dunia Industri (DUDI).'],
-                    ['icon' => 'file-check-2', 'title' => 'Verifikasi sertifikat', 'desc' => 'Cek keaslian sertifikat kelulusan BLK dan e-Sertifikat kompetensi.'],
-                ] as $layanan)
-                    <article class="sk-service">
-                        <div class="sk-icon"><i data-lucide="{{ $layanan['icon'] }}" class="w-5 h-5"></i></div>
-                        <h3>{{ $layanan['title'] }}</h3>
-                        <p>{{ $layanan['desc'] }}</p>
-                    </article>
-                @endforeach
-            </div>
-        </div>
-    </section>
+          <div class="flex flex-1 flex-col p-4">
+            <span class="text-[10px] font-bold uppercase tracking-[0.12em] text-primary">
+              {{ $item->kategori ?? 'Kejuruan' }}
+            </span>
+            <h3 class="mt-1.5 text-sm font-bold leading-snug text-foreground">{{ $item->nama_pelatihan }}</h3>
+            <p class="mt-1.5 line-clamp-3 text-xs leading-relaxed text-muted-foreground">{{ $item->deskripsi_pelatihan }}</p>
 
-    {{-- Program pelatihan --}}
-    <section class="sk-section">
-        <div class="sk-wrap">
-            <div class="sk-head">
-                <div><span class="sk-eyebrow">Belajar yang kepake</span><h2 class="sk-title">Pilih skill.<br>Mulai dari sini.</h2></div>
-                <a href="{{ route('pelatihan.katalog') }}" class="sk-link">Semua pelatihan <i data-lucide="arrow-up-right" class="w-4 h-4"></i></a>
+            <div class="mt-auto flex gap-2 pt-4">
+              <x-ui.button
+                href="{{ route('pelatihan.katalog') . '#' . ($item->id_pelatihan ?? $item->id) }}"
+                variant="outline"
+                size="xs"
+                class="flex-1"
+              >
+                Lihat silabus
+              </x-ui.button>
+              <x-ui.button href="{{ route('register') }}" size="xs" class="flex-1">
+                Daftar
+              </x-ui.button>
             </div>
-            <div class="sk-program-grid">
-                @forelse ($pelatihans as $item)
-                    <article class="sk-program">
-                        <div class="sk-program-media">
-                            <img src="{{ $item->gambar_url ?? asset('images/hero-image.webp') }}" alt="{{ $item->nama_pelatihan }}" loading="lazy">
-                            <span class="sk-chip">{{ $item->sumber_dana ?? 'Program pelatihan' }}</span>
-                        </div>
-                        <div class="sk-program-body">
-                            <span class="sk-category">{{ $item->kategori ?? 'Kejuruan' }}</span>
-                            <h3>{{ $item->nama_pelatihan }}</h3>
-                            <p>{{ $item->deskripsi_pelatihan }}</p>
-                            <div class="sk-card-actions">
-                                <a href="{{ route('pelatihan.katalog') . '#' . ($item->id_pelatihan ?? $item->id) }}">Lihat silabus</a>
-                                <a href="{{ route('register') }}">Daftar</a>
-                            </div>
-                        </div>
-                    </article>
-                @empty
-                    <div class="sk-empty">Belum ada data pelatihan aktif.</div>
-                @endforelse
-            </div>
-        </div>
-    </section>
+          </div>
+        </x-ui.card>
+      @empty
+        <x-ui.empty class="sm:col-span-2 lg:col-span-4">
+          <x-ui.empty-header>
+            <x-ui.empty-media variant="icon">
+              <x-lucide-book-open />
+            </x-ui.empty-media>
+            <x-ui.empty-title>Belum ada data pelatihan aktif.</x-ui.empty-title>
+            <x-ui.empty-description>Silakan cek kembali katalog pelatihan beberapa waktu lagi.</x-ui.empty-description>
+          </x-ui.empty-header>
+        </x-ui.empty>
+      @endforelse
+    </div>
+  </section>
 
-            {{-- Lowongan kerja --}}
-    <section class="sk-section sk-section-soft">
-        <div class="sk-wrap">
-            <div class="sk-head">
-                <div><span class="sk-eyebrow">Langkah berikutnya</span><h2 class="sk-title">Peluang kerja<br>buat kamu kejar.</h2></div>
-                <a href="{{ route('lowongan.katalog') }}" class="sk-link">Semua lowongan <i data-lucide="arrow-up-right" class="w-4 h-4"></i></a>
-            </div>
-            <div class="sk-job-grid">
-                @forelse ($lowongans as $job)
-                    @php
-                        $tgl = $job->tanggal_posting ? \Carbon\Carbon::parse($job->tanggal_posting)->translatedFormat('d M Y') : '-';
-                    @endphp
-                    <article class="sk-program">
-                        <div class="sk-program-media">
-                            <img src="{{ $job->gambar_url ?? asset('images/hero-image.webp') }}" alt="{{ $job->judul_lowongan }}" loading="lazy">
-                            <span class="sk-chip">{{ ucfirst($job->status) }}</span>
-                        </div>
-                        <div class="sk-program-body">
-                            <span class="sk-category">{{ $job->mitra->nama_perusahaan ?? '-' }}</span>
-                            <h3>{{ $job->judul_lowongan }}</h3>
-                            <p>{{ $job->deskripsi ?: 'Tidak ada deskripsi.' }}</p>
-                            <div class="sk-job-meta">
-                                <span><i data-lucide="map-pin" class="w-3.5 h-3.5"></i>{{ $job->lokasi ?? '-' }}</span>
-                                <span><i data-lucide="calendar" class="w-3.5 h-3.5"></i>Diposting {{ $tgl }}</span>
-                            </div>
-                            <div class="sk-card-actions">
-                                <a href="{{ route('lowongan.detail', $job->id_lowongan) }}">Lihat selengkapnya <i data-lucide="arrow-right" class="w-3.5 h-3.5" style="margin-left:6px"></i></a>
-                            </div>
-                        </div>
-                    </article>
-                @empty
-                    <div class="sk-empty">Belum ada lowongan aktif saat ini.</div>
-                @endforelse
-            </div>
+  {{-- Lowongan --}}
+  <section class="border-y border-border bg-muted/40 py-16 md:py-20">
+    <div class="site-container">
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <x-ui.badge variant="secondary" class="gap-2 uppercase tracking-wide">
+            <span class="size-1.5 rounded-full bg-sikarir-lime"></span>
+            Langkah berikutnya
+          </x-ui.badge>
+          <h2 class="mt-4 text-3xl font-black tracking-tight text-foreground sm:text-4xl">
+            Peluang kerja<br>buat kamu kejar.
+          </h2>
         </div>
-    </section>
 
-    {{-- Alur pendaftaran --}}
-    <section class="sk-section">
-        <div class="sk-wrap">
-            <span class="sk-eyebrow">Alurnya transparan</span>
-            <h2 class="sk-title">Empat langkah buat<br>mulai perjalananmu.</h2>
-            <div class="sk-steps">
-                @foreach ([
-                    ['title' => 'Buat akun', 'desc' => 'Daftarkan akun siKarir menggunakan NIK yang valid dan lengkapi profil.'],
-                    ['title' => 'Pilih kejuruan', 'desc' => 'Cari program aktif yang sesuai minat, jadwal, dan kuota.'],
-                    ['title' => 'Ikuti seleksi', 'desc' => 'Jalani tes tertulis online dan verifikasi wawancara di workshop BLK.'],
-                    ['title' => 'Belajar & sertifikasi', 'desc' => 'Ikuti pelatihan hingga uji kompetensi resmi BNSP.'],
-                ] as $step)
-                    <article class="sk-step">
-                        <span class="sk-step-number">{{ sprintf('%02d', $loop->iteration) }}</span>
-                        <h3>{{ $step['title'] }}</h3>
-                        <p>{{ $step['desc'] }}</p>
-                    </article>
-                @endforeach
-            </div>
-        </div>
-    </section>
+        <x-ui.button href="{{ route('lowongan.katalog') }}" variant="ghost" class="font-bold text-primary">
+          Semua lowongan
+          <x-lucide-arrow-up-right />
+        </x-ui.button>
+      </div>
 
-    {{-- Warta dan alumni --}}
-    <section class="sk-section sk-section-soft">
-        <div class="sk-wrap sk-story-grid">
-            <div>
-                <div class="sk-head"><div><span class="sk-eyebrow">Info terbaru</span><h2 class="sk-title">Warta &amp; agenda BLK.</h2></div></div>
-                <div class="sk-story-list">
-                    @forelse ($berita as $b)
-                        <article class="sk-story">
-                            <img src="{{ $b->gambar_url ?? asset('images/hero-image.webp') }}" alt="" loading="lazy">
-                            <div><span class="sk-story-meta">{{ $b->kategori ?? 'Pengumuman' }} · {{ $b->tanggal ?? '' }}</span><h3>{{ $b->judul }}</h3><p>{{ $b->ringkasan }}</p></div>
-                        </article>
-                    @empty
-                        <div class="sk-empty">Belum ada warta terbaru.</div>
-                    @endforelse
+      <div class="mt-8 grid gap-4 md:grid-cols-3">
+        @forelse ($lowongans as $job)
+          <x-ui.card class="flex flex-col overflow-hidden p-0 transition hover:border-primary/40 hover:shadow-md">
+            @if ($job->gambar_url)
+              <img
+                src="{{ $job->gambar_url }}"
+                alt="{{ $job->judul_lowongan }}"
+                class="aspect-[16/9] w-full object-cover"
+                loading="lazy"
+              >
+            @else
+              <div class="grid aspect-[16/9] w-full place-items-center bg-accent text-accent-foreground">
+                <x-lucide-building-2 class="size-8" />
+              </div>
+            @endif
+
+            <div class="flex flex-1 flex-col p-5">
+              <div class="flex items-start justify-between gap-3">
+                <h3 class="text-base font-bold leading-snug text-foreground">
+                  <a href="{{ route('lowongan.detail', $job->id_lowongan) }}" class="transition hover:text-primary">
+                    {{ $job->judul_lowongan }}
+                  </a>
+                </h3>
+                <x-ui.badge tone="success" class="shrink-0 capitalize">{{ $job->status }}</x-ui.badge>
+              </div>
+
+              <div class="mt-3 space-y-1.5 text-xs text-muted-foreground">
+                <p class="flex items-center gap-2">
+                  <x-lucide-building-2 class="size-3.5 text-primary" />
+                  {{ $job->mitra->nama_perusahaan ?? '-' }}
+                </p>
+                <p class="flex items-center gap-2">
+                  <x-lucide-map-pin class="size-3.5 text-primary" />
+                  {{ $job->lokasi ?? '-' }}
+                </p>
+              </div>
+
+              <p class="mt-4 line-clamp-3 text-xs leading-relaxed text-muted-foreground">
+                {{ $job->deskripsi ?? 'Tidak ada deskripsi.' }}
+              </p>
+
+              <div class="mt-auto flex items-center justify-between gap-3 border-t border-border pt-4">
+                <div class="text-[10px] text-muted-foreground">
+                  Diposting
+                  <span class="mt-0.5 block text-xs font-bold text-foreground">
+                    {{ $job->tanggal_posting ? \Carbon\Carbon::parse($job->tanggal_posting)->format('d M Y') : '-' }}
+                  </span>
                 </div>
-            </div>
-            <div>
-                <div class="sk-head"><div><span class="sk-eyebrow">Cerita lulusan</span><h2 class="sk-title">Dari BLK ke dunia kerja.</h2></div></div>
-                <div class="sk-alumni">
-                    @forelse ($alumni as $a)
-                        <article class="sk-quote">
-                            <div class="sk-quote-person"><img src="{{ $a->foto_url ?? asset('images/logo-sikarir.png') }}" alt="" loading="lazy"><div><strong>{{ $a->nama }}</strong><span>{{ $a->profesi }}</span></div></div>
-                            <blockquote>“{{ $a->testimoni }}”</blockquote>
-                        </article>
-                    @empty
-                        <div class="sk-empty">Belum ada testimoni alumni.</div>
-                    @endforelse
-                    <div class="sk-about"><div><strong>Tentang UPT BLK Jember</strong><p>Lembaga pelatihan vokasi Disnakertrans Jatim dengan fasilitas workshop.</p></div><a href="{{ route('tentang.index') }}">Kenali BLK <span aria-hidden="true">↗</span></a></div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    {{-- CTA --}}
-    <section class="sk-section">
-        <div class="sk-wrap sk-cta">
-            <div class="sk-cta-inner">
-                <div><span class="sk-eyebrow">Masa depan dimulai dari skill</span><h2>Siap mulai langkah barumu?</h2><p>Daftar akun siKarir, temukan program yang cocok, dan siapkan diri untuk peluang berikutnya.</p></div>
-                <div class="sk-actions"><a href="{{ route('register') }}" class="sk-btn sk-btn-lime">Buat akun siKarir <i data-lucide="arrow-up-right" class="w-4 h-4"></i></a></div>
+                <x-ui.button href="{{ route('lowongan.detail', $job->id_lowongan) }}" size="sm">
+                  Lihat selengkapnya
+                  <x-lucide-arrow-right />
+                </x-ui.button>
+              </div>
             </div>
+          </x-ui.card>
+        @empty
+          <x-ui.empty class="md:col-span-3">
+            <x-ui.empty-header>
+              <x-ui.empty-media variant="icon">
+                <x-lucide-briefcase-business />
+              </x-ui.empty-media>
+              <x-ui.empty-title>Belum ada lowongan aktif saat ini.</x-ui.empty-title>
+              <x-ui.empty-description>Lowongan baru dari mitra industri akan tampil di sini.</x-ui.empty-description>
+            </x-ui.empty-header>
+          </x-ui.empty>
+        @endforelse
+      </div>
+    </div>
+  </section>
+
+  {{-- Alur pendaftaran --}}
+  <section class="site-container py-16 md:py-20">
+    <div class="max-w-2xl">
+      <x-ui.badge variant="secondary" class="gap-2 uppercase tracking-wide">
+        <span class="size-1.5 rounded-full bg-sikarir-lime"></span>
+        Alurnya transparan
+      </x-ui.badge>
+      <h2 class="mt-4 text-3xl font-black tracking-tight text-foreground sm:text-4xl">
+        Empat langkah buat<br>mulai perjalananmu.
+      </h2>
+    </div>
+
+    <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      @foreach ([
+          ['title' => 'Buat akun', 'desc' => 'Daftarkan akun siKarir menggunakan NIK yang valid dan lengkapi profil.'],
+          ['title' => 'Pilih kejuruan', 'desc' => 'Cari program aktif yang sesuai minat, jadwal, dan kuota.'],
+          ['title' => 'Ikuti seleksi', 'desc' => 'Jalani tes tertulis online dan verifikasi wawancara di workshop BLK.'],
+          ['title' => 'Belajar & sertifikasi', 'desc' => 'Ikuti pelatihan hingga uji kompetensi resmi BNSP.'],
+      ] as $step)
+        <div class="relative">
+          <span class="grid size-11 place-items-center rounded-full border border-border bg-card text-xs font-black text-primary shadow-sm">
+            {{ sprintf('%02d', $loop->iteration) }}
+          </span>
+          <h3 class="mt-4 text-base font-bold text-foreground">{{ $step['title'] }}</h3>
+          <p class="mt-1.5 text-xs leading-relaxed text-muted-foreground">{{ $step['desc'] }}</p>
         </div>
-    </section>
-</div>
+      @endforeach
+    </div>
+  </section>
+
+  {{-- Warta & alumni --}}
+  <section class="border-y border-border bg-muted/40 py-16 md:py-20">
+    <div class="site-container grid gap-10 lg:grid-cols-2">
+      <div>
+        <x-ui.badge variant="secondary" class="gap-2 uppercase tracking-wide">
+          <span class="size-1.5 rounded-full bg-sikarir-lime"></span>
+          Info terbaru
+        </x-ui.badge>
+        <h2 class="mt-4 text-2xl font-black tracking-tight text-foreground sm:text-3xl">Warta & agenda BLK.</h2>
+
+        <div class="mt-6 space-y-3">
+          @forelse ($berita as $b)
+            <x-ui.card class="flex gap-4 p-3">
+              <img
+                src="{{ $b->gambar_url ?? asset('images/hero-image.webp') }}"
+                alt=""
+                loading="lazy"
+                class="size-24 shrink-0 rounded-lg object-cover"
+              >
+              <div class="min-w-0">
+                <div class="text-[10px] font-bold uppercase tracking-[0.09em] text-primary">
+                  {{ $b->kategori ?? 'Pengumuman' }} · {{ $b->tanggal ?? '' }}
+                </div>
+                <h3 class="mt-1 line-clamp-2 text-sm font-bold leading-snug text-foreground">{{ $b->judul }}</h3>
+                <p class="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground">{{ $b->ringkasan }}</p>
+              </div>
+            </x-ui.card>
+          @empty
+            <x-ui.empty>
+              <x-ui.empty-header>
+                <x-ui.empty-media variant="icon">
+                  <x-lucide-newspaper />
+                </x-ui.empty-media>
+                <x-ui.empty-title class="text-base">Belum ada warta terbaru.</x-ui.empty-title>
+              </x-ui.empty-header>
+            </x-ui.empty>
+          @endforelse
+        </div>
+      </div>
+
+      <div>
+        <x-ui.badge variant="secondary" class="gap-2 uppercase tracking-wide">
+          <span class="size-1.5 rounded-full bg-sikarir-lime"></span>
+          Cerita lulusan
+        </x-ui.badge>
+        <h2 class="mt-4 text-2xl font-black tracking-tight text-foreground sm:text-3xl">Dari BLK ke dunia kerja.</h2>
+
+        <div class="mt-6 space-y-3">
+          @forelse ($alumni as $a)
+            <x-ui.card class="p-5">
+              <div class="mb-3 flex items-center gap-3">
+                <x-ui.avatar class="size-10">
+                  <x-ui.avatar-image src="{{ $a->foto_url ?? asset('images/logo-sikarir.png') }}" alt="{{ $a->nama }}" />
+                  <x-ui.avatar-fallback>{{ mb_strtoupper(mb_substr($a->nama, 0, 1)) }}</x-ui.avatar-fallback>
+                </x-ui.avatar>
+                <div>
+                  <div class="text-xs font-bold text-foreground">{{ $a->nama }}</div>
+                  <div class="text-[10px] text-muted-foreground">{{ $a->profesi }}</div>
+                </div>
+              </div>
+              <blockquote class="text-xs leading-relaxed text-muted-foreground">“{{ $a->testimoni }}”</blockquote>
+            </x-ui.card>
+          @empty
+            <x-ui.empty>
+              <x-ui.empty-header>
+                <x-ui.empty-media variant="icon">
+                  <x-lucide-message-square-quote />
+                </x-ui.empty-media>
+                <x-ui.empty-title class="text-base">Belum ada testimoni alumni.</x-ui.empty-title>
+              </x-ui.empty-header>
+            </x-ui.empty>
+          @endforelse
+
+          <div class="flex items-center justify-between gap-4 rounded-xl bg-accent px-5 py-4">
+            <div>
+              <div class="text-xs font-bold text-foreground">Tentang UPT BLK Jember</div>
+              <p class="mt-1 text-[11px] leading-relaxed text-muted-foreground">Lembaga pelatihan vokasi Disnakertrans Jatim dengan fasilitas workshop.</p>
+            </div>
+            <x-ui.button href="{{ route('tentang.index') }}" variant="ghost" size="sm" class="shrink-0 font-bold text-primary">
+              Kenali BLK
+              <x-lucide-arrow-up-right />
+            </x-ui.button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {{-- CTA --}}
+  <section class="site-container py-16 md:py-20">
+    <x-ui.card class="relative overflow-hidden border-primary/30 bg-gradient-to-br from-primary via-[#0d4335] to-[#0a2f26] text-primary-foreground">
+      <div class="pointer-events-none absolute -right-16 -top-16 size-56 rounded-full bg-sikarir-lime/10 blur-3xl"></div>
+
+      <div class="relative flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between">
+        <div class="max-w-2xl">
+          <x-ui.badge class="gap-2 border-primary-foreground/20 bg-primary-foreground/10 text-primary-foreground">
+            <span class="size-1.5 rounded-full bg-sikarir-lime"></span>
+            Masa depan dimulai dari skill
+          </x-ui.badge>
+          <h2 class="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">Siap mulai langkah barumu?</h2>
+          <p class="mt-3 text-sm leading-relaxed text-primary-foreground/75">
+            Daftar akun siKarir, temukan program yang cocok, dan siapkan diri untuk peluang berikutnya.
+          </p>
+        </div>
+
+        <x-ui.button href="{{ route('register') }}" size="lg" class="shrink-0 bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
+          Buat akun siKarir
+          <x-lucide-arrow-up-right />
+        </x-ui.button>
+      </div>
+    </x-ui.card>
+  </section>
 @endsection

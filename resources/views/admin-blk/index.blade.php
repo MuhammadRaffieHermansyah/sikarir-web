@@ -1,53 +1,48 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard Ringkasan Eksekutif & Admin BLK')
+@section('title', 'Dashboard Ringkasan Eksekutif & Admin BLK - SiKarir BLK')
 
 @section('content')
-  <!-- Title & Action Bar -->
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-    <div>
-      <div class="flex items-center gap-2 text-xs text-slate-400 mb-1">
-        <span>Beranda</span> &gt; <span class="text-slate-600 font-medium">Dashboard Ringkasan</span>
-      </div>
-      <h1 class="text-xl font-black text-slate-900 tracking-tight">Ringkasan Eksekutif & Operasional Balai</h1>
-      <p class="text-xs text-slate-500 mt-0.5">Pantau aktivitas pelatihan vokasi, progres magang industri, verifikasi sertifikasi, dan manajemen administrator BLK.</p>
-    </div>
+  <x-ui.page-header
+    title="Ringkasan Eksekutif & Operasional Balai"
+    description="Pantau aktivitas pelatihan vokasi, progres magang industri, verifikasi sertifikasi, dan manajemen administrator BLK."
+  >
+    <x-slot:breadcrumb>
+      <x-ui.breadcrumb>
+        <x-ui.breadcrumb-list>
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-page>Beranda</x-ui.breadcrumb-page>
+          </x-ui.breadcrumb-item>
+          <x-ui.breadcrumb-separator />
+          <x-ui.breadcrumb-item>
+            <x-ui.breadcrumb-page>Dashboard Ringkasan</x-ui.breadcrumb-page>
+          </x-ui.breadcrumb-item>
+        </x-ui.breadcrumb-list>
+      </x-ui.breadcrumb>
+    </x-slot:breadcrumb>
 
-    <div class="flex flex-wrap items-center gap-2 self-start md:self-auto">
-      <select class="bg-white border border-slate-200 text-xs px-3 py-2 rounded-lg font-medium shadow-sm focus:outline-none text-slate-700">
+    <x-slot:actions>
+      <x-ui.select native class="w-auto">
         <option>Gelombang II - TA 2024/2025</option>
         <option>Gelombang I - TA 2024/2025</option>
-      </select>
-      <select class="bg-white border border-slate-200 text-xs px-3 py-2 rounded-lg font-medium shadow-sm focus:outline-none text-slate-700">
+      </x-ui.select>
+
+      <x-ui.select native class="w-auto">
         <option>Semua Balai (BLK Regional)</option>
         <option>BLK Pusat Vokasi</option>
-      </select>
+      </x-ui.select>
+    </x-slot:actions>
+  </x-ui.page-header>
 
-      <!-- <a href="{{ route('admin-blk.create') }}" class="bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold px-3 py-2 rounded-lg flex items-center gap-1.5 shadow-sm transition">
-        <i data-lucide="user-plus" class="w-4 h-4"></i> Tambah Admin BLK
-      </a> -->
-    </div>
-  </div>
-
-  <!-- Session Alerts -->
-  @if(session('success'))
-    <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs px-4 py-3 rounded-xl flex items-center justify-between shadow-sm">
-      <div class="flex items-center gap-2.5">
-        <div class="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
-          <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-700"></i>
-        </div>
-        <span class="font-medium">{{ session('success') }}</span>
-      </div>
-      <button onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-700 p-1">
-        <i data-lucide="x" class="w-4 h-4"></i>
-      </button>
-    </div>
+  @if (session('success'))
+    <x-ui.alert tone="success">
+      <x-lucide-circle-check-big />
+      <x-ui.alert-description>{{ session('success') }}</x-ui.alert-description>
+    </x-ui.alert>
   @endif
 
-  <!-- Component: Stat Cards -->
   <x-stat-cards />
 
-  <!-- Component: Chart Section -->
   <x-chart-section />
 
   <!-- Management Section: Admin BLK Personnel Table -->
@@ -179,6 +174,4 @@
       </div>
     @endif
   </div> -->
-
-  
 @endsection
