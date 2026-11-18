@@ -35,7 +35,7 @@
         </div>
     @endif
 
-    <form action="{{ route('lowongan.store') }}" method="POST" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <form action="{{ route('lowongan.store') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         @csrf
 
         <div class="lg:col-span-2 space-y-6">
@@ -141,6 +141,30 @@
         <div class="space-y-6">
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
                 <h3 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100 flex items-center gap-2">
+                    <i data-lucide="image" class="w-4 h-4 text-emerald-700"></i> Foto Lowongan
+                </h3>
+
+                <label for="gambar" id="dropzone"
+                    class="relative flex flex-col items-center justify-center w-full h-44 border-2 border-dashed border-slate-200 hover:border-emerald-500 bg-slate-50 hover:bg-emerald-50/40 rounded-lg cursor-pointer overflow-hidden transition @error('gambar') border-rose-400 @enderror">
+                    <div id="upload-placeholder" class="flex flex-col items-center gap-2 text-center px-4">
+                        <i data-lucide="upload-cloud" class="w-7 h-7 text-slate-400"></i>
+                        <p class="text-xs font-semibold text-slate-600">Klik untuk upload foto</p>
+                        <p class="text-[11px] text-slate-400">JPG, PNG, WEBP. Maks 2 MB.</p>
+                    </div>
+                    <img id="upload-preview" src="" alt="Preview foto" class="hidden absolute inset-0 w-full h-full object-cover" />
+                    <input type="file" name="gambar" id="gambar" accept="image/png,image/jpeg,image/webp" class="hidden" />
+                </label>
+
+                <button type="button" id="remove-image"
+                    class="hidden w-full text-xs font-semibold text-rose-600 hover:text-rose-700 py-2 rounded-lg bg-rose-50 hover:bg-rose-100 transition">
+                    Hapus gambar
+                </button>
+                @error('gambar')
+                    <p class="text-rose-600 text-[11px]">{{ $message }}</p>
+                @enderror
+            </div>
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 space-y-4">
+                <h3 class="font-bold text-slate-800 text-xs pb-2 border-b border-slate-100 flex items-center gap-2">
                     <i data-lucide="info" class="w-4 h-4 text-emerald-700"></i> Panduan Lowongan
                 </h3>
                 <p class="text-xs text-slate-600 leading-relaxed">
@@ -158,4 +182,34 @@
             </div>
         </div>
     </form>
+    @push('scripts')
+<script>
+    const input = document.getElementById('gambar');
+    const preview = document.getElementById('upload-preview');
+    const placeholder = document.getElementById('upload-placeholder');
+    const removeBtn = document.getElementById('remove-image');
+
+    input.addEventListener('change', () => {
+        const file = input.files[0];
+        if (!file) return;
+        if (file.size > 2 * 1024 * 1024) {
+            alert('Ukuran gambar maksimal 2 MB.');
+            input.value = '';
+            return;
+        }
+        preview.src = URL.createObjectURL(file);
+        preview.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+        removeBtn.classList.remove('hidden');
+    });
+
+    removeBtn.addEventListener('click', () => {
+        input.value = '';
+        preview.src = '';
+        preview.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+        removeBtn.classList.add('hidden');
+    });
+</script>
+@endpush
 @endsection
