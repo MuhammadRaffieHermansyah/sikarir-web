@@ -29,9 +29,17 @@
 
   <!-- Poster Program -->
   @if ($pelatihan->gambar_url)
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <div class="relative h-64 sm:h-80 rounded-2xl overflow-hidden border border-slate-200 bg-slate-900 shadow-lg shadow-slate-900/10">
       <img src="{{ $pelatihan->gambar_url }}" alt="Poster {{ $pelatihan->nama_pelatihan }}"
-        class="w-full max-h-72 object-cover">
+        class="absolute inset-0 h-full w-full object-cover" />
+      <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent"></div>
+      <div class="absolute inset-x-0 bottom-0 p-5 sm:p-7 text-white">
+        <div class="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] backdrop-blur-sm">
+          <i data-lucide="image" class="h-3.5 w-3.5"></i> Poster Program
+        </div>
+        <h2 class="mt-2 max-w-2xl text-xl sm:text-2xl font-black tracking-tight">{{ $pelatihan->nama_pelatihan }}</h2>
+        <p class="mt-1 text-xs text-white/75">Program pelatihan vokasi BLK</p>
+      </div>
     </div>
   @endif
 
@@ -121,7 +129,7 @@
                   $instruktur = $jadwal->instruktur;
                   $namaInstruktur = is_object($instruktur) ? ($instruktur->nama ?? '-') : ($instruktur ?: '-');
 
-                  $ruangan = $jadwal->ruangan;
+                  $ruangan = $jadwal->ruanganWorkshop;
                   $namaRuangan = is_object($ruangan)
                       ? ($ruangan->nama_ruangan ?? $ruangan->nama ?? '-')
                       : ($ruangan ?: '-');
@@ -192,6 +200,13 @@
             <span class="text-slate-400">Durasi Pelatihan:</span>
             <span class="font-bold text-slate-900">{{ $pelatihan->durasi_label ?? '-' }}</span>
           </div>
+          <div class="flex items-start justify-between gap-3">
+            <span class="text-slate-400">Instruktur:</span>
+            <span class="font-bold text-right text-slate-900">{{ $pelatihan->instruktur?->nama ?? '-' }}</span>
+          </div>
+          @if($pelatihan->instruktur?->bidang_keahlian)
+            <div class="-mt-1 text-right text-[10px] text-emerald-700">{{ $pelatihan->instruktur->bidang_keahlian }}</div>
+          @endif
           <div class="flex items-center justify-between gap-3">
             <span class="text-slate-400">Target Kuota:</span>
             <span class="font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded text-[11px]">{{ $pelatihan->kuota }} Siswa / Batch</span>

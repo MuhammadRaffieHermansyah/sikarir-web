@@ -129,6 +129,6 @@ class DaftarPelatihanController extends Controller
 
     protected function relations(): array
     {
-        return ['admin', 'durasi'];
+        return ['admin', 'instruktur', 'durasi'];
     }
 }
