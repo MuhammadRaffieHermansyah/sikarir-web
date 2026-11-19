@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Profil Peserta Vokasi - ' . ($peserta->user->name ?? 'Peserta'))
+@section('title', 'Detail Profil Peserta Vokasi - ' . ($peserta->nama ?? 'Peserta'))
 
 @section('content')
   <x-ui.page-header
@@ -42,12 +42,12 @@
     <div class="flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
       <div class="flex items-center gap-5">
         <span class="grid size-16 shrink-0 place-items-center rounded-2xl bg-primary text-2xl font-black uppercase text-primary-foreground">
-          {{ strtoupper(substr($peserta->user->name ?? 'P', 0, 2)) }}
+          {{ strtoupper(substr($peserta->nama ?? 'P', 0, 2)) }}
         </span>
 
         <div>
           <div class="flex flex-wrap items-center gap-2.5">
-            <h2 class="text-lg font-extrabold text-foreground">{{ $peserta->user->name ?? 'Peserta Tanpa Nama' }}</h2>
+            <h2 class="text-lg font-extrabold text-foreground">{{ $peserta->nama ?? 'Peserta Tanpa Nama' }}</h2>
             <x-ui.badge variant="secondary" class="font-mono">NIS: {{ $peserta->nomor_peserta ?? '-' }}</x-ui.badge>
             <x-ui.badge variant="secondary">{{ $peserta->jurusan ?? 'Kejuruan Vokasi' }}</x-ui.badge>
           </div>
@@ -138,7 +138,7 @@
 
             <div>
               <span class="mb-1 block font-medium text-muted-foreground">Petugas Pendaftar (Admin)</span>
-              <span class="font-semibold text-foreground">{{ $peserta->admin->user->name ?? 'System Default' }}</span>
+              <span class="font-semibold text-foreground">{{ $peserta->admin->nama ?? 'System Default' }}</span>
             </div>
 
             <div class="sm:col-span-2">

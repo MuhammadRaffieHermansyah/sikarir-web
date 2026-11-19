@@ -40,12 +40,12 @@
         <div class="flex items-center gap-3">
           <x-ui.avatar class="size-10">
             <x-ui.avatar-fallback class="bg-accent text-sm font-bold text-accent-foreground">
-              {{ strtoupper(substr($sertifikat->peserta->user->name ?? 'P', 0, 2)) }}
+              {{ strtoupper(substr($sertifikat->peserta->nama ?? 'P', 0, 2)) }}
             </x-ui.avatar-fallback>
           </x-ui.avatar>
 
           <div class="min-w-0">
-            <x-ui.card-title class="text-base font-bold">{{ $sertifikat->peserta->user->name ?? 'Tanpa Nama' }}</x-ui.card-title>
+            <x-ui.card-title class="text-base font-bold">{{ $sertifikat->peserta->nama ?? 'Tanpa Nama' }}</x-ui.card-title>
             <x-ui.card-description>
               ID Sertifikat: #CERT-{{ str_pad($sertifikat->id_sertifikat ?? $sertifikat->id, 4, '0', STR_PAD_LEFT) }}
               {{ isset($sertifikat->peserta->nomor_peserta) ? '• No. Peserta: ' . $sertifikat->peserta->nomor_peserta : '' }}
@@ -83,7 +83,7 @@
             <x-lucide-user-check class="size-3.5" />
             Admin Penanggung Jawab
           </span>
-          <p class="font-medium text-foreground">{{ $sertifikat->admin->user->name ?? '-' }}</p>
+          <p class="font-medium text-foreground">{{ $sertifikat->admin->nama ?? '-' }}</p>
         </div>
 
         <div class="space-y-1">

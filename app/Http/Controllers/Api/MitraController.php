@@ -7,7 +7,9 @@ use App\Http\Requests\StoreMitraRequest;
 use App\Http\Requests\UpdateMitraRequest;
 use App\Http\Resources\MitraResource;
 use App\Models\Mitra;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 use OpenApi\Attributes as OA;
 
 class MitraController extends Controller
@@ -57,7 +59,26 @@ class MitraController extends Controller
     )]
     public function store(StoreMitraRequest $request): JsonResponse
     {
-        $mitra = Mitra::create($request->validated());
+        $data = $request->validated();
+        $idUser = $data['id_user'] ?? null;
+
+        if ($idUser !== null) {
+            $data['nama'] ??= User::find($idUser)?->name;
+        }
+
+        $existing = $idUser !== null ? Mitra::where('id_user', $idUser)->first() : null;
+
+        if ($existing === null) {
+            $mitra = Mitra::create($data);
+        } elseif ((int) $idUser === (int) $request->user()?->id) {
+            $existing->update($data);
+            $mitra = $existing;
+        } else {
+            throw ValidationException::withMessages([
+                'id_user' => 'Akun pengguna ini sudah ditautkan ke mitra lain.',
+            ]);
+        }
+
         return (new MitraResource($mitra))->response()->setStatusCode(201);
     }
 
@@ -67,7 +88,7 @@ class MitraController extends Controller
         tags: ['Mitra'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
             new OA\Response(response: 200, description: 'Detail mitra'),
@@ -77,6 +98,7 @@ class MitraController extends Controller
     public function show(int $id): JsonResponse
     {
         $mitra = Mitra::with($this->relations())->findOrFail($id);
+
         return (new MitraResource($mitra))->response();
     }
 
@@ -86,7 +108,7 @@ class MitraController extends Controller
         tags: ['Mitra'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         requestBody: new OA\RequestBody(
             required: true,
@@ -114,6 +136,7 @@ class MitraController extends Controller
     {
         $mitra = Mitra::findOrFail($id);
         $mitra->update($request->validated());
+
         return (new MitraResource($mitra->fresh()->load($this->relations())))->response();
     }
 
@@ -123,7 +146,7 @@ class MitraController extends Controller
         tags: ['Mitra'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
             new OA\Response(response: 200, description: 'Mitra berhasil dihapus'),
@@ -134,6 +157,7 @@ class MitraController extends Controller
     {
         $mitra = Mitra::findOrFail($id);
         $mitra->delete();
+
         return response()->json(['message' => 'Data berhasil dihapus']);
     }
 

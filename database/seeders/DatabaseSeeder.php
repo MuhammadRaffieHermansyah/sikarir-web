@@ -49,25 +49,23 @@ class DatabaseSeeder extends Seeder
         $demoAdminUser = User::updateOrCreate(
             ['email' => 'admin@sikarir.com'],
             [
-                'name' => 'Admin BLK Pusat',
                 'password' => Hash::make('password'),
                 'role' => 'admin_blk',
             ]
         );
-        $demoAdmin = AdminBlk::firstOrCreate(['id_user' => $demoAdminUser->id]);
+        $demoAdmin = AdminBlk::firstOrCreate(['id_user' => $demoAdminUser->id], ['nama' => 'Admin BLK Pusat']);
 
         // Tambah Admin lain
         $otherAdminUsers = User::factory(2)->adminBlk()->create();
         $admins = collect([$demoAdmin]);
         foreach ($otherAdminUsers as $u) {
-            $admins->push(AdminBlk::firstOrCreate(['id_user' => $u->id]));
+            $admins->push(AdminBlk::firstOrCreate(['id_user' => $u->id], ['nama' => fake()->name()]));
         }
 
         // Mitra Demo Utama
         $demoMitraUser = User::updateOrCreate(
             ['email' => 'mitra@sikarir.com'],
             [
-                'name' => 'HRD PT Midtrans Indonesia',
                 'password' => Hash::make('password'),
                 'role' => 'mitra',
             ]
@@ -75,6 +73,7 @@ class DatabaseSeeder extends Seeder
         $demoMitra = Mitra::updateOrCreate(
             ['id_user' => $demoMitraUser->id],
             [
+                'nama' => 'HRD PT Midtrans Indonesia',
                 'nama_perusahaan' => 'PT Midtrans Indonesia',
                 'jenis_mitra' => 'Perusahaan Nasional',
                 'logo_perusahaan' => 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&auto=format&fit=crop&q=80',
@@ -125,7 +124,6 @@ class DatabaseSeeder extends Seeder
             $u = User::updateOrCreate(
                 ['email' => $m['email']],
                 [
-                    'name' => 'HR ' . $m['name'],
                     'password' => Hash::make('password'),
                     'role' => 'mitra',
                 ]
@@ -133,14 +131,15 @@ class DatabaseSeeder extends Seeder
             $mitraObj = Mitra::updateOrCreate(
                 ['id_user' => $u->id],
                 [
+                    'nama' => 'HR '.$m['name'],
                     'nama_perusahaan' => $m['name'],
                     'jenis_mitra' => 'Perusahaan BUMN & Swasta',
                     'logo_perusahaan' => $m['logo'],
                     'provinsi' => 'Jawa Timur',
                     'kota' => $m['kota'],
-                    'alamat' => 'Kawasan Industri Terpadu No. ' . fake()->buildingNumber(),
+                    'alamat' => 'Kawasan Industri Terpadu No. '.fake()->buildingNumber(),
                     'no_telp' => fake()->numerify('021-########'),
-                    'no_izin' => 'SK-MITRA-' . fake()->numerify('###') . '/2026',
+                    'no_izin' => 'SK-MITRA-'.fake()->numerify('###').'/2026',
                     'jabatan_pic' => 'HR Manager',
                     'bidang_usaha' => $m['bidang'],
                 ]
@@ -152,7 +151,6 @@ class DatabaseSeeder extends Seeder
         $demoPesertaUser = User::updateOrCreate(
             ['email' => 'peserta@sikarir.com'],
             [
-                'name' => 'Ahmad Syahputra',
                 'password' => Hash::make('password'),
                 'role' => 'peserta',
             ]
@@ -160,6 +158,7 @@ class DatabaseSeeder extends Seeder
         $demoPeserta = Peserta::updateOrCreate(
             ['id_user' => $demoPesertaUser->id],
             [
+                'nama' => 'Ahmad Syahputra',
                 'id_admin' => $demoAdmin->id_admin,
                 'nomor_peserta' => 'PST-2026-0001',
                 'jenis_kelamin' => 'Laki-laki',
@@ -181,8 +180,9 @@ class DatabaseSeeder extends Seeder
         foreach ($pesertaUsers as $u) {
             $peserta = Peserta::create([
                 'id_user' => $u->id,
+                'nama' => fake()->name(),
                 'id_admin' => $admins->random()->id_admin,
-                'nomor_peserta' => 'PST-' . fake()->unique()->numerify('######'),
+                'nomor_peserta' => 'PST-'.fake()->unique()->numerify('######'),
                 'jenis_kelamin' => fake()->randomElement(['Laki-laki', 'Perempuan']),
                 'nomor_kk' => fake()->numerify('35################'),
                 'nomor_wa' => fake()->numerify('08##########'),
@@ -353,7 +353,7 @@ class DatabaseSeeder extends Seeder
                     'tanggal' => $tgl,
                 ],
                 [
-                    'jam_hadir' => '07:5' . rand(2, 8) . ':00',
+                    'jam_hadir' => '07:5'.rand(2, 8).':00',
                     'status_kehadiran' => 'hadir',
                     'latitude' => -8.1763120,
                     'longitude' => 113.7007150,
@@ -505,7 +505,7 @@ class DatabaseSeeder extends Seeder
                         'status' => fake()->randomElement(['melamar', 'diproses', 'wawancara', 'diterima', 'ditolak']),
                         'catatan_pelamar' => fake()->optional()->sentence(),
                         'catatan_mitra' => fake()->optional()->sentence(),
-                        'resume_url' => 'https://example.com/resumes/' . fake()->uuid() . '.pdf',
+                        'resume_url' => 'https://example.com/resumes/'.fake()->uuid().'.pdf',
                     ]
                 );
             }

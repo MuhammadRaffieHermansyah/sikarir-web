@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\JadwalPelatihan;
 
 class RuanganWorkshop extends Model
 {
+    use HasFactory;
+
     protected $table = 'ruangan_workshop';
 
     protected $fillable = [

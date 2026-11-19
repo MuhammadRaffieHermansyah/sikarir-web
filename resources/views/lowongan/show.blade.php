@@ -184,7 +184,7 @@
 
                     <x-ui.table-row>
                       <x-ui.table-cell class="px-4 py-3">
-                        <div class="font-semibold text-foreground">{{ $lam->peserta->user->name ?? '-' }}</div>
+                        <div class="font-semibold text-foreground">{{ $lam->peserta->nama ?? '-' }}</div>
                         <div class="text-xs text-muted-foreground">{{ $lam->peserta->user->email ?? '-' }}</div>
                       </x-ui.table-cell>
 

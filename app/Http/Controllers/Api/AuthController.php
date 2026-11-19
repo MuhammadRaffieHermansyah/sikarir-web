@@ -39,21 +39,16 @@ class AuthController extends Controller
     public function register(RegisterRequest $request): JsonResponse
     {
         $data = $request->validated();
+        $nama = $data['name'];
+        unset($data['name']);
+
         if (empty($data['role'])) {
             $data['role'] = 'peserta';
         }
         $user = User::create($data);
 
-        // Jika mendaftar sebagai peserta, buatkan record peserta awal
-        if ($user->role === 'peserta') {
-            \App\Models\Peserta::firstOrCreate(
-                ['id_user' => $user->id],
-                [
-                    'nomor_peserta' => 'PST-' . date('Ymd') . '-' . str_pad($user->id, 4, '0', STR_PAD_LEFT),
-                    'jenis_kelamin' => 'Laki-laki',
-                ]
-            );
-        }
+        // Simpan nama pada profil sesuai role agar data user tetap konsisten.
+        $user->ensureRoleProfile($nama);
 
         return response()->json([
             'message' => 'Registrasi berhasil',
@@ -85,9 +80,10 @@ class AuthController extends Controller
     {
         $data = $request->validated();
         $user = User::where('email', $data['email'])->first();
-        if (!$user || !Hash::check($data['password'], $user->password)) {
+        if (! $user || ! Hash::check($data['password'], $user->password)) {
             throw ValidationException::withMessages(['email' => ['Email atau password salah.']]);
         }
+
         return response()->json([
             'message' => 'Login berhasil',
             'data' => $user->load(['peserta', 'mitra', 'adminBlk']),
@@ -123,6 +119,7 @@ class AuthController extends Controller
     public function logout(Request $request): JsonResponse
     {
         $request->user()->currentAccessToken()?->delete();
+
         return response()->json(['message' => 'Logout berhasil']);
     }
 }

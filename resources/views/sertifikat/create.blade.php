@@ -68,7 +68,7 @@
                 <option value="">-- Pilih Peserta --</option>
                 @foreach ($pesertas as $p)
                   <option value="{{ $p->id_peserta ?? $p->id }}" @selected(old('id_peserta') == ($p->id_peserta ?? $p->id))>
-                    {{ $p->user->name ?? 'Peserta #' . ($p->id_peserta ?? $p->id) }} {{ isset($p->nomor_peserta) ? '(' . $p->nomor_peserta . ')' : '' }}
+                    {{ $p->nama ?? 'Peserta #' . ($p->id_peserta ?? $p->id) }} {{ isset($p->nomor_peserta) ? '(' . $p->nomor_peserta . ')' : '' }}
                   </option>
                 @endforeach
               </x-ui.select>
@@ -119,7 +119,7 @@
                 <option value="">-- Pilih Admin --</option>
                 @foreach ($admins as $a)
                   <option value="{{ $a->id_admin ?? $a->id }}" @selected(old('id_admin') == ($a->id_admin ?? $a->id))>
-                    {{ $a->user->name ?? 'Admin #' . ($a->id_admin ?? $a->id) }}
+                    {{ $a->nama ?? 'Admin #' . ($a->id_admin ?? $a->id) }}
                   </option>
                 @endforeach
               </x-ui.select>

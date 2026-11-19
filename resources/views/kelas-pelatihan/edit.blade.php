@@ -79,7 +79,7 @@
             <x-ui.select name="id_peserta" id="id_peserta" native class="w-full" required>
               @foreach ($pesertas as $peserta)
                 <option value="{{ $peserta->id_peserta }}" @selected(old('id_peserta', $kelas->id_peserta) == $peserta->id_peserta)>
-                  {{ $peserta->user->name ?? 'Peserta' }} (NIS: {{ $peserta->nomor_peserta }})
+                  {{ $peserta->nama ?? 'Peserta' }} (NIS: {{ $peserta->nomor_peserta }})
                 </option>
               @endforeach
             </x-ui.select>

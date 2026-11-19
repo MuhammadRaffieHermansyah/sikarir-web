@@ -14,7 +14,6 @@ class MitraSeeder extends Seeder
         $demoUser = User::updateOrCreate(
             ['email' => 'mitra@sikarir.test'],
             [
-                'name' => 'Mitra Demo',
                 'password' => 'password',
                 'role' => 'mitra',
             ]
@@ -23,6 +22,7 @@ class MitraSeeder extends Seeder
         Mitra::firstOrCreate(
             ['id_user' => $demoUser->id],
             [
+                'nama' => 'Mitra Demo',
                 'nama_perusahaan' => 'PT SIKARIR Demo',
                 'jenis_mitra' => 'Perusahaan',
                 'kota' => 'Jember',

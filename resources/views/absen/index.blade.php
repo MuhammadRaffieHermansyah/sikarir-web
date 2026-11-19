@@ -98,11 +98,11 @@
                 <div class="flex items-center gap-3">
                   <x-ui.avatar class="size-8">
                     <x-ui.avatar-fallback class="bg-muted text-xs font-bold text-muted-foreground">
-                      {{ strtoupper(substr($absen->peserta->user->name ?? 'P', 0, 2)) }}
+                      {{ strtoupper(substr($absen->peserta->nama ?? 'P', 0, 2)) }}
                     </x-ui.avatar-fallback>
                   </x-ui.avatar>
                   <div class="min-w-0">
-                    <div class="font-bold text-foreground">{{ $absen->peserta->user->name ?? 'Tanpa Nama' }}</div>
+                    <div class="font-bold text-foreground">{{ $absen->peserta->nama ?? 'Tanpa Nama' }}</div>
                     <div class="text-xs text-muted-foreground">{{ $absen->peserta->user->email ?? '-' }}</div>
                   </div>
                 </div>

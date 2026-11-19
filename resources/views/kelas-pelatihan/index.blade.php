@@ -89,14 +89,14 @@
               <x-ui.table-cell class="px-4 py-3">
                 <div class="flex items-center gap-3">
                   <span class="grid size-9 shrink-0 place-items-center rounded-lg bg-accent text-xs font-black text-accent-foreground">
-                    {{ strtoupper(substr($item->peserta->user->name ?? 'P', 0, 2)) }}
+                    {{ strtoupper(substr($item->peserta->nama ?? 'P', 0, 2)) }}
                   </span>
                   <div class="min-w-0">
                     <a
                       href="{{ route('pesertas.show', $item->id_peserta) }}"
                       class="font-bold text-foreground transition group-hover:text-primary"
                     >
-                      {{ $item->peserta->user->name ?? 'Peserta Tidak Ditemukan' }}
+                      {{ $item->peserta->nama ?? 'Peserta Tidak Ditemukan' }}
                     </a>
                     <div class="text-xs text-muted-foreground">
                       NIS: {{ $item->peserta->nomor_peserta ?? '-' }}
@@ -151,7 +151,7 @@
                     variant="ghost"
                     size="icon-sm"
                     title="Lihat Detail"
-                    aria-label="Lihat detail kelas {{ $item->peserta->user->name ?? '' }}"
+                    aria-label="Lihat detail kelas {{ $item->peserta->nama ?? '' }}"
                   >
                     <x-lucide-eye />
                   </x-ui.button>
@@ -161,7 +161,7 @@
                     variant="ghost"
                     size="icon-sm"
                     title="Edit Status"
-                    aria-label="Edit status kelas {{ $item->peserta->user->name ?? '' }}"
+                    aria-label="Edit status kelas {{ $item->peserta->nama ?? '' }}"
                   >
                     <x-lucide-pencil />
                   </x-ui.button>

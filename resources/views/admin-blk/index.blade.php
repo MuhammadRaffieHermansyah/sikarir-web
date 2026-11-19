@@ -87,11 +87,11 @@
               <td class="px-5 py-3.5">
                 <div class="flex items-center gap-3">
                   <div class="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-600 to-teal-800 text-white font-bold flex items-center justify-center text-xs shadow-sm shrink-0">
-                    {{ strtoupper(substr($admin->user->name ?? 'A', 0, 2)) }}
+                    {{ strtoupper(substr($admin->nama ?? 'A', 0, 2)) }}
                   </div>
                   <div>
                     <a href="{{ route('admin-blk.show', $admin->id_admin) }}" class="font-bold text-slate-800 hover:text-emerald-700 transition">
-                      {{ $admin->user->name ?? 'Tanpa Nama' }}
+                      {{ $admin->nama ?? 'Tanpa Nama' }}
                     </a>
                     <div class="text-[10px] text-slate-400 flex items-center gap-1">
                       <span>ID Admin: #BLK-{{ str_pad($admin->id_admin, 3, '0', STR_PAD_LEFT) }}</span>

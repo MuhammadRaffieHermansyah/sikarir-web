@@ -6,6 +6,6 @@ class UpdateAdminBlkRequest extends StoreAdminBlkRequest
 {
     public function rules(): array
     {
-        return ['id_user' => 'sometimes|exists:users,id'];
+        return ['id_user' => 'sometimes|exists:users,id', 'nama' => 'sometimes|nullable|string|max:255'];
     }
 }

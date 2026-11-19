@@ -90,7 +90,7 @@ class AbsenController extends Controller
         $user = $request->user();
         $peserta = $user->peserta ?? null;
 
-        if (!$peserta) {
+        if (! $peserta) {
             return response()->json(['message' => 'Data peserta tidak ditemukan.', 'data' => null], 200);
         }
 
@@ -102,27 +102,27 @@ class AbsenController extends Controller
 
         $records = $query->latest('tanggal')->get();
 
-        $totalHadir   = $records->where('status_kehadiran', 'hadir')->count();
-        $totalIzin    = $records->where('status_kehadiran', 'izin')->count();
-        $totalSakit   = $records->where('status_kehadiran', 'sakit')->count();
-        $totalAlpha   = $records->whereIn('status_kehadiran', ['alpha', 'alpa'])->count();
-        $totalSesi    = $records->count();
-        $persentase   = $totalSesi > 0 ? round(($totalHadir / $totalSesi) * 100, 1) : 0;
-        $statusLulus  = $persentase >= 80 ? 'Memenuhi Syarat Sertifikasi' : 'Kehadiran Belum Memenuhi Syarat';
+        $totalHadir = $records->where('status_kehadiran', 'hadir')->count();
+        $totalIzin = $records->where('status_kehadiran', 'izin')->count();
+        $totalSakit = $records->where('status_kehadiran', 'sakit')->count();
+        $totalAlpha = $records->whereIn('status_kehadiran', ['alpha', 'alpa'])->count();
+        $totalSesi = $records->count();
+        $persentase = $totalSesi > 0 ? round(($totalHadir / $totalSesi) * 100, 1) : 0;
+        $statusLulus = $persentase >= 80 ? 'Memenuhi Syarat Sertifikasi' : 'Kehadiran Belum Memenuhi Syarat';
 
         $perJadwal = $records->groupBy('id_jadwal')->map(function ($items) {
             $jadwal = $items->first()->jadwal;
-            $hadir  = $items->where('status_kehadiran', 'hadir')->count();
-            $total  = $items->count();
-            $pct    = $total > 0 ? round(($hadir / $total) * 100, 1) : 0;
+            $hadir = $items->where('status_kehadiran', 'hadir')->count();
+            $total = $items->count();
+            $pct = $total > 0 ? round(($hadir / $total) * 100, 1) : 0;
 
             return [
-                'id_jadwal'       => $jadwal->id_jadwal ?? null,
-                'nama_pelatihan'  => $jadwal->pelatihan->nama_pelatihan ?? 'Pelatihan',
-                'total_hadir'     => $hadir,
-                'total_sesi'      => $total,
-                'persentase'      => $pct,
-                'status'          => $pct >= 80 ? 'Memenuhi Syarat' : 'Perlu Ditingkatkan',
+                'id_jadwal' => $jadwal->id_jadwal ?? null,
+                'nama_pelatihan' => $jadwal->pelatihan->nama_pelatihan ?? 'Pelatihan',
+                'total_hadir' => $hadir,
+                'total_sesi' => $total,
+                'persentase' => $pct,
+                'status' => $pct >= 80 ? 'Memenuhi Syarat' : 'Perlu Ditingkatkan',
             ];
         })->values();
 
@@ -130,20 +130,20 @@ class AbsenController extends Controller
             'message' => 'Rekapitulasi kehadiran peserta berhasil diambil',
             'data' => [
                 'peserta' => [
-                    'id_peserta'    => $peserta->id_peserta,
+                    'id_peserta' => $peserta->id_peserta,
                     'nomor_peserta' => $peserta->nomor_peserta,
-                    'nama'          => $user->name,
+                    'nama' => $peserta->nama,
                 ],
                 'summary' => [
-                    'total_hadir'        => $totalHadir,
-                    'total_izin'         => $totalIzin,
-                    'total_sakit'        => $totalSakit,
-                    'total_alpha'        => $totalAlpha,
-                    'total_sesi'         => $totalSesi,
-                    'persentase_hadir'   => $persentase,
-                    'syarat_persentase'  => 80,
-                    'status_kelayakan'   => $statusLulus,
-                    'memenuhi_syarat'    => $persentase >= 80,
+                    'total_hadir' => $totalHadir,
+                    'total_izin' => $totalIzin,
+                    'total_sakit' => $totalSakit,
+                    'total_alpha' => $totalAlpha,
+                    'total_sesi' => $totalSesi,
+                    'persentase_hadir' => $persentase,
+                    'syarat_persentase' => 80,
+                    'status_kelayakan' => $statusLulus,
+                    'memenuhi_syarat' => $persentase >= 80,
                 ],
                 'per_jadwal' => $perJadwal,
             ],
@@ -186,7 +186,7 @@ class AbsenController extends Controller
         $peserta = $user?->peserta;
         if ($peserta) {
             $data['id_peserta'] = $peserta->id_peserta;
-        } elseif (!empty($data['id_peserta'])) {
+        } elseif (! empty($data['id_peserta'])) {
             $found = Peserta::find($data['id_peserta']) ?? Peserta::where('id_user', $data['id_peserta'])->first();
             if ($found) {
                 $data['id_peserta'] = $found->id_peserta;
@@ -198,7 +198,7 @@ class AbsenController extends Controller
         }
 
         // 2. Resolve id_jadwal jika kosong atau tidak valid
-        if (empty($data['id_jadwal']) || !JadwalPelatihan::where('id_jadwal', $data['id_jadwal'])->exists()) {
+        if (empty($data['id_jadwal']) || ! JadwalPelatihan::where('id_jadwal', $data['id_jadwal'])->exists()) {
             $activeKelas = KelasPelatihan::where('id_peserta', $data['id_peserta'])->latest('id_kelas')->first();
             if ($activeKelas) {
                 $data['id_jadwal'] = $activeKelas->id_jadwal;
@@ -246,6 +246,7 @@ class AbsenController extends Controller
         }
 
         $absen = Absen::create($data);
+
         return (new AbsenResource($absen->load($this->relations())))->response()->setStatusCode(201);
     }
 
@@ -255,7 +256,7 @@ class AbsenController extends Controller
         tags: ['Absen'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
             new OA\Response(response: 200, description: 'Detail absensi'),
@@ -265,6 +266,7 @@ class AbsenController extends Controller
     public function show(int $id): JsonResponse
     {
         $absen = Absen::with($this->relations())->findOrFail($id);
+
         return (new AbsenResource($absen))->response();
     }
 
@@ -274,7 +276,7 @@ class AbsenController extends Controller
         tags: ['Absen'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         requestBody: new OA\RequestBody(
             required: true,
@@ -297,11 +299,11 @@ class AbsenController extends Controller
     public function update(UpdateAbsenRequest $request, int $id): JsonResponse
     {
         $absen = Absen::findOrFail($id);
-        $data  = $request->validated();
+        $data = $request->validated();
 
         $idPeserta = $data['id_peserta'] ?? $absen->id_peserta;
-        $idJadwal  = $data['id_jadwal']  ?? $absen->id_jadwal;
-        $tanggal   = $data['tanggal']    ?? $absen->tanggal->format('Y-m-d');
+        $idJadwal = $data['id_jadwal'] ?? $absen->id_jadwal;
+        $tanggal = $data['tanggal'] ?? $absen->tanggal->format('Y-m-d');
 
         $exists = Absen::where('id_peserta', $idPeserta)
             ->where('id_jadwal', $idJadwal)
@@ -314,6 +316,7 @@ class AbsenController extends Controller
         }
 
         $absen->update($data);
+
         return (new AbsenResource($absen->fresh()->load($this->relations())))->response();
     }
 
@@ -323,7 +326,7 @@ class AbsenController extends Controller
         tags: ['Absen'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
             new OA\Response(response: 200, description: 'Absensi berhasil dihapus'),
@@ -334,6 +337,7 @@ class AbsenController extends Controller
     {
         $absen = Absen::findOrFail($id);
         $absen->delete();
+
         return response()->json(['message' => 'Data berhasil dihapus']);
     }
 
@@ -351,14 +355,14 @@ class AbsenController extends Controller
      */
     private function validateLocation(array $data): array
     {
-        $lat = $data['latitude']  ?? null;
+        $lat = $data['latitude'] ?? null;
         $lng = $data['longitude'] ?? null;
 
         if ($lat === null || $lng === null) {
             return [
-                'error'   => true,
+                'error' => true,
                 'message' => 'Koordinat GPS diperlukan untuk presensi hadir. Pastikan lokasi perangkat diaktifkan.',
-                'jarak_meter'  => null,
+                'jarak_meter' => null,
                 'radius_meter' => null,
             ];
         }
@@ -378,21 +382,21 @@ class AbsenController extends Controller
 
         if ($jarakMeter > $radiusMeter) {
             return [
-                'error'        => true,
-                'message'      => sprintf(
+                'error' => true,
+                'message' => sprintf(
                     'Anda berada %.0f meter dari lokasi pelatihan. Presensi hanya diizinkan dalam radius %d meter.',
                     $jarakMeter,
                     $radiusMeter
                 ),
-                'jarak_meter'  => round($jarakMeter, 2),
+                'jarak_meter' => round($jarakMeter, 2),
                 'radius_meter' => $radiusMeter,
             ];
         }
 
         return [
-            'error'        => false,
-            'message'      => 'OK',
-            'jarak_meter'  => round($jarakMeter, 2),
+            'error' => false,
+            'message' => 'OK',
+            'jarak_meter' => round($jarakMeter, 2),
             'radius_meter' => $radiusMeter,
         ];
     }

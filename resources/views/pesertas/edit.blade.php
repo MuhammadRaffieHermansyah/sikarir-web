@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Peserta Vokasi - ' . ($peserta->user->name ?? 'Peserta'))
+@section('title', 'Edit Peserta Vokasi - ' . ($peserta->nama ?? 'Peserta'))
 
 @section('content')
   <x-ui.page-header
@@ -42,12 +42,12 @@
     <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
       <div class="flex items-center gap-4">
         <span class="grid size-14 shrink-0 place-items-center rounded-xl bg-primary text-lg font-black uppercase text-primary-foreground shadow-sm">
-          {{ strtoupper(substr($peserta->user->name ?? 'P', 0, 2)) }}
+          {{ strtoupper(substr($peserta->nama ?? 'P', 0, 2)) }}
         </span>
 
         <div>
           <div class="flex flex-wrap items-center gap-2">
-            <h2 class="text-base font-bold text-foreground">{{ $peserta->user->name ?? 'Tanpa Nama' }}</h2>
+            <h2 class="text-base font-bold text-foreground">{{ $peserta->nama ?? 'Tanpa Nama' }}</h2>
             <x-ui.badge variant="secondary" class="font-mono">NIS: {{ $peserta->nomor_peserta }}</x-ui.badge>
             <x-ui.badge variant="secondary">{{ $peserta->jurusan ?? 'Kejuruan Vokasi' }}</x-ui.badge>
           </div>
@@ -126,6 +126,12 @@
                 @endforeach
               </x-ui.select>
               <x-ui.field-error :messages="$errors->get('id_user')" />
+            </x-ui.field>
+
+            <x-ui.field class="sm:col-span-2" data-invalid="{{ $errors->has('nama') ? 'true' : 'false' }}">
+              <x-ui.field-label for="nama">Nama Lengkap Peserta <span class="text-destructive">*</span></x-ui.field-label>
+              <x-ui.input id="nama" name="nama" type="text" :value="old('nama', $peserta->nama)" required />
+              <x-ui.field-error :messages="$errors->get('nama')" />
             </x-ui.field>
 
             <x-ui.field data-invalid="{{ $errors->has('nomor_peserta') ? 'true' : 'false' }}">

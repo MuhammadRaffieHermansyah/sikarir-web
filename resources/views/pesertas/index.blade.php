@@ -84,14 +84,14 @@
               <x-ui.table-cell class="px-4 py-3">
                 <div class="flex items-center gap-3">
                   <span class="grid size-9 shrink-0 place-items-center rounded-full bg-primary text-xs font-bold uppercase text-primary-foreground">
-                    {{ strtoupper(substr($peserta->user->name ?? 'P', 0, 2)) }}
+                    {{ strtoupper(substr($peserta->nama ?? 'P', 0, 2)) }}
                   </span>
                   <div class="min-w-0">
                     <a
                       href="{{ route('pesertas.show', $peserta->id_peserta) }}"
                       class="font-bold text-foreground transition group-hover:text-primary"
                     >
-                      {{ $peserta->user->name ?? 'Tanpa Nama' }}
+                      {{ $peserta->nama ?? 'Tanpa Nama' }}
                     </a>
                     <div class="text-xs text-muted-foreground">
                       {{ $peserta->jenis_kelamin ?? '-' }} • {{ $peserta->user->email ?? '-' }}
@@ -132,7 +132,7 @@
                     variant="ghost"
                     size="icon-sm"
                     title="Detail"
-                    aria-label="Lihat detail peserta {{ $peserta->user->name ?? '' }}"
+                    aria-label="Lihat detail peserta {{ $peserta->nama ?? '' }}"
                   >
                     <x-lucide-eye />
                   </x-ui.button>
@@ -142,7 +142,7 @@
                     variant="ghost"
                     size="icon-sm"
                     title="Edit"
-                    aria-label="Edit peserta {{ $peserta->user->name ?? '' }}"
+                    aria-label="Edit peserta {{ $peserta->nama ?? '' }}"
                   >
                     <x-lucide-pencil />
                   </x-ui.button>
@@ -162,7 +162,7 @@
                       size="icon-sm"
                       class="text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
                       title="Hapus"
-                      aria-label="Hapus peserta {{ $peserta->user->name ?? '' }}"
+                      aria-label="Hapus peserta {{ $peserta->nama ?? '' }}"
                     >
                       <x-lucide-trash-2 />
                     </x-ui.button>
