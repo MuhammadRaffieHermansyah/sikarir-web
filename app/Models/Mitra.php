@@ -10,7 +10,17 @@ class Mitra extends Model
     use HasFactory;
 
     protected $primaryKey = 'id_mitra';
-    protected $fillable = ['id_user', 'nama_perusahaan', 'jenis_mitra', 'logo_perusahaan', 'provinsi', 'kota', 'alamat', 'no_telp', 'no_izin', 'jabatan_pic', 'bidang_usaha'];
+
+    protected $fillable = [
+        'id_user', 'nama_perusahaan', 'jenis_mitra', 'logo_perusahaan', 'provinsi', 'kota', 'alamat', 'no_telp',
+        'no_izin', 'surat_legalitas_path', 'surat_permohonan_kerjasama_path', 'is_verified', 'verified_at',
+        'verified_by', 'jabatan_pic', 'bidang_usaha',
+    ];
+
+    protected function casts(): array
+    {
+        return ['is_verified' => 'boolean', 'verified_at' => 'datetime'];
+    }
 
     public function getIdAttribute()
     {
@@ -35,5 +45,10 @@ class Mitra extends Model
     public function lowongan()
     {
         return $this->hasMany(DaftarLowongan::class, 'id_mitra');
+    }
+
+    public function verifiedBy()
+    {
+        return $this->belongsTo(User::class, 'verified_by');
     }
 }

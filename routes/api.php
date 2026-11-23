@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Api\AdminBlkController;
 use App\Http\Controllers\Api\AbsenController;
+use App\Http\Controllers\Api\AdminBlkController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DaftarLowonganController;
 use App\Http\Controllers\Api\DaftarPelatihanController;
@@ -69,7 +69,9 @@ Route::name('api.')->group(function () {
         Route::get('lowongan/my-applications', [DaftarLowonganController::class, 'myApplications'])->name('lowongan.my-applications');
         Route::post('lowongan/{id}/lamar', [DaftarLowonganController::class, 'lamar'])->name('lowongan.lamar');
         Route::get('lowongan/{id}', [DaftarLowonganController::class, 'show'])->whereNumber('id');
-        Route::apiResource('lowongan', DaftarLowonganController::class)->except(['index', 'show']);
+        Route::apiResource('lowongan', DaftarLowonganController::class)
+            ->except(['index', 'show'])
+            ->middleware(['role:admin_blk,mitra', 'mitra.verified']);
 
         // Pelatihan & Jadwal CRUD
         Route::apiResource('pelatihan', DaftarPelatihanController::class)->except(['index', 'show']);

@@ -3,12 +3,27 @@
 @section('title', 'Profil Akun - SiKarir')
 
 @section('content')
+  @php
+    $isMitra = $user->role === 'mitra';
+    $isMitraVerified = $isMitra && $user->mitra?->is_verified;
+  @endphp
+
   <x-ui.page-header
     title="Profil Akun"
     description="Kelola informasi pribadi, keamanan kata sandi, dan status akun Anda."
   >
     <x-slot:actions>
-      @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && $user->hasVerifiedEmail())
+      @if ($isMitra && $isMitraVerified)
+        <x-ui.badge tone="success" class="gap-1.5">
+          <x-lucide-badge-check class="size-3.5 text-blue-500" />
+          Mitra Terverifikasi
+        </x-ui.badge>
+      @elseif ($isMitra)
+        <x-ui.badge tone="warning" class="gap-1.5">
+          <x-lucide-clock-3 class="size-3.5" />
+          Menunggu Verifikasi Mitra
+        </x-ui.badge>
+      @elseif ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && $user->hasVerifiedEmail())
         <x-ui.badge tone="success" class="gap-1.5">
           <x-lucide-badge-check class="size-3.5" />
           Email Terverifikasi
@@ -57,9 +72,9 @@
             </x-ui.badge>
           </div>
           <div class="flex items-center justify-between gap-3 text-xs">
-            <span class="text-muted-foreground">Status Email</span>
+            <span class="text-muted-foreground">{{ $isMitra ? 'Status Mitra' : 'Status Email' }}</span>
             <span class="font-semibold text-foreground">
-              {{ $user->hasVerifiedEmail() ? 'Terverifikasi' : 'Belum Terverifikasi' }}
+              {{ $isMitra ? ($isMitraVerified ? 'Terverifikasi' : 'Menunggu Verifikasi') : ($user->hasVerifiedEmail() ? 'Terverifikasi' : 'Belum Terverifikasi') }}
             </span>
           </div>
           <div class="flex items-center justify-between gap-3 text-xs">

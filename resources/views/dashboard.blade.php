@@ -26,6 +26,14 @@
     <div class="pointer-events-none absolute -bottom-16 -right-16 size-64 rounded-full bg-sikarir-lime/10 blur-3xl"></div>
   </x-ui.card>
 
+  @if (auth()->user()->role === 'mitra' && ! auth()->user()->mitra?->is_verified)
+    <x-ui.alert tone="info" class="mt-6">
+      <x-lucide-clock-3 />
+      <x-ui.alert-title>Verifikasi mitra masih diproses</x-ui.alert-title>
+      <x-ui.alert-description>Dokumen perusahaan Anda sedang ditinjau admin. Akses untuk mengelola lowongan akan aktif setelah akun diverifikasi.</x-ui.alert-description>
+    </x-ui.alert>
+  @endif
+
   @if (View::exists('components.stat-cards'))
     <x-stat-cards />
   @endif
@@ -35,6 +43,7 @@
     description="Pilih modul di bawah untuk mengelola data operasional BLK."
   />
 
+  @if (auth()->user()->role !== 'mitra' || auth()->user()->mitra?->is_verified)
   <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
     @foreach ([
       ['Mitra', 'building-2', 'Kelola Mitra Perusahaan', 'Daftar, tambah, dan kelola data perusahaan mitra kerja sama industri.', 'mitras.index'],
@@ -67,4 +76,5 @@
       </a>
     @endforeach
   </div>
+  @endif
 @endsection
