@@ -35,6 +35,17 @@
         <x-lucide-pencil />
         Edit Data
       </x-ui.button>
+
+      @unless ($mitra->is_verified)
+        <form action="{{ route('mitras.verify', $mitra) }}" method="POST">
+          @csrf
+          @method('PATCH')
+          <x-ui.button type="submit">
+            <x-lucide-badge-check />
+            Verifikasi Mitra
+          </x-ui.button>
+        </form>
+      @endunless
     </x-slot:actions>
   </x-ui.page-header>
 
@@ -87,18 +98,25 @@
       </div>
 
       <div class="text-right sm:border-l sm:border-border sm:pl-6">
-        <div class="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Status Kerjasama</div>
-        <div class="mt-1 flex items-center justify-end gap-1.5 text-xs font-bold text-primary">
-          <span class="size-2 animate-pulse rounded-full bg-emerald-500"></span>
-          Mitra Aktif Balai
-        </div>
+        <div class="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Status Verifikasi</div>
+        @if ($mitra->is_verified)
+          <div class="mt-1 flex items-center justify-end gap-1.5 text-xs font-bold text-primary">
+            <x-lucide-badge-check class="size-4 text-blue-500" />
+            Mitra Terverifikasi
+          </div>
+        @else
+          <div class="mt-1 flex items-center justify-end gap-1.5 text-xs font-bold text-amber-600">
+            <x-lucide-clock-3 class="size-4" />
+            Menunggu Verifikasi
+          </div>
+        @endif
       </div>
     </div>
   </x-ui.card>
 
   <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
     <x-ui.stat label="Total Lowongan Magang" :value="count($mitra->lowongan ?? []) . ' Posisi'" icon="briefcase" />
-    <x-ui.stat label="Status Legalitas" :value="$mitra->no_izin ? 'Terverifikasi NIB' : 'Terdaftar'" icon="shield-check" />
+    <x-ui.stat label="Status Akun" :value="$mitra->is_verified ? 'Terverifikasi' : 'Menunggu Review'" icon="shield-check" />
     <x-ui.stat label="PIC Penanggung Jawab" :value="$mitra->jabatan_pic ?? 'HRD / PIC Industri'" icon="user-check" />
   </div>
 
@@ -151,6 +169,22 @@
             <div class="sm:col-span-2">
               <span class="mb-1 block font-medium text-muted-foreground">Alamat Kantor / Pabrik</span>
               <span class="font-medium leading-relaxed text-foreground">{{ $mitra->alamat ?? '-' }}</span>
+            </div>
+
+            <div class="sm:col-span-2">
+              <span class="mb-2 block font-medium text-muted-foreground">Dokumen Pengajuan</span>
+              <div class="flex flex-wrap gap-2">
+                @if ($mitra->surat_legalitas_path)
+                  <x-ui.button href="{{ route('mitras.documents.download', [$mitra, 'legalitas']) }}" variant="outline" size="sm">
+                    <x-lucide-file-text /> Surat Legalitas
+                  </x-ui.button>
+                @endif
+                @if ($mitra->surat_permohonan_kerjasama_path)
+                  <x-ui.button href="{{ route('mitras.documents.download', [$mitra, 'permohonan']) }}" variant="outline" size="sm">
+                    <x-lucide-file-text /> Surat Permohonan Kerja Sama
+                  </x-ui.button>
+                @endif
+              </div>
             </div>
 
             @if ($mitra->logo_perusahaan)

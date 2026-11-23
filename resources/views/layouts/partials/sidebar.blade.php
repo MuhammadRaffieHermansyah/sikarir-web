@@ -2,6 +2,7 @@
     $user = auth()->user();
     $isAdmin = $user?->role === 'admin_blk';
     $isMitra = $user?->role === 'mitra';
+    $isMitraVerified = $user?->mitra?->is_verified;
 
     $groups = [];
 
@@ -44,15 +45,22 @@
             [
                 'label' => 'Utama',
                 'items' => [
-                    ['label' => 'Dashboard Ringkasan', 'route' => 'dashboard', 'active' => 'dashboard', 'icon' => 'layout-dashboard'],
+                    ['label' => 'Dashboard Mitra', 'route' => 'dashboard', 'active' => 'dashboard', 'icon' => 'layout-dashboard'],
                 ],
             ],
-            [
-                'label' => 'Manajemen Lowongan',
-                'items' => [
-                    ['label' => 'Lowongan Saya', 'route' => 'lowongan.index', 'active' => 'lowongan.*', 'icon' => 'briefcase-business', 'badge' => \App\Models\DaftarLowongan::where('id_mitra', $user?->mitra->id_mitra ?? null)->count().' Aktif'],
+            $isMitraVerified
+                ? [
+                    'label' => 'Manajemen Lowongan',
+                    'items' => [
+                        ['label' => 'Lowongan Saya', 'route' => 'lowongan.index', 'active' => 'lowongan.*', 'icon' => 'briefcase-business', 'badge' => \App\Models\DaftarLowongan::where('id_mitra', $user?->mitra->id_mitra ?? null)->count().' Aktif'],
+                    ],
+                ]
+                : [
+                    'label' => 'Status Akun',
+                    'items' => [
+                        ['label' => 'Menunggu Verifikasi', 'route' => 'dashboard', 'active' => 'dashboard', 'icon' => 'clock-3'],
+                    ],
                 ],
-            ],
         ];
     }
 @endphp
