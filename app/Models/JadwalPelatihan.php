@@ -10,7 +10,9 @@ class JadwalPelatihan extends Model
     use HasFactory;
 
     protected $table = 'jadwal_pelatihan';
+
     protected $primaryKey = 'id_jadwal';
+
     protected $fillable = [
         'id_pelatihan', 'tanggal_mulai', 'tanggal_selesai',
         'jam_mulai', 'jam_selesai', 'id_instruktur',
@@ -20,39 +22,64 @@ class JadwalPelatihan extends Model
     ];
 
     protected $casts = [
-        'tanggal_mulai'    => 'date',
-        'tanggal_selesai'  => 'date',
-        'lokasi_latitude'  => 'decimal:7',
+        'tanggal_mulai' => 'date',
+        'tanggal_selesai' => 'date',
+        'lokasi_latitude' => 'decimal:7',
         'lokasi_longitude' => 'decimal:7',
-        'radius_meter'     => 'integer',
+        'radius_meter' => 'integer',
     ];
 
     public function getIdAttribute()
     {
         return $this->getKey();
     }
+
     public function pelatihan()
     {
         return $this->belongsTo(DaftarPelatihan::class, 'id_pelatihan');
     }
+
     public function instruktur()
     {
         return $this->belongsTo(Instruktur::class, 'id_instruktur');
     }
+
     public function ruanganWorkshop()
     {
-    return $this->belongsTo(RuanganWorkshop::class, 'id_ruangan_workshop');
+        return $this->belongsTo(RuanganWorkshop::class, 'id_ruangan_workshop');
     }
+
     public function kelas()
     {
         return $this->hasMany(KelasPelatihan::class, 'id_jadwal');
     }
+
     public function absensi()
     {
         return $this->hasMany(Absen::class, 'id_jadwal');
     }
+
     public function sertifikat()
     {
         return $this->hasMany(Sertifikat::class, 'id_jadwal');
+    }
+
+    public function modul()
+    {
+        return $this->hasMany(Modul::class, 'id_jadwal');
+    }
+
+    public function diampuOleh(User $user): bool
+    {
+        return $user->role === 'instruktur'
+            && $this->id_instruktur !== null
+            && Instruktur::where('id', $this->id_instruktur)->where('id_user', $user->id)->exists();
+    }
+
+    public function diikutiOleh(User $user): bool
+    {
+        $idPeserta = $user->peserta?->id_peserta;
+
+        return $idPeserta !== null && $this->kelas()->where('id_peserta', $idPeserta)->exists();
     }
 }
