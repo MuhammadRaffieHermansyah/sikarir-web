@@ -27,6 +27,8 @@ class MitraFactory extends Factory
 
             'logo_perusahaan' => null,
 
+            'is_verified' => true,
+
             'provinsi' => 'Jawa Timur',
 
             'kota' => fake()->randomElement([

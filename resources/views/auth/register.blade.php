@@ -97,6 +97,10 @@
                     <x-lucide-arrow-up-right class="size-3.5" />
                 </a>
             </div>
+            <div class="text-center text-xs text-muted-foreground">
+                Perusahaan atau mitra industri?
+                <a href="{{ route('register.mitra') }}" class="font-bold text-primary hover:underline">Daftar sebagai mitra</a>
+            </div>
         </x-slot:links>
     </x-auth-shell>
 </x-guest-layout>

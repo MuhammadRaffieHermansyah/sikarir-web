@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MitraController extends Controller
 {
@@ -109,9 +110,36 @@ class MitraController extends Controller
 
     public function show(int $id): View
     {
-        $mitra = Mitra::with(['user'])->findOrFail($id);
+        $mitra = Mitra::with(['user', 'verifiedBy'])->findOrFail($id);
 
         return view('mitras.show', compact('mitra'));
+    }
+
+    public function verify(Mitra $mitra): RedirectResponse
+    {
+        if ($mitra->is_verified) {
+            return redirect()->route('mitras.show', $mitra)->with('success', 'Mitra ini sudah terverifikasi.');
+        }
+
+        $mitra->update([
+            'is_verified' => true,
+            'verified_at' => now(),
+            'verified_by' => request()->user()->id,
+        ]);
+
+        return redirect()->route('mitras.show', $mitra)->with('success', 'Mitra berhasil diverifikasi dan kini dapat mengelola lowongan.');
+    }
+
+    public function downloadDocument(Mitra $mitra, string $document): StreamedResponse
+    {
+        $path = match ($document) {
+            'legalitas' => $mitra->surat_legalitas_path,
+            'permohonan' => $mitra->surat_permohonan_kerjasama_path,
+        };
+
+        abort_unless($path && Storage::exists($path), 404);
+
+        return Storage::download($path, $document.'-'.$mitra->id_mitra.'.'.pathinfo($path, PATHINFO_EXTENSION));
     }
 
     public function edit(int $id): View

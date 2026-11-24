@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Mitra;
 use App\Models\User;
 
 test('guest is redirected to login when accessing role protected route', function () {
@@ -8,10 +9,12 @@ test('guest is redirected to login when accessing role protected route', functio
 
 test('admin_blk can access admin only routes', function () {
     $user = User::factory()->create(['role' => 'admin_blk']);
+    Mitra::factory()->count(11)->create();
 
     $this->actingAs($user)
         ->get('/mitras')
-        ->assertOk();
+        ->assertOk()
+        ->assertSee('Navigasi halaman');
 });
 
 test('peserta is redirected to dashboard with error when accessing admin only route', function () {
@@ -25,10 +28,21 @@ test('peserta is redirected to dashboard with error when accessing admin only ro
 
 test('mitra can access lowongan routes', function () {
     $user = User::factory()->create(['role' => 'mitra']);
+    Mitra::factory()->create(['id_user' => $user->id, 'is_verified' => true]);
 
     $this->actingAs($user)
         ->get('/lowongan')
         ->assertOk();
+});
+
+test('unverified mitra is redirected to dashboard when accessing lowongan routes', function () {
+    $user = User::factory()->create(['role' => 'mitra']);
+    Mitra::factory()->create(['id_user' => $user->id, 'is_verified' => false]);
+
+    $this->actingAs($user)
+        ->get('/lowongan')
+        ->assertRedirect(route('dashboard'))
+        ->assertSessionHas('error', 'Akun mitra Anda masih menunggu verifikasi admin.');
 });
 
 test('peserta is redirected to dashboard when accessing lowongan routes', function () {

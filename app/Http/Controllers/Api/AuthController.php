@@ -8,7 +8,10 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use OpenApi\Attributes as OA;
 
@@ -45,14 +48,42 @@ class AuthController extends Controller
         if (empty($data['role'])) {
             $data['role'] = 'peserta';
         }
-        $user = User::create($data);
 
-        // Simpan nama pada profil sesuai role agar data user tetap konsisten.
-        $user->ensureRoleProfile($nama);
+        $legalitasPath = null;
+        $permohonanPath = null;
+
+        if ($data['role'] === 'mitra') {
+            $legalitasPath = $request->file('surat_legalitas')->store('mitra-documents/legalitas');
+            $permohonanPath = $request->file('surat_permohonan_kerjasama')->store('mitra-documents/permohonan');
+        }
+
+        try {
+            $user = DB::transaction(function () use ($data, $nama, $legalitasPath, $permohonanPath): User {
+                $user = User::create(Arr::only($data, ['email', 'password', 'role']));
+
+                if ($user->role === 'mitra') {
+                    $user->mitra()->create([
+                        'nama' => $nama,
+                        'nama_perusahaan' => $data['nama_perusahaan'],
+                        'surat_legalitas_path' => $legalitasPath,
+                        'surat_permohonan_kerjasama_path' => $permohonanPath,
+                    ]);
+                } else {
+                    // Simpan nama pada profil sesuai role agar data user tetap konsisten.
+                    $user->ensureRoleProfile($nama);
+                }
+
+                return $user;
+            });
+        } catch (\Throwable $exception) {
+            Storage::delete(array_filter([$legalitasPath, $permohonanPath]));
+
+            throw $exception;
+        }
 
         return response()->json([
             'message' => 'Registrasi berhasil',
-            'data' => $user->load('peserta'),
+            'data' => $user->load(['peserta', 'mitra']),
             'token' => $user->createToken('sikarir')->plainTextToken,
         ], 201);
     }

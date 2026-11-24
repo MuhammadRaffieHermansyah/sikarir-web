@@ -4,6 +4,7 @@ use App\Http\Controllers\AbsenController;
 use App\Http\Controllers\AdminBlkController;
 use App\Http\Controllers\DaftarLowonganController;
 use App\Http\Controllers\DaftarPelatihanController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DurasiPelatihanController;
 use App\Http\Controllers\HariLiburController;
 use App\Http\Controllers\InstrukturController;
@@ -51,9 +52,9 @@ Route::get('/internal/pelatihan/{id}/durasi', function ($id) {
     ]);
 })->name('pelatihan.durasi')->middleware('auth');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     // Profile
@@ -64,6 +65,10 @@ Route::middleware('auth')->group(function () {
     // Resource web routes (return views)
     Route::middleware('role:admin_blk')->group(function () {
         Route::resource('mitras', MitraController::class);
+        Route::patch('mitras/{mitra}/verify', [MitraController::class, 'verify'])->name('mitras.verify');
+        Route::get('mitras/{mitra}/documents/{document}', [MitraController::class, 'downloadDocument'])
+            ->whereIn('document', ['legalitas', 'permohonan'])
+            ->name('mitras.documents.download');
         Route::resource('durasi-pelatihan', DurasiPelatihanController::class);
         Route::resource('instruktur', InstrukturController::class);
         Route::resource('pesertas', PesertaController::class);
@@ -73,7 +78,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('ruangan-workshop', RuanganWorkshopController::class);
     });
 
-    Route::middleware('role:admin_blk,mitra')->group(function () {
+    Route::middleware(['role:admin_blk,mitra', 'mitra.verified'])->group(function () {
         Route::resource('lowongan', DaftarLowonganController::class);
     });
 
