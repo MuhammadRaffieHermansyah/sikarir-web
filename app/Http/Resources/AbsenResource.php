@@ -9,20 +9,27 @@ class AbsenResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'id_absen'        => $this->id_absen,
-            'id_jadwal'       => $this->id_jadwal,
-            'id_peserta'      => $this->id_peserta,
-            'tanggal'         => $this->tanggal?->format('Y-m-d'),
-            'jam_hadir'       => $this->jam_hadir,
-            'status_kehadiran'=> $this->status_kehadiran,
-            'keterangan'      => $this->keterangan,
+            'id_absen' => $this->id_absen,
+            'id_jadwal' => $this->id_jadwal,
+            'id_peserta' => $this->id_peserta,
+            'tanggal' => $this->tanggal?->format('Y-m-d'),
+            'jam_hadir' => $this->jam_hadir,
+            'status_kehadiran' => $this->status_kehadiran,
+            'keterangan' => $this->keterangan,
             // Kolom lokasi GPS
-            'latitude'        => $this->latitude ? (float) $this->latitude : null,
-            'longitude'       => $this->longitude ? (float) $this->longitude : null,
-            'jarak_meter'     => $this->jarak_meter ? (float) $this->jarak_meter : null,
+            'latitude' => $this->latitude ? (float) $this->latitude : null,
+            'longitude' => $this->longitude ? (float) $this->longitude : null,
+            'jarak_meter' => $this->jarak_meter ? (float) $this->jarak_meter : null,
+            // Presensi pulang
+            'jam_keluar' => $this->jam_keluar,
+            'latitude_keluar' => $this->latitude_keluar ? (float) $this->latitude_keluar : null,
+            'longitude_keluar' => $this->longitude_keluar ? (float) $this->longitude_keluar : null,
+            'jarak_keluar_meter' => $this->jarak_keluar_meter ? (float) $this->jarak_keluar_meter : null,
+            // Lampiran izin/sakit
+            'lampiran_url' => $this->lampiran_url,
             // Relasi
-            'peserta'         => $this->whenLoaded('peserta'),
-            'jadwal'          => $this->whenLoaded('jadwal'),
+            'peserta' => $this->whenLoaded('peserta'),
+            'jadwal' => $this->whenLoaded('jadwal'),
         ];
     }
 }

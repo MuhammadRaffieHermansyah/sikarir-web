@@ -90,6 +90,8 @@ Route::name('api.')->group(function () {
         Route::get('absen/rekap', [AbsenController::class, 'rekap'])->name('absen.rekap');
         Route::get('absensi/today', [AbsenController::class, 'today'])->name('absensi.today');
         Route::get('absensi/rekap', [AbsenController::class, 'rekap'])->name('absensi.rekap');
+        Route::post('absen/{id}/pulang', [AbsenController::class, 'pulang'])->whereNumber('id')->name('absen.pulang');
+        Route::post('absensi/{id}/pulang', [AbsenController::class, 'pulang'])->whereNumber('id')->name('absensi.pulang');
         Route::apiResource('absen', AbsenController::class);
         Route::apiResource('absensi', AbsenController::class);
 
