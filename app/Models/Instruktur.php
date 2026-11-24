@@ -12,6 +12,7 @@ class Instruktur extends Model
     protected $table = 'instruktur';
 
     protected $fillable = [
+        'id_user',
         'nama',
         'bidang_keahlian',
     ];
@@ -19,5 +20,10 @@ class Instruktur extends Model
     public function jadwal()
     {
         return $this->hasMany(JadwalPelatihan::class, 'id_instruktur');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user');
     }
 }

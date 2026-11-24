@@ -125,7 +125,7 @@ class DatabaseSeeder extends Seeder
             $u = User::updateOrCreate(
                 ['email' => $m['email']],
                 [
-                    'name' => 'HR ' . $m['name'],
+                    'name' => 'HR '.$m['name'],
                     'password' => Hash::make('password'),
                     'role' => 'mitra',
                 ]
@@ -138,9 +138,9 @@ class DatabaseSeeder extends Seeder
                     'logo_perusahaan' => $m['logo'],
                     'provinsi' => 'Jawa Timur',
                     'kota' => $m['kota'],
-                    'alamat' => 'Kawasan Industri Terpadu No. ' . fake()->buildingNumber(),
+                    'alamat' => 'Kawasan Industri Terpadu No. '.fake()->buildingNumber(),
                     'no_telp' => fake()->numerify('021-########'),
-                    'no_izin' => 'SK-MITRA-' . fake()->numerify('###') . '/2026',
+                    'no_izin' => 'SK-MITRA-'.fake()->numerify('###').'/2026',
                     'jabatan_pic' => 'HR Manager',
                     'bidang_usaha' => $m['bidang'],
                 ]
@@ -182,7 +182,7 @@ class DatabaseSeeder extends Seeder
             $peserta = Peserta::create([
                 'id_user' => $u->id,
                 'id_admin' => $admins->random()->id_admin,
-                'nomor_peserta' => 'PST-' . fake()->unique()->numerify('######'),
+                'nomor_peserta' => 'PST-'.fake()->unique()->numerify('######'),
                 'jenis_kelamin' => fake()->randomElement(['Laki-laki', 'Perempuan']),
                 'nomor_kk' => fake()->numerify('35################'),
                 'nomor_wa' => fake()->numerify('08##########'),
@@ -353,7 +353,7 @@ class DatabaseSeeder extends Seeder
                     'tanggal' => $tgl,
                 ],
                 [
-                    'jam_hadir' => '07:5' . rand(2, 8) . ':00',
+                    'jam_hadir' => '07:5'.rand(2, 8).':00',
                     'status_kehadiran' => 'hadir',
                     'latitude' => -8.1763120,
                     'longitude' => 113.7007150,
@@ -397,6 +397,9 @@ class DatabaseSeeder extends Seeder
                 'id_admin' => $demoAdmin->id_admin,
             ]
         );
+
+        // Akun demo instruktur + contoh modul & materi
+        $this->call(InstrukturAkunSeeder::class);
 
         /*
         |--------------------------------------------------------------------------
@@ -505,7 +508,7 @@ class DatabaseSeeder extends Seeder
                         'status' => fake()->randomElement(['melamar', 'diproses', 'wawancara', 'diterima', 'ditolak']),
                         'catatan_pelamar' => fake()->optional()->sentence(),
                         'catatan_mitra' => fake()->optional()->sentence(),
-                        'resume_url' => 'https://example.com/resumes/' . fake()->uuid() . '.pdf',
+                        'resume_url' => 'https://example.com/resumes/'.fake()->uuid().'.pdf',
                     ]
                 );
             }

@@ -9,7 +9,9 @@ use App\Http\Controllers\Api\DurasiPelatihanController;
 use App\Http\Controllers\Api\InstrukturController;
 use App\Http\Controllers\Api\JadwalPelatihanController;
 use App\Http\Controllers\Api\KelasPelatihanController;
+use App\Http\Controllers\Api\MateriController;
 use App\Http\Controllers\Api\MitraController;
+use App\Http\Controllers\Api\ModulController;
 use App\Http\Controllers\Api\PesertaController;
 use App\Http\Controllers\Api\SertifikatController;
 use App\Http\Controllers\Api\SwaggerTestController;
@@ -53,6 +55,14 @@ Route::name('api.')->group(function () {
         Route::apiResource('mitra', MitraController::class)->except(['index', 'show']);
 
         Route::apiResource('durasi-pelatihan', DurasiPelatihanController::class);
+        // Fitur instruktur (mobile): kelas yang diampu, modul & materi
+        Route::get('instruktur/kelas', [ModulController::class, 'kelasInstruktur'])->name('instruktur.kelas');
+        Route::get('kelas-pelatihan/{idKelas}/modul', [ModulController::class, 'index'])->whereNumber('idKelas')->name('kelas.modul.index');
+        Route::post('kelas-pelatihan/{idKelas}/modul', [ModulController::class, 'store'])->whereNumber('idKelas')->name('kelas.modul.store');
+        Route::delete('modul/{idModul}', [ModulController::class, 'destroy'])->whereNumber('idModul')->name('modul.destroy');
+        Route::post('modul/{idModul}/materi', [MateriController::class, 'store'])->whereNumber('idModul')->name('modul.materi.store');
+        Route::delete('materi/{idMateri}', [MateriController::class, 'destroy'])->whereNumber('idMateri')->name('materi.destroy');
+
         Route::apiResource('instruktur', InstrukturController::class);
 
         // Peserta me & aliases (mendukung singular & plural)
