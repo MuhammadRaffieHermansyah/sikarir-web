@@ -8,6 +8,8 @@ use App\Http\Requests\UpdatePesertaRequest;
 use App\Http\Resources\PesertaResource;
 use App\Models\Peserta;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use OpenApi\Attributes as OA;
 
 class PesertaController extends Controller
@@ -37,17 +39,17 @@ class PesertaController extends Controller
             new OA\Response(response: 401, description: 'Unauthenticated'),
         ]
     )]
-    public function me(\Illuminate\Http\Request $request): JsonResponse
+    public function me(Request $request): JsonResponse
     {
         $user = $request->user();
-        if (!$user) {
+        if (! $user) {
             return response()->json(['message' => 'Unauthenticated.'], 401);
         }
 
         $peserta = Peserta::firstOrCreate(
             ['id_user' => $user->id],
             [
-                'nomor_peserta' => 'PST-' . date('Ymd') . '-' . str_pad($user->id, 4, '0', STR_PAD_LEFT),
+                'nomor_peserta' => 'PST-'.date('Ymd').'-'.str_pad($user->id, 4, '0', STR_PAD_LEFT),
                 'jenis_kelamin' => 'Laki-laki',
             ]
         );
@@ -82,10 +84,10 @@ class PesertaController extends Controller
             new OA\Response(response: 422, description: 'Validasi gagal'),
         ]
     )]
-    public function updateMe(\Illuminate\Http\Request $request): JsonResponse
+    public function updateMe(Request $request): JsonResponse
     {
         $user = $request->user();
-        if (!$user) {
+        if (! $user) {
             return response()->json(['message' => 'Unauthenticated.'], 401);
         }
 
@@ -107,25 +109,34 @@ class PesertaController extends Controller
         }
 
         $validated = $request->validate([
-            'jenis_kelamin'      => 'required|in:Laki-laki,Perempuan',
-            'nomor_kk'           => 'required|string|max:30',
-            'nomor_wa'           => 'required|string|max:30',
-            'tanggal_lahir'      => 'required|date',
-            'tempat_lahir'       => 'required|string|max:100',
-            'alamat_lengkap'     => 'required|string',
-            'pendidikan_terakhir'=> 'required|string|max:100',
-            'pendidikan_sekarang'=> 'nullable|string|max:100',
-            'status_pendidikan'  => 'nullable|in:sudah_lulus,masih_menempuh',
-            'jurusan'            => 'nullable|string|max:150',
-            'is_disabilitas'     => 'nullable|boolean',
-            'jenis_disabilitas'  => 'nullable|string|max:100',
-            'pas_foto'           => 'nullable|file|image|mimes:jpg,jpeg,png,webp|max:10240',
+            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+            'nomor_kk' => 'required|string|max:30',
+            'nomor_wa' => 'required|string|max:30',
+            'tanggal_lahir' => 'required|date',
+            'tempat_lahir' => 'required|string|max:100',
+            'alamat_lengkap' => 'required|string',
+            'pendidikan_terakhir' => 'required|string|max:100',
+            'pendidikan_sekarang' => 'nullable|string|max:100',
+            'status_pendidikan' => 'nullable|in:sudah_lulus,masih_menempuh',
+            'jurusan' => 'nullable|string|max:150',
+            'is_disabilitas' => 'nullable|boolean',
+            'jenis_disabilitas' => 'nullable|string|max:100',
+            'pas_foto' => 'nullable|file|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'name' => 'nullable|string|max:255',
+            'nama' => 'nullable|string|max:255',
         ]);
+
+        // Nama akun ikut diperbarui; bukan kolom tabel pesertas.
+        $namaBaru = $validated['nama'] ?? $validated['name'] ?? null;
+        unset($validated['name'], $validated['nama']);
+        if (filled($namaBaru) && $namaBaru !== $user->name) {
+            $user->update(['name' => $namaBaru]);
+        }
 
         $peserta = Peserta::firstOrCreate(
             ['id_user' => $user->id],
             [
-                'nomor_peserta' => 'PST-' . date('Ymd') . '-' . str_pad($user->id, 4, '0', STR_PAD_LEFT),
+                'nomor_peserta' => 'PST-'.date('Ymd').'-'.str_pad($user->id, 4, '0', STR_PAD_LEFT),
                 'jenis_kelamin' => $validated['jenis_kelamin'],
             ]
         );
@@ -134,7 +145,7 @@ class PesertaController extends Controller
         if ($request->hasFile('pas_foto')) {
             // Hapus foto lama jika ada
             if ($peserta->pas_foto) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($peserta->pas_foto);
+                Storage::disk('public')->delete($peserta->pas_foto);
             }
             $path = $request->file('pas_foto')->store('pas_foto', 'public');
             $validated['pas_foto'] = $path;
@@ -180,6 +191,7 @@ class PesertaController extends Controller
     public function store(StorePesertaRequest $request): JsonResponse
     {
         $peserta = Peserta::create($request->validated());
+
         return (new PesertaResource($peserta))->response()->setStatusCode(201);
     }
 
@@ -189,7 +201,7 @@ class PesertaController extends Controller
         tags: ['Peserta'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
             new OA\Response(response: 200, description: 'Detail peserta'),
@@ -199,6 +211,7 @@ class PesertaController extends Controller
     public function show(int $id): JsonResponse
     {
         $peserta = Peserta::with($this->relations())->findOrFail($id);
+
         return (new PesertaResource($peserta))->response();
     }
 
@@ -208,7 +221,7 @@ class PesertaController extends Controller
         tags: ['Peserta'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         requestBody: new OA\RequestBody(
             required: true,
@@ -238,6 +251,7 @@ class PesertaController extends Controller
     {
         $peserta = Peserta::findOrFail($id);
         $peserta->update($request->validated());
+
         return (new PesertaResource($peserta->fresh()->load($this->relations())))->response();
     }
 
@@ -247,7 +261,7 @@ class PesertaController extends Controller
         tags: ['Peserta'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
             new OA\Response(response: 200, description: 'Peserta berhasil dihapus'),
@@ -258,6 +272,7 @@ class PesertaController extends Controller
     {
         $peserta = Peserta::findOrFail($id);
         $peserta->delete();
+
         return response()->json(['message' => 'Data berhasil dihapus']);
     }
 

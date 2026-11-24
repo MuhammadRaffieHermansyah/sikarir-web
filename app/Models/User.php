@@ -11,13 +11,13 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $fillable = ['name', 'email', 'password', 'role'];
+    protected $fillable = ['name', 'email', 'password', 'role', 'foto', 'must_change_password'];
 
     protected $hidden = ['password', 'remember_token'];
 
     protected function casts(): array
     {
-        return ['email_verified_at' => 'datetime', 'password' => 'hashed'];
+        return ['email_verified_at' => 'datetime', 'password' => 'hashed', 'must_change_password' => 'boolean'];
     }
 
     public function peserta()

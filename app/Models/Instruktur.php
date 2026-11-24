@@ -15,6 +15,9 @@ class Instruktur extends Model
         'id_user',
         'nama',
         'bidang_keahlian',
+        'nomor_wa',
+        'bio',
+        'keahlian',
     ];
 
     public function jadwal()

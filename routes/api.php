@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\MateriController;
 use App\Http\Controllers\Api\MitraController;
 use App\Http\Controllers\Api\ModulController;
 use App\Http\Controllers\Api\PesertaController;
+use App\Http\Controllers\Api\ProfilePasswordController;
 use App\Http\Controllers\Api\SertifikatController;
 use App\Http\Controllers\Api\SwaggerTestController;
 use Illuminate\Support\Facades\Route;
@@ -56,6 +57,11 @@ Route::name('api.')->group(function () {
 
         Route::apiResource('durasi-pelatihan', DurasiPelatihanController::class);
         // Fitur instruktur (mobile): kelas yang diampu, modul & materi
+        Route::middleware('role:instruktur')->group(function () {
+            Route::get('instruktur/me', [InstrukturController::class, 'me'])->name('instruktur.me');
+            Route::match(['put', 'post'], 'instruktur/me', [InstrukturController::class, 'updateMe'])->name('instruktur.update-me');
+        });
+        Route::put('profile/password', ProfilePasswordController::class)->name('profile.password');
         Route::get('instruktur/kelas', [ModulController::class, 'kelasInstruktur'])->name('instruktur.kelas');
         Route::get('kelas-pelatihan/{idKelas}/modul', [ModulController::class, 'index'])->whereNumber('idKelas')->name('kelas.modul.index');
         Route::post('kelas-pelatihan/{idKelas}/modul', [ModulController::class, 'store'])->whereNumber('idKelas')->name('kelas.modul.store');
