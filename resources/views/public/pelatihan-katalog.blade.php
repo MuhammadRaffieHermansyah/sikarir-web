@@ -49,26 +49,9 @@
     </div>
   </section>
 
-  {{-- STAT STRIP --}}
-  <section class="site-container -mt-8 mb-8">
-    <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
-      @foreach ([
-          ['icon' => 'cpu', 'value' => '14', 'label' => 'Kejuruan aktif'],
-          ['icon' => 'users', 'value' => '32', 'label' => 'Paket berjalan'],
-          ['icon' => 'circle-dollar-sign', 'value' => '100%', 'label' => 'Gratis bebas biaya'],
-          ['icon' => 'award', 'value' => 'BNSP', 'label' => 'Sertifikasi resmi'],
-      ] as $stat)
-        <x-ui.stat
-          :icon="$stat['icon']"
-          :value="$stat['value']"
-          :label="$stat['label']"
-          class="gap-2.5 p-4 shadow-sm"
-        />
-      @endforeach
-    </div>
-  </section>
 
-  <div class="site-container space-y-8 pb-14">
+
+  <div class="site-container space-y-8 py-10 md:py-14">
     {{-- SEARCH & FILTER --}}
     <x-ui.card>
       <form method="GET" action="{{ route('pelatihan.katalog') }}" class="grid gap-3 md:grid-cols-12">
