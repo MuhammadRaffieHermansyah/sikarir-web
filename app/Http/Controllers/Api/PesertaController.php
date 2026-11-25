@@ -7,6 +7,7 @@ use App\Http\Requests\StorePesertaRequest;
 use App\Http\Requests\UpdatePesertaRequest;
 use App\Http\Resources\PesertaResource;
 use App\Models\Peserta;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -49,6 +50,7 @@ class PesertaController extends Controller
         $peserta = Peserta::firstOrCreate(
             ['id_user' => $user->id],
             [
+                'nama' => $user->name,
                 'nomor_peserta' => 'PST-'.date('Ymd').'-'.str_pad($user->id, 4, '0', STR_PAD_LEFT),
                 'jenis_kelamin' => 'Laki-laki',
             ]
@@ -126,20 +128,22 @@ class PesertaController extends Controller
             'nama' => 'nullable|string|max:255',
         ]);
 
-        // Nama akun ikut diperbarui; bukan kolom tabel pesertas.
-        $namaBaru = $validated['nama'] ?? $validated['name'] ?? null;
+        // `name` adalah kontrak mobile; `nama` hanya alias internal.
+        $namaBaru = $validated['name'] ?? $validated['nama'] ?? null;
         unset($validated['name'], $validated['nama']);
-        if (filled($namaBaru) && $namaBaru !== $user->name) {
-            $user->update(['name' => $namaBaru]);
-        }
 
         $peserta = Peserta::firstOrCreate(
             ['id_user' => $user->id],
             [
+                'nama' => $namaBaru ?? $user->name,
                 'nomor_peserta' => 'PST-'.date('Ymd').'-'.str_pad($user->id, 4, '0', STR_PAD_LEFT),
                 'jenis_kelamin' => $validated['jenis_kelamin'],
             ]
         );
+
+        if (filled($namaBaru)) {
+            $user->ensureRoleProfile($namaBaru);
+        }
 
         // Handle upload pas foto
         if ($request->hasFile('pas_foto')) {
@@ -190,7 +194,10 @@ class PesertaController extends Controller
     )]
     public function store(StorePesertaRequest $request): JsonResponse
     {
-        $peserta = Peserta::create($request->validated());
+        $data = $request->validated();
+        $data['nama'] ??= User::find($data['id_user'])?->name;
+
+        $peserta = Peserta::create($data);
 
         return (new PesertaResource($peserta))->response()->setStatusCode(201);
     }

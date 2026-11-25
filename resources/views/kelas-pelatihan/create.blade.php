@@ -68,7 +68,7 @@
               <option value="">-- Pilih Siswa Vokasi Terdaftar --</option>
               @foreach ($pesertas as $peserta)
                 <option value="{{ $peserta->id_peserta }}" @selected(old('id_peserta') == $peserta->id_peserta)>
-                  {{ $peserta->user->name ?? 'Peserta' }} (NIS: {{ $peserta->nomor_peserta }} | Minat: {{ $peserta->jurusan ?? '-' }})
+                  {{ $peserta->nama ?? 'Peserta' }} (NIS: {{ $peserta->nomor_peserta }} | Minat: {{ $peserta->jurusan ?? '-' }})
                 </option>
               @endforeach
             </x-ui.select>

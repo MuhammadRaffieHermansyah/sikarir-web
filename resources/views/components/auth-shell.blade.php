@@ -24,7 +24,7 @@
         <div class="relative z-10 my-10 space-y-6">
             <div class="mx-auto grid size-24 place-items-center rounded-3xl border border-white/10 bg-white/5 shadow-2xl backdrop-blur">
                 <span class="grid size-16 place-items-center rounded-2xl border border-sikarir-lime/25 bg-sikarir-lime/10">
-                    <i data-lucide="{{ $icon }}" class="size-8 text-sikarir-lime"></i>
+                    <x-dynamic-component :component="'lucide-'.$icon" class="size-8 text-sikarir-lime" />
                 </span>
             </div>
 

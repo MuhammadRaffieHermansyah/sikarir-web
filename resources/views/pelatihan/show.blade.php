@@ -18,10 +18,12 @@
         Kembali
       </x-ui.button>
 
+      @if (auth()->user()?->role === 'admin_blk')
       <x-ui.button href="{{ route('pelatihan.edit', $pelatihan->id_pelatihan) }}" class="bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
         <x-lucide-pencil />
         Edit Kurikulum
       </x-ui.button>
+      @endif
     </x-slot:actions>
   </x-ui.page-header>
 
@@ -86,10 +88,12 @@
               </div>
             </div>
 
+            @if (auth()->user()?->role === 'admin_blk')
             <x-ui.button href="{{ route('jadwal-pelatihan.create') }}" variant="outline" size="sm">
               <x-lucide-plus />
               Buka Batch Baru
             </x-ui.button>
+            @endif
           </div>
         </x-ui.card-header>
 
@@ -214,6 +218,7 @@
         </x-ui.card-content>
       </x-ui.card>
 
+      @if (auth()->user()?->role === 'admin_blk')
       <x-ui.card variant="sectioned">
         <x-ui.card-header class="border-b">
           <x-ui.card-title class="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-muted-foreground">
@@ -248,6 +253,7 @@
           </form>
         </x-ui.card-content>
       </x-ui.card>
+      @endif
     </div>
   </div>
 @endsection

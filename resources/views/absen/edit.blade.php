@@ -71,7 +71,7 @@
                 <option value="">-- Pilih Peserta --</option>
                 @foreach ($pesertas as $p)
                   <option value="{{ $p->id_peserta }}" @selected(old('id_peserta', $absen->id_peserta) == $p->id_peserta)>
-                    {{ $p->user->name ?? 'Peserta #' . $p->id_peserta }} {{ isset($p->nomor_peserta) ? '(' . $p->nomor_peserta . ')' : '' }}
+                    {{ $p->nama ?? 'Peserta #' . $p->id_peserta }} {{ isset($p->nomor_peserta) ? '(' . $p->nomor_peserta . ')' : '' }}
                   </option>
                 @endforeach
               </x-ui.select>

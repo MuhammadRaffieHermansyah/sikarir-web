@@ -17,7 +17,7 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            'name' => ['required', 'string', 'max:255', 'regex:/^[\pL\s.,\x27\-]+$/u'],
             'email' => [
                 'required',
                 'string',
@@ -32,7 +32,7 @@ class ProfileUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.regex' => 'Nama hanya boleh mengandung huruf dan spasi.',
+            'name.regex' => 'Nama hanya boleh berisi huruf, spasi, dan tanda . , - \'.',
         ];
     }
 }

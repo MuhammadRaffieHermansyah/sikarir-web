@@ -22,15 +22,19 @@
     </x-slot:breadcrumb>
 
     <x-slot:actions>
+      @if (auth()->user()?->role === 'admin_blk')
       <x-ui.button href="{{ route('absen.rekap') }}" variant="outline">
         <x-lucide-chart-column />
         Rekapitulasi & Laporan
       </x-ui.button>
+      @endif
 
+      @if (auth()->user()?->role === 'admin_blk')
       <x-ui.button href="{{ route('absen.create') }}" class="bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
         <x-lucide-plus />
         Catat Absen
       </x-ui.button>
+      @endif
     </x-slot:actions>
   </x-ui.page-header>
 
@@ -98,11 +102,11 @@
                 <div class="flex items-center gap-3">
                   <x-ui.avatar class="size-8">
                     <x-ui.avatar-fallback class="bg-muted text-xs font-bold text-muted-foreground">
-                      {{ strtoupper(substr($absen->peserta->user->name ?? 'P', 0, 2)) }}
+                      {{ strtoupper(substr($absen->peserta->nama ?? 'P', 0, 2)) }}
                     </x-ui.avatar-fallback>
                   </x-ui.avatar>
                   <div class="min-w-0">
-                    <div class="font-bold text-foreground">{{ $absen->peserta->user->name ?? 'Tanpa Nama' }}</div>
+                    <div class="font-bold text-foreground">{{ $absen->peserta->nama ?? 'Tanpa Nama' }}</div>
                     <div class="text-xs text-muted-foreground">{{ $absen->peserta->user->email ?? '-' }}</div>
                   </div>
                 </div>
@@ -141,6 +145,7 @@
                     <x-lucide-eye />
                   </x-ui.button>
 
+                  @if (auth()->user()?->role === 'admin_blk')
                   <x-ui.button
                     href="{{ route('absen.edit', $absen->id_absen) }}"
                     variant="ghost"
@@ -171,6 +176,7 @@
                       <x-lucide-trash-2 />
                     </x-ui.button>
                   </form>
+                  @endif
                 </div>
               </x-ui.table-cell>
             </x-ui.table-row>
@@ -194,10 +200,12 @@
                       Reset Filter Pencarian
                     </x-ui.button>
                   @else
+                    @if (auth()->user()?->role === 'admin_blk')
                     <x-ui.button href="{{ route('absen.create') }}" class="bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
                       <x-lucide-plus />
                       Catat Absensi Pertama
                     </x-ui.button>
+                    @endif
                   @endif
                 </x-ui.empty>
               </x-ui.table-cell>

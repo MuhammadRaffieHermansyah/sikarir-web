@@ -189,7 +189,7 @@
     <table class="header-table">
       <tr>
         <td class="header-logo">
-          <img src="{{ asset('images/logo_sikarir.png') }}" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/b/b3/Logo_Kementerian_Ketenagakerjaan_Republik_Indonesia.png'" alt="Logo">
+          <img src="{{ asset('images/logo-sikarir.png') }}" alt="Logo">
         </td>
         <td class="header-text">
           <h3>Kementerian Ketenagakerjaan Republik Indonesia</h3>
@@ -219,7 +219,7 @@
       <tr>
         <td><strong>Instruktur Pembina</strong></td>
         <td>:</td>
-        <td>{{ $selectedJadwal->instruktur->user->name ?? ($selectedJadwal->instruktur ?? 'Tim Instruktur BPVP') }}</td>
+        <td>{{ $selectedJadwal?->instruktur?->nama ?? 'Tim Instruktur BPVP' }}</td>
         <td><strong>Tanggal Cetak</strong></td>
         <td>:</td>
         <td>{{ date('d F Y') }}</td>
@@ -272,7 +272,7 @@
           <tr>
             <td class="center">{{ $loop->iteration }}</td>
             <td class="center" style="font-family: monospace;">{{ $rp->peserta->nomor_peserta ?? '-' }}</td>
-            <td><strong>{{ $rp->peserta->user->name ?? '-' }}</strong></td>
+            <td><strong>{{ $rp->peserta->nama ?? '-' }}</strong></td>
             <td class="center font-bold">{{ $rp->hadir }}</td>
             <td class="center">{{ $rp->izin }}</td>
             <td class="center">{{ $rp->sakit }}</td>
@@ -300,15 +300,15 @@
           Mengetahui,<br>
           <strong>Instruktur Pelatihan Vokasi</strong>
           <div class="sign-space"></div>
-          <strong><u>{{ $selectedJadwal->instruktur->user->name ?? 'Instruktur Pembina' }}</u></strong><br>
-          <span>NIP. 19850712 201101 1 004</span>
+          <strong><u>{{ $selectedJadwal?->instruktur?->nama ?? '( ........................................ )' }}</u></strong><br>
+          <span>NIP. ..............................</span>
         </td>
         <td>
           Jember, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}<br>
           <strong>Kepala Balai Pelatihan Vokasi</strong>
           <div class="sign-space"></div>
-          <strong><u>Drs. H. Bambang Soeprapto, M.M.</u></strong><br>
-          <span>NIP. 19740315 199803 1 002</span>
+          <strong><u>( ........................................ )</u></strong><br>
+          <span>NIP. ..............................</span>
         </td>
       </tr>
     </table>

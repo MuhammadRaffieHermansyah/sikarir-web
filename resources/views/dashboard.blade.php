@@ -16,11 +16,15 @@
         </p>
       </div>
 
+      @if (auth()->user()->role === 'admin_blk')
+
       <x-ui.button href="{{ url('/api/documentation') }}" target="_blank" variant="secondary" class="shrink-0 bg-white text-primary hover:bg-white/90">
         <x-lucide-file-code />
         Swagger API Docs
         <x-lucide-external-link />
       </x-ui.button>
+
+      @endif
     </div>
 
     <div class="pointer-events-none absolute -bottom-16 -right-16 size-64 rounded-full bg-sikarir-lime/10 blur-3xl"></div>
@@ -34,7 +38,7 @@
     </x-ui.alert>
   @endif
 
-  @if (View::exists('components.stat-cards'))
+  @if (auth()->user()->role === 'admin_blk' && View::exists('components.stat-cards'))
     <x-stat-cards />
   @endif
 
@@ -46,23 +50,24 @@
   @if (auth()->user()->role !== 'mitra' || auth()->user()->mitra?->is_verified)
   <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
     @foreach ([
-      ['Mitra', 'building-2', 'Kelola Mitra Perusahaan', 'Daftar, tambah, dan kelola data perusahaan mitra kerja sama industri.', 'mitras.index'],
-      ['Peserta', 'users', 'Kelola Data Peserta', 'Data pribadi, NIK, kontak, dan riwayat keikutsertaan peserta pelatihan.', 'pesertas.index'],
-      ['Admin BLK', 'shield-check', 'Admin & Instruktur BLK', 'Kelola akun pengguna, hak akses, dan penugasan staf administrator BLK.', 'admin-blk.index'],
-      ['Lowongan', 'briefcase', 'Lowongan Pekerjaan', 'Publikasi dan kelola informasi lowongan kerja aktif dari perusahaan mitra.', 'lowongan.index'],
-      ['Program Pelatihan', 'book-open', 'Daftar Program Pelatihan', 'Program kejuruan, kurikulum, dan katalog pelatihan vokasi BLK.', 'pelatihan.index'],
-      ['Jadwal & Kelas', 'calendar', 'Jadwal & Kuota Batch', 'Atur tanggal mulai, tanggal selesai, kuota, tempat, dan status gelombang.', 'jadwal-pelatihan.index'],
-      ['Kelas', 'graduation-cap', 'Pendaftaran Peserta Kelas', 'Kelola penempatan, verifikasi pendaftaran, dan daftar anggota kelas.', 'kelas-pelatihan.index'],
-      ['Absensi', 'clipboard-check', 'Presensi Peserta Harian', 'Pencatatan hadir, izin, sakit, dan alpa peserta pelatihan harian.', 'absen.index'],
-      ['Sertifikat', 'award', 'Penerbitan Sertifikat', 'Penomoran, tanggal terbit, dan unggah berkas sertifikat digital kelulusan.', 'sertifikat.index'],
-    ] as [$label, $icon, $title, $description, $route])
+      ['Mitra', 'building-2', 'Kelola Mitra Perusahaan', 'Daftar, tambah, dan kelola data perusahaan mitra kerja sama industri.', 'mitras.index', ['admin_blk']],
+      ['Peserta', 'users', 'Kelola Data Peserta', 'Data pribadi, NIK, kontak, dan riwayat keikutsertaan peserta pelatihan.', 'pesertas.index', ['admin_blk']],
+      ['Admin BLK', 'shield-check', 'Admin & Instruktur BLK', 'Kelola akun pengguna, hak akses, dan penugasan staf administrator BLK.', 'admin-blk.index', ['admin_blk']],
+      ['Lowongan', 'briefcase', 'Lowongan Pekerjaan', 'Publikasi dan kelola informasi lowongan kerja aktif dari perusahaan mitra.', 'lowongan.index', ['admin_blk', 'mitra']],
+      ['Program Pelatihan', 'book-open', 'Daftar Program Pelatihan', 'Program kejuruan, kurikulum, dan katalog pelatihan vokasi BLK.', 'pelatihan.index', ['admin_blk', 'mitra', 'peserta']],
+      ['Jadwal & Kelas', 'calendar', 'Jadwal & Kuota Batch', 'Atur tanggal mulai, tanggal selesai, kuota, tempat, dan status gelombang.', 'jadwal-pelatihan.index', ['admin_blk']],
+      ['Kelas', 'graduation-cap', 'Pendaftaran Peserta Kelas', 'Kelola penempatan, verifikasi pendaftaran, dan daftar anggota kelas.', 'kelas-pelatihan.index', ['admin_blk']],
+      ['Absensi', 'clipboard-check', 'Presensi Peserta Harian', 'Pencatatan hadir, izin, sakit, dan alpa peserta pelatihan harian.', 'absen.index', ['admin_blk', 'peserta']],
+      ['Sertifikat', 'award', 'Penerbitan Sertifikat', 'Penomoran, tanggal terbit, dan unggah berkas sertifikat digital kelulusan.', 'sertifikat.index', ['admin_blk', 'peserta']],
+    ] as [$label, $icon, $title, $description, $route, $roles])
+      @continue(! in_array(auth()->user()->role, $roles, true))
       <a href="{{ route($route) }}" class="group block outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 rounded-xl">
         <x-ui.card class="flex h-full flex-col justify-between transition-all hover:border-primary/40 hover:shadow-md">
           <div>
             <div class="mb-3 flex items-center justify-between">
               <x-ui.badge variant="secondary" size="sm" class="uppercase tracking-wide">{{ $label }}</x-ui.badge>
               <span class="grid size-9 place-items-center rounded-lg bg-muted text-muted-foreground transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                <i data-lucide="{{ $icon }}" class="size-4"></i>
+                <x-dynamic-component :component="'lucide-'.$icon" class="size-4" />
               </span>
             </div>
             <div class="text-sm font-bold text-foreground transition-colors group-hover:text-primary">{{ $title }}</div>

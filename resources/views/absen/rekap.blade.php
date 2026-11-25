@@ -113,7 +113,7 @@
         <div class="flex items-center gap-6 border-t border-primary-foreground/20 pt-3 text-xs md:border-l md:border-t-0 md:pl-6 md:pt-0">
           <div>
             <span class="block text-[10px] font-semibold uppercase text-sikarir-lime">Instruktur</span>
-            <span class="font-bold text-white">{{ $selectedJadwal->instruktur->user->name ?? $selectedJadwal->instruktur ?? '-' }}</span>
+            <span class="font-bold text-white">{{ $selectedJadwal->instruktur->nama ?? '-' }}</span>
           </div>
           <div>
             <span class="block text-[10px] font-semibold uppercase text-sikarir-lime">Ruangan</span>
@@ -158,8 +158,8 @@
             <x-ui.table-head class="w-20 px-3 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground">Sakit</x-ui.table-head>
             <x-ui.table-head class="w-20 px-3 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground">Alpha</x-ui.table-head>
             <x-ui.table-head class="w-24 px-3 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground">Total Sesi</x-ui.table-head>
-            <x-ui.table-head class="w-36 px-4 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground">Persentase</x-ui.table-head>
-            <x-ui.table-head class="w-36 px-4 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground">Status Kelayakan</x-ui.table-head>
+            <x-ui.table-head class="w-32 px-2 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground">Persentase</x-ui.table-head>
+            <x-ui.table-head class="w-32 px-2 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground">Kelayakan</x-ui.table-head>
           </x-ui.table-row>
         </x-ui.table-header>
 
@@ -169,7 +169,7 @@
               <x-ui.table-cell class="px-4 py-3 text-center text-muted-foreground">{{ $loop->iteration }}</x-ui.table-cell>
 
               <x-ui.table-cell class="px-4 py-3">
-                <span class="block text-xs font-bold text-foreground">{{ $rp->peserta->user->name ?? '-' }}</span>
+                <span class="block text-xs font-bold text-foreground">{{ $rp->peserta->nama ?? '-' }}</span>
                 <span class="text-xs text-muted-foreground">
                   No. Peserta: {{ $rp->peserta->nomor_peserta ?? '-' }} &bull; {{ $rp->peserta->user->email ?? '-' }}
                 </span>
@@ -181,9 +181,9 @@
               <x-ui.table-cell class="px-3 py-3 text-center font-medium text-destructive">{{ $rp->alpha }}</x-ui.table-cell>
               <x-ui.table-cell class="px-3 py-3 text-center font-semibold text-foreground">{{ $rp->total }}</x-ui.table-cell>
 
-              <x-ui.table-cell class="px-4 py-3 text-center">
+              <x-ui.table-cell class="px-2 py-3 text-center">
                 <div class="flex items-center justify-center gap-2">
-                  <div class="h-2 w-16 shrink-0 overflow-hidden rounded-full bg-muted">
+                  <div class="h-2 w-10 shrink-0 overflow-hidden rounded-full bg-muted">
                     <div
                       class="h-2 rounded-full {{ $rp->persentase >= 80 ? 'bg-emerald-500' : ($rp->persentase >= 60 ? 'bg-amber-500' : 'bg-rose-500') }}"
                       style="width: {{ $rp->persentase }}%"
@@ -199,7 +199,7 @@
                 @if ($rp->persentase >= 80)
                   <x-ui.badge tone="success" class="gap-1">
                     <x-lucide-circle-check class="size-3" />
-                    Memenuhi Syarat
+                    Layak
                   </x-ui.badge>
                 @else
                   <x-ui.badge tone="warning" class="gap-1">
@@ -270,7 +270,7 @@
               </x-ui.table-cell>
 
               <x-ui.table-cell class="px-4 py-3">
-                <span class="block font-bold text-foreground">{{ $absen->peserta->user->name ?? '-' }}</span>
+                <span class="block font-bold text-foreground">{{ $absen->peserta->nama ?? '-' }}</span>
                 <span class="text-xs text-muted-foreground">{{ $absen->peserta->nomor_peserta ?? '-' }}</span>
               </x-ui.table-cell>
 

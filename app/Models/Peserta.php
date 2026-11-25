@@ -10,21 +10,31 @@ class Peserta extends Model
     use HasFactory;
 
     protected $primaryKey = 'id_peserta';
-    protected $fillable = ['id_user', 'id_admin', 'nomor_peserta', 'jenis_kelamin', 'nomor_kk', 'nomor_wa', 'tanggal_lahir', 'tempat_lahir', 'alamat_lengkap', 'pendidikan_terakhir', 'pendidikan_sekarang', 'pas_foto', 'jurusan', 'is_disabilitas', 'jenis_disabilitas', 'status_pendidikan'];
+
+    protected $fillable = ['id_user', 'id_admin', 'nama', 'nomor_peserta', 'jenis_kelamin', 'nomor_kk', 'nomor_wa', 'tanggal_lahir', 'tempat_lahir', 'alamat_lengkap', 'pendidikan_terakhir', 'pendidikan_sekarang', 'pas_foto', 'jurusan', 'is_disabilitas', 'jenis_disabilitas', 'status_pendidikan'];
+
     protected $casts = ['tanggal_lahir' => 'date', 'is_disabilitas' => 'boolean'];
+
     protected $appends = ['is_profile_complete'];
+
+    /**
+     * Keep the internal `nama` column out of the mobile API payload.
+     *
+     * @var list<string>
+     */
+    protected $hidden = ['nama'];
 
     public function isProfileComplete(): bool
     {
-        return !empty($this->nomor_wa)
-            && !empty($this->nomor_kk)
-            && !empty($this->tanggal_lahir)
-            && !empty($this->tempat_lahir)
-            && !empty($this->jenis_kelamin)
-            && !empty($this->alamat_lengkap)
-            && !empty($this->pendidikan_terakhir)
-            && !empty($this->status_pendidikan)
-            && !empty($this->pas_foto);
+        return ! empty($this->nomor_wa)
+            && ! empty($this->nomor_kk)
+            && ! empty($this->tanggal_lahir)
+            && ! empty($this->tempat_lahir)
+            && ! empty($this->jenis_kelamin)
+            && ! empty($this->alamat_lengkap)
+            && ! empty($this->pendidikan_terakhir)
+            && ! empty($this->status_pendidikan)
+            && ! empty($this->pas_foto);
     }
 
     public function getIsProfileCompleteAttribute(): bool

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterMitraRequest;
-use App\Models\Mitra;
+use App\Models\Peserta;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -39,18 +39,24 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'peserta',
-        ]);
+        $user = DB::transaction(function () use ($validated): User {
+            $user = User::create([
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'role' => 'peserta',
+            ]);
+
+            // Profil peserta awal agar akun langsung muncul di data peserta, absensi, dan kelas.
+            $user->ensureRoleProfile($validated['name']);
+
+            return $user;
+        });
 
         event(new Registered($user));
 
@@ -68,14 +74,13 @@ class RegisteredUserController extends Controller
         try {
             $user = DB::transaction(function () use ($data, $legalitasPath, $permohonanPath): User {
                 $user = User::create([
-                    'name' => $data['name'],
                     'email' => $data['email'],
                     'password' => Hash::make($data['password']),
                     'role' => 'mitra',
                 ]);
 
-                Mitra::create([
-                    'id_user' => $user->id,
+                $user->mitra()->create([
+                    'nama' => $data['name'],
                     'nama_perusahaan' => $data['nama_perusahaan'],
                     'surat_legalitas_path' => $legalitasPath,
                     'surat_permohonan_kerjasama_path' => $permohonanPath,

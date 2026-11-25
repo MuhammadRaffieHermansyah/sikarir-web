@@ -10,8 +10,9 @@ class StoreAdminBlkRequest extends FormRequest
     {
         return true;
     }
+
     public function rules(): array
     {
-        return ['id_user' => 'required|exists:users,id|unique:admin_blks,id_user'];
+        return ['id_user' => 'required|exists:users,id|unique:admin_blks,id_user', 'nama' => 'nullable|string|max:255'];
     }
 }

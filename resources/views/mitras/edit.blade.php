@@ -206,6 +206,12 @@
               <x-ui.field-error :messages="$errors->get('no_izin')" />
             </x-ui.field>
 
+            <x-ui.field data-invalid="{{ $errors->has('nama') ? 'true' : 'false' }}">
+              <x-ui.field-label for="nama">Nama Penanggung Jawab (PIC) <span class="text-destructive">*</span></x-ui.field-label>
+              <x-ui.input id="nama" name="nama" type="text" :value="old('nama', $mitra->nama)" required />
+              <x-ui.field-error :messages="$errors->get('nama')" />
+            </x-ui.field>
+
             <x-ui.field data-invalid="{{ $errors->has('id_user') ? 'true' : 'false' }}">
               <x-ui.field-label for="id_user">Akun User Terkait</x-ui.field-label>
               <x-ui.select name="id_user" id="id_user" native class="w-full">

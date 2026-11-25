@@ -8,9 +8,9 @@
     </div>
 
     <div class="space-y-1">
-        <x-ui.item href="#" size="sm" class="hover:bg-accent/50">
+        <x-ui.item href="{{ route('pesertas.create') }}" size="sm" class="hover:bg-accent/50">
             <x-lucide-user-plus class="size-4 text-muted-foreground" />
-            <x-ui.item-content><x-ui.item-title class="text-xs">Tambah User / Siswa Baru</x-ui.item-title></x-ui.item-content>
+            <x-ui.item-content><x-ui.item-title class="text-xs">Tambah Peserta Baru</x-ui.item-title></x-ui.item-content>
             <x-lucide-chevron-right class="ms-auto size-4 text-muted-foreground" />
         </x-ui.item>
 
@@ -23,12 +23,12 @@
         <x-ui.item href="{{ route('absen.rekap') }}" size="sm" variant="muted">
             <x-lucide-circle-check-big class="size-4 text-success" />
             <x-ui.item-content><x-ui.item-title class="text-xs">Rekap Presensi Hari Ini</x-ui.item-title></x-ui.item-content>
-            <x-ui.badge tone="success" size="sm">12</x-ui.badge>
+            <x-ui.badge tone="success" size="sm">{{ \App\Models\Absen::whereDate('tanggal', today())->count() }}</x-ui.badge>
         </x-ui.item>
 
         <x-ui.item href="{{ route('sertifikat.index') }}" size="sm" class="hover:bg-accent/50">
             <x-lucide-printer class="size-4 text-muted-foreground" />
-            <x-ui.item-content><x-ui.item-title class="text-xs">Cetak Sertifikat Kompetensi Massal</x-ui.item-title></x-ui.item-content>
+            <x-ui.item-content><x-ui.item-title class="text-xs">Kelola Sertifikat Kompetensi</x-ui.item-title></x-ui.item-content>
             <x-lucide-chevron-right class="ms-auto size-4 text-muted-foreground" />
         </x-ui.item>
     </div>

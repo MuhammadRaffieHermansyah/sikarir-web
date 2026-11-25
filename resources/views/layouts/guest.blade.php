@@ -10,7 +10,6 @@
         <link rel="apple-touch-icon" href="{{ asset('images/sikarir-logo.png') }}?v=2">
 
         <title>{{ $title }}</title>
-        <script src="https://unpkg.com/lucide@latest"></script>
 
         @fonts
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -26,9 +25,5 @@
         </div>
 
         <x-ui.sonner position="bottom-right" />
-
-        <script>
-            lucide.createIcons();
-        </script>
     </body>
 </html>

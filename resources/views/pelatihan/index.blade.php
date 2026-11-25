@@ -27,15 +27,19 @@
         Kejuruan & Kurikulum Vokasi
       </x-ui.badge>
 
+      @if (auth()->user()?->role === 'admin_blk')
       <x-ui.button href="{{ route('jadwal-pelatihan.index') }}" variant="outline">
         <x-lucide-calendar />
         Jadwal Kelas
       </x-ui.button>
+      @endif
 
+      @if (auth()->user()?->role === 'admin_blk')
       <x-ui.button href="{{ route('pelatihan.create') }}" class="bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
         <x-lucide-plus-circle />
         Tambah Program Baru
       </x-ui.button>
+      @endif
     </x-slot:actions>
   </x-ui.page-header>
 
@@ -149,7 +153,7 @@
               </x-ui.table-cell>
 
               <x-ui.table-cell class="px-4 py-3">
-                @php($penanggungJawab = $pelatihan->instruktur?->nama ?? $pelatihan->admin?->user?->name ?? 'Belum Ditunjuk')
+                @php($penanggungJawab = $pelatihan->instruktur?->nama ?? $pelatihan->admin?->nama ?? 'Belum Ditunjuk')
 
                 <div class="flex items-center gap-2">
                   <x-ui.avatar class="size-6">
@@ -175,6 +179,7 @@
                     <x-lucide-eye />
                   </x-ui.button>
 
+                  @if (auth()->user()?->role === 'admin_blk')
                   <x-ui.button
                     href="{{ route('pelatihan.edit', $pelatihan->id_pelatihan) }}"
                     variant="ghost"
@@ -205,6 +210,7 @@
                       <x-lucide-trash-2 />
                     </x-ui.button>
                   </form>
+                  @endif
                 </div>
               </x-ui.table-cell>
             </x-ui.table-row>
@@ -228,10 +234,12 @@
                       Reset Filter Pencarian
                     </x-ui.button>
                   @else
+                    @if (auth()->user()?->role === 'admin_blk')
                     <x-ui.button href="{{ route('pelatihan.create') }}" class="bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
                       <x-lucide-plus />
                       Buat Program Baru
                     </x-ui.button>
+                    @endif
                   @endif
                 </x-ui.empty>
               </x-ui.table-cell>

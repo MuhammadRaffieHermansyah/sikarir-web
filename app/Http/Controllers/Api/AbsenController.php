@@ -140,7 +140,7 @@ class AbsenController extends Controller
                 'peserta' => [
                     'id_peserta' => $peserta->id_peserta,
                     'nomor_peserta' => $peserta->nomor_peserta,
-                    'nama' => $user->name,
+                    'nama' => $peserta->nama,
                 ],
                 'summary' => [
                     'total_hadir' => $totalHadir,

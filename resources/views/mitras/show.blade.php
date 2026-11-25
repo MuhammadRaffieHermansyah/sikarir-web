@@ -162,7 +162,7 @@
             <div>
               <span class="mb-1 block font-medium text-muted-foreground">Akun Pengguna Terkait</span>
               <span class="font-semibold text-foreground">
-                {{ $mitra->user->name ?? 'Tidak ditautkan' }}{{ $mitra->user ? ' (' . $mitra->user->email . ')' : '' }}
+                {{ $mitra->nama ?? 'Tidak ditautkan' }}{{ $mitra->user ? ' (' . $mitra->user->email . ')' : '' }}
               </span>
             </div>
 

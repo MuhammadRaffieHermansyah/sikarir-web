@@ -30,7 +30,9 @@ test('mitra can register with verification documents', function () {
     $mitra = Mitra::where('id_user', $user->id)->firstOrFail();
 
     expect($user->role)->toBe('mitra')
-        ->and($mitra->is_verified)->toBeFalse();
+        ->and($mitra->is_verified)->toBeFalse()
+        ->and($mitra->nama)->toBe('Siti Rahma')
+        ->and($user->name)->toBe('Siti Rahma');
 
     Storage::disk('local')->assertExists($mitra->surat_legalitas_path);
     Storage::disk('local')->assertExists($mitra->surat_permohonan_kerjasama_path);

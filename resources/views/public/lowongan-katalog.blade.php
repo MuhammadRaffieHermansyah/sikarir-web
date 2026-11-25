@@ -321,10 +321,6 @@
             @endforeach
           </div>
 
-          <x-ui.button href="#" variant="secondary" class="w-full">
-            <x-lucide-download />
-            Unduh Panduan Penyaluran (PDF)
-          </x-ui.button>
         </x-ui.card>
 
         {{-- CTA Mitra --}}
@@ -343,12 +339,12 @@
           </p>
 
           <div class="space-y-2 pt-2">
-            <x-ui.button href="#" class="w-full bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
+            <x-ui.button href="{{ route('register.mitra') }}" class="w-full bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
               Daftarkan Perusahaan Anda
             </x-ui.button>
 
             <a
-              href="https://wa.me/#"
+              href="https://wa.me/{{ config('blk.wa') }}"
               target="_blank"
               rel="noopener"
               class="block text-center text-xs font-semibold text-sikarir-lime hover:underline"

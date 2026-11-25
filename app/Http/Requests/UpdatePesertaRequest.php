@@ -19,6 +19,7 @@ class UpdatePesertaRequest extends FormRequest
         return [
             'id_user' => ['sometimes', 'exists:users,id', Rule::unique('pesertas', 'id_user')->ignore($id, 'id_peserta')],
             'id_admin' => 'sometimes|nullable|exists:admin_blks,id_admin',
+            'nama' => 'sometimes|nullable|string|max:255',
             'nomor_peserta' => ['sometimes', 'string', 'max:100', Rule::unique('pesertas', 'nomor_peserta')->ignore($id, 'id_peserta')],
             'jenis_kelamin' => 'sometimes|in:Laki-laki,Perempuan',
             'nomor_kk' => 'sometimes|nullable|string|max:30',

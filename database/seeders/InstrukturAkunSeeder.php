@@ -25,7 +25,6 @@ class InstrukturAkunSeeder extends Seeder
         $user = User::updateOrCreate(
             ['email' => 'instruktur@sikarir.com'],
             [
-                'name' => $instruktur->nama,
                 'password' => Hash::make('password'),
                 'role' => 'instruktur',
             ]
