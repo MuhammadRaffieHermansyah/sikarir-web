@@ -14,8 +14,8 @@ class StoreInstrukturRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama' => 'required|string|max:150|regex:/^[a-zA-Z\s]+$/',
-            'bidang_keahlian' => 'required|string|max:150|regex:/^[a-zA-Z\s]+$/',
+            'nama' => 'required|string|max:150|regex:/^[\pL\s.,\x27\-]+$/u',
+            'bidang_keahlian' => 'required|string|max:150|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
         ];
     }
 
@@ -24,10 +24,10 @@ class StoreInstrukturRequest extends FormRequest
         return [
             'nama.required' => 'Nama instruktur wajib diisi.',
             'nama.max' => 'Nama instruktur maksimal 150 karakter.',
-            'nama.regex' => 'Nama instruktur hanya boleh mengandung huruf dan spasi.',
+            'nama.regex' => 'Nama instruktur hanya boleh berisi huruf, spasi, dan tanda . , - \'.',
             'bidang_keahlian.required' => 'Bidang keahlian wajib diisi.',
             'bidang_keahlian.max' => 'Bidang keahlian maksimal 150 karakter.',
-            'bidang_keahlian.regex' => 'Bidang keahlian hanya boleh mengandung huruf dan spasi.',
+            'bidang_keahlian.regex' => 'Bidang keahlian hanya boleh berisi huruf, angka, spasi, dan tanda baca umum.',
         ];
     }
 }

@@ -12,7 +12,7 @@ class AdminBlkController extends Controller
 {
     public function index(): View
     {
-        $admins = AdminBlk::with(['user', 'pelatihan', 'lowongan', 'peserta', 'sertifikat'])
+        $admins = AdminBlk::with(['user', 'pelatihan', 'peserta', 'sertifikat'])
             ->latest('id_admin')
             ->paginate(10);
 
@@ -22,6 +22,7 @@ class AdminBlkController extends Controller
     public function create(): View
     {
         $users = User::orderBy('name')->get();
+
         return view('admin-blk.create', compact('users'));
     }
 
@@ -31,8 +32,8 @@ class AdminBlkController extends Controller
             'id_user' => 'required|exists:users,id|unique:admin_blks,id_user',
         ], [
             'id_user.required' => 'Pengguna wajib dipilih.',
-            'id_user.exists'   => 'Pengguna tidak ditemukan.',
-            'id_user.unique'   => 'Pengguna ini sudah terdaftar sebagai Administrator BLK.',
+            'id_user.exists' => 'Pengguna tidak ditemukan.',
+            'id_user.unique' => 'Pengguna ini sudah terdaftar sebagai Administrator BLK.',
         ]);
 
         AdminBlk::create([
@@ -44,7 +45,8 @@ class AdminBlkController extends Controller
 
     public function show(int $id): View
     {
-        $admin = AdminBlk::with(['user', 'peserta', 'lowongan', 'pelatihan', 'sertifikat'])->findOrFail($id);
+        $admin = AdminBlk::with(['user', 'peserta', 'pelatihan', 'sertifikat'])->findOrFail($id);
+
         return view('admin-blk.show', compact('admin'));
     }
 
@@ -52,6 +54,7 @@ class AdminBlkController extends Controller
     {
         $admin = AdminBlk::with('user')->findOrFail($id);
         $users = User::orderBy('name')->get();
+
         return view('admin-blk.edit', compact('admin', 'users'));
     }
 
@@ -60,11 +63,11 @@ class AdminBlkController extends Controller
         $admin = AdminBlk::findOrFail($id);
 
         $request->validate([
-            'id_user' => 'required|exists:users,id|unique:admin_blks,id_user,' . $admin->id_admin . ',id_admin',
+            'id_user' => 'required|exists:users,id|unique:admin_blks,id_user,'.$admin->id_admin.',id_admin',
         ], [
             'id_user.required' => 'Pengguna wajib dipilih.',
-            'id_user.exists'   => 'Pengguna tidak ditemukan.',
-            'id_user.unique'   => 'Pengguna ini sudah terdaftar sebagai Administrator BLK lain.',
+            'id_user.exists' => 'Pengguna tidak ditemukan.',
+            'id_user.unique' => 'Pengguna ini sudah terdaftar sebagai Administrator BLK lain.',
         ]);
 
         $admin->update([
@@ -78,7 +81,7 @@ class AdminBlkController extends Controller
     {
         $admin = AdminBlk::findOrFail($id);
         $admin->delete();
+
         return redirect()->route('admin-blk.index')->with('success', 'Data administrator BLK berhasil dihapus.');
     }
 }
-

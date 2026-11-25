@@ -189,7 +189,7 @@
     <table class="header-table">
       <tr>
         <td class="header-logo">
-          <img src="{{ asset('images/logo_sikarir.png') }}" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/b/b3/Logo_Kementerian_Ketenagakerjaan_Republik_Indonesia.png'" alt="Logo">
+          <img src="{{ asset('images/logo-sikarir.png') }}" alt="Logo">
         </td>
         <td class="header-text">
           <h3>Kementerian Ketenagakerjaan Republik Indonesia</h3>
@@ -300,15 +300,15 @@
           Mengetahui,<br>
           <strong>Instruktur Pelatihan Vokasi</strong>
           <div class="sign-space"></div>
-          <strong><u>{{ $selectedJadwal->instruktur->nama ?? 'Instruktur Pembina' }}</u></strong><br>
-          <span>NIP. 19850712 201101 1 004</span>
+          <strong><u>{{ $selectedJadwal?->instruktur?->nama ?? '( ........................................ )' }}</u></strong><br>
+          <span>NIP. ..............................</span>
         </td>
         <td>
           Jember, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}<br>
           <strong>Kepala Balai Pelatihan Vokasi</strong>
           <div class="sign-space"></div>
-          <strong><u>Drs. H. Bambang Soeprapto, M.M.</u></strong><br>
-          <span>NIP. 19740315 199803 1 002</span>
+          <strong><u>( ........................................ )</u></strong><br>
+          <span>NIP. ..............................</span>
         </td>
       </tr>
     </table>

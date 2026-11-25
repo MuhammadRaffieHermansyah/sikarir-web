@@ -35,8 +35,5 @@
         icon="award"
         caption="Sertifikat kompetensi diterbitkan"
     >
-        <x-slot:trailing>
-            <x-ui.badge tone="info" size="sm">Terverifikasi</x-ui.badge>
-        </x-slot:trailing>
     </x-ui.stat>
 </div>

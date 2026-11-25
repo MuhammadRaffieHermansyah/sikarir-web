@@ -17,25 +17,9 @@
         <p class="mt-0.5 truncate text-sm font-bold tracking-tight text-foreground">siKarir Dashboard</p>
     </div>
 
-    <form class="relative min-w-0 flex-1 sm:max-w-md lg:ml-2" role="search">
-        <label class="sr-only" for="dashboard-search">Cari di dashboard</label>
-        <x-ui.input id="dashboard-search" type="search" placeholder="Cari peserta, kelas, atau lowongan..." class="h-10 pl-10">
-            <x-slot:leading>
-                <x-lucide-search />
-            </x-slot:leading>
-        </x-ui.input>
-    </form>
 
     <div class="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
-        <x-ui.badge variant="secondary" class="hidden gap-1.5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide sm:inline-flex">
-            <span class="size-1.5 rounded-full bg-primary"></span>
-            Gelombang II 2025
-        </x-ui.badge>
 
-        <x-ui.button variant="outline" size="icon" aria-label="Notifikasi" class="relative">
-            <x-lucide-bell />
-            <span class="absolute right-2.5 top-2.5 size-1.5 rounded-full bg-primary ring-2 ring-background"></span>
-        </x-ui.button>
 
         <x-ui.dropdown-menu>
             <x-ui.dropdown-menu-trigger>
