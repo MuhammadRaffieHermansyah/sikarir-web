@@ -93,7 +93,7 @@ class DaftarLowonganController extends Controller
         $validated = $request->validate([
             'judul_lowongan' => [
                 'required', 'string', 'max:100',
-                'regex:/^[a-zA-Z\s]+$/',
+                'regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
                 Rule::unique('daftar_lowongan', 'judul_lowongan')->where(function ($query) use ($mitra) {
                     return $query->where('id_mitra', $mitra->id_mitra);
                 }),
@@ -112,7 +112,7 @@ class DaftarLowonganController extends Controller
             'deskripsi.required' => 'Deskripsi pekerjaan wajib diisi.',
             'kualifikasi.required' => 'Kualifikasi & persyaratan wajib diisi.',
             'status.in' => 'Status lowongan harus aktif, draft, atau ditutup.',
-            'judul_lowongan.regex' => 'Judul lowongan tidak boleh mengandung simbol atau angka.',
+            'judul_lowongan.regex' => 'Judul lowongan hanya boleh berisi huruf, angka, spasi, dan tanda baca umum.',
             'gambar.image' => 'File harus berupa gambar.',
             'gambar.mimes' => 'Format gambar harus JPG, PNG, atau WEBP.',
             'gambar.max' => 'Ukuran gambar maksimal 2 MB.',
@@ -161,7 +161,7 @@ class DaftarLowonganController extends Controller
         $validated = $request->validate([
             'judul_lowongan' => [
                 'required', 'string', 'max:255',
-                'regex:/^[a-zA-Z\s]+$/',
+                'regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
                 Rule::unique('daftar_lowongan', 'judul_lowongan')
                     ->where(function ($query) use ($lowongan) {
                         return $query->where('id_mitra', $lowongan->id_mitra);
@@ -181,7 +181,7 @@ class DaftarLowonganController extends Controller
             'deskripsi.required' => 'Deskripsi pekerjaan wajib diisi.',
             'kualifikasi.required' => 'Kualifikasi & persyaratan wajib diisi.',
             'status.in' => 'Status lowongan harus aktif, draft, atau ditutup.',
-            'judul_lowongan.regex' => 'Judul lowongan hanya boleh berisi huruf dan spasi.',
+            'judul_lowongan.regex' => 'Judul lowongan hanya boleh berisi huruf, angka, spasi, dan tanda baca umum.',
             'gambar.image' => 'File harus berupa gambar.',
             'gambar.mimes' => 'Format gambar harus JPG, PNG, atau WEBP.',
             'gambar.max' => 'Ukuran gambar maksimal 2 MB.',
