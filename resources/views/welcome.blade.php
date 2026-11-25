@@ -291,7 +291,7 @@
           <x-ui.card class="flex h-full flex-col overflow-hidden p-0 transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-md">
             <div class="relative h-40 overflow-hidden bg-muted">
               <img
-                src="{{ $item->gambar_url ?? $fallbackImg }}"
+                src="{{ $item->gambar_thumb_url ?? $fallbackImg }}"
                 onerror="this.onerror=null;this.src='{{ $fallbackImg }}'"
                 alt="{{ $item->nama_pelatihan }}"
                 loading="lazy"
@@ -387,7 +387,7 @@
           <x-ui.card class="flex flex-col overflow-hidden p-0 transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-md">
             @if ($job->gambar_url)
               <img
-                src="{{ $job->gambar_url }}"
+                src="{{ $job->gambar_thumb_url }}"
                 onerror="this.onerror=null;this.src='{{ $fallbackImg }}'"
                 alt="{{ $job->judul_lowongan }}"
                 class="aspect-[16/9] w-full object-cover"

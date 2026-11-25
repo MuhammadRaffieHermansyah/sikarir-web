@@ -155,7 +155,7 @@
                 <div class="flex min-w-0 gap-3.5">
                   @if ($job->gambar_url)
                     <img
-                      src="{{ $job->gambar_url }}"
+                      src="{{ $job->gambar_thumb_url }}"
                       alt="{{ $job->judul_lowongan }}"
                       class="size-14 shrink-0 rounded-xl border border-border object-cover"
                       loading="lazy"

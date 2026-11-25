@@ -7,25 +7,24 @@ use App\Models\Peserta;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
 class PesertaController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = Peserta::with(['user', 'admin.user', 'kelas.jadwal.pelatihan', 'sertifikat']);
+        $query = Peserta::with('user:id,email')->withCount('kelas');
 
         // Filter Pencarian (Nama, Email, NIS / Nomor Peserta, Jurusan, Nomor WA)
         if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('nomor_peserta', 'like', "%{$search}%")
-                    ->orWhere('nama', 'like', "%{$search}%")
-                    ->orWhere('jurusan', 'like', "%{$search}%")
-                    ->orWhere('nomor_wa', 'like', "%{$search}%")
-                    ->orWhereHas('user', function ($sub) use ($search) {
-                        $sub->where('email', 'like', "%{$search}%");
-                    });
+            $like = $this->likePattern($request->string('search')->toString());
+            $query->where(function ($q) use ($like) {
+                $q->where('nomor_peserta', 'like', $like)
+                    ->orWhere('nama', 'like', $like)
+                    ->orWhere('jurusan', 'like', $like)
+                    ->orWhere('nomor_wa', 'like', $like)
+                    ->orWhereIn('id_user', User::select('id')->where('email', 'like', $like));
             });
         }
 
@@ -35,7 +34,7 @@ class PesertaController extends Controller
         }
 
         // Ambil daftar jurusan unik untuk opsi dropdown filter
-        $jurusanList = Peserta::distinct()->whereNotNull('jurusan')->pluck('jurusan');
+        $jurusanList = Cache::remember('peserta.jurusan-list', 300, fn () => Peserta::whereNotNull('jurusan')->distinct()->orderBy('jurusan')->pluck('jurusan'));
 
         // Ambil data terbaru dengan pagination & pertahankan query string URL
         $pesertas = $query->latest('id_peserta')
@@ -47,8 +46,8 @@ class PesertaController extends Controller
 
     public function create(): View
     {
-        $users = User::orderBy('email')->get();
-        $admins = AdminBlk::with('user')->get();
+        $users = User::select('id', 'email', 'role')->withProfileNames()->where('role', 'peserta')->doesntHave('peserta')->orderBy('email')->get();
+        $admins = AdminBlk::select('id_admin', 'nama')->orderBy('nama')->get();
 
         return view('pesertas.create', compact('users', 'admins'));
     }
@@ -62,8 +61,8 @@ class PesertaController extends Controller
             'nomor_peserta' => 'required|string|max:50|unique:pesertas,nomor_peserta',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'jurusan' => 'required|string|max:100|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
-            'nomor_wa' => 'required|string|max:30',
-            'nomor_kk' => 'required|string|max:30',
+            'nomor_wa' => ['required', 'string', 'max:30', 'regex:/^\+?[0-9]{8,20}$/'],
+            'nomor_kk' => ['required', 'string', 'regex:/^[0-9]{16}$/'],
             'tanggal_lahir' => 'required|date',
             'tempat_lahir' => 'required|string|max:100|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
             'pendidikan_terakhir' => 'required|string|max:100|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
@@ -78,6 +77,8 @@ class PesertaController extends Controller
             'jenis_kelamin.required' => 'Jenis kelamin wajib diisi.',
             'jurusan.required' => 'Jurusan wajib diisi.',
             'nomor_wa.required' => 'Nomor WA wajib diisi.',
+            'nomor_wa.regex' => 'Nomor WA hanya boleh berisi angka (8-20 digit, boleh diawali +).',
+            'nomor_kk.regex' => 'Nomor KK harus 16 digit angka.',
             'nomor_kk.required' => 'Nomor KK wajib diisi.',
             'tanggal_lahir.required' => 'Tanggal lahir wajib diisi.',
             'tempat_lahir.required' => 'Tempat lahir wajib diisi.',
@@ -104,8 +105,11 @@ class PesertaController extends Controller
     public function edit(int $id): View
     {
         $peserta = Peserta::with('user')->findOrFail($id);
-        $users = User::orderBy('email')->get();
-        $admins = AdminBlk::with('user')->get();
+        $users = User::select('id', 'email')
+            ->where('role', 'peserta')
+            ->where(fn ($q) => $q->doesntHave('peserta')->orWhere('id', $peserta->id_user))
+            ->orderBy('email')->get();
+        $admins = AdminBlk::select('id_admin', 'nama')->orderBy('nama')->get();
 
         return view('pesertas.edit', compact('peserta', 'users', 'admins'));
     }
@@ -121,8 +125,8 @@ class PesertaController extends Controller
             'nomor_peserta' => 'required|string|max:50|unique:pesertas,nomor_peserta,'.$peserta->id_peserta.',id_peserta',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'jurusan' => 'nullable|string|max:100|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
-            'nomor_wa' => 'nullable|string|max:30',
-            'nomor_kk' => 'nullable|string|max:30',
+            'nomor_wa' => ['nullable', 'string', 'max:30', 'regex:/^\+?[0-9]{8,20}$/'],
+            'nomor_kk' => ['nullable', 'string', 'regex:/^[0-9]{16}$/'],
             'tanggal_lahir' => 'nullable|date',
             'tempat_lahir' => 'nullable|string|max:100|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
             'pendidikan_terakhir' => 'nullable|string|max:100|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
@@ -132,6 +136,8 @@ class PesertaController extends Controller
             'nama.required' => 'Nama peserta wajib diisi.',
             'nama.regex' => 'Nama peserta hanya boleh berisi huruf, angka, spasi, dan tanda baca umum.',
             'nomor_peserta.unique' => 'Nomor peserta (NIS) sudah digunakan.',
+            'nomor_wa.regex' => 'Nomor WA hanya boleh berisi angka (8-20 digit, boleh diawali +).',
+            'nomor_kk.regex' => 'Nomor KK harus 16 digit angka.',
             'jurusan.regex' => 'Jurusan hanya boleh berisi huruf, angka, spasi, dan tanda baca umum.',
             'tempat_lahir.regex' => 'Tempat lahir hanya boleh berisi huruf, angka, spasi, dan tanda baca umum.',
             'pendidikan_terakhir.regex' => 'Pendidikan terakhir hanya boleh berisi huruf, angka, spasi, dan tanda baca umum.',

@@ -7,7 +7,6 @@ use App\Models\Mitra;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -16,7 +15,7 @@ class DaftarLowonganController extends Controller
     public function index(Request $request): View
     {
         // 1. Inisialisasi Query Utama
-        $query = DaftarLowongan::with('mitra');
+        $query = DaftarLowongan::with('mitra:id_mitra,nama_perusahaan,logo_perusahaan');
 
         // 2. Filter Berdasarkan Role User (Jika Mitra, Hanya Lihat Lowongan Miliknya)
         if (Auth::user()->role === 'mitra') {
@@ -27,13 +26,11 @@ class DaftarLowonganController extends Controller
 
         // 3. Filter Pencarian Keyword
         if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('judul_lowongan', 'like', "%{$search}%")
-                    ->orWhere('lokasi', 'like', "%{$search}%")
-                    ->orWhereHas('mitra', function ($sub) use ($search) {
-                        $sub->where('nama_perusahaan', 'like', "%{$search}%");
-                    });
+            $like = $this->likePattern($request->string('search')->toString());
+            $query->where(function ($q) use ($like) {
+                $q->where('judul_lowongan', 'like', $like)
+                    ->orWhere('lokasi', 'like', $like)
+                    ->orWhereIn('id_mitra', Mitra::select('id_mitra')->where('nama_perusahaan', 'like', $like));
             });
         }
 
@@ -49,9 +46,10 @@ class DaftarLowonganController extends Controller
             $baseMetricsQuery->where('id_mitra', $mitra ? $mitra->id_mitra : null);
         }
 
-        $countAktif = (clone $baseMetricsQuery)->where('status', 'aktif')->count();
-        $countDraft = (clone $baseMetricsQuery)->where('status', 'draft')->count();
-        $countDitutup = (clone $baseMetricsQuery)->where('status', 'ditutup')->count();
+        $statusCounts = $baseMetricsQuery->selectRaw('status, COUNT(*) as total')->groupBy('status')->pluck('total', 'status');
+        $countAktif = (int) ($statusCounts['aktif'] ?? 0);
+        $countDraft = (int) ($statusCounts['draft'] ?? 0);
+        $countDitutup = (int) ($statusCounts['ditutup'] ?? 0);
 
         $lowongans = $query->latest('id_lowongan')
             ->paginate(10)
@@ -123,7 +121,7 @@ class DaftarLowonganController extends Controller
             $validated['tanggal_posting'] = now()->format('Y-m-d');
         }
         if ($request->hasFile('gambar')) {
-            $validated['gambar'] = $request->file('gambar')->store('lowongan', 'public');
+            $validated['gambar'] = $this->storeImage($request->file('gambar'), 'lowongan', 1280, 1280, 640);
         }
         DaftarLowongan::create($validated);
 
@@ -133,6 +131,10 @@ class DaftarLowonganController extends Controller
     public function show(int $id): View
     {
         $lowongan = DaftarLowongan::with('mitra.user')->findOrFail($id);
+
+        if (Auth::user()->role === 'mitra' && $lowongan->id_mitra !== Auth::user()->mitra?->id_mitra) {
+            abort(403, 'Anda tidak memiliki izin untuk melihat lowongan ini.');
+        }
 
         return view('lowongan.show', compact('lowongan'));
     }
@@ -160,7 +162,7 @@ class DaftarLowonganController extends Controller
 
         $validated = $request->validate([
             'judul_lowongan' => [
-                'required', 'string', 'max:255',
+                'required', 'string', 'max:100',
                 'regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
                 Rule::unique('daftar_lowongan', 'judul_lowongan')
                     ->where(function ($query) use ($lowongan) {
@@ -177,6 +179,7 @@ class DaftarLowonganController extends Controller
         ], [
             'judul_lowongan.required' => 'Judul posisi lowongan wajib diisi.',
             'judul_lowongan.unique' => 'Perusahaan Anda sudah memiliki lowongan lain dengan judul tersebut.',
+            'judul_lowongan.max' => 'Judul posisi lowongan maksimal 100 karakter.',
             'lokasi.required' => 'Lokasi penempatan wajib diisi.',
             'deskripsi.required' => 'Deskripsi pekerjaan wajib diisi.',
             'kualifikasi.required' => 'Kualifikasi & persyaratan wajib diisi.',
@@ -189,11 +192,11 @@ class DaftarLowonganController extends Controller
 
         if ($request->hasFile('gambar')) {
             if ($lowongan->gambar) {
-                Storage::disk('public')->delete($lowongan->gambar);
+                $this->deleteImage($lowongan->gambar);
             }
-            $validated['gambar'] = $request->file('gambar')->store('lowongan', 'public');
+            $validated['gambar'] = $this->storeImage($request->file('gambar'), 'lowongan', 1280, 1280, 640);
         } elseif ($request->boolean('hapus_gambar') && $lowongan->gambar) {
-            Storage::disk('public')->delete($lowongan->gambar);
+            $this->deleteImage($lowongan->gambar);
             $validated['gambar'] = null;
         }
         $lowongan->update($validated);
@@ -209,7 +212,7 @@ class DaftarLowonganController extends Controller
             return redirect()->route('lowongan.index')->with('error', 'Anda tidak memiliki izin untuk menghapus lowongan ini.');
         }
         if ($lowongan->gambar) {
-            Storage::disk('public')->delete($lowongan->gambar);
+            $this->deleteImage($lowongan->gambar);
         }
         $lowongan->delete();
 

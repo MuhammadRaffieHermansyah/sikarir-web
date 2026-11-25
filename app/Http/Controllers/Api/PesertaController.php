@@ -151,7 +151,7 @@ class PesertaController extends Controller
             if ($peserta->pas_foto) {
                 Storage::disk('public')->delete($peserta->pas_foto);
             }
-            $path = $request->file('pas_foto')->store('pas_foto', 'public');
+            $path = $this->storeImage($request->file('pas_foto'), 'pas_foto', 800, 800);
             $validated['pas_foto'] = $path;
         } else {
             unset($validated['pas_foto']); // jangan hapus foto lama kalau tidak ada upload baru

@@ -165,7 +165,7 @@
           <div>
             <div class="relative aspect-[16/10] overflow-hidden bg-muted">
               <img
-                src="{{ $item->gambar_url ?? asset('images/hero-image.webp') }}"
+                src="{{ $item->gambar_thumb_url ?? asset('images/hero-image.webp') }}"
                 alt="{{ $item->nama_pelatihan }}"
                 class="size-full object-cover"
                 loading="lazy"

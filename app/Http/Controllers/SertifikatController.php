@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AdminBlk;
+use App\Models\DaftarPelatihan;
 use App\Models\JadwalPelatihan;
 use App\Models\Peserta;
 use App\Models\Sertifikat;
@@ -16,19 +17,16 @@ class SertifikatController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = Sertifikat::with(['peserta.user', 'jadwal.pelatihan', 'admin.user']);
+        $query = Sertifikat::with(['peserta:id_peserta,id_user,nama', 'peserta.user:id,email', 'jadwal:id_jadwal,id_pelatihan', 'jadwal.pelatihan:id_pelatihan,nama_pelatihan']);
         $this->scopeToOwnPeserta($query, $request);
 
         if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('no_sertifikat', 'like', "%{$search}%")
-                    ->orWhereHas('peserta', function ($sub) use ($search) {
-                        $sub->where('nama', 'like', "%{$search}%");
-                    })
-                    ->orWhereHas('jadwal.pelatihan', function ($sub) use ($search) {
-                        $sub->where('nama_pelatihan', 'like', "%{$search}%");
-                    });
+            $like = $this->likePattern($request->string('search')->toString());
+            $query->where(function ($q) use ($like) {
+                $q->where('no_sertifikat', 'like', $like)
+                    ->orWhereIn('id_peserta', Peserta::select('id_peserta')->where('nama', 'like', $like))
+                    ->orWhereIn('id_jadwal', JadwalPelatihan::select('id_jadwal')
+                        ->whereIn('id_pelatihan', DaftarPelatihan::select('id_pelatihan')->where('nama_pelatihan', 'like', $like)));
             });
         }
 

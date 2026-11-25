@@ -106,13 +106,10 @@
               <td class="px-5 py-3.5 text-center">
                 <div class="inline-flex items-center gap-2 text-slate-600">
                   <span class="inline-flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded text-[10px] font-medium" title="Program Pelatihan">
-                    <x-lucide-book-open class="w-3 h-3 text-slate-500" /> {{ count($admin->pelatihan ?? []) }}
-                  </span>
-                  <span class="inline-flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded text-[10px] font-medium" title="Lowongan Diposting">
-                    <x-lucide-briefcase class="w-3 h-3 text-slate-500" /> {{ count($admin->lowongan ?? []) }}
+                    <x-lucide-book-open class="w-3 h-3 text-slate-500" /> {{ $admin->pelatihan_count }}
                   </span>
                   <span class="inline-flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded text-[10px] font-medium" title="Sertifikat">
-                    <x-lucide-award class="w-3 h-3 text-slate-500" /> {{ count($admin->sertifikat ?? []) }}
+                    <x-lucide-award class="w-3 h-3 text-slate-500" /> {{ $admin->sertifikat_count }}
                   </span>
                 </div>
               </td>

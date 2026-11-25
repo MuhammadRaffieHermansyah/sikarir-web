@@ -12,7 +12,8 @@ class AdminBlkController extends Controller
 {
     public function index(): View
     {
-        $admins = AdminBlk::with(['user', 'pelatihan', 'peserta', 'sertifikat'])
+        $admins = AdminBlk::with('user:id,email,role')
+            ->withCount(['pelatihan', 'sertifikat'])
             ->latest('id_admin')
             ->paginate(10);
 
@@ -21,7 +22,7 @@ class AdminBlkController extends Controller
 
     public function create(): View
     {
-        $users = User::orderBy('email')->get();
+        $users = User::select('id', 'email', 'role')->withProfileNames()->where('role', 'admin_blk')->doesntHave('adminBlk')->orderBy('email')->get();
 
         return view('admin-blk.create', compact('users'));
     }
@@ -54,7 +55,10 @@ class AdminBlkController extends Controller
     public function edit(int $id): View
     {
         $admin = AdminBlk::with('user')->findOrFail($id);
-        $users = User::orderBy('email')->get();
+        $users = User::select('id', 'email', 'role')->withProfileNames()
+            ->where('role', 'admin_blk')
+            ->where(fn ($q) => $q->doesntHave('adminBlk')->orWhere('id', $admin->id_user))
+            ->orderBy('email')->get();
 
         return view('admin-blk.edit', compact('admin', 'users'));
     }
