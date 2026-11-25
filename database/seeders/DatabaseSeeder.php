@@ -398,6 +398,9 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        // Akun demo instruktur + contoh modul & materi
+        $this->call(InstrukturAkunSeeder::class);
+
         /*
         |--------------------------------------------------------------------------
         | 8. DAFTAR LOWONGAN KERJA & LAMARAN

@@ -132,7 +132,7 @@ test('api responses keep the same field set after the name column moves to role 
 test('the api never exposes the internal nama column', function () {
     $snapshot = apiContractSnapshot();
 
-    foreach ($snapshot as $payload => $paths) {
-        expect($paths)->not->toContain('nama', "Payload {$payload} exposes the internal nama column.");
+    foreach ($snapshot as $paths) {
+        expect($paths)->not->toContain('nama');
     }
 });

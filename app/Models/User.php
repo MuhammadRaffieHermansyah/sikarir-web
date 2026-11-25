@@ -11,7 +11,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $fillable = ['email', 'password', 'role'];
+    protected $fillable = ['email', 'password', 'role', 'foto', 'must_change_password'];
 
     protected $hidden = ['password', 'remember_token'];
 
@@ -24,7 +24,7 @@ class User extends Authenticatable
 
     protected function casts(): array
     {
-        return ['email_verified_at' => 'datetime', 'password' => 'hashed'];
+        return ['email_verified_at' => 'datetime', 'password' => 'hashed', 'must_change_password' => 'boolean'];
     }
 
     /**
@@ -36,9 +36,10 @@ class User extends Authenticatable
     public function getNameAttribute(): ?string
     {
         $relations = match ($this->role) {
-            'mitra' => ['mitra', 'peserta', 'adminBlk'],
-            'admin_blk' => ['adminBlk', 'peserta', 'mitra'],
-            default => ['peserta', 'mitra', 'adminBlk'],
+            'mitra' => ['mitra', 'peserta', 'adminBlk', 'instruktur'],
+            'admin_blk' => ['adminBlk', 'peserta', 'mitra', 'instruktur'],
+            'instruktur' => ['instruktur', 'peserta', 'mitra', 'adminBlk'],
+            default => ['peserta', 'mitra', 'adminBlk', 'instruktur'],
         };
 
         foreach ($relations as $relation) {
@@ -57,14 +58,18 @@ class User extends Authenticatable
     /**
      * Ensure the profile row that owns the person name exists for this user's role.
      *
-     * @param  array{nama_perusahaan?: string|null, jenis_kelamin?: string|null}  $attributes
+     * @param  array{nama_perusahaan?: string|null, jenis_kelamin?: string|null, bidang_keahlian?: string|null}  $attributes
      */
-    public function ensureRoleProfile(string $nama, array $attributes = []): AdminBlk|Mitra|Peserta
+    public function ensureRoleProfile(string $nama, array $attributes = []): AdminBlk|Instruktur|Mitra|Peserta
     {
         $profile = match ($this->role) {
             'mitra' => $this->mitra()->firstOrCreate([], [
                 'nama' => $nama,
                 'nama_perusahaan' => $attributes['nama_perusahaan'] ?? $nama,
+            ]),
+            'instruktur' => $this->instruktur()->firstOrCreate([], [
+                'nama' => $nama,
+                'bidang_keahlian' => $attributes['bidang_keahlian'] ?? '-',
             ]),
             'peserta' => $this->peserta()->firstOrCreate([], [
                 'nama' => $nama,
@@ -89,6 +94,11 @@ class User extends Authenticatable
     public function mitra()
     {
         return $this->hasOne(Mitra::class, 'id_user');
+    }
+
+    public function instruktur()
+    {
+        return $this->hasOne(Instruktur::class, 'id_user');
     }
 
     public function adminBlk()

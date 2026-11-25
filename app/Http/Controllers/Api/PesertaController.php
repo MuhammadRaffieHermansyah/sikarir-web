@@ -112,7 +112,6 @@ class PesertaController extends Controller
 
         $validated = $request->validate([
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
-            'nama' => 'nullable|string|max:255',
             'nomor_kk' => 'required|string|max:30',
             'nomor_wa' => 'required|string|max:30',
             'tanggal_lahir' => 'required|date',
@@ -124,17 +123,27 @@ class PesertaController extends Controller
             'jurusan' => 'nullable|string|max:150',
             'is_disabilitas' => 'nullable|boolean',
             'jenis_disabilitas' => 'nullable|string|max:100',
-            'pas_foto' => 'nullable|file|image|mimes:jpg,jpeg,png,webp|max:10240',
+            'pas_foto' => 'nullable|file|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'name' => 'nullable|string|max:255',
+            'nama' => 'nullable|string|max:255',
         ]);
+
+        // `name` adalah kontrak mobile; `nama` hanya alias internal.
+        $namaBaru = $validated['name'] ?? $validated['nama'] ?? null;
+        unset($validated['name'], $validated['nama']);
 
         $peserta = Peserta::firstOrCreate(
             ['id_user' => $user->id],
             [
-                'nama' => $validated['nama'] ?? $user->name,
+                'nama' => $namaBaru ?? $user->name,
                 'nomor_peserta' => 'PST-'.date('Ymd').'-'.str_pad($user->id, 4, '0', STR_PAD_LEFT),
                 'jenis_kelamin' => $validated['jenis_kelamin'],
             ]
         );
+
+        if (filled($namaBaru)) {
+            $user->ensureRoleProfile($namaBaru);
+        }
 
         // Handle upload pas foto
         if ($request->hasFile('pas_foto')) {
