@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
-use App\Models\Mitra;
-use App\Models\Peserta;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -44,6 +42,9 @@ class AuthController extends Controller
     public function register(RegisterRequest $request): JsonResponse
     {
         $data = $request->validated();
+        $nama = $data['name'];
+        unset($data['name']);
+
         if (empty($data['role'])) {
             $data['role'] = 'peserta';
         }
@@ -57,16 +58,19 @@ class AuthController extends Controller
         }
 
         try {
-            $user = DB::transaction(function () use ($data, $legalitasPath, $permohonanPath): User {
-                $user = User::create(Arr::only($data, ['name', 'email', 'password', 'role']));
+            $user = DB::transaction(function () use ($data, $nama, $legalitasPath, $permohonanPath): User {
+                $user = User::create(Arr::only($data, ['email', 'password', 'role']));
 
                 if ($user->role === 'mitra') {
-                    Mitra::create([
-                        'id_user' => $user->id,
+                    $user->mitra()->create([
+                        'nama' => $nama,
                         'nama_perusahaan' => $data['nama_perusahaan'],
                         'surat_legalitas_path' => $legalitasPath,
                         'surat_permohonan_kerjasama_path' => $permohonanPath,
                     ]);
+                } else {
+                    // Simpan nama pada profil sesuai role agar data user tetap konsisten.
+                    $user->ensureRoleProfile($nama);
                 }
 
                 return $user;
@@ -75,17 +79,6 @@ class AuthController extends Controller
             Storage::delete(array_filter([$legalitasPath, $permohonanPath]));
 
             throw $exception;
-        }
-
-        // Jika mendaftar sebagai peserta, buatkan record peserta awal
-        if ($user->role === 'peserta') {
-            Peserta::firstOrCreate(
-                ['id_user' => $user->id],
-                [
-                    'nomor_peserta' => 'PST-'.date('Ymd').'-'.str_pad($user->id, 4, '0', STR_PAD_LEFT),
-                    'jenis_kelamin' => 'Laki-laki',
-                ]
-            );
         }
 
         return response()->json([

@@ -20,11 +20,11 @@ class PesertaController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('nomor_peserta', 'like', "%{$search}%")
+                    ->orWhere('nama', 'like', "%{$search}%")
                     ->orWhere('jurusan', 'like', "%{$search}%")
                     ->orWhere('nomor_wa', 'like', "%{$search}%")
                     ->orWhereHas('user', function ($sub) use ($search) {
-                        $sub->where('name', 'like', "%{$search}%")
-                            ->orWhere('email', 'like', "%{$search}%");
+                        $sub->where('email', 'like', "%{$search}%");
                     });
             });
         }
@@ -47,7 +47,7 @@ class PesertaController extends Controller
 
     public function create(): View
     {
-        $users = User::orderBy('name')->get();
+        $users = User::orderBy('email')->get();
         $admins = AdminBlk::with('user')->get();
 
         return view('pesertas.create', compact('users', 'admins'));
@@ -58,18 +58,21 @@ class PesertaController extends Controller
         $validated = $request->validate([
             'id_user' => 'required|exists:users,id|unique:pesertas,id_user',
             'id_admin' => 'nullable|exists:admin_blks,id_admin',
+            'nama' => 'required|string|max:255|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
             'nomor_peserta' => 'required|string|max:50|unique:pesertas,nomor_peserta',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
-            'jurusan' => 'required|string|max:100|regex:/^[\pL\pN\s().,&\/+\-]+$/u',
+            'jurusan' => 'required|string|max:100|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
             'nomor_wa' => 'required|string|max:30',
             'nomor_kk' => 'required|string|max:30',
             'tanggal_lahir' => 'required|date',
-            'tempat_lahir' => 'required|string|max:100|regex:/^[\pL\pN\s().,&\/+\-]+$/u',
-            'pendidikan_terakhir' => 'required|string|max:100|regex:/^[\pL\pN\s().,&\/+\-]+$/u',
-            'alamat_lengkap' => 'required|string|regex:/^[\pL\pN\s().,&\/+\-]+$/u',
+            'tempat_lahir' => 'required|string|max:100|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
+            'pendidikan_terakhir' => 'required|string|max:100|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
+            'alamat_lengkap' => 'required|string|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
         ], [
             'id_user.required' => 'Akun pengguna wajib dipilih.',
             'id_user.unique' => 'Pengguna ini sudah terdaftar sebagai Peserta.',
+            'nama.required' => 'Nama peserta wajib diisi.',
+            'nama.regex' => 'Nama peserta hanya boleh berisi huruf, angka, spasi, dan tanda baca umum.',
             'nomor_peserta.required' => 'Nomor peserta (NIS) wajib diisi.',
             'nomor_peserta.unique' => 'Nomor peserta (NIS) sudah digunakan.',
             'jenis_kelamin.required' => 'Jenis kelamin wajib diisi.',
@@ -101,7 +104,7 @@ class PesertaController extends Controller
     public function edit(int $id): View
     {
         $peserta = Peserta::with('user')->findOrFail($id);
-        $users = User::orderBy('name')->get();
+        $users = User::orderBy('email')->get();
         $admins = AdminBlk::with('user')->get();
 
         return view('pesertas.edit', compact('peserta', 'users', 'admins'));
@@ -114,17 +117,20 @@ class PesertaController extends Controller
         $validated = $request->validate([
             'id_user' => 'required|exists:users,id|unique:pesertas,id_user,'.$peserta->id_peserta.',id_peserta',
             'id_admin' => 'nullable|exists:admin_blks,id_admin',
+            'nama' => 'required|string|max:255|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
             'nomor_peserta' => 'required|string|max:50|unique:pesertas,nomor_peserta,'.$peserta->id_peserta.',id_peserta',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
-            'jurusan' => 'nullable|string|max:100|regex:/^[\pL\pN\s().,&\/+\-]+$/u',
+            'jurusan' => 'nullable|string|max:100|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
             'nomor_wa' => 'nullable|string|max:30',
             'nomor_kk' => 'nullable|string|max:30',
             'tanggal_lahir' => 'nullable|date',
-            'tempat_lahir' => 'nullable|string|max:100|regex:/^[\pL\pN\s().,&\/+\-]+$/u',
-            'pendidikan_terakhir' => 'nullable|string|max:100|regex:/^[\pL\pN\s().,&\/+\-]+$/u',
-            'alamat_lengkap' => 'nullable|string|regex:/^[\pL\pN\s().,&\/+\-]+$/u',
+            'tempat_lahir' => 'nullable|string|max:100|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
+            'pendidikan_terakhir' => 'nullable|string|max:100|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
+            'alamat_lengkap' => 'nullable|string|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
         ], [
             'id_user.unique' => 'Akun pengguna ini sudah terdaftar sebagai Peserta.',
+            'nama.required' => 'Nama peserta wajib diisi.',
+            'nama.regex' => 'Nama peserta hanya boleh berisi huruf, angka, spasi, dan tanda baca umum.',
             'nomor_peserta.unique' => 'Nomor peserta (NIS) sudah digunakan.',
             'jurusan.regex' => 'Jurusan hanya boleh berisi huruf, angka, spasi, dan tanda baca umum.',
             'tempat_lahir.regex' => 'Tempat lahir hanya boleh berisi huruf, angka, spasi, dan tanda baca umum.',

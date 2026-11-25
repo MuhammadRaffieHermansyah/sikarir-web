@@ -23,8 +23,8 @@ class SertifikatController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('no_sertifikat', 'like', "%{$search}%")
-                    ->orWhereHas('peserta.user', function ($sub) use ($search) {
-                        $sub->where('name', 'like', "%{$search}%");
+                    ->orWhereHas('peserta', function ($sub) use ($search) {
+                        $sub->where('nama', 'like', "%{$search}%");
                     })
                     ->orWhereHas('jadwal.pelatihan', function ($sub) use ($search) {
                         $sub->where('nama_pelatihan', 'like', "%{$search}%");

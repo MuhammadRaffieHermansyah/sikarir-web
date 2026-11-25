@@ -153,7 +153,7 @@
               </x-ui.table-cell>
 
               <x-ui.table-cell class="px-4 py-3">
-                @php($penanggungJawab = $pelatihan->instruktur?->nama ?? $pelatihan->admin?->user?->name ?? 'Belum Ditunjuk')
+                @php($penanggungJawab = $pelatihan->instruktur?->nama ?? $pelatihan->admin?->nama ?? 'Belum Ditunjuk')
 
                 <div class="flex items-center gap-2">
                   <x-ui.avatar class="size-6">

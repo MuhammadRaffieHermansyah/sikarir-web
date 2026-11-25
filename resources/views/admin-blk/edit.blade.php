@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Administrator BLK - ' . ($admin->user->name ?? 'Admin'))
+@section('title', 'Edit Administrator BLK - ' . ($admin->nama ?? 'Admin'))
 
 @section('content')
   <x-ui.page-header
@@ -42,12 +42,12 @@
     <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
       <div class="flex items-center gap-4">
         <span class="grid size-14 shrink-0 place-items-center rounded-xl bg-primary text-lg font-black text-primary-foreground shadow-sm">
-          {{ strtoupper(substr($admin->user->name ?? 'A', 0, 2)) }}
+          {{ strtoupper(substr($admin->nama ?? 'A', 0, 2)) }}
         </span>
 
         <div>
           <div class="flex flex-wrap items-center gap-2">
-            <h2 class="text-base font-bold text-foreground">{{ $admin->user->name ?? 'Tanpa Nama' }}</h2>
+            <h2 class="text-base font-bold text-foreground">{{ $admin->nama ?? 'Tanpa Nama' }}</h2>
             <x-ui.badge variant="secondary" class="font-mono">
               ID Admin: #BLK-{{ str_pad($admin->id_admin, 3, '0', STR_PAD_LEFT) }}
             </x-ui.badge>
@@ -127,6 +127,12 @@
               @endforeach
             </x-ui.select>
             <x-ui.field-error :messages="$errors->get('id_user')" />
+          </x-ui.field>
+
+          <x-ui.field data-invalid="{{ $errors->has('nama') ? 'true' : 'false' }}">
+            <x-ui.field-label for="nama">Nama Administrator <span class="text-destructive">*</span></x-ui.field-label>
+            <x-ui.input id="nama" name="nama" type="text" :value="old('nama', $admin->nama)" required />
+            <x-ui.field-error :messages="$errors->get('nama')" />
           </x-ui.field>
 
           <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">

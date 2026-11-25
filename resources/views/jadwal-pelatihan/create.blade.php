@@ -405,7 +405,6 @@
           infoDurasiText.textContent = 'Durasi: ' + hari + ' Hari Kerja / ' + jam + ' Total Jam (' + jph + ' jam/hari) — Jam & tanggal selesai dihitung otomatis.';
           infoDurasi.classList.remove('hidden');
           infoDurasi.classList.add('flex');
-          if (window.lucide) lucide.createIcons({ nodes: [infoDurasi] });
           hitungJamSelesai(hari, jam);
           if (tglMulai.value) hitungTanggalSelesai();
         } else {
@@ -521,7 +520,6 @@
           renderChip(dilewati);
           cekDataLibur();
           previewJadwal.classList.remove('hidden');
-          if (window.lucide) lucide.createIcons({ nodes: [previewJadwal] });
           loadingTglSelesai.classList.add('hidden');
         });
       }
@@ -573,7 +571,6 @@
         renderChip(arr);
         cekDataLibur();
         previewJadwal.classList.remove('hidden');
-        if (window.lucide) lucide.createIcons({ nodes: [previewJadwal] });
       }
 
       // ---- 8. Validasi jam ----

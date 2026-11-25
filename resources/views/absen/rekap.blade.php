@@ -169,7 +169,7 @@
               <x-ui.table-cell class="px-4 py-3 text-center text-muted-foreground">{{ $loop->iteration }}</x-ui.table-cell>
 
               <x-ui.table-cell class="px-4 py-3">
-                <span class="block text-xs font-bold text-foreground">{{ $rp->peserta->user->name ?? '-' }}</span>
+                <span class="block text-xs font-bold text-foreground">{{ $rp->peserta->nama ?? '-' }}</span>
                 <span class="text-xs text-muted-foreground">
                   No. Peserta: {{ $rp->peserta->nomor_peserta ?? '-' }} &bull; {{ $rp->peserta->user->email ?? '-' }}
                 </span>
@@ -270,7 +270,7 @@
               </x-ui.table-cell>
 
               <x-ui.table-cell class="px-4 py-3">
-                <span class="block font-bold text-foreground">{{ $absen->peserta->user->name ?? '-' }}</span>
+                <span class="block font-bold text-foreground">{{ $absen->peserta->nama ?? '-' }}</span>
                 <span class="text-xs text-muted-foreground">{{ $absen->peserta->nomor_peserta ?? '-' }}</span>
               </x-ui.table-cell>
 

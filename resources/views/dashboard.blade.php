@@ -67,7 +67,7 @@
             <div class="mb-3 flex items-center justify-between">
               <x-ui.badge variant="secondary" size="sm" class="uppercase tracking-wide">{{ $label }}</x-ui.badge>
               <span class="grid size-9 place-items-center rounded-lg bg-muted text-muted-foreground transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                <i data-lucide="{{ $icon }}" class="size-4"></i>
+                <x-dynamic-component :component="'lucide-'.$icon" class="size-4" />
               </span>
             </div>
             <div class="text-sm font-bold text-foreground transition-colors group-hover:text-primary">{{ $title }}</div>

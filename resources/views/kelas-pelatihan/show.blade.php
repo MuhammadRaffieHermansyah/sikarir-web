@@ -44,12 +44,12 @@
     <div class="relative flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
       <div class="flex items-center gap-5">
         <span class="grid size-16 shrink-0 place-items-center rounded-2xl bg-primary text-2xl font-black text-primary-foreground">
-          {{ strtoupper(substr($kelas->peserta->user->name ?? 'P', 0, 2)) }}
+          {{ strtoupper(substr($kelas->peserta->nama ?? 'P', 0, 2)) }}
         </span>
 
         <div>
           <div class="flex flex-wrap items-center gap-2.5">
-            <h2 class="text-lg font-extrabold text-foreground">{{ $kelas->peserta->user->name ?? 'Peserta' }}</h2>
+            <h2 class="text-lg font-extrabold text-foreground">{{ $kelas->peserta->nama ?? 'Peserta' }}</h2>
             <x-ui.badge variant="secondary">NIS: {{ $kelas->peserta->nomor_peserta ?? '-' }}</x-ui.badge>
             <x-ui.badge variant="secondary">{{ $kelas->jadwal->pelatihan->nama_pelatihan ?? '-' }}</x-ui.badge>
           </div>
@@ -159,7 +159,7 @@
         <x-ui.card-content class="space-y-3 text-xs">
           <div class="flex items-center gap-2 text-foreground">
             <x-lucide-user class="size-4 text-primary" />
-            <span>{{ $kelas->peserta->user->name ?? '-' }}</span>
+            <span>{{ $kelas->peserta->nama ?? '-' }}</span>
           </div>
           <div class="flex items-center gap-2 text-foreground">
             <x-lucide-phone class="size-4 text-primary" />

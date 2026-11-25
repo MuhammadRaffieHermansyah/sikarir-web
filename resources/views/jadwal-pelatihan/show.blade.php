@@ -137,7 +137,7 @@
                   </x-ui.table-cell>
 
                   <x-ui.table-cell class="px-4 py-3 font-bold text-foreground">
-                    {{ $kelas->peserta->user->name ?? '-' }}
+                    {{ $kelas->peserta->nama ?? '-' }}
                   </x-ui.table-cell>
 
                   <x-ui.table-cell class="px-4 py-3 text-muted-foreground">

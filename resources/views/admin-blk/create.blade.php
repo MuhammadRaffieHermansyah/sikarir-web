@@ -78,6 +78,12 @@
             <x-ui.field-description>Hanya akun pengguna aktif yang dapat ditugaskan sebagai Administrator Balai.</x-ui.field-description>
             <x-ui.field-error :messages="$errors->get('id_user')" />
           </x-ui.field>
+
+          <x-ui.field data-invalid="{{ $errors->has('nama') ? 'true' : 'false' }}">
+            <x-ui.field-label for="nama">Nama Administrator <span class="text-destructive">*</span></x-ui.field-label>
+            <x-ui.input id="nama" name="nama" type="text" :value="old('nama')" required />
+            <x-ui.field-error :messages="$errors->get('nama')" />
+          </x-ui.field>
         </x-ui.card-content>
       </x-ui.card>
 

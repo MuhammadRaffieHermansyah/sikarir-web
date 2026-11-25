@@ -13,7 +13,7 @@ $navLinks = [
 
         <a href="{{ url('/') }}" class="group flex min-w-0 shrink-0 items-center gap-2.5 sm:gap-3">
             <span class="grid size-10 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm transition group-hover:scale-105">
-                <i data-lucide="sparkles" class="size-5"></i>
+                <x-lucide-sparkles class="size-5" />
             </span>
             <div class="min-w-0 leading-none">
                 <span class="block text-base font-black tracking-[-.04em] text-foreground transition group-hover:text-primary">siKarir</span>
@@ -40,12 +40,12 @@ $navLinks = [
                     Masuk
                 </x-ui.button>
                 <x-ui.button size="sm" href="{{ route('register') }}" class="font-bold">
-                    <i data-lucide="user-plus" class="size-3.5"></i>
+                    <x-lucide-user-plus class="size-3.5" />
                     <span>Daftar</span>
                 </x-ui.button>
                 @else
                 <x-ui.button size="sm" href="{{ route('dashboard') }}" class="font-bold">
-                    <i data-lucide="layout-dashboard" class="size-3.5"></i>
+                    <x-lucide-layout-dashboard class="size-3.5" />
                     <span>Dashboard</span>
                 </x-ui.button>
                 <x-ui.badge tone="success" class="hidden 2xl:inline-flex">
@@ -55,8 +55,8 @@ $navLinks = [
             </div>
 
             <x-ui.button id="menuToggle" variant="outline" size="icon" class="lg:hidden" aria-label="Buka menu" aria-controls="mobileMenu" aria-expanded="false">
-                <span id="iconMenu"><i data-lucide="menu" class="size-5"></i></span>
-                <span id="iconClose" class="hidden"><i data-lucide="x" class="size-5"></i></span>
+                <span id="iconMenu"><x-lucide-menu class="size-5" /></span>
+                <span id="iconClose" class="hidden"><x-lucide-x class="size-5" /></span>
             </x-ui.button>
         </div>
     </div>
@@ -79,16 +79,16 @@ $navLinks = [
             <div class="flex flex-col gap-2 border-t border-border pt-3 text-sm sm:hidden">
                 @guest
                 <x-ui.button href="{{ route('register') }}" class="w-full font-bold">
-                    <i data-lucide="user-plus" class="size-4"></i>
+                    <x-lucide-user-plus class="size-4" />
                     <span>Daftar Akun</span>
                 </x-ui.button>
                 <x-ui.button variant="outline" href="{{ route('login') }}" class="w-full font-bold">
-                    <i data-lucide="log-in" class="size-4"></i>
+                    <x-lucide-log-in class="size-4" />
                     <span>Masuk</span>
                 </x-ui.button>
                 @else
                 <x-ui.button href="{{ route('dashboard') }}" class="w-full font-bold">
-                    <i data-lucide="layout-dashboard" class="size-4"></i>
+                    <x-lucide-layout-dashboard class="size-4" />
                     <span>Dashboard</span>
                 </x-ui.button>
                 @endguest

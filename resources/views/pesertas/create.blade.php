@@ -79,6 +79,19 @@
               <x-ui.field-error :messages="$errors->get('id_user')" />
             </x-ui.field>
 
+            <x-ui.field class="sm:col-span-2" data-invalid="{{ $errors->has('nama') ? 'true' : 'false' }}">
+              <x-ui.field-label for="nama">Nama Lengkap Peserta <span class="text-destructive">*</span></x-ui.field-label>
+              <x-ui.input
+                id="nama"
+                name="nama"
+                type="text"
+                :value="old('nama')"
+                placeholder="Nama lengkap peserta"
+                required
+              />
+              <x-ui.field-error :messages="$errors->get('nama')" />
+            </x-ui.field>
+
             <x-ui.field data-invalid="{{ $errors->has('nomor_peserta') ? 'true' : 'false' }}">
               <x-ui.field-label for="nomor_peserta">Nomor Induk Siswa / NIS <span class="text-destructive">*</span></x-ui.field-label>
               <x-ui.input

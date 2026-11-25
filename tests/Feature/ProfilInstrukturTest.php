@@ -11,7 +11,7 @@ use Laravel\Sanctum\Sanctum;
 beforeEach(function () {
     Storage::fake('public');
 
-    $this->user = User::factory()->create(['role' => 'instruktur', 'name' => 'Budi']);
+    $this->user = User::factory()->create(['role' => 'instruktur']);
     $this->instruktur = Instruktur::factory()->create(['id_user' => $this->user->id, 'nama' => 'Budi']);
 });
 
@@ -129,7 +129,9 @@ test('peserta mengubah nama akun lewat profil dan nomor peserta tidak berubah', 
         'tempat_lahir' => 'Jember',
         'alamat_lengkap' => 'Jl. Contoh',
         'pendidikan_terakhir' => 'SMK',
-    ])->assertOk()->assertJsonPath('data.nama', 'Nama Baru');
+    ])->assertOk()
+        ->assertJsonPath('data.user.name', 'Nama Baru')
+        ->assertJsonMissingPath('data.nama');
 
     expect($peserta->user->fresh()->name)->toBe('Nama Baru')
         ->and($peserta->fresh()->nomor_peserta)->toBe($nomorAwal);

@@ -448,7 +448,6 @@
           infoDurasiText.textContent = 'Durasi: ' + hari + ' Hari Kerja / ' + jam + ' Total Jam (' + jph + ' jam/hari)';
           infoDurasi.classList.remove('hidden');
           infoDurasi.classList.add('flex');
-          if (window.lucide) lucide.createIcons({ nodes: [infoDurasi] });
         }
       }
       initDurasi();
@@ -473,7 +472,6 @@
             ' Total Jam (' + jph + ' jam/hari) — Tanggal & jam selesai akan dihitung ulang.';
           infoDurasi.classList.remove('hidden');
           infoDurasi.classList.add('flex');
-          if (window.lucide) lucide.createIcons({ nodes: [infoDurasi] });
           hitungJamSelesai(hari, jam);
           if (tglMulai.value) hitungTanggalSelesai();
         } else {
@@ -597,7 +595,6 @@
           renderChip(dilewati);
           cekDataLibur();
           previewJadwal.classList.remove('hidden');
-          if (window.lucide) lucide.createIcons({ nodes: [previewJadwal] });
           loadingTglSelesai.classList.add('hidden');
         });
       }
@@ -665,7 +662,6 @@
         renderChip(arr);
         cekDataLibur();
         previewJadwal.classList.remove('hidden');
-        if (window.lucide) lucide.createIcons({ nodes: [previewJadwal] });
       }
 
       // ---- 8. Validasi jam ----
@@ -687,13 +683,11 @@
             document.getElementById('lokasi_longitude').value = pos.coords.longitude.toFixed(7);
             btnLoc.innerHTML = '✔ Berhasil';
             setTimeout(function () {
-              btnLoc.innerHTML = '<i data-lucide="crosshair" class="w-3.5 h-3.5"></i> Ambil GPS Saat Ini';
-              if (window.lucide) lucide.createIcons();
+              btnLoc.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><circle cx="12" cy="12" r="10"/><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"/></svg> Ambil GPS Saat Ini';
             }, 2000);
           }, function (err) {
             alert('Gagal mengambil lokasi: ' + err.message);
-            btnLoc.innerHTML = '<i data-lucide="crosshair" class="w-3.5 h-3.5"></i> Ambil GPS Saat Ini';
-            if (window.lucide) lucide.createIcons();
+            btnLoc.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><circle cx="12" cy="12" r="10"/><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"/></svg> Ambil GPS Saat Ini';
           }, { enableHighAccuracy: true });
         });
       }

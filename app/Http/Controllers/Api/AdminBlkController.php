@@ -7,6 +7,7 @@ use App\Http\Requests\StoreAdminBlkRequest;
 use App\Http\Requests\UpdateAdminBlkRequest;
 use App\Http\Resources\AdminBlkResource;
 use App\Models\AdminBlk;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use OpenApi\Attributes as OA;
 
@@ -48,7 +49,11 @@ class AdminBlkController extends Controller
     )]
     public function store(StoreAdminBlkRequest $request): JsonResponse
     {
-        $admin = AdminBlk::create($request->validated());
+        $data = $request->validated();
+        $data['nama'] ??= User::find($data['id_user'])?->name;
+
+        $admin = AdminBlk::create($data);
+
         return (new AdminBlkResource($admin))->response()->setStatusCode(201);
     }
 
@@ -58,7 +63,7 @@ class AdminBlkController extends Controller
         tags: ['Admin BLK'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
             new OA\Response(response: 200, description: 'Detail admin BLK'),
@@ -68,6 +73,7 @@ class AdminBlkController extends Controller
     public function show(int $id): JsonResponse
     {
         $admin = AdminBlk::with($this->relations())->findOrFail($id);
+
         return (new AdminBlkResource($admin))->response();
     }
 
@@ -77,7 +83,7 @@ class AdminBlkController extends Controller
         tags: ['Admin BLK'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         requestBody: new OA\RequestBody(
             required: true,
@@ -96,6 +102,7 @@ class AdminBlkController extends Controller
     {
         $admin = AdminBlk::findOrFail($id);
         $admin->update($request->validated());
+
         return (new AdminBlkResource($admin->fresh()->load($this->relations())))->response();
     }
 
@@ -105,7 +112,7 @@ class AdminBlkController extends Controller
         tags: ['Admin BLK'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
             new OA\Response(response: 200, description: 'Admin BLK berhasil dihapus'),
@@ -116,6 +123,7 @@ class AdminBlkController extends Controller
     {
         $admin = AdminBlk::findOrFail($id);
         $admin->delete();
+
         return response()->json(['message' => 'Data berhasil dihapus']);
     }
 

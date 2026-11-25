@@ -21,24 +21,25 @@ class AdminBlkController extends Controller
 
     public function create(): View
     {
-        $users = User::orderBy('name')->get();
+        $users = User::orderBy('email')->get();
 
         return view('admin-blk.create', compact('users'));
     }
 
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'id_user' => 'required|exists:users,id|unique:admin_blks,id_user',
+            'nama' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
         ], [
             'id_user.required' => 'Pengguna wajib dipilih.',
             'id_user.exists' => 'Pengguna tidak ditemukan.',
             'id_user.unique' => 'Pengguna ini sudah terdaftar sebagai Administrator BLK.',
+            'nama.required' => 'Nama administrator wajib diisi.',
+            'nama.regex' => 'Nama hanya boleh mengandung huruf dan spasi.',
         ]);
 
-        AdminBlk::create([
-            'id_user' => $request->id_user,
-        ]);
+        AdminBlk::create($validated);
 
         return redirect()->route('admin-blk.index')->with('success', 'Data administrator BLK berhasil ditambahkan.');
     }
@@ -53,7 +54,7 @@ class AdminBlkController extends Controller
     public function edit(int $id): View
     {
         $admin = AdminBlk::with('user')->findOrFail($id);
-        $users = User::orderBy('name')->get();
+        $users = User::orderBy('email')->get();
 
         return view('admin-blk.edit', compact('admin', 'users'));
     }
@@ -62,17 +63,18 @@ class AdminBlkController extends Controller
     {
         $admin = AdminBlk::findOrFail($id);
 
-        $request->validate([
+        $validated = $request->validate([
             'id_user' => 'required|exists:users,id|unique:admin_blks,id_user,'.$admin->id_admin.',id_admin',
+            'nama' => 'required|string|max:255|regex:/^[a-zA-Z\s]+$/',
         ], [
             'id_user.required' => 'Pengguna wajib dipilih.',
             'id_user.exists' => 'Pengguna tidak ditemukan.',
             'id_user.unique' => 'Pengguna ini sudah terdaftar sebagai Administrator BLK lain.',
+            'nama.required' => 'Nama administrator wajib diisi.',
+            'nama.regex' => 'Nama hanya boleh mengandung huruf dan spasi.',
         ]);
 
-        $admin->update([
-            'id_user' => $request->id_user,
-        ]);
+        $admin->update($validated);
 
         return redirect()->route('admin-blk.index')->with('success', 'Data administrator BLK berhasil diperbarui.');
     }

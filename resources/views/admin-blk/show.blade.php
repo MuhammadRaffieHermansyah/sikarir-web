@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Profil Administrator BLK - ' . ($admin->user->name ?? 'Admin'))
+@section('title', 'Detail Profil Administrator BLK - ' . ($admin->nama ?? 'Admin'))
 
 @section('content')
   <x-ui.page-header
@@ -42,12 +42,12 @@
     <div class="flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
       <div class="flex items-center gap-5">
         <span class="grid size-16 shrink-0 place-items-center rounded-2xl bg-primary text-2xl font-black text-primary-foreground">
-          {{ strtoupper(substr($admin->user->name ?? 'A', 0, 2)) }}
+          {{ strtoupper(substr($admin->nama ?? 'A', 0, 2)) }}
         </span>
 
         <div>
           <div class="flex flex-wrap items-center gap-2.5">
-            <h2 class="text-lg font-extrabold text-foreground">{{ $admin->user->name ?? 'Tanpa Nama' }}</h2>
+            <h2 class="text-lg font-extrabold text-foreground">{{ $admin->nama ?? 'Tanpa Nama' }}</h2>
             <x-ui.badge variant="secondary" class="font-mono">
               ID: #BLK-{{ str_pad($admin->id_admin, 3, '0', STR_PAD_LEFT) }}
             </x-ui.badge>
@@ -117,7 +117,7 @@
           <div class="grid grid-cols-1 gap-x-6 gap-y-4 text-xs sm:grid-cols-2">
             <div>
               <span class="mb-1 block font-medium text-muted-foreground">Nama Lengkap</span>
-              <span class="text-sm font-bold text-foreground">{{ $admin->user->name ?? '-' }}</span>
+              <span class="text-sm font-bold text-foreground">{{ $admin->nama ?? '-' }}</span>
             </div>
 
             <div>

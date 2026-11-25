@@ -8,7 +8,7 @@
     <div>
         <a href="{{ url('/') }}" class="mb-3 flex items-center gap-2">
             <div class="grid size-10 place-items-center rounded-xl bg-sikarir-lime text-sikarir-ink shadow-lg">
-                <i data-lucide="sparkles" class="size-5"></i>
+                <x-lucide-sparkles class="size-5" />
             </div>
             <div class="leading-tight">
                 <p class="text-sm font-black tracking-[-.04em] text-white">siKarir</p>
@@ -21,13 +21,13 @@
         <div>
             <p class="mb-3 text-[10px] font-black uppercase tracking-[.14em] text-sikarir-lime">Kantor &amp; Workshop</p>
             <div class="space-y-2 text-xs text-white/70">
-                <p class="flex items-start gap-2"><i data-lucide="map-pin" class="mt-0.5 size-3.5 shrink-0 text-sikarir-lime"></i> {{ config('blk.address') }}</p>
-                <p class="flex items-center gap-2"><i data-lucide="phone" class="size-3.5 shrink-0 text-sikarir-lime"></i> {{ config('blk.phone') }}</p>
-                <a href="https://wa.me/{{ config('blk.wa') }}" target="_blank" rel="noopener" class="flex items-center gap-2 transition hover:text-sikarir-lime"><i data-lucide="message-circle" class="size-3.5 shrink-0 text-sikarir-lime"></i> WhatsApp: {{ config('blk.wa_label') }}</a>
+                <p class="flex items-start gap-2"><x-lucide-map-pin class="mt-0.5 size-3.5 shrink-0 text-sikarir-lime" /> {{ config('blk.address') }}</p>
+                <p class="flex items-center gap-2"><x-lucide-phone class="size-3.5 shrink-0 text-sikarir-lime" /> {{ config('blk.phone') }}</p>
+                <a href="https://wa.me/{{ config('blk.wa') }}" target="_blank" rel="noopener" class="flex items-center gap-2 transition hover:text-sikarir-lime"><x-lucide-message-circle class="size-3.5 shrink-0 text-sikarir-lime" /> WhatsApp: {{ config('blk.wa_label') }}</a>
                 <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ config('blk.email') }}"
                     target="_blank" rel="noopener"
                     class="flex items-center gap-2 transition hover:text-sikarir-lime">
-                        <i data-lucide="mail" class="size-3.5 shrink-0 text-sikarir-lime"></i> {{ config('blk.email') }}
+                        <x-lucide-mail class="size-3.5 shrink-0 text-sikarir-lime" /> {{ config('blk.email') }}
                 </a>
             </div>
         </div>
@@ -44,11 +44,11 @@
                 ] as $p)
                     @if ($p['url'])
                         <a href="{{ $p['url'] }}" target="_blank" rel="noopener" class="flex items-center gap-2 transition hover:text-sikarir-lime">
-                            <i data-lucide="arrow-up-right" class="size-3.5 shrink-0 text-sikarir-lime"></i> {{ $p['label'] }}
+                            <x-lucide-arrow-up-right class="size-3.5 shrink-0 text-sikarir-lime" /> {{ $p['label'] }}
                         </a>
                     @else
                         <p class="flex items-center gap-2">
-                            <i data-lucide="arrow-up-right" class="size-3.5 shrink-0 text-sikarir-lime"></i> {{ $p['label'] }}
+                            <x-lucide-arrow-up-right class="size-3.5 shrink-0 text-sikarir-lime" /> {{ $p['label'] }}
                         </p>
                     @endif
                 @endforeach

@@ -18,6 +18,7 @@ class UpdateMitraRequest extends FormRequest
 
         return [
             'id_user' => ['sometimes', 'nullable', 'exists:users,id', Rule::unique('mitras', 'id_user')->ignore($id, 'id_mitra')],
+            'nama' => 'sometimes|nullable|string|max:255',
             'nama_perusahaan' => 'sometimes|string|max:255',
             'jenis_mitra' => 'sometimes|nullable|string|max:100',
             'logo_perusahaan' => 'sometimes|nullable|string|max:255',

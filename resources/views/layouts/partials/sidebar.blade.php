@@ -17,26 +17,26 @@
             [
                 'label' => 'Manajemen Data',
                 'items' => [
-                    ['label' => 'Program Pelatihan', 'route' => 'pelatihan.index', 'active' => 'pelatihan.*', 'icon' => 'book', 'badge' => \App\Models\DaftarPelatihan::count().' Aktif'],
-                    ['label' => 'Durasi Pelatihan', 'route' => 'durasi-pelatihan.index', 'active' => 'durasi-pelatihan.*', 'icon' => 'timer', 'badge' => \App\Models\DurasiPelatihan::count().' Data'],
-                    ['label' => 'Instruktur', 'route' => 'instruktur.index', 'active' => 'instruktur.*', 'icon' => 'user-check', 'badge' => \App\Models\Instruktur::count().' Orang'],
-                    ['label' => 'Ruangan Workshop', 'route' => 'ruangan-workshop.index', 'active' => 'ruangan-workshop.*', 'icon' => 'building-2', 'badge' => \App\Models\RuanganWorkshop::count().' Ruangan'],
-                    ['label' => 'Jadwal & Kelas', 'route' => 'jadwal-pelatihan.index', 'active' => 'jadwal-pelatihan.*', 'icon' => 'calendar-fold', 'badge' => \App\Models\JadwalPelatihan::count().' Aktif'],
+                    ['label' => 'Program Pelatihan', 'route' => 'pelatihan.index', 'active' => 'pelatihan.*', 'icon' => 'book'],
+                    ['label' => 'Durasi Pelatihan', 'route' => 'durasi-pelatihan.index', 'active' => 'durasi-pelatihan.*', 'icon' => 'timer'],
+                    ['label' => 'Instruktur', 'route' => 'instruktur.index', 'active' => 'instruktur.*', 'icon' => 'user-check'],
+                    ['label' => 'Ruangan Workshop', 'route' => 'ruangan-workshop.index', 'active' => 'ruangan-workshop.*', 'icon' => 'building-2'],
+                    ['label' => 'Jadwal & Kelas', 'route' => 'jadwal-pelatihan.index', 'active' => 'jadwal-pelatihan.*', 'icon' => 'calendar-fold'],
                 ],
             ],
             [
                 'label' => 'Monitoring Peserta',
                 'items' => [
-                    ['label' => 'Data Peserta', 'route' => 'pesertas.index', 'active' => 'pesertas.*', 'icon' => 'users-round', 'badge' => \App\Models\Peserta::count().' Peserta'],
+                    ['label' => 'Data Peserta', 'route' => 'pesertas.index', 'active' => 'pesertas.*', 'icon' => 'users-round'],
                     ['label' => 'Presensi Peserta', 'route' => 'absen.index', 'active' => 'absen.*', 'icon' => 'check-square'],
-                    ['label' => 'Penerbitan Sertifikat', 'route' => 'sertifikat.index', 'active' => 'sertifikat.*', 'icon' => 'award', 'badge' => \App\Models\Sertifikat::count().' Sertifikat'],
+                    ['label' => 'Penerbitan Sertifikat', 'route' => 'sertifikat.index', 'active' => 'sertifikat.*', 'icon' => 'award'],
                 ],
             ],
             [
                 'label' => 'Mitra & Lowongan',
                 'items' => [
-                    ['label' => 'Mitra DU/DI', 'route' => 'mitras.index', 'active' => 'mitras.*', 'icon' => 'building-2', 'badge' => \App\Models\Mitra::count().' Mitra'],
-                    ['label' => 'Lowongan Kerja', 'route' => 'lowongan.index', 'active' => 'lowongan.*', 'icon' => 'briefcase-business', 'badge' => \App\Models\DaftarLowongan::count().' Aktif'],
+                    ['label' => 'Mitra DU/DI', 'route' => 'mitras.index', 'active' => 'mitras.*', 'icon' => 'building-2'],
+                    ['label' => 'Lowongan Kerja', 'route' => 'lowongan.index', 'active' => 'lowongan.*', 'icon' => 'briefcase-business'],
                 ],
             ],
         ];
@@ -52,7 +52,7 @@
                 ? [
                     'label' => 'Manajemen Lowongan',
                     'items' => [
-                        ['label' => 'Lowongan Saya', 'route' => 'lowongan.index', 'active' => 'lowongan.*', 'icon' => 'briefcase-business', 'badge' => \App\Models\DaftarLowongan::where('id_mitra', $user?->mitra->id_mitra ?? null)->count().' Aktif'],
+                        ['label' => 'Lowongan Saya', 'route' => 'lowongan.index', 'active' => 'lowongan.*', 'icon' => 'briefcase-business'],
                     ],
                 ]
                 : [

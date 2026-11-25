@@ -10,7 +10,7 @@ class AdminBlkSeeder extends Seeder
 {
     public function run(): void
     {
-        $user = User::updateOrCreate(['email' => 'admin@sikarir.test'], ['name' => 'Admin BLK', 'password' => 'password', 'role' => 'admin_blk']);
-        AdminBlk::firstOrCreate(['id_user' => $user->id]);
+        $user = User::updateOrCreate(['email' => 'admin@sikarir.test'], ['password' => 'password', 'role' => 'admin_blk']);
+        AdminBlk::firstOrCreate(['id_user' => $user->id], ['nama' => 'Admin BLK']);
     }
 }

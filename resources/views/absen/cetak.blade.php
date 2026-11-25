@@ -219,7 +219,7 @@
       <tr>
         <td><strong>Instruktur Pembina</strong></td>
         <td>:</td>
-        <td>{{ $selectedJadwal->instruktur->nama ?? ('Tim Instruktur BPVP') }}</td>
+        <td>{{ $selectedJadwal?->instruktur?->nama ?? 'Tim Instruktur BPVP' }}</td>
         <td><strong>Tanggal Cetak</strong></td>
         <td>:</td>
         <td>{{ date('d F Y') }}</td>
@@ -272,7 +272,7 @@
           <tr>
             <td class="center">{{ $loop->iteration }}</td>
             <td class="center" style="font-family: monospace;">{{ $rp->peserta->nomor_peserta ?? '-' }}</td>
-            <td><strong>{{ $rp->peserta->user->name ?? '-' }}</strong></td>
+            <td><strong>{{ $rp->peserta->nama ?? '-' }}</strong></td>
             <td class="center font-bold">{{ $rp->hadir }}</td>
             <td class="center">{{ $rp->izin }}</td>
             <td class="center">{{ $rp->sakit }}</td>

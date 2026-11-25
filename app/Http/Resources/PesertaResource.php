@@ -13,7 +13,6 @@ class PesertaResource extends JsonResource
             'id_user' => $this->id_user,
             'id_admin' => $this->id_admin,
             'nomor_peserta' => $this->nomor_peserta,
-            'nama' => $this->user?->name,
             'jenis_kelamin' => $this->jenis_kelamin,
             'nomor_kk' => $this->nomor_kk,
             'nomor_wa' => $this->nomor_wa,

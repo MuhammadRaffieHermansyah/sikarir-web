@@ -22,6 +22,7 @@ class MitraController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('nama_perusahaan', 'like', "%{$search}%")
+                    ->orWhere('nama', 'like', "%{$search}%")
                     ->orWhere('bidang_usaha', 'like', "%{$search}%")
                     ->orWhere('kota', 'like', "%{$search}%")
                     ->orWhere('provinsi', 'like', "%{$search}%")
@@ -48,7 +49,7 @@ class MitraController extends Controller
 
     public function create(): View
     {
-        $users = User::orderBy('name')->get();
+        $users = User::orderBy('email')->get();
 
         return view('mitras.create', compact('users'));
     }
@@ -57,6 +58,7 @@ class MitraController extends Controller
     {
         $validated = $request->validate([
             'logo_perusahaan' => 'required|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
+            'nama' => 'required|string|max:255|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
             'nama_perusahaan' => 'required|unique:mitras,nama_perusahaan|string|max:255|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
             'id_user' => 'required|exists:users,id|unique:mitras,id_user',
             'jenis_mitra' => 'required|string|max:100',
@@ -69,6 +71,8 @@ class MitraController extends Controller
             'alamat' => 'required|string',
         ], [
             'logo_perusahaan.required' => 'Logo perusahaan wajib diunggah.',
+            'nama.required' => 'Nama PIC wajib diisi.',
+            'nama.regex' => 'Nama PIC hanya boleh berisi huruf, angka, spasi, dan tanda baca umum.',
             'nama_perusahaan.required' => 'Nama perusahaan wajib diisi.',
             'nama_perusahaan.unique' => 'Nama perusahaan sudah terdaftar.',
             'id_user.unique' => 'Akun pengguna ini sudah ditautkan ke mitra lain.',
@@ -141,7 +145,7 @@ class MitraController extends Controller
     public function edit(int $id): View
     {
         $mitra = Mitra::with('user')->findOrFail($id);
-        $users = User::orderBy('name')->get();
+        $users = User::orderBy('email')->get();
 
         return view('mitras.edit', compact('mitra', 'users'));
     }
@@ -152,6 +156,7 @@ class MitraController extends Controller
 
         $validated = $request->validate([
             'logo_perusahaan' => 'image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
+            'nama' => 'nullable|string|max:255|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
             'nama_perusahaan' => ['required', 'string', 'max:255', 'regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u', Rule::unique('mitras', 'nama_perusahaan')->ignore($id, 'id_mitra')],
             'id_user' => 'required|',
             'jenis_mitra' => 'required|string|max:100',
@@ -163,6 +168,8 @@ class MitraController extends Controller
             'kota' => 'required|string|max:100|regex:/^[\pL\s.,\x27\-]+$/u',
             'alamat' => 'required|string',
         ], [
+            'nama.required' => 'Nama PIC wajib diisi.',
+            'nama.regex' => 'Nama PIC hanya boleh berisi huruf, angka, spasi, dan tanda baca umum.',
             'nama_perusahaan.required' => 'Nama perusahaan wajib diisi.',
             'nama_perusahaan.unique' => 'Nama perusahaan sudah terdaftar.',
             'jenis_mitra.required' => 'Jenis mitra wajib diisi.',

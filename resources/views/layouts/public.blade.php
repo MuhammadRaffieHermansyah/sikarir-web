@@ -10,7 +10,6 @@
 
     @fonts
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="site-shell flex min-h-screen flex-col justify-between bg-background font-sans text-foreground antialiased">
 
@@ -23,9 +22,5 @@
     @include('layouts.footer')
 
     <x-ui.sonner position="bottom-right" />
-
-    <script>
-        lucide.createIcons();
-    </script>
 </body>
 </html>

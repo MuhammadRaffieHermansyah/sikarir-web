@@ -155,7 +155,7 @@ class InstrukturController extends Controller
         $fotoLama = $user->foto;
 
         DB::transaction(function () use ($user, $instruktur, $data, $pathFoto) {
-            $user->update(array_filter(['name' => $data['nama'], 'foto' => $pathFoto]));
+            $user->update(array_filter(['foto' => $pathFoto]));
             $instruktur->update([
                 'nama' => $data['nama'],
                 'nomor_wa' => $data['nomor_wa'] ?? null,

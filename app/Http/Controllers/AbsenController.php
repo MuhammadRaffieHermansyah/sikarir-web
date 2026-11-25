@@ -23,9 +23,10 @@ class AbsenController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->whereHas('peserta.user', function ($sub) use ($search) {
-                    $sub->where('name', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%");
+                $q->whereHas('peserta', function ($sub) use ($search) {
+                    $sub->where('nama', 'like', "%{$search}%");
+                })->orWhereHas('peserta.user', function ($sub) use ($search) {
+                    $sub->where('email', 'like', "%{$search}%");
                 })->orWhereHas('jadwal.pelatihan', function ($sub) use ($search) {
                     $sub->where('nama_pelatihan', 'like', "%{$search}%");
                 });
@@ -37,6 +38,7 @@ class AbsenController extends Controller
             $query->where('status_kehadiran', $request->status);
         }
 
+        // Ambil data terbaru berdasarkan id_absen dengan pagination & pertahankan query string URL
         $absens = $query->latest('id_absen')
             ->paginate(10)
             ->withQueryString();
