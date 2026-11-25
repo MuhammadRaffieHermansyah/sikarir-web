@@ -41,3 +41,26 @@ test('halaman daftar dan detail admin BLK tidak error saat ada data', function (
     $this->actingAs($admin)->get(route('admin-blk.index'))->assertOk();
     $this->actingAs($admin)->get(route('admin-blk.show', $profil->id_admin))->assertOk();
 });
+
+test('header dan halaman cetak tidak lagi memuat teks contoh', function () {
+    $admin = User::factory()->create(['role' => 'admin_blk']);
+
+    $this->actingAs($admin)->get(route('admin-blk.index'))
+        ->assertOk()
+        ->assertDontSee('Gelombang II')
+        ->assertDontSee('Semua Balai');
+
+    $this->actingAs($admin)->get(route('absen.cetak'))
+        ->assertOk()
+        ->assertDontSee('Bambang Soeprapto')
+        ->assertDontSee('logo_sikarir.png', false);
+});
+
+test('dashboard peserta tidak menampilkan statistik global maupun tombol dokumentasi API', function () {
+    $peserta = User::factory()->create(['role' => 'peserta']);
+
+    $this->actingAs($peserta)->get(route('dashboard'))
+        ->assertOk()
+        ->assertDontSee('Total Pengguna Terdaftar')
+        ->assertDontSee('Swagger API Docs');
+});
