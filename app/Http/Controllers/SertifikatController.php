@@ -6,6 +6,7 @@ use App\Models\AdminBlk;
 use App\Models\JadwalPelatihan;
 use App\Models\Peserta;
 use App\Models\Sertifikat;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -16,6 +17,7 @@ class SertifikatController extends Controller
     public function index(Request $request): View
     {
         $query = Sertifikat::with(['peserta.user', 'jadwal.pelatihan', 'admin.user']);
+        $this->scopeToOwnPeserta($query, $request);
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -52,7 +54,7 @@ class SertifikatController extends Controller
             'id_peserta' => 'required|exists:pesertas,id_peserta',
             'id_jadwal' => 'required|exists:jadwal_pelatihan,id_jadwal',
             'id_admin' => 'required|exists:admin_blks,id_admin',
-            'no_sertifikat' => 'required|string|max:100|unique:sertifikats,no_sertifikat|regex:/^[a-zA-Z0-9\s]+$/',
+            'no_sertifikat' => 'required|string|max:100|unique:sertifikats,no_sertifikat|regex:/^[a-zA-Z0-9\s\/.\-]+$/',
             'tanggal_terbit' => 'required|date',
             'file_sertifikat' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ], [
@@ -62,7 +64,7 @@ class SertifikatController extends Controller
             'no_sertifikat.required' => 'Nomor seri sertifikat wajib diisi.',
             'no_sertifikat.unique' => 'Nomor seri sertifikat sudah digunakan.',
             'tanggal_terbit.required' => 'Tanggal penerbitan sertifikat wajib diisi.',
-            'no_sertifikat.regex' => 'Nomor sertifikat hanya boleh mengandung huruf dan angka.',
+            'no_sertifikat.regex' => 'Nomor sertifikat hanya boleh berisi huruf, angka, spasi, serta tanda / . -',
         ]);
 
         // Check if peserta already has sertifikat for this jadwal
@@ -79,9 +81,11 @@ class SertifikatController extends Controller
         return redirect()->route('sertifikat.index')->with('success', 'Sertifikat kompetensi vokasi berhasil diterbitkan.');
     }
 
-    public function show(int $id): View
+    public function show(Request $request, int $id): View
     {
-        $sertifikat = Sertifikat::with(['peserta.user', 'jadwal.pelatihan', 'admin.user'])->findOrFail($id);
+        $query = Sertifikat::with(['peserta.user', 'jadwal.pelatihan', 'admin.user']);
+        $this->scopeToOwnPeserta($query, $request);
+        $sertifikat = $query->findOrFail($id);
 
         return view('sertifikat.show', compact('sertifikat'));
     }
@@ -104,11 +108,11 @@ class SertifikatController extends Controller
             'id_peserta' => 'required|exists:pesertas,id_peserta',
             'id_jadwal' => 'required|exists:jadwal_pelatihan,id_jadwal',
             'id_admin' => 'required|exists:admin_blks,id_admin',
-            'no_sertifikat' => 'required|string|max:100|unique:sertifikats,no_sertifikat,'.$sertifikat->id_sertifikat.',id_sertifikat|regex:/^[a-zA-Z0-9\s]+$/',
+            'no_sertifikat' => 'required|string|max:100|unique:sertifikats,no_sertifikat,'.$sertifikat->id_sertifikat.',id_sertifikat|regex:/^[a-zA-Z0-9\s\/.\-]+$/',
             'tanggal_terbit' => 'required|date',
             'file_sertifikat' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ], [
-            'no_sertifikat.regex' => 'Nomor sertifikat hanya boleh mengandung huruf dan angka.',
+            'no_sertifikat.regex' => 'Nomor sertifikat hanya boleh berisi huruf, angka, spasi, serta tanda / . -',
         ]);
 
         // Prevent moving to a (peserta, jadwal) combination that already has a sertifikat
@@ -142,5 +146,17 @@ class SertifikatController extends Controller
         $sertifikat->delete();
 
         return redirect()->route('sertifikat.index')->with('success', 'Data sertifikat kompetensi berhasil dihapus.');
+    }
+
+    /**
+     * Peserta hanya boleh melihat sertifikatnya sendiri.
+     */
+    private function scopeToOwnPeserta(Builder $query, Request $request): void
+    {
+        $user = $request->user();
+
+        if ($user?->role === 'peserta') {
+            $query->where('id_peserta', $user->peserta?->id_peserta ?? 0);
+        }
     }
 }

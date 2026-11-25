@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterMitraRequest;
+use App\Models\Peserta;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -44,13 +45,18 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'role' => 'peserta',
-        ]);
+        $user = DB::transaction(function () use ($validated): User {
+            $user = User::create([
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'role' => 'peserta',
+            ]);
 
-        $user->ensureRoleProfile($validated['name']);
+            // Profil peserta awal agar akun langsung muncul di data peserta, absensi, dan kelas.
+            $user->ensureRoleProfile($validated['name']);
+
+            return $user;
+        });
 
         event(new Registered($user));
 

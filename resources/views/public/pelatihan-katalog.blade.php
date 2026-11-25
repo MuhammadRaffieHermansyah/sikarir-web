@@ -50,11 +50,11 @@
   </section>
 
   {{-- STAT STRIP --}}
-  <section class="site-container -mt-8 mb-8">
+  <section class="site-container relative z-10 -mt-8 mb-8"  >
     <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
       @foreach ([
-          ['icon' => 'cpu', 'value' => '14', 'label' => 'Kejuruan aktif'],
-          ['icon' => 'users', 'value' => '32', 'label' => 'Paket berjalan'],
+          ['icon' => 'cpu', 'value' => (string) \App\Models\DaftarPelatihan::count(), 'label' => 'Kejuruan aktif'],
+          ['icon' => 'users', 'value' => (string) \App\Models\JadwalPelatihan::where('status', 'berlangsung')->count(), 'label' => 'Batch berjalan'],
           ['icon' => 'circle-dollar-sign', 'value' => '100%', 'label' => 'Gratis bebas biaya'],
           ['icon' => 'award', 'value' => 'BNSP', 'label' => 'Sertifikasi resmi'],
       ] as $stat)
@@ -217,13 +217,9 @@
           </div>
 
           <div class="flex gap-2 px-5 pb-5">
-            <x-ui.button href="#" variant="outline" class="w-1/2">
-              Silabus
-            </x-ui.button>
-
             <x-ui.button
               href="{{ route('register') }}"
-              class="w-1/2 bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]"
+              class="w-full bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]"
             >
               Daftar
               <x-lucide-arrow-right />
@@ -415,17 +411,6 @@
         @endforeach
       </div>
 
-      <x-ui.card class="flex flex-col gap-4 border-primary bg-primary p-5 text-primary-foreground sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h4 class="text-sm font-bold">Unduh Buku Panduan &amp; Silabus</h4>
-          <p class="mt-0.5 text-xs text-primary-foreground/75">Katalog kurikulum lengkap seluruh 14 kejuruan PDF.</p>
-        </div>
-
-        <x-ui.button href="#" class="shrink-0 bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
-          <x-lucide-download />
-          PDF (8.4 MB)
-        </x-ui.button>
-      </x-ui.card>
     </div>
   </section>
 
@@ -476,7 +461,7 @@
         </div>
 
         <x-ui.button
-          href="https://wa.me/#"
+          href="https://wa.me/{{ config('blk.wa') }}"
           target="_blank"
           rel="noopener"
           class="shrink-0 bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]"

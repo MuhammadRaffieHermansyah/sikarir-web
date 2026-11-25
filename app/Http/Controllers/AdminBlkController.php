@@ -12,7 +12,7 @@ class AdminBlkController extends Controller
 {
     public function index(): View
     {
-        $admins = AdminBlk::with(['user', 'pelatihan', 'lowongan', 'peserta', 'sertifikat'])
+        $admins = AdminBlk::with(['user', 'pelatihan', 'peserta', 'sertifikat'])
             ->latest('id_admin')
             ->paginate(10);
 
@@ -46,7 +46,7 @@ class AdminBlkController extends Controller
 
     public function show(int $id): View
     {
-        $admin = AdminBlk::with(['user', 'peserta', 'lowongan', 'pelatihan', 'sertifikat'])->findOrFail($id);
+        $admin = AdminBlk::with(['user', 'peserta', 'pelatihan', 'sertifikat'])->findOrFail($id);
 
         return view('admin-blk.show', compact('admin'));
     }

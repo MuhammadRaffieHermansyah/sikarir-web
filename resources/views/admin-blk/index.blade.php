@@ -21,17 +21,6 @@
       </x-ui.breadcrumb>
     </x-slot:breadcrumb>
 
-    <x-slot:actions>
-      <x-ui.select native class="w-auto">
-        <option>Gelombang II - TA 2024/2025</option>
-        <option>Gelombang I - TA 2024/2025</option>
-      </x-ui.select>
-
-      <x-ui.select native class="w-auto">
-        <option>Semua Balai (BLK Regional)</option>
-        <option>BLK Pusat Vokasi</option>
-      </x-ui.select>
-    </x-slot:actions>
   </x-ui.page-header>
 
   @if (session('success'))

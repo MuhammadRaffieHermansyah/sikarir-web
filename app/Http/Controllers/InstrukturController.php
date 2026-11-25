@@ -17,13 +17,13 @@ class InstrukturController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('nama', 'like', "%{$search}%")
-                  ->orWhere('bidang_keahlian', 'like', "%{$search}%");
+                    ->orWhere('bidang_keahlian', 'like', "%{$search}%");
             });
         }
 
         $instrukturs = $query->orderBy('nama')
-                           ->paginate(10)
-                           ->withQueryString();
+            ->paginate(10)
+            ->withQueryString();
 
         return view('instruktur.index', compact('instrukturs'));
     }
@@ -36,31 +36,34 @@ class InstrukturController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'nama' => 'required|string|max:150|regex:/^[a-zA-Z\s]+$/|unique:instruktur,nama',
-            'bidang_keahlian' => 'required|string|max:150|regex:/^[a-zA-Z\s]+$/',
+            'nama' => 'required|string|max:150|regex:/^[\pL\s.,\x27\-]+$/u|unique:instruktur,nama',
+            'bidang_keahlian' => 'required|string|max:150|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
         ], [
             'nama.required' => 'Nama instruktur wajib diisi.',
             'nama.max' => 'Nama instruktur maksimal 150 karakter.',
-            'nama.regex' => 'Nama instruktur hanya boleh mengandung huruf dan spasi.',
+            'nama.regex' => 'Nama instruktur hanya boleh berisi huruf, spasi, dan tanda . , - \'.',
             'nama.unique' => 'Nama instruktur sudah terdaftar.',
             'bidang_keahlian.required' => 'Bidang keahlian wajib diisi.',
             'bidang_keahlian.max' => 'Bidang keahlian maksimal 150 karakter.',
-            'bidang_keahlian.regex' => 'Bidang keahlian hanya boleh mengandung huruf dan spasi.',
+            'bidang_keahlian.regex' => 'Bidang keahlian hanya boleh berisi huruf, angka, spasi, dan tanda baca umum.',
         ]);
 
         Instruktur::create($validated);
+
         return redirect()->route('instruktur.index')->with('success', 'Data instruktur berhasil ditambahkan.');
     }
 
     public function show(int $id): View
     {
         $instruktur = Instruktur::with('jadwal.pelatihan')->findOrFail($id);
+
         return view('instruktur.show', compact('instruktur'));
     }
 
     public function edit(int $id): View
     {
         $instruktur = Instruktur::findOrFail($id);
+
         return view('instruktur.edit', compact('instruktur'));
     }
 
@@ -69,18 +72,19 @@ class InstrukturController extends Controller
         $instruktur = Instruktur::findOrFail($id);
 
         $validated = $request->validate([
-            'nama' => 'required|string|max:150|regex:/^[a-zA-Z\s]+$/',
-            'bidang_keahlian' => 'required|string|max:150|regex:/^[a-zA-Z\s]+$/',
+            'nama' => 'required|string|max:150|regex:/^[\pL\s.,\x27\-]+$/u',
+            'bidang_keahlian' => 'required|string|max:150|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
         ], [
             'nama.required' => 'Nama instruktur wajib diisi.',
             'nama.max' => 'Nama instruktur maksimal 150 karakter.',
-            'nama.regex' => 'Nama instruktur hanya boleh mengandung huruf dan spasi.',
+            'nama.regex' => 'Nama instruktur hanya boleh berisi huruf, spasi, dan tanda . , - \'.',
             'bidang_keahlian.required' => 'Bidang keahlian wajib diisi.',
             'bidang_keahlian.max' => 'Bidang keahlian maksimal 150 karakter.',
-            'bidang_keahlian.regex' => 'Bidang keahlian hanya boleh mengandung huruf dan spasi.',
+            'bidang_keahlian.regex' => 'Bidang keahlian hanya boleh berisi huruf, angka, spasi, dan tanda baca umum.',
         ]);
 
         $instruktur->update($validated);
+
         return redirect()->route('instruktur.index')->with('success', 'Data instruktur berhasil diperbarui.');
     }
 
@@ -88,6 +92,7 @@ class InstrukturController extends Controller
     {
         $instruktur = Instruktur::findOrFail($id);
         $instruktur->delete();
+
         return redirect()->route('instruktur.index')->with('success', 'Data instruktur berhasil dihapus.');
     }
 }

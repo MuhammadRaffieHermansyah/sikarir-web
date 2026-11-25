@@ -1,17 +1,22 @@
 @php
 $navLinks = [
     ['label' => 'Dashboard', 'route' => 'dashboard', 'active' => 'dashboard'],
-    ['label' => 'Mitra', 'route' => 'mitras.index', 'active' => 'mitras.*'],
-    ['label' => 'Peserta', 'route' => 'pesertas.index', 'active' => 'pesertas.*'],
-    ['label' => 'Admin BLK', 'route' => 'admin-blk.index', 'active' => 'admin-blk.*'],
-    ['label' => 'Lowongan', 'route' => 'lowongan.index', 'active' => 'lowongan.*'],
-    ['label' => 'Pelatihan', 'route' => 'pelatihan.index', 'active' => 'pelatihan.*'],
-    ['label' => 'Instruktur', 'route' => 'instruktur.index', 'active' => 'instruktur.*'],
-    ['label' => 'Jadwal', 'route' => 'jadwal-pelatihan.index', 'active' => 'jadwal-pelatihan.*'],
-    ['label' => 'Kelas', 'route' => 'kelas-pelatihan.index', 'active' => 'kelas-pelatihan.*'],
-    ['label' => 'Absensi', 'route' => 'absen.index', 'active' => 'absen.*'],
-    ['label' => 'Sertifikat', 'route' => 'sertifikat.index', 'active' => 'sertifikat.*'],
+    ['label' => 'Mitra', 'route' => 'mitras.index', 'active' => 'mitras.*', 'roles' => ['admin_blk']],
+    ['label' => 'Peserta', 'route' => 'pesertas.index', 'active' => 'pesertas.*', 'roles' => ['admin_blk']],
+    ['label' => 'Admin BLK', 'route' => 'admin-blk.index', 'active' => 'admin-blk.*', 'roles' => ['admin_blk']],
+    ['label' => 'Lowongan', 'route' => 'lowongan.index', 'active' => 'lowongan.*', 'roles' => ['admin_blk', 'mitra']],
+    ['label' => 'Pelatihan', 'route' => 'pelatihan.index', 'active' => 'pelatihan.*', 'roles' => ['admin_blk', 'mitra', 'peserta']],
+    ['label' => 'Instruktur', 'route' => 'instruktur.index', 'active' => 'instruktur.*', 'roles' => ['admin_blk']],
+    ['label' => 'Jadwal', 'route' => 'jadwal-pelatihan.index', 'active' => 'jadwal-pelatihan.*', 'roles' => ['admin_blk']],
+    ['label' => 'Kelas', 'route' => 'kelas-pelatihan.index', 'active' => 'kelas-pelatihan.*', 'roles' => ['admin_blk']],
+    ['label' => 'Absensi', 'route' => 'absen.index', 'active' => 'absen.*', 'roles' => ['admin_blk', 'peserta']],
+    ['label' => 'Sertifikat', 'route' => 'sertifikat.index', 'active' => 'sertifikat.*', 'roles' => ['admin_blk', 'peserta']],
 ];
+
+$navLinks = array_values(array_filter(
+    $navLinks,
+    fn (array $link): bool => ! isset($link['roles']) || in_array(auth()->user()?->role, $link['roles'], true)
+));
 @endphp
 
 <nav class="border-b border-border bg-card" x-data="{ open: false }">

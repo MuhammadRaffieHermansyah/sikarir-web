@@ -22,10 +22,12 @@
     </x-slot:breadcrumb>
 
     <x-slot:actions>
+      @if (auth()->user()?->role === 'admin_blk')
       <x-ui.button href="{{ route('absen.edit', $absen->id_absen) }}" class="bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
         <x-lucide-pencil />
         Edit
       </x-ui.button>
+      @endif
 
       <x-ui.button href="{{ route('absen.index') }}" variant="outline">
         <x-lucide-arrow-left />
@@ -162,6 +164,7 @@
           Dicatat pada: {{ $absen->created_at ? $absen->created_at->translatedFormat('d M Y, H:i') : '-' }}
         </span>
 
+        @if (auth()->user()?->role === 'admin_blk')
         <form
           action="{{ route('absen.destroy', $absen->id_absen) }}"
           method="POST"
@@ -175,6 +178,7 @@
             Hapus Data
           </x-ui.button>
         </form>
+        @endif
       </div>
     </x-ui.card>
   </div>
