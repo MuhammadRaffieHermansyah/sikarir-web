@@ -45,7 +45,7 @@ class DaftarPelatihanController extends Controller
     {
         $validated = $request->validate([
             'id_instruktur' => 'required|exists:instruktur,id',
-            'nama_pelatihan' => 'required|unique:daftar_pelatihan,nama_pelatihan|string|max:70|regex:/^[a-zA-Z\s]+$/',
+            'nama_pelatihan' => 'required|unique:daftar_pelatihan,nama_pelatihan|string|max:70|regex:/^[\pL\pN\s().,&\/+\-]+$/u',
             'deskripsi_pelatihan' => 'nullable|string',
             'kuota' => 'required|integer|min:1',
             'id_durasi' => 'nullable|exists:durasi_pelatihan,id_durasi',
@@ -55,10 +55,10 @@ class DaftarPelatihanController extends Controller
             'id_instruktur.exists' => 'Instruktur yang dipilih tidak terdaftar.',
             'nama_pelatihan.required' => 'Nama kejuruan / program pelatihan wajib diisi.',
             'nama_pelatihan.unique' => 'Nama kejuruan / program pelatihan sudah ada.',
-            'nama_pelatihan.max' => 'Nama kejuruan / program pelatihan maksimal 40 karakter.',
+            'nama_pelatihan.max' => 'Nama kejuruan / program pelatihan maksimal 70 karakter.',
             'kuota.required' => 'Kapasitas kuota peserta wajib ditentukan.',
             'kuota.min' => 'Kuota minimal 1 orang peserta.',
-            'nama_pelatihan.regex' => 'Nama kejuruan / program pelatihan hanya boleh mengandung huruf dan spasi.',
+            'nama_pelatihan.regex' => 'Nama kejuruan / program pelatihan hanya boleh berisi huruf, angka, spasi, dan tanda ( ) . , & / + -.',
             'gambar.image' => 'File harus berupa gambar.',
             'gambar.mimes' => 'Format gambar harus JPG, PNG, atau WEBP.',
             'gambar.max' => 'Ukuran gambar maksimal 2 MB.',
@@ -94,7 +94,7 @@ class DaftarPelatihanController extends Controller
 
         $validated = $request->validate([
             'id_instruktur' => 'required|exists:instruktur,id',
-            'nama_pelatihan' => 'required|string|max:70|regex:/^[a-zA-Z\s]+$/',
+            'nama_pelatihan' => 'required|string|max:70|regex:/^[\pL\pN\s().,&\/+\-]+$/u',
             'deskripsi_pelatihan' => 'nullable|string',
             'kuota' => 'required|integer|min:1',
             'id_durasi' => 'nullable|exists:durasi_pelatihan,id_durasi',
@@ -103,10 +103,10 @@ class DaftarPelatihanController extends Controller
             'id_instruktur.required' => 'Instruktur penanggung jawab wajib dipilih.',
             'id_instruktur.exists' => 'Instruktur yang dipilih tidak terdaftar.',
             'nama_pelatihan.required' => 'Nama kejuruan / program pelatihan wajib diisi.',
-            'nama_pelatihan.max' => 'Nama kejuruan / program pelatihan maksimal 40 karakter.',
+            'nama_pelatihan.max' => 'Nama kejuruan / program pelatihan maksimal 70 karakter.',
             'kuota.required' => 'Kapasitas kuota peserta wajib ditentukan.',
             'kuota.min' => 'Kuota minimal 1 orang peserta.',
-            'nama_pelatihan.regex' => 'Nama kejuruan / program pelatihan hanya boleh mengandung huruf dan spasi.',
+            'nama_pelatihan.regex' => 'Nama kejuruan / program pelatihan hanya boleh berisi huruf, angka, spasi, dan tanda ( ) . , & / + -.',
             'gambar.image' => 'File harus berupa gambar.',
             'gambar.mimes' => 'Format gambar harus JPG, PNG, atau WEBP.',
             'gambar.max' => 'Ukuran gambar maksimal 2 MB.',

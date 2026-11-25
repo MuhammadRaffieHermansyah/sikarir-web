@@ -22,10 +22,12 @@
     </x-slot:breadcrumb>
 
     <x-slot:actions>
+      @if (auth()->user()?->role === 'admin_blk')
       <x-ui.button href="{{ route('sertifikat.create') }}" class="bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
         <x-lucide-plus />
         Tambah Sertifikat
       </x-ui.button>
+      @endif
     </x-slot:actions>
   </x-ui.page-header>
 
@@ -138,6 +140,7 @@
                     <x-lucide-eye />
                   </x-ui.button>
 
+                  @if (auth()->user()?->role === 'admin_blk')
                   <x-ui.button
                     href="{{ route('sertifikat.edit', $sertifikat->id_sertifikat) }}"
                     variant="ghost"
@@ -168,6 +171,7 @@
                       <x-lucide-trash-2 />
                     </x-ui.button>
                   </form>
+                  @endif
                 </div>
               </x-ui.table-cell>
             </x-ui.table-row>
@@ -185,10 +189,12 @@
                     </x-ui.empty-description>
                   </x-ui.empty-header>
 
+                  @if (auth()->user()?->role === 'admin_blk')
                   <x-ui.button href="{{ route('sertifikat.create') }}" class="bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
                     <x-lucide-plus />
                     Terbitkan Sertifikat Pertama
                   </x-ui.button>
+                  @endif
                 </x-ui.empty>
               </x-ui.table-cell>
             </x-ui.table-row>

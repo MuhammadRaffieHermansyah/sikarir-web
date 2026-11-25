@@ -113,7 +113,7 @@
         <div class="flex items-center gap-6 border-t border-primary-foreground/20 pt-3 text-xs md:border-l md:border-t-0 md:pl-6 md:pt-0">
           <div>
             <span class="block text-[10px] font-semibold uppercase text-sikarir-lime">Instruktur</span>
-            <span class="font-bold text-white">{{ $selectedJadwal->instruktur->user->name ?? $selectedJadwal->instruktur ?? '-' }}</span>
+            <span class="font-bold text-white">{{ $selectedJadwal->instruktur->nama ?? '-' }}</span>
           </div>
           <div>
             <span class="block text-[10px] font-semibold uppercase text-sikarir-lime">Ruangan</span>
