@@ -46,16 +46,17 @@
   @if (auth()->user()->role !== 'mitra' || auth()->user()->mitra?->is_verified)
   <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
     @foreach ([
-      ['Mitra', 'building-2', 'Kelola Mitra Perusahaan', 'Daftar, tambah, dan kelola data perusahaan mitra kerja sama industri.', 'mitras.index'],
-      ['Peserta', 'users', 'Kelola Data Peserta', 'Data pribadi, NIK, kontak, dan riwayat keikutsertaan peserta pelatihan.', 'pesertas.index'],
-      ['Admin BLK', 'shield-check', 'Admin & Instruktur BLK', 'Kelola akun pengguna, hak akses, dan penugasan staf administrator BLK.', 'admin-blk.index'],
-      ['Lowongan', 'briefcase', 'Lowongan Pekerjaan', 'Publikasi dan kelola informasi lowongan kerja aktif dari perusahaan mitra.', 'lowongan.index'],
-      ['Program Pelatihan', 'book-open', 'Daftar Program Pelatihan', 'Program kejuruan, kurikulum, dan katalog pelatihan vokasi BLK.', 'pelatihan.index'],
-      ['Jadwal & Kelas', 'calendar', 'Jadwal & Kuota Batch', 'Atur tanggal mulai, tanggal selesai, kuota, tempat, dan status gelombang.', 'jadwal-pelatihan.index'],
-      ['Kelas', 'graduation-cap', 'Pendaftaran Peserta Kelas', 'Kelola penempatan, verifikasi pendaftaran, dan daftar anggota kelas.', 'kelas-pelatihan.index'],
-      ['Absensi', 'clipboard-check', 'Presensi Peserta Harian', 'Pencatatan hadir, izin, sakit, dan alpa peserta pelatihan harian.', 'absen.index'],
-      ['Sertifikat', 'award', 'Penerbitan Sertifikat', 'Penomoran, tanggal terbit, dan unggah berkas sertifikat digital kelulusan.', 'sertifikat.index'],
-    ] as [$label, $icon, $title, $description, $route])
+      ['Mitra', 'building-2', 'Kelola Mitra Perusahaan', 'Daftar, tambah, dan kelola data perusahaan mitra kerja sama industri.', 'mitras.index', ['admin_blk']],
+      ['Peserta', 'users', 'Kelola Data Peserta', 'Data pribadi, NIK, kontak, dan riwayat keikutsertaan peserta pelatihan.', 'pesertas.index', ['admin_blk']],
+      ['Admin BLK', 'shield-check', 'Admin & Instruktur BLK', 'Kelola akun pengguna, hak akses, dan penugasan staf administrator BLK.', 'admin-blk.index', ['admin_blk']],
+      ['Lowongan', 'briefcase', 'Lowongan Pekerjaan', 'Publikasi dan kelola informasi lowongan kerja aktif dari perusahaan mitra.', 'lowongan.index', ['admin_blk', 'mitra']],
+      ['Program Pelatihan', 'book-open', 'Daftar Program Pelatihan', 'Program kejuruan, kurikulum, dan katalog pelatihan vokasi BLK.', 'pelatihan.index', ['admin_blk', 'mitra', 'peserta']],
+      ['Jadwal & Kelas', 'calendar', 'Jadwal & Kuota Batch', 'Atur tanggal mulai, tanggal selesai, kuota, tempat, dan status gelombang.', 'jadwal-pelatihan.index', ['admin_blk']],
+      ['Kelas', 'graduation-cap', 'Pendaftaran Peserta Kelas', 'Kelola penempatan, verifikasi pendaftaran, dan daftar anggota kelas.', 'kelas-pelatihan.index', ['admin_blk']],
+      ['Absensi', 'clipboard-check', 'Presensi Peserta Harian', 'Pencatatan hadir, izin, sakit, dan alpa peserta pelatihan harian.', 'absen.index', ['admin_blk', 'peserta']],
+      ['Sertifikat', 'award', 'Penerbitan Sertifikat', 'Penomoran, tanggal terbit, dan unggah berkas sertifikat digital kelulusan.', 'sertifikat.index', ['admin_blk', 'peserta']],
+    ] as [$label, $icon, $title, $description, $route, $roles])
+      @continue(! in_array(auth()->user()->role, $roles, true))
       <a href="{{ route($route) }}" class="group block outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 rounded-xl">
         <x-ui.card class="flex h-full flex-col justify-between transition-all hover:border-primary/40 hover:shadow-md">
           <div>

@@ -219,7 +219,7 @@
       <tr>
         <td><strong>Instruktur Pembina</strong></td>
         <td>:</td>
-        <td>{{ $selectedJadwal->instruktur->user->name ?? ($selectedJadwal->instruktur ?? 'Tim Instruktur BPVP') }}</td>
+        <td>{{ $selectedJadwal->instruktur->nama ?? ('Tim Instruktur BPVP') }}</td>
         <td><strong>Tanggal Cetak</strong></td>
         <td>:</td>
         <td>{{ date('d F Y') }}</td>
@@ -300,7 +300,7 @@
           Mengetahui,<br>
           <strong>Instruktur Pelatihan Vokasi</strong>
           <div class="sign-space"></div>
-          <strong><u>{{ $selectedJadwal->instruktur->user->name ?? 'Instruktur Pembina' }}</u></strong><br>
+          <strong><u>{{ $selectedJadwal->instruktur->nama ?? 'Instruktur Pembina' }}</u></strong><br>
           <span>NIP. 19850712 201101 1 004</span>
         </td>
         <td>

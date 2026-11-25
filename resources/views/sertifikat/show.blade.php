@@ -22,10 +22,12 @@
     </x-slot:breadcrumb>
 
     <x-slot:actions>
+      @if (auth()->user()?->role === 'admin_blk')
       <x-ui.button href="{{ route('sertifikat.edit', $sertifikat->id_sertifikat ?? $sertifikat->id) }}" class="bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
         <x-lucide-pencil />
         Edit
       </x-ui.button>
+      @endif
 
       <x-ui.button href="{{ route('sertifikat.index') }}" variant="outline">
         <x-lucide-arrow-left />
@@ -131,6 +133,7 @@
           Diterbitkan pada: {{ $sertifikat->created_at ? $sertifikat->created_at->translatedFormat('d M Y, H:i') : '-' }}
         </span>
 
+        @if (auth()->user()?->role === 'admin_blk')
         <form
           action="{{ route('sertifikat.destroy', $sertifikat->id_sertifikat ?? $sertifikat->id) }}"
           method="POST"
@@ -144,6 +147,7 @@
             Hapus Sertifikat
           </x-ui.button>
         </form>
+        @endif
       </div>
     </x-ui.card>
   </div>
