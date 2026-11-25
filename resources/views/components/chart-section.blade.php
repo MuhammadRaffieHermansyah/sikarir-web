@@ -2,15 +2,17 @@
     $hariIndonesia = [1 => 'Senin', 2 => 'Selasa', 3 => 'Rabu', 4 => 'Kamis', 5 => 'Jumat'];
     $senin = now()->startOfWeek();
 
-    $absensiMingguIni = \App\Models\Absen::query()
+    $perHari = \App\Models\Absen::query()
         ->whereBetween('tanggal', [$senin->toDateString(), $senin->copy()->addDays(4)->toDateString()])
-        ->get(['tanggal', 'status_kehadiran']);
+        ->selectRaw("tanggal, COUNT(*) AS total, SUM(CASE WHEN status_kehadiran = 'hadir' THEN 1 ELSE 0 END) AS hadir")
+        ->groupBy('tanggal')
+        ->get()
+        ->keyBy(fn ($row) => $row->tanggal->toDateString());
 
-    $tren = collect($hariIndonesia)->map(function (string $nama, int $urutan) use ($senin, $absensiMingguIni) {
-        $tanggal = $senin->copy()->addDays($urutan - 1)->toDateString();
-        $hariIni = $absensiMingguIni->filter(fn ($a) => $a->tanggal->toDateString() === $tanggal);
-        $total = $hariIni->count();
-        $hadir = $hariIni->where('status_kehadiran', 'hadir')->count();
+    $tren = collect($hariIndonesia)->map(function (string $nama, int $urutan) use ($senin, $perHari) {
+        $row = $perHari->get($senin->copy()->addDays($urutan - 1)->toDateString());
+        $total = (int) ($row->total ?? 0);
+        $hadir = (int) ($row->hadir ?? 0);
 
         return [
             'hari' => $nama,
@@ -19,15 +21,21 @@
         ];
     })->values();
 
-    $totalMingguIni = $absensiMingguIni->count();
-    $hadirMingguIni = $absensiMingguIni->where('status_kehadiran', 'hadir')->count();
+    $totalMingguIni = (int) $perHari->sum('total');
+    $hadirMingguIni = (int) $perHari->sum('hadir');
     $rataKehadiran = $totalMingguIni > 0 ? round($hadirMingguIni / $totalMingguIni * 100, 1) : 0;
 
-    $absensiHariIni = \App\Models\Absen::query()->whereDate('tanggal', today())->get(['status_kehadiran']);
-    $totalHariIni = $absensiHariIni->count();
-    $hadirHariIni = $absensiHariIni->where('status_kehadiran', 'hadir')->count();
-    $izinSakitHariIni = $absensiHariIni->whereIn('status_kehadiran', ['izin', 'sakit'])->count();
-    $alphaHariIni = $absensiHariIni->whereIn('status_kehadiran', ['alpha', 'alpa'])->count();
+    $hariIni = \App\Models\Absen::query()
+        ->where('tanggal', today()->toDateString())
+        ->selectRaw("COUNT(*) AS total,
+            SUM(CASE WHEN status_kehadiran = 'hadir' THEN 1 ELSE 0 END) AS hadir,
+            SUM(CASE WHEN status_kehadiran IN ('izin', 'sakit') THEN 1 ELSE 0 END) AS izin_sakit,
+            SUM(CASE WHEN status_kehadiran IN ('alpha', 'alpa') THEN 1 ELSE 0 END) AS alpha")
+        ->first();
+    $totalHariIni = (int) ($hariIni->total ?? 0);
+    $hadirHariIni = (int) ($hariIni->hadir ?? 0);
+    $izinSakitHariIni = (int) ($hariIni->izin_sakit ?? 0);
+    $alphaHariIni = (int) ($hariIni->alpha ?? 0);
     $persenHariIni = $totalHariIni > 0 ? round($hadirHariIni / $totalHariIni * 100, 1) : 0;
 @endphp
 

@@ -32,12 +32,17 @@ class DashboardController extends Controller
 
         $lowonganQuery = DaftarLowongan::query()->where('id_mitra', $mitra->id_mitra);
 
+        $statusCounts = (clone $lowonganQuery)
+            ->selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
         $statistics = [
-            'aktif' => (clone $lowonganQuery)->where('status', 'aktif')->count(),
-            'draft' => (clone $lowonganQuery)->where('status', 'draft')->count(),
-            'ditutup' => (clone $lowonganQuery)->where('status', 'ditutup')->count(),
+            'aktif' => (int) ($statusCounts['aktif'] ?? 0),
+            'draft' => (int) ($statusCounts['draft'] ?? 0),
+            'ditutup' => (int) ($statusCounts['ditutup'] ?? 0),
             'pelamar' => LamaranLowongan::query()
-                ->whereHas('lowongan', fn ($query) => $query->where('id_mitra', $mitra->id_mitra))
+                ->whereIn('id_lowongan', DaftarLowongan::select('id_lowongan')->where('id_mitra', $mitra->id_mitra))
                 ->count(),
         ];
 

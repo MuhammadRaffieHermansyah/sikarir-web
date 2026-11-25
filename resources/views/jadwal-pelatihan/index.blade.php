@@ -135,7 +135,7 @@
               </x-ui.table-cell>
 
               <x-ui.table-cell class="px-4 py-3">
-                <span class="font-bold text-foreground">{{ count($jadwal->kelas ?? []) }}</span>
+                <span class="font-bold text-foreground">{{ $jadwal->kelas_count }}</span>
                 <span class="text-xs text-muted-foreground"> / {{ $jadwal->pelatihan->kuota ?? '16' }} Siswa</span>
               </x-ui.table-cell>
 

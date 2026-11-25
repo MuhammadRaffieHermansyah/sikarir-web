@@ -114,7 +114,7 @@
                 <div class="flex min-w-[240px] items-center gap-3">
                   @if ($pelatihan->gambar_url)
                     <img
-                      src="{{ $pelatihan->gambar_url }}"
+                      src="{{ $pelatihan->gambar_thumb_url }}"
                       alt="{{ $pelatihan->nama_pelatihan }}"
                       class="size-10 shrink-0 rounded-lg border border-border object-cover"
                     >

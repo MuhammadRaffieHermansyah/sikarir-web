@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasImageThumbnail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class DaftarLowongan extends Model
 {
-    use HasFactory;
+    use HasFactory, HasImageThumbnail;
 
     protected $table = 'daftar_lowongan';
 

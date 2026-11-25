@@ -7,21 +7,20 @@ use App\Models\DurasiPelatihan;
 use App\Models\Instruktur;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class DaftarPelatihanController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = DaftarPelatihan::with(['admin.user', 'instruktur', 'jadwal', 'durasi']);
+        $query = DaftarPelatihan::with(['admin:id_admin,nama', 'instruktur:id,nama', 'durasi']);
 
         // Filter Pencarian Keyword (Nama Pelatihan atau Deskripsi)
         if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('nama_pelatihan', 'like', "%{$search}%")
-                    ->orWhere('deskripsi_pelatihan', 'like', "%{$search}%");
+            $like = $this->likePattern($request->string('search')->toString());
+            $query->where(function ($q) use ($like) {
+                $q->where('nama_pelatihan', 'like', $like)
+                    ->orWhere('deskripsi_pelatihan', 'like', $like);
             });
         }
 
@@ -65,8 +64,9 @@ class DaftarPelatihanController extends Controller
         ]);
 
         if ($request->hasFile('gambar')) {
-            $validated['gambar'] = $request->file('gambar')->store('pelatihan', 'public');
+            $validated['gambar'] = $this->storeImage($request->file('gambar'), 'pelatihan', 1280, 1280, 640);
         }
+        $validated['id_admin'] = $request->user()->adminBlk?->id_admin;
         DaftarPelatihan::create($validated);
 
         return redirect()->route('pelatihan.index')->with('success', 'Program kejuruan pelatihan vokasi berhasil ditambahkan.');
@@ -114,11 +114,11 @@ class DaftarPelatihanController extends Controller
 
         if ($request->hasFile('gambar')) {
             if ($pelatihan->gambar) {
-                Storage::disk('public')->delete($pelatihan->gambar);
+                $this->deleteImage($pelatihan->gambar);
             }
-            $validated['gambar'] = $request->file('gambar')->store('pelatihan', 'public');
+            $validated['gambar'] = $this->storeImage($request->file('gambar'), 'pelatihan', 1280, 1280, 640);
         } elseif ($request->boolean('hapus_gambar') && $pelatihan->gambar) {
-            Storage::disk('public')->delete($pelatihan->gambar);
+            $this->deleteImage($pelatihan->gambar);
             $validated['gambar'] = null;
         }
 
@@ -131,7 +131,7 @@ class DaftarPelatihanController extends Controller
     {
         $pelatihan = DaftarPelatihan::findOrFail($id);
         if ($pelatihan->gambar) {
-            Storage::disk('public')->delete($pelatihan->gambar);
+            $this->deleteImage($pelatihan->gambar);
         }
         $pelatihan->delete();
 

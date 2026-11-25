@@ -22,11 +22,12 @@ use App\Models\DaftarPelatihan;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    $pelatihans = DaftarPelatihan::latest('id_pelatihan')->take(8)->get();
-    $lowongans = DaftarLowongan::with('mitra.user')
+    // Beranda hanya menampilkan 6 program dan 3 lowongan, jadi tidak perlu mengambil lebih banyak.
+    $pelatihans = DaftarPelatihan::latest('id_pelatihan')->take(6)->get();
+    $lowongans = DaftarLowongan::with('mitra:id_mitra,nama_perusahaan')
         ->where('status', 'aktif')
         ->latest('id_lowongan')
-        ->take(6)
+        ->take(3)
         ->get();
 
     return view('welcome', compact('pelatihans', 'lowongans'));

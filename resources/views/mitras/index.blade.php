@@ -135,7 +135,7 @@
               <x-ui.table-cell class="px-4 py-3 text-center">
                 <x-ui.badge tone="success" class="gap-1">
                   <x-lucide-briefcase class="size-3" />
-                  {{ count($mitra->lowongan ?? []) }}
+                  {{ $mitra->lowongan_count }}
                 </x-ui.badge>
               </x-ui.table-cell>
 

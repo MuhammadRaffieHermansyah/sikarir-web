@@ -15,19 +15,19 @@ class MitraController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = Mitra::with(['user', 'lowongan']);
+        $query = Mitra::with('user:id,email')->withCount('lowongan');
 
         // Filter Pencarian (Nama Perusahaan, Bidang Usaha, Kota, Provinsi, No Telp)
         if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('nama_perusahaan', 'like', "%{$search}%")
-                    ->orWhere('nama', 'like', "%{$search}%")
-                    ->orWhere('bidang_usaha', 'like', "%{$search}%")
-                    ->orWhere('kota', 'like', "%{$search}%")
-                    ->orWhere('provinsi', 'like', "%{$search}%")
-                    ->orWhere('no_telp', 'like', "%{$search}%")
-                    ->orWhere('jabatan_pic', 'like', "%{$search}%");
+            $like = $this->likePattern($request->string('search')->toString());
+            $query->where(function ($q) use ($like) {
+                $q->where('nama_perusahaan', 'like', $like)
+                    ->orWhere('nama', 'like', $like)
+                    ->orWhere('bidang_usaha', 'like', $like)
+                    ->orWhere('kota', 'like', $like)
+                    ->orWhere('provinsi', 'like', $like)
+                    ->orWhere('no_telp', 'like', $like)
+                    ->orWhere('jabatan_pic', 'like', $like);
             });
         }
 
@@ -49,7 +49,7 @@ class MitraController extends Controller
 
     public function create(): View
     {
-        $users = User::orderBy('email')->get();
+        $users = User::select('id', 'email', 'role')->withProfileNames()->where('role', 'mitra')->doesntHave('mitra')->orderBy('email')->get();
 
         return view('mitras.create', compact('users'));
     }
@@ -57,14 +57,14 @@ class MitraController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'logo_perusahaan' => 'required|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
+            'logo_perusahaan' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
             'nama' => 'required|string|max:255|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
             'nama_perusahaan' => 'required|unique:mitras,nama_perusahaan|string|max:255|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
             'id_user' => 'required|exists:users,id|unique:mitras,id_user',
             'jenis_mitra' => 'required|string|max:100',
             'bidang_usaha' => 'required|string|max:255|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
             'no_telp' => 'required|string|min:10|max:13|regex:/^[0-9]+$/',
-            'no_izin' => 'required|string|max:100|regex:/^[a-zA-Z0-9\s\/.\-]+$/',
+            'no_izin' => 'required|string|max:100|regex:/^[a-zA-Z0-9\s\/.\-]+$/|unique:mitras,no_izin',
             'jabatan_pic' => 'required|string|max:100|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
             'provinsi' => 'required|string|max:100|regex:/^[\pL\s.,\x27\-]+$/u',
             'kota' => 'required|string|max:100|regex:/^[\pL\s.,\x27\-]+$/u',
@@ -91,7 +91,7 @@ class MitraController extends Controller
             'kota.regex' => 'Kota hanya boleh berisi huruf, spasi, dan tanda . , - \'.',
             'no_izin.regex' => 'Nomor izin hanya boleh berisi huruf, angka, spasi, serta tanda / . -',
             'logo_perusahaan.image' => 'File logo harus berupa gambar.',
-            'logo_perusahaan.mimes' => 'Format logo yang diizinkan: jpeg, png, jpg, gif, webp, svg.',
+            'logo_perusahaan.mimes' => 'Format logo yang diizinkan: jpeg, png, jpg, webp.',
             'logo_perusahaan.max' => 'Ukuran file logo maksimal 2MB.',
             'no_telp.regex' => 'Nomor telepon harus berupa angka.',
             'no_telp.min' => 'Nomor telepon minimal 10 digit.',
@@ -99,8 +99,7 @@ class MitraController extends Controller
         ]);
 
         if ($request->hasFile('logo_perusahaan')) {
-            $validated['logo_perusahaan'] = $request->file('logo_perusahaan')
-                ->store('logos/mitras', 'public');
+            $validated['logo_perusahaan'] = $this->storeImage($request->file('logo_perusahaan'), 'logos/mitras', 512, 512);
         }
 
         Mitra::create($validated);
@@ -145,7 +144,10 @@ class MitraController extends Controller
     public function edit(int $id): View
     {
         $mitra = Mitra::with('user')->findOrFail($id);
-        $users = User::orderBy('email')->get();
+        $users = User::select('id', 'email')
+            ->where('role', 'mitra')
+            ->where(fn ($q) => $q->doesntHave('mitra')->orWhere('id', $mitra->id_user))
+            ->orderBy('email')->get();
 
         return view('mitras.edit', compact('mitra', 'users'));
     }
@@ -155,10 +157,10 @@ class MitraController extends Controller
         $mitra = Mitra::findOrFail($id);
 
         $validated = $request->validate([
-            'logo_perusahaan' => 'image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
+            'logo_perusahaan' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'nama' => 'nullable|string|max:255|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
             'nama_perusahaan' => ['required', 'string', 'max:255', 'regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u', Rule::unique('mitras', 'nama_perusahaan')->ignore($id, 'id_mitra')],
-            'id_user' => 'required|',
+            'id_user' => ['required', 'exists:users,id', Rule::unique('mitras', 'id_user')->ignore($id, 'id_mitra')],
             'jenis_mitra' => 'required|string|max:100',
             'bidang_usaha' => 'required|string|max:255|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
             'no_telp' => 'required|string|min:10|max:13|regex:/^[0-9]+$/',
@@ -187,7 +189,7 @@ class MitraController extends Controller
             'kota.regex' => 'Kota hanya boleh berisi huruf, spasi, dan tanda . , - \'.',
             'no_izin.regex' => 'Nomor izin hanya boleh berisi huruf, angka, spasi, serta tanda / . -',
             'logo_perusahaan.image' => 'File logo harus berupa gambar.',
-            'logo_perusahaan.mimes' => 'Format logo yang diizinkan: jpeg, png, jpg, gif, webp, svg.',
+            'logo_perusahaan.mimes' => 'Format logo yang diizinkan: jpeg, png, jpg, webp.',
             'logo_perusahaan.max' => 'Ukuran file logo maksimal 2MB.',
             'no_telp.regex' => 'Nomor telepon harus berupa angka.',
             'no_telp.min' => 'Nomor telepon minimal 10 digit.',
@@ -199,8 +201,7 @@ class MitraController extends Controller
             if ($mitra->logo_perusahaan) {
                 Storage::disk('public')->delete($mitra->logo_perusahaan);
             }
-            $validated['logo_perusahaan'] = $request->file('logo_perusahaan')
-                ->store('logos/mitras', 'public');
+            $validated['logo_perusahaan'] = $this->storeImage($request->file('logo_perusahaan'), 'logos/mitras', 512, 512);
         }
 
         $mitra->update($validated);

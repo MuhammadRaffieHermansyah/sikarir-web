@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -25,6 +26,20 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return ['email_verified_at' => 'datetime', 'password' => 'hashed', 'must_change_password' => 'boolean'];
+    }
+
+    /**
+     * Eager-load keempat profil peran sekaligus (4 query total) agar accessor `name`
+     * tidak menjalankan query per user saat dipakai di daftar/dropdown.
+     */
+    public function scopeWithProfileNames(Builder $query): void
+    {
+        $query->with([
+            'peserta:id_peserta,id_user,nama',
+            'mitra:id_mitra,id_user,nama',
+            'adminBlk:id_admin,id_user,nama',
+            'instruktur:id,id_user,nama',
+        ]);
     }
 
     /**

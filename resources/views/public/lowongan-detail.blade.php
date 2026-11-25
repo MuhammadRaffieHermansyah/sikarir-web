@@ -169,7 +169,7 @@
                 <a href="{{ route('lowongan.detail', $lain->id_lowongan) }}" class="group flex items-center gap-3">
                   @if ($lain->gambar_url)
                     <img
-                      src="{{ $lain->gambar_url }}"
+                      src="{{ $lain->gambar_thumb_url }}"
                       alt=""
                       class="size-11 shrink-0 rounded-lg border border-border object-cover"
                       loading="lazy"

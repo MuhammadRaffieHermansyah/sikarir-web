@@ -23,7 +23,7 @@
         <x-ui.item href="{{ route('absen.rekap') }}" size="sm" variant="muted">
             <x-lucide-circle-check-big class="size-4 text-success" />
             <x-ui.item-content><x-ui.item-title class="text-xs">Rekap Presensi Hari Ini</x-ui.item-title></x-ui.item-content>
-            <x-ui.badge tone="success" size="sm">{{ \App\Models\Absen::whereDate('tanggal', today())->count() }}</x-ui.badge>
+            <x-ui.badge tone="success" size="sm">{{ \App\Models\Absen::where('tanggal', today()->toDateString())->count() }}</x-ui.badge>
         </x-ui.item>
 
         <x-ui.item href="{{ route('sertifikat.index') }}" size="sm" class="hover:bg-accent/50">

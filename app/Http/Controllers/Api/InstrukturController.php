@@ -150,7 +150,7 @@ class InstrukturController extends Controller
         ]);
 
         $pathFoto = $request->hasFile('foto')
-            ? $request->file('foto')->store('foto', 'public')
+            ? $this->storeImage($request->file('foto'), 'foto', 800, 800)
             : null;
         $fotoLama = $user->foto;
 
