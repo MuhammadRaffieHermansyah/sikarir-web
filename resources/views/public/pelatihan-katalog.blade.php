@@ -68,7 +68,8 @@
     </div>
   </section>
 
-  <div class="site-container space-y-8 pb-14">
+
+  <div class="site-container space-y-8 py-10 md:py-14">
     {{-- SEARCH & FILTER --}}
     <x-ui.card>
       <form method="GET" action="{{ route('pelatihan.katalog') }}" class="grid gap-3 md:grid-cols-12">
