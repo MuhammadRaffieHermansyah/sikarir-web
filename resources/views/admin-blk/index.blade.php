@@ -51,7 +51,7 @@
       <div>
         <div class="flex items-center gap-2">
           <div class="p-1.5 bg-emerald-50 text-emerald-700 rounded-lg">
-            <i data-lucide="shield-check" class="w-4 h-4"></i>
+            <x-lucide-shield-check class="w-4 h-4" />
           </div>
           <h2 class="font-bold text-slate-800 text-sm">Daftar Administrator BLK</h2>
           <span class="bg-emerald-100 text-emerald-800 text-[11px] font-semibold px-2 py-0.5 rounded-full">
@@ -63,7 +63,7 @@
 
       <div class="flex items-center gap-2">
         <a href="{{ route('admin-blk.create') }}" class="inline-flex items-center gap-1.5 px-3 py-2 bg-emerald-900 hover:bg-emerald-950 text-white text-xs font-semibold rounded-lg shadow-sm transition">
-          <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+          <x-lucide-plus class="w-3.5 h-3.5" />
           <span>Tambah Admin</span>
         </a>
       </div>
@@ -101,7 +101,7 @@
               </td>
               <td class="px-5 py-3.5">
                 <div class="font-medium text-slate-800 flex items-center gap-1.5">
-                  <i data-lucide="mail" class="w-3.5 h-3.5 text-slate-400"></i>
+                  <x-lucide-mail class="w-3.5 h-3.5 text-slate-400" />
                   <span>{{ $admin->user->email ?? '-' }}</span>
                 </div>
                 <div class="text-[10px] text-slate-400 mt-0.5">
@@ -117,13 +117,13 @@
               <td class="px-5 py-3.5 text-center">
                 <div class="inline-flex items-center gap-2 text-slate-600">
                   <span class="inline-flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded text-[10px] font-medium" title="Program Pelatihan">
-                    <i data-lucide="book-open" class="w-3 h-3 text-slate-500"></i> {{ count($admin->pelatihan ?? []) }}
+                    <x-lucide-book-open class="w-3 h-3 text-slate-500" /> {{ count($admin->pelatihan ?? []) }}
                   </span>
                   <span class="inline-flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded text-[10px] font-medium" title="Lowongan Diposting">
-                    <i data-lucide="briefcase" class="w-3 h-3 text-slate-500"></i> {{ count($admin->lowongan ?? []) }}
+                    <x-lucide-briefcase class="w-3 h-3 text-slate-500" /> {{ count($admin->lowongan ?? []) }}
                   </span>
                   <span class="inline-flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded text-[10px] font-medium" title="Sertifikat">
-                    <i data-lucide="award" class="w-3 h-3 text-slate-500"></i> {{ count($admin->sertifikat ?? []) }}
+                    <x-lucide-award class="w-3 h-3 text-slate-500" /> {{ count($admin->sertifikat ?? []) }}
                   </span>
                 </div>
               </td>
@@ -134,16 +134,16 @@
               <td class="px-5 py-3.5 text-right">
                 <div class="inline-flex items-center gap-1.5">
                   <a href="{{ route('admin-blk.show', $admin->id_admin) }}" class="p-1.5 text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition" title="Lihat Profil">
-                    <i data-lucide="eye" class="w-4 h-4"></i>
+                    <x-lucide-eye class="w-4 h-4" />
                   </a>
                   <a href="{{ route('admin-blk.edit', $admin->id_admin) }}" class="p-1.5 text-slate-500 hover:text-amber-700 hover:bg-amber-50 rounded-lg transition" title="Edit Data">
-                    <i data-lucide="edit-3" class="w-4 h-4"></i>
+                    <x-lucide-edit-3 class="w-4 h-4" />
                   </a>
                   <form action="{{ route('admin-blk.destroy', $admin->id_admin) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus administrator ini?')">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="p-1.5 text-slate-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition" title="Hapus Administrator">
-                      <i data-lucide="trash-2" class="w-4 h-4"></i>
+                      <x-lucide-trash-2 class="w-4 h-4" />
                     </button>
                   </form>
                 </div>
@@ -154,11 +154,11 @@
               <td colspan="6" class="px-5 py-10 text-center text-slate-400">
                 <div class="flex flex-col items-center justify-center gap-2">
                   <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-                    <i data-lucide="users" class="w-6 h-6"></i>
+                    <x-lucide-users class="w-6 h-6" />
                   </div>
                   <p class="text-xs font-medium text-slate-600">Belum ada data Administrator BLK</p>
                   <a href="{{ route('admin-blk.create') }}" class="text-xs text-emerald-700 hover:underline font-semibold flex items-center gap-1">
-                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> Tambahkan Admin Pertama
+                    <x-lucide-plus class="w-3.5 h-3.5" /> Tambahkan Admin Pertama
                   </a>
                 </div>
               </td>

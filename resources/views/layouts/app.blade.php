@@ -9,7 +9,6 @@
 
   @fonts
   @vite(['resources/css/app.css', 'resources/js/app.js'])
-  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="admin-shell h-full font-sans text-foreground antialiased">
   <x-ui.sidebar-provider persist class="h-screen overflow-hidden">
@@ -36,9 +35,6 @@
 
   <x-ui.sonner position="bottom-right" />
 
-  <script>
-      lucide.createIcons();
-  </script>
   @stack('scripts')
 </body>
 </html>
