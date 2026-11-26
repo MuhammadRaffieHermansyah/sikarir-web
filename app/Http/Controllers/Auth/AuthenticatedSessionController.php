@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\PastikanAksesWeb;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -25,6 +27,12 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
+
+        if (! $request->user()->canAccessWeb()) {
+            Auth::guard('web')->logout();
+
+            throw ValidationException::withMessages(['email' => PastikanAksesWeb::PESAN_KHUSUS_APLIKASI]);
+        }
 
         $request->session()->regenerate();
 

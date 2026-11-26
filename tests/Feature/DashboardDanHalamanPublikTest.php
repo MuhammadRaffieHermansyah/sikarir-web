@@ -167,11 +167,9 @@ test('header dan halaman cetak tidak lagi memuat teks contoh', function () {
         ->assertDontSee('logo_sikarir.png', false);
 });
 
-test('dashboard peserta tidak menampilkan statistik global maupun tombol dokumentasi API', function () {
-    $peserta = User::factory()->create(['role' => 'peserta']);
+test('peserta dan instruktur tidak membuka dashboard web', function (string $role) {
+    $this->actingAs(User::factory()->create(['role' => $role]))->get(route('dashboard'))
+        ->assertRedirect(route('login'));
 
-    $this->actingAs($peserta)->get(route('dashboard'))
-        ->assertOk()
-        ->assertDontSee('Total Pengguna Terdaftar')
-        ->assertDontSee('Swagger API Docs');
-});
+    $this->assertGuest();
+})->with(['peserta', 'instruktur']);

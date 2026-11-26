@@ -70,24 +70,6 @@
                     ],
                 ],
         ];
-    } elseif ($user?->role === 'peserta') {
-        $groups = [
-            [
-                'label' => 'Utama',
-                'items' => [
-                    ['label' => 'Dashboard', 'route' => 'dashboard', 'active' => 'dashboard', 'icon' => 'layout-dashboard'],
-                ],
-            ],
-            [
-                'label' => 'Pelatihan Saya',
-                'items' => [
-                    ['label' => 'Program Pelatihan', 'route' => 'pelatihan.index', 'active' => 'pelatihan.*', 'icon' => 'book'],
-                    ['label' => 'Presensi Saya', 'route' => 'absen.index', 'active' => 'absen.*', 'icon' => 'check-square'],
-                    ['label' => 'Sertifikat Saya', 'route' => 'sertifikat.index', 'active' => 'sertifikat.*', 'icon' => 'award'],
-                    ['label' => 'Lowongan Saya', 'route' => 'lowongan.index', 'active' => 'lowongan.*', 'icon' => 'briefcase-business'],
-                ],
-            ],
-        ];
     }
 @endphp
 

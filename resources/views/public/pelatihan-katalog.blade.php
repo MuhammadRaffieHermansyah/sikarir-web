@@ -72,7 +72,7 @@
   <div class="site-container space-y-8 py-10 md:py-14">
     {{-- SEARCH & FILTER --}}
     <x-ui.card>
-      <form id="katalog-filter" method="GET" action="{{ route('pelatihan.katalog') }}" class="grid gap-3 md:grid-cols-12">
+      <form id="katalog-filter" method="GET" action="{{ route('pelatihan.katalog') }}" data-results-url="{{ route('pelatihan.katalog.hasil') }}" class="grid gap-3 md:grid-cols-12">
         <div class="md:col-span-8">
           <x-ui.field>
             <x-ui.field-label for="katalog-q" class="sr-only">Cari pelatihan</x-ui.field-label>
@@ -349,7 +349,7 @@
         controller?.abort();
         controller = new AbortController();
         const params = new URLSearchParams(new FormData(form));
-        const url = new URL(@js(route('pelatihan.katalog.hasil')), window.location.origin);
+        const url = new URL(form.dataset.resultsUrl, window.location.origin);
         url.search = params.toString();
         grid.setAttribute('aria-busy', 'true');
 
