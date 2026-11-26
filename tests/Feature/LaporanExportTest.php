@@ -31,50 +31,50 @@ test('export data peserta berisi peserta', function () {
     $response = $this->actingAs($this->admin)->get(route('laporan.peserta'));
 
     $response->assertOk()->assertDownload();
-    expect($response->headers->get('content-type'))->toContain('text/csv')
-        ->and($response->streamedContent())->toContain($peserta->nomor_peserta);
+    expect($response->headers->get('content-type'))->toContain('spreadsheetml')
+        ->and(xlsxSheetXml($response))->toContain($peserta->nomor_peserta)->toContain('Laporan Data Peserta');
 });
 
 test('export pendaftaran hanya berisi jadwal yang difilter', function () {
     $kelas = KelasPelatihan::factory()->create();
     $kelasLain = KelasPelatihan::factory()->create();
 
-    $csv = $this->actingAs($this->admin)
+    $xml = $this->actingAs($this->admin)
         ->get(route('laporan.pendaftaran', ['id_jadwal' => $kelas->id_jadwal]))
-        ->assertOk()
-        ->streamedContent();
+        ->assertOk();
+    $xml = xlsxSheetXml($xml);
 
-    expect($csv)->toContain($kelas->peserta->nomor_peserta);
-    expect($csv)
+    expect($xml)->toContain($kelas->peserta->nomor_peserta);
+    expect($xml)
         ->not->toContain($kelasLain->peserta->nomor_peserta);
 });
 
 test('export sertifikat berisi nomor sertifikat', function () {
     $sertifikat = Sertifikat::factory()->create();
 
-    $csv = $this->actingAs($this->admin)->get(route('laporan.sertifikat'))->assertOk()->streamedContent();
+    $xml = xlsxSheetXml($this->actingAs($this->admin)->get(route('laporan.sertifikat'))->assertOk());
 
-    expect($csv)->toContain($sertifikat->no_sertifikat);
+    expect($xml)->toContain($sertifikat->no_sertifikat);
 });
 
 test('export lamaran bisa difilter per status', function () {
     $diterima = LamaranLowongan::factory()->create(['status' => 'diterima']);
     $ditolak = LamaranLowongan::factory()->create(['status' => 'ditolak']);
 
-    $csv = $this->actingAs($this->admin)
+    $xml = $this->actingAs($this->admin)
         ->get(route('laporan.lamaran', ['status' => 'diterima']))
-        ->assertOk()
-        ->streamedContent();
+        ->assertOk();
+    $xml = xlsxSheetXml($xml);
 
-    expect($csv)->toContain($diterima->peserta->nomor_peserta);
-    expect($csv)
+    expect($xml)->toContain($diterima->peserta->nomor_peserta);
+    expect($xml)
         ->not->toContain($ditolak->peserta->nomor_peserta);
 });
 
-test('nilai yang diawali tanda sama dengan diamankan dari formula injection', function () {
+test('nilai yang diawali tanda sama dengan disimpan sebagai teks, bukan rumus', function () {
     Peserta::factory()->create(['nama' => '=HYPERLINK("x")']);
 
-    $csv = $this->actingAs($this->admin)->get(route('laporan.peserta'))->streamedContent();
+    $xml = xlsxSheetXml($this->actingAs($this->admin)->get(route('laporan.peserta')));
 
-    expect($csv)->toContain("'=HYPERLINK");
+    expect($xml)->toContain('=HYPERLINK(&quot;x&quot;)')->not->toContain('<f>');
 });

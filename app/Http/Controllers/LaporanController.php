@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\ExportsXlsx;
 use App\Models\JadwalPelatihan;
 use App\Models\KelasPelatihan;
 use App\Models\LamaranLowongan;
@@ -9,14 +10,16 @@ use App\Models\Peserta;
 use App\Models\Sertifikat;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Pusat laporan admin BLK: ekspor data peserta, pendaftaran kelas,
- * sertifikat, dan lamaran kerja ke CSV (dapat dibuka di Excel).
+ * sertifikat, dan lamaran kerja ke file Excel (.xlsx) berformat tabel.
  */
 class LaporanController extends Controller
 {
+    use ExportsXlsx;
+
     /** @var list<string> */
     public const STATUS_LAMARAN = ['melamar', 'diproses', 'wawancara', 'diterima', 'ditolak'];
 
@@ -38,11 +41,11 @@ class LaporanController extends Controller
         ]);
     }
 
-    public function peserta(): StreamedResponse
+    public function peserta(): BinaryFileResponse
     {
         $pesertas = Peserta::with('user:id,email')->withCount(['kelas', 'sertifikat'])->orderBy('nomor_peserta')->get();
 
-        return $this->csv('laporan-data-peserta', [
+        return $this->xlsx('laporan-data-peserta', 'Laporan Data Peserta', [
             'No', 'No. Peserta', 'Nama', 'Email', 'Jenis Kelamin', 'Tempat Lahir', 'Tanggal Lahir', 'No. WA',
             'Pendidikan Terakhir', 'Jurusan', 'Disabilitas', 'Alamat', 'Jumlah Kelas', 'Jumlah Sertifikat',
         ], $pesertas->map(fn (Peserta $p, int $i): array => [
@@ -63,7 +66,7 @@ class LaporanController extends Controller
         ])->all());
     }
 
-    public function pendaftaran(Request $request): StreamedResponse
+    public function pendaftaran(Request $request): BinaryFileResponse
     {
         $filters = $request->validate(['id_jadwal' => 'nullable|exists:jadwal_pelatihan,id_jadwal']);
 
@@ -73,7 +76,7 @@ class LaporanController extends Controller
             ->orderBy('id_kelas')
             ->get();
 
-        return $this->csv('laporan-pendaftaran-kelas', [
+        return $this->xlsx('laporan-pendaftaran-kelas', 'Laporan Pendaftaran Kelas Pelatihan', [
             'No', 'Program Pelatihan', 'Periode', 'Instruktur', 'No. Peserta', 'Nama Peserta', 'Email', 'Status', 'Tanggal Daftar',
         ], $kelas->map(fn (KelasPelatihan $k, int $i): array => [
             $i + 1,
@@ -83,12 +86,12 @@ class LaporanController extends Controller
             $k->peserta?->nomor_peserta,
             $k->peserta?->nama,
             $k->peserta?->user?->email,
-            $k->status,
+            ucfirst((string) $k->status),
             $k->created_at?->format('d/m/Y'),
-        ])->all());
+        ])->all(), $this->keteranganJadwal($filters['id_jadwal'] ?? null));
     }
 
-    public function sertifikat(Request $request): StreamedResponse
+    public function sertifikat(Request $request): BinaryFileResponse
     {
         $filters = $request->validate(['id_jadwal' => 'nullable|exists:jadwal_pelatihan,id_jadwal']);
 
@@ -97,7 +100,7 @@ class LaporanController extends Controller
             ->orderBy('tanggal_terbit')
             ->get();
 
-        return $this->csv('laporan-sertifikat', [
+        return $this->xlsx('laporan-sertifikat', 'Laporan Sertifikat Terbit', [
             'No', 'No. Sertifikat', 'Tanggal Terbit', 'No. Peserta', 'Nama Peserta', 'Email', 'Program Pelatihan', 'Periode',
         ], $sertifikats->map(fn (Sertifikat $s, int $i): array => [
             $i + 1,
@@ -108,10 +111,10 @@ class LaporanController extends Controller
             $s->peserta?->user?->email,
             $s->jadwal?->pelatihan?->nama_pelatihan,
             $this->periode($s->jadwal),
-        ])->all());
+        ])->all(), $this->keteranganJadwal($filters['id_jadwal'] ?? null));
     }
 
-    public function lamaran(Request $request): StreamedResponse
+    public function lamaran(Request $request): BinaryFileResponse
     {
         $filters = $request->validate(['status' => 'nullable|in:'.implode(',', self::STATUS_LAMARAN)]);
 
@@ -120,7 +123,7 @@ class LaporanController extends Controller
             ->orderByDesc('tanggal_melamar')
             ->get();
 
-        return $this->csv('laporan-lamaran-kerja', [
+        return $this->xlsx('laporan-lamaran-kerja', 'Laporan Lamaran Kerja', [
             'No', 'Tanggal Melamar', 'Posisi Lowongan', 'Perusahaan', 'Lokasi', 'No. Peserta', 'Nama Pelamar', 'Email', 'Status',
         ], $lamarans->map(fn (LamaranLowongan $l, int $i): array => [
             $i + 1,
@@ -131,29 +134,19 @@ class LaporanController extends Controller
             $l->peserta?->nomor_peserta,
             $l->peserta?->nama,
             $l->peserta?->user?->email,
-            $l->status,
-        ])->all());
+            ucfirst((string) $l->status),
+        ])->all(), isset($filters['status']) ? 'Status: '.ucfirst($filters['status']) : null);
     }
 
-    /**
-     * Unduh data sebagai CSV UTF-8 (dengan BOM agar Excel membaca karakter dengan benar).
-     *
-     * @param  list<string>  $header
-     * @param  list<array<int, mixed>>  $rows
-     */
-    private function csv(string $name, array $header, array $rows): StreamedResponse
+    private function keteranganJadwal(int|string|null $idJadwal): ?string
     {
-        return response()->streamDownload(function () use ($header, $rows): void {
-            $out = fopen('php://output', 'w');
-            fwrite($out, "\xEF\xBB\xBF");
-            fputcsv($out, $header);
+        if (! $idJadwal) {
+            return null;
+        }
 
-            foreach ($rows as $row) {
-                fputcsv($out, array_map(fn ($value): string => $this->csvSafe((string) ($value ?? '-')), $row));
-            }
+        $jadwal = JadwalPelatihan::with('pelatihan:id_pelatihan,nama_pelatihan')->find($idJadwal);
 
-            fclose($out);
-        }, $name.'-'.now()->format('Ymd-His').'.csv', ['Content-Type' => 'text/csv; charset=UTF-8']);
+        return 'Jadwal: '.($jadwal?->pelatihan?->nama_pelatihan ?? '-').' ('.$this->periode($jadwal).')';
     }
 
     private function periode(?JadwalPelatihan $jadwal): string
@@ -163,13 +156,5 @@ class LaporanController extends Controller
         }
 
         return ($jadwal->tanggal_mulai?->format('d/m/Y') ?? '-').' s/d '.($jadwal->tanggal_selesai?->format('d/m/Y') ?? '-');
-    }
-
-    /**
-     * Cegah formula injection saat CSV dibuka di Excel.
-     */
-    private function csvSafe(string $value): string
-    {
-        return preg_match('/^[=+\-@\t\r]/', $value) ? "'".$value : $value;
     }
 }

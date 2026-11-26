@@ -17,7 +17,7 @@
 @section('content')
   <x-ui.page-header
     title="Laporan & Export Data"
-    description="Unduh laporan data BLK dalam format CSV yang bisa langsung dibuka di Microsoft Excel atau Google Sheets."
+    description="Unduh laporan data BLK dalam bentuk tabel Excel (.xlsx) yang rapi, siap dibuka di Microsoft Excel atau Google Sheets."
   />
 
   <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -33,7 +33,7 @@
       <x-ui.card-content class="flex justify-end">
         <x-ui.button href="{{ route('laporan.peserta') }}" size="sm">
           <x-lucide-download />
-          Export CSV
+          Export Excel
         </x-ui.button>
       </x-ui.card-content>
     </x-ui.card>
@@ -55,7 +55,7 @@
           </x-ui.field>
           <x-ui.button type="submit" size="sm">
             <x-lucide-download />
-            Export CSV
+            Export Excel
           </x-ui.button>
         </form>
       </x-ui.card-content>
@@ -78,7 +78,7 @@
           </x-ui.field>
           <x-ui.button type="submit" size="sm">
             <x-lucide-download />
-            Export CSV
+            Export Excel
           </x-ui.button>
         </form>
       </x-ui.card-content>
@@ -106,7 +106,7 @@
           </x-ui.field>
           <x-ui.button type="submit" size="sm">
             <x-lucide-download />
-            Export CSV
+            Export Excel
           </x-ui.button>
         </form>
       </x-ui.card-content>
@@ -119,12 +119,12 @@
           <x-lucide-clipboard-list class="size-4 text-primary" />
           Rekap Presensi
         </x-ui.card-title>
-        <x-ui.card-description>Rekap kehadiran per peserta dengan filter jadwal, tanggal, dan status. Tersedia export CSV dan cetak/PDF.</x-ui.card-description>
+        <x-ui.card-description>Rekap kehadiran per peserta dengan filter jadwal, tanggal, dan status. Tersedia export Excel dan cetak/PDF.</x-ui.card-description>
       </x-ui.card-header>
       <x-ui.card-content class="flex justify-end gap-2">
         <x-ui.button href="{{ route('absen.export') }}" variant="outline" size="sm">
           <x-lucide-download />
-          Export CSV
+          Export Excel
         </x-ui.button>
         <x-ui.button href="{{ route('absen.rekap') }}" size="sm">
           <x-lucide-arrow-right />

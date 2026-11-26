@@ -24,7 +24,7 @@
     <x-slot:actions>
       <x-ui.button href="{{ route('absen.export', request()->query()) }}" variant="outline">
         <x-lucide-download />
-        Export Excel (CSV)
+        Export Excel
       </x-ui.button>
 
       <x-ui.button href="{{ route('absen.cetak', request()->query()) }}" target="_blank" variant="secondary">

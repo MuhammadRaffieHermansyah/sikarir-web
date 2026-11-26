@@ -95,16 +95,16 @@ test('rekap absensi menolak rentang tanggal terbalik', function () {
         ->assertSessionHasErrors('tanggal_selesai');
 });
 
-test('admin bisa export csv dan membuka halaman cetak', function () {
+test('admin bisa export excel dan membuka halaman cetak', function () {
     Absen::factory()->create([
         'id_peserta' => $this->peserta->id_peserta,
         'status_kehadiran' => 'hadir',
     ]);
 
-    $csv = $this->actingAs($this->admin)->get(route('absen.export'));
-    $csv->assertOk()->assertDownload();
-    expect($csv->headers->get('content-type'))->toContain('text/csv')
-        ->and($csv->streamedContent())->toContain($this->peserta->user->name);
+    $excel = $this->actingAs($this->admin)->get(route('absen.export'));
+    $excel->assertOk()->assertDownload();
+    expect($excel->headers->get('content-type'))->toContain('spreadsheetml')
+        ->and(xlsxSheetXml($excel))->toContain($this->peserta->nomor_peserta);
 
     $this->actingAs($this->admin)->get(route('absen.cetak'))->assertOk();
 });
