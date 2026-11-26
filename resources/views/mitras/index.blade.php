@@ -36,6 +36,16 @@
     </x-ui.alert>
   @endif
 
+  @if (request('verifikasi') === 'menunggu')
+    <x-ui.alert tone="warning">
+      <x-lucide-clock-3 />
+      <x-ui.alert-description>
+        Menampilkan mitra yang menunggu verifikasi.
+        <a href="{{ route('mitras.index') }}" class="font-bold underline">Tampilkan semua mitra</a>
+      </x-ui.alert-description>
+    </x-ui.alert>
+  @endif
+
   <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
     <x-ui.stat label="Total Mitra DU/DI" :value="(isset($mitras) ? $mitras->total() : 0) . ' Perusahaan'" icon="building-2" />
     <x-ui.stat label="Status Kerjasama" value="100% Aktif" icon="briefcase" />

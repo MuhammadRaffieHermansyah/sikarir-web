@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DaftarLowongan;
 use App\Models\DaftarPelatihan;
 use App\Models\Instruktur;
+use App\Models\JadwalPelatihan;
 use App\Models\LamaranLowongan;
 use App\Models\Mitra;
 use App\Models\Peserta;
@@ -34,6 +35,14 @@ class DashboardController extends Controller
                         'sertifikat' => Sertifikat::count(),
                     ];
                 });
+
+                // Angka yang perlu ditindaklanjuti admin tidak di-cache agar langsung berubah setelah aksi.
+                $stats += [
+                    'mitra_menunggu' => Mitra::where('is_verified', false)->count(),
+                    'pelatihan_berjalan' => JadwalPelatihan::where('status', 'berlangsung')->count(),
+                    'lamaran_masuk' => LamaranLowongan::count(),
+                    'lamaran_minggu_ini' => LamaranLowongan::where('created_at', '>=', now()->subDays(7))->count(),
+                ];
             }
 
             return view('dashboard', compact('stats'));
