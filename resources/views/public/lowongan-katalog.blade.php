@@ -49,8 +49,14 @@
 
   <div class="site-container space-y-8 py-10 md:py-14">
     {{-- SEARCH & FILTER --}}
+    @php
+      $lokasiTersedia = collect(is_array($daftarLokasi ?? null) ? $daftarLokasi : [])
+          ->filter(fn ($lokasi) => is_string($lokasi))
+          ->values();
+      $anchorHasil = '#daftar-lowongan';
+    @endphp
     <x-ui.card>
-      <form method="GET" action="{{ route('lowongan.katalog') }}" class="space-y-4">
+      <form method="GET" action="{{ route('lowongan.katalog') }}{{ $anchorHasil }}" class="space-y-4">
         <div class="flex flex-col gap-3 md:flex-row">
           <div class="min-w-0 flex-1">
             <x-ui.field>
@@ -82,7 +88,7 @@
             </x-ui.field-label>
             <x-ui.select name="wilayah" id="lowongan-wilayah" native class="w-full" onchange="this.form.submit()">
               <option value="">Semua Lokasi Penempatan</option>
-              @foreach ($daftarLokasi ?? [] as $lokasi)
+              @foreach ($lokasiTersedia as $lokasi)
                 <option value="{{ $lokasi }}" @selected(request('wilayah') === $lokasi)>{{ $lokasi }}</option>
               @endforeach
             </x-ui.select>
@@ -91,15 +97,15 @@
 
         <div class="flex flex-col justify-between gap-3 border-t border-border pt-4 md:flex-row md:items-center">
           <div class="flex flex-wrap items-center gap-2 text-xs">
-            @if (($daftarLokasi ?? collect())->isNotEmpty())
+            @if ($lokasiTersedia->isNotEmpty())
               <span class="flex items-center gap-1 font-bold text-muted-foreground">
                 <x-lucide-map-pin class="size-3.5 text-primary" />
                 Lokasi:
               </span>
 
-              @foreach ($daftarLokasi->take(5) as $lokasi)
+              @foreach ($lokasiTersedia->take(5) as $lokasi)
                 <x-ui.badge
-                  :href="route('lowongan.katalog', ['wilayah' => $lokasi])"
+                  :href="route('lowongan.katalog', ['wilayah' => $lokasi]).$anchorHasil"
                   variant="outline"
                   size="lg"
                   class="rounded-full"
@@ -114,14 +120,14 @@
               </span>
 
               @foreach (['Teknisi Las', 'Otomotif Roda 4', 'Operator Garmen', 'Web Developer', 'Barista Kopi'] as $tag)
-                <x-ui.badge :href="route('lowongan.katalog', ['q' => $tag])" variant="outline" size="lg" class="rounded-full">
+                <x-ui.badge :href="route('lowongan.katalog', ['q' => $tag]).$anchorHasil" variant="outline" size="lg" class="rounded-full">
                   {{ $tag }}
                 </x-ui.badge>
               @endforeach
             @endif
           </div>
 
-          <x-ui.button href="{{ route('lowongan.katalog') }}" variant="link" size="sm" class="shrink-0 px-0 text-destructive">
+          <x-ui.button href="{{ route('lowongan.katalog') }}{{ $anchorHasil }}" variant="link" size="sm" class="shrink-0 px-0 text-destructive">
             <x-lucide-rotate-ccw />
             Reset Filter
           </x-ui.button>
@@ -131,7 +137,7 @@
 
     <div class="grid gap-8 lg:grid-cols-12">
       {{-- KOLOM KIRI: DAFTAR LOWONGAN --}}
-      <div class="space-y-5 lg:col-span-8">
+      <div id="daftar-lowongan" class="space-y-5 scroll-mt-6 lg:col-span-8">
         <div class="flex flex-wrap items-center justify-between gap-2 px-1 text-xs font-medium text-muted-foreground">
           <p class="flex items-center gap-1.5 font-bold text-foreground">
             <x-lucide-briefcase class="size-4 text-primary" />
@@ -173,31 +179,16 @@
                       </a>
                     </h3>
 
-                    <p class="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs font-semibold text-muted-foreground">
-                      <span>{{ $job->mitra->nama_perusahaan ?? '-' }}</span>
-                      <span class="text-border">•</span>
-                      <span class="flex items-center gap-1 font-bold text-primary">
-                        <x-lucide-circle-check-big class="size-3.5" />
-                        Terverifikasi Disnakertrans
-                      </span>
-                    </p>
+                    <p class="mt-0.5 text-xs font-semibold text-muted-foreground">{{ $job->mitra->nama_perusahaan ?? '-' }}</p>
                   </div>
                 </div>
 
-                <x-ui.badge variant="secondary" class="max-w-40 shrink-0 truncate uppercase tracking-wide">
-                  {{ $job->mitra->bidang_usaha ?? 'Lowongan' }}
-                </x-ui.badge>
               </div>
 
               <div class="flex flex-wrap items-center gap-4 rounded-xl border border-border bg-muted/40 p-2.5 text-xs font-medium text-muted-foreground">
                 <span class="flex items-center gap-1">
                   <x-lucide-map-pin class="size-3.5 text-muted-foreground" />
                   {{ $job->lokasi ?? '-' }}
-                </span>
-
-                <span class="flex items-center gap-1 font-semibold text-primary">
-                  <x-lucide-award class="size-3.5" />
-                  Alumni BLK
                 </span>
 
                 <span class="ml-auto flex items-center gap-1 font-semibold">
@@ -215,16 +206,7 @@
 
                 <div class="flex items-center gap-2">
                   <x-ui.button href="{{ route('lowongan.detail', $job->id_lowongan) }}" variant="outline" size="sm">
-                    Detail Syarat
-                  </x-ui.button>
-
-                  <x-ui.button
-                    href="{{ route('register') }}"
-                    size="sm"
-                    class="bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]"
-                  >
-                    Lamar Cepat (BKK)
-                    <x-lucide-arrow-right />
+                    Info Selengkapnya
                   </x-ui.button>
                 </div>
               </div>
@@ -241,7 +223,7 @@
                 </x-ui.empty-description>
               </x-ui.empty-header>
 
-              <x-ui.button href="{{ route('lowongan.katalog') }}" variant="outline" size="sm">
+              <x-ui.button href="{{ route('lowongan.katalog') }}{{ $anchorHasil }}" variant="outline" size="sm">
                 <x-lucide-rotate-ccw />
                 Reset Filter
               </x-ui.button>
@@ -288,41 +270,6 @@
           </div>
         </x-ui.card>
 
-        {{-- Alur Penyaluran BKK --}}
-        <x-ui.card class="space-y-4 p-5">
-          <div class="flex items-center gap-2.5">
-            <span class="grid size-9 shrink-0 place-items-center rounded-xl bg-accent text-accent-foreground">
-              <x-lucide-trending-up class="size-5" />
-            </span>
-
-            <div>
-              <h3 class="text-sm font-bold leading-none text-foreground">Alur Penyaluran BKK</h3>
-              <p class="mt-1 text-[10px] font-medium text-muted-foreground">Mekanisme Resmi Penempatan Alumni</p>
-            </div>
-          </div>
-
-          <div class="space-y-3.5 pt-2">
-            @foreach ([
-                ['no' => '1', 'title' => 'Registrasi & Upload Sertifikat', 'desc' => 'Lengkapi profil akun siKarir Anda, unggah sertifikat PBK BLK Jember atau lisensi kompetensi BNSP resmi.'],
-                ['no' => '2', 'title' => 'Lamar Lowongan Mitra DUDI', 'desc' => 'Pilih formasi kerja yang selaras dengan kejuruan Anda. Klik tombol "Lamar Cepat" untuk auto-verifikasi.'],
-                ['no' => '3', 'title' => 'Tes Seleksi & Wawancara', 'desc' => 'Ikuti uji praktik dan interview kerja terfasilitasi baik di aula UPT BLK Jember maupun via virtual interview.'],
-                ['no' => '4', 'title' => 'Kontrak & Monitoring', 'desc' => 'Penandatanganan PKWT/Perjanjian Kerja bersama HRD mitra serta pencatatan resmi database Disnakertrans.'],
-            ] as $step)
-              <div class="flex gap-3">
-                <span class="grid size-6 shrink-0 place-items-center rounded-full bg-primary text-xs font-black text-primary-foreground">
-                  {{ $step['no'] }}
-                </span>
-
-                <div class="space-y-0.5">
-                  <h4 class="text-xs font-bold text-foreground">{{ $step['title'] }}</h4>
-                  <p class="text-[11px] leading-relaxed text-muted-foreground">{{ $step['desc'] }}</p>
-                </div>
-              </div>
-            @endforeach
-          </div>
-
-        </x-ui.card>
-
         {{-- CTA Mitra --}}
         <x-ui.card class="space-y-3 border-primary bg-gradient-to-br from-primary to-[#0a3b2e] p-6 text-primary-foreground">
           <x-ui.badge class="border-primary-foreground/25 bg-primary-foreground/10 uppercase tracking-wide text-sikarir-lime">
@@ -354,17 +301,6 @@
           </div>
         </x-ui.card>
 
-        {{-- LSP Badge --}}
-        <x-ui.card class="flex items-center gap-3 p-4">
-          <span class="grid size-10 shrink-0 place-items-center rounded-xl bg-accent text-accent-foreground">
-            <x-lucide-award class="size-6" />
-          </span>
-
-          <div>
-            <h4 class="text-xs font-bold text-foreground">LSP P1 BLK Jember</h4>
-            <p class="text-[10px] text-muted-foreground">Terlisensi Resmi BNSP No. KEP.0418/BNSP/III/2021</p>
-          </div>
-        </x-ui.card>
       </div>
     </div>
   </div>
