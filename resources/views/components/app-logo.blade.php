@@ -1,10 +1,13 @@
+@php
+    $gradientId = 'app-logo-gradient-' . uniqid();
+@endphp
 
 <svg xmlns="http://www.w3.org/2000/svg"
      viewBox="0 0 2047 2047"
-     {{ $attributes->merge(['class' => 'h-44 w-44 object-contain']) }}>
+     {{ $attributes->merge(['class' => 'object-contain']) }}>
 
     <defs>
-        <linearGradient id="green" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id="{{ $gradientId }}" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stop-color="#087b32"/>
             <stop offset="100%" stop-color="#00612b"/>
         </linearGradient>
@@ -17,7 +20,7 @@
         width="1629"
         height="1602"
         rx="365"
-        fill="url(#green)"
+        fill="url(#{{ $gradientId }})"
     />
 
     <!-- White Briefcase Icon -->

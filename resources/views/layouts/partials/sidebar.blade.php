@@ -76,6 +76,7 @@
                     ['label' => 'Program Pelatihan', 'route' => 'pelatihan.index', 'active' => 'pelatihan.*', 'icon' => 'book'],
                     ['label' => 'Presensi Saya', 'route' => 'absen.index', 'active' => 'absen.*', 'icon' => 'check-square'],
                     ['label' => 'Sertifikat Saya', 'route' => 'sertifikat.index', 'active' => 'sertifikat.*', 'icon' => 'award'],
+                    ['label' => 'Lowongan Saya', 'route' => 'lowongan.index', 'active' => 'lowongan.*', 'icon' => 'briefcase-business'],
                 ],
             ],
         ];
@@ -87,11 +88,9 @@
         class="h-[var(--app-header-height)] shrink-0 justify-center border-b border-sidebar-border px-4 py-0 group-data-[collapsible=icon]:px-0">
         <a href="{{ url('/') }}"
             class="flex items-center gap-2.5 rounded-lg py-1 outline-none transition-colors hover:bg-sidebar-accent/60 focus-visible:ring-2 focus-visible:ring-sidebar-ring group-data-[collapsible=icon]:justify-center">
-            <img src="{{ asset('images/logo-sikarir.png') }}" alt="siKarir BLK Jember"
-                class="h-9 w-auto shrink-0 object-contain group-data-[collapsible=icon]:hidden">
+            <x-app-logo class="size-9 shrink-0 group-data-[collapsible=icon]:hidden" role="img" aria-label="siKarir BLK Jember" />
 
-            <img src="{{ asset('images/sikarir-logo.png') }}" alt="siKarir"
-                class="hidden size-8 shrink-0 rounded-lg object-contain group-data-[collapsible=icon]:block">
+            <x-app-logo class="hidden size-8 shrink-0 rounded-lg group-data-[collapsible=icon]:block" role="img" aria-label="siKarir" />
         </a>
     </x-ui.sidebar-header>
 

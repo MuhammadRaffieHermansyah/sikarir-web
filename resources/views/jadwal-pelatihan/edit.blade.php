@@ -129,7 +129,7 @@
                 </div>
               </div>
               <p id="hint-tgl-selesai" class="mt-1 hidden text-xs text-muted-foreground">
-                Dihitung otomatis — melewati Sabtu, Minggu &amp; libur nasional
+                Dihitung otomatis â€” melewati Sabtu, Minggu &amp; libur nasional
               </p>
               <x-ui.field-error :messages="$errors->get('tanggal_selesai')" />
             </x-ui.field>
@@ -458,7 +458,7 @@
         muatHariLiburRentang(updatePreviewManual);
       }
 
-      // ---- 3. Pilih program → update durasi & hitung ulang ----
+      // ---- 3. Pilih program â†’ update durasi & hitung ulang ----
       selectPelatihan.addEventListener('change', function () {
         var opt  = this.options[this.selectedIndex];
         var hari = +(opt.getAttribute('data-hari') || 0);
@@ -469,7 +469,7 @@
           jumlahJamTotal  = jam;
           var jph = (jam / hari % 1 === 0) ? (jam / hari) : (jam / hari).toFixed(1);
           infoDurasiText.textContent = 'Durasi: ' + hari + ' Hari Kerja / ' + jam +
-            ' Total Jam (' + jph + ' jam/hari) — Tanggal & jam selesai akan dihitung ulang.';
+            ' Total Jam (' + jph + ' jam/hari) â€” Tanggal & jam selesai akan dihitung ulang.';
           infoDurasi.classList.remove('hidden');
           infoDurasi.classList.add('flex');
           hitungJamSelesai(hari, jam);
@@ -526,7 +526,7 @@
 
         if (kosong.length) {
           warnDataLibur.textContent = 'Data libur nasional tahun ' + kosong.join(', ') +
-            ' belum tersedia. Tanggal selesai hanya melewati Sabtu & Minggu — periksa manual.';
+            ' belum tersedia. Tanggal selesai hanya melewati Sabtu & Minggu â€” periksa manual.';
           warnDataLibur.classList.remove('hidden');
         } else {
           warnDataLibur.classList.add('hidden');
@@ -677,11 +677,11 @@
       var btnLoc = document.getElementById('btn-use-current-location');
       if (btnLoc && navigator.geolocation) {
         btnLoc.addEventListener('click', function () {
-          btnLoc.innerHTML = '<span class="inline-block animate-spin mr-1">⌛</span> Mendeteksi...';
+          btnLoc.innerHTML = '<span class="inline-block animate-spin mr-1">âŒ›</span> Mendeteksi...';
           navigator.geolocation.getCurrentPosition(function (pos) {
             document.getElementById('lokasi_latitude').value  = pos.coords.latitude.toFixed(7);
             document.getElementById('lokasi_longitude').value = pos.coords.longitude.toFixed(7);
-            btnLoc.innerHTML = '✔ Berhasil';
+            btnLoc.innerHTML = 'âœ” Berhasil';
             setTimeout(function () {
               btnLoc.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5"><circle cx="12" cy="12" r="10"/><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"/></svg> Ambil GPS Saat Ini';
             }, 2000);

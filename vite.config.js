@@ -17,7 +17,7 @@ export default defineConfig({
                     styles: ["normal"],
                     subsets: ["latin"],
                     display: "swap",
-                    preload: true,
+                    preload: [{ weight: 400 }, { weight: 700 }],
                     fallbacks: [],
                     optimizedFallbacks: false,
                 },
