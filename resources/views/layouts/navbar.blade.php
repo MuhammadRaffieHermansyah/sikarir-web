@@ -40,8 +40,8 @@ $navLinks = [
                     Masuk
                 </x-ui.button>
                 <x-ui.button size="sm" href="{{ route('register') }}" class="font-bold">
-                    <x-lucide-user-plus class="size-3.5" />
-                    <span>Daftar</span>
+                    <x-lucide-smartphone class="size-3.5" />
+                    <span>Daftar lewat aplikasi</span>
                 </x-ui.button>
                 @else
                 <x-ui.button size="sm" href="{{ route('dashboard') }}" class="font-bold">
@@ -79,8 +79,8 @@ $navLinks = [
             <div class="flex flex-col gap-2 border-t border-border pt-3 text-sm sm:hidden">
                 @guest
                 <x-ui.button href="{{ route('register') }}" class="w-full font-bold">
-                    <x-lucide-user-plus class="size-4" />
-                    <span>Daftar Akun</span>
+                    <x-lucide-smartphone class="size-4" />
+                    <span>Daftar lewat aplikasi</span>
                 </x-ui.button>
                 <x-ui.button variant="outline" href="{{ route('login') }}" class="w-full font-bold">
                     <x-lucide-log-in class="size-4" />
