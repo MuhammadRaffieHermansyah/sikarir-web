@@ -87,10 +87,15 @@
     <x-ui.sidebar-header
         class="h-[var(--app-header-height)] shrink-0 justify-center border-b border-sidebar-border px-4 py-0 group-data-[collapsible=icon]:px-0">
         <a href="{{ url('/') }}"
-            class="flex items-center gap-2.5 rounded-lg py-1 outline-none transition-colors hover:bg-sidebar-accent/60 focus-visible:ring-2 focus-visible:ring-sidebar-ring group-data-[collapsible=icon]:justify-center">
+            class="flex min-w-0 items-center gap-2.5 rounded-lg py-1 outline-none transition-colors hover:bg-sidebar-accent/60 focus-visible:ring-2 focus-visible:ring-sidebar-ring group-data-[collapsible=icon]:justify-center">
             <x-app-logo class="size-9 shrink-0 group-data-[collapsible=icon]:hidden" role="img" aria-label="siKarir BLK Jember" />
 
             <x-app-logo class="hidden size-8 shrink-0 rounded-lg group-data-[collapsible=icon]:block" role="img" aria-label="siKarir" />
+
+            <div class="min-w-0 leading-none group-data-[collapsible=icon]:hidden">
+                <span class="block truncate text-sm font-black tracking-[-.04em] text-sidebar-foreground transition group-hover:text-primary">siKarir</span>
+                <p class="mt-0.5 whitespace-nowrap text-[9px] font-bold uppercase tracking-[.14em] text-sidebar-foreground/60">UPT BLK JEMBER</p>
+            </div>
         </a>
     </x-ui.sidebar-header>
 
