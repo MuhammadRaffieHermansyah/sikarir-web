@@ -268,21 +268,18 @@
             Tindakan ini akan menghapus data induk peserta, riwayat kelas, dan absensi yang terkait dari database.
           </p>
 
-          <form
-            action="{{ route('pesertas.destroy', $peserta->id_peserta) }}"
-            method="POST"
-            onsubmit="return confirm('Apakah Anda yakin ingin menghapus data peserta ini?')"
-          >
-            @csrf
-            @method('DELETE')
-
-            <x-ui.button type="submit" variant="destructive" class="w-full">
+          <x-ui.button type="submit" form="form-hapus-peserta" variant="destructive" class="w-full">
               <x-lucide-trash-2 />
               Hapus Peserta
             </x-ui.button>
-          </form>
         </x-ui.card-content>
       </x-ui.card>
     </div>
+  </form>
+
+  {{-- Form hapus di luar form simpan: form bersarang membuat Simpan ikut mengirim _method=DELETE. --}}
+  <form id="form-hapus-peserta" action="{{ route('pesertas.destroy', $peserta->id_peserta) }}" method="POST" class="hidden" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data peserta ini?')">
+    @csrf
+    @method('DELETE')
   </form>
 @endsection

@@ -214,21 +214,18 @@
             Tindakan ini akan mencabut hak akses administrator BLK untuk akun pengguna ini. Data pelatihan atau sertifikat yang pernah divalidasi akan tetap tersimpan di riwayat sistem.
           </p>
 
-          <form
-            action="{{ route('admin-blk.destroy', $admin->id_admin) }}"
-            method="POST"
-            onsubmit="return confirm('Apakah Anda yakin ingin menghapus administrator ini?')"
-          >
-            @csrf
-            @method('DELETE')
-
-            <x-ui.button type="submit" variant="destructive" class="w-full">
+          <x-ui.button type="submit" form="form-hapus-admin" variant="destructive" class="w-full">
               <x-lucide-trash-2 />
               Hapus Administrator
             </x-ui.button>
-          </form>
         </x-ui.card-content>
       </x-ui.card>
     </div>
+  </form>
+
+  {{-- Form hapus di luar form simpan: form bersarang membuat Simpan ikut mengirim _method=DELETE. --}}
+  <form id="form-hapus-admin" action="{{ route('admin-blk.destroy', $admin->id_admin) }}" method="POST" class="hidden" onsubmit="return confirm('Apakah Anda yakin ingin menghapus administrator ini?')">
+    @csrf
+    @method('DELETE')
   </form>
 @endsection
