@@ -15,16 +15,6 @@
           Sistem Informasi Karir & Pelatihan Vokasi Balai Latihan Kerja. Monitor operasional pelatihan hingga penerbitan sertifikasi kompetensi.
         </p>
       </div>
-
-      @if (auth()->user()->role === 'admin_blk')
-
-      <x-ui.button href="{{ url('/api/documentation') }}" target="_blank" variant="secondary" class="shrink-0 bg-white text-primary hover:bg-white/90">
-        <x-lucide-file-code />
-        Swagger API Docs
-        <x-lucide-external-link />
-      </x-ui.button>
-
-      @endif
     </div>
 
     <div class="pointer-events-none absolute -bottom-16 -right-16 size-64 rounded-full bg-sikarir-lime/10 blur-3xl"></div>
