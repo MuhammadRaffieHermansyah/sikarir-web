@@ -29,7 +29,7 @@
   @endif
 
   @if (auth()->user()->role === 'admin_blk' && View::exists('components.stat-cards'))
-    <x-stat-cards />
+    <x-stat-cards :stats="$stats" />
   @endif
 
   <x-ui.page-header

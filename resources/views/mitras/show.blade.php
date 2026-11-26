@@ -63,6 +63,10 @@
                 src="{{ Storage::url($mitra->logo_perusahaan) }}"
                 alt="Logo {{ $mitra->nama_perusahaan }}"
                 class="size-full object-cover"
+                width="80"
+                height="80"
+                loading="lazy"
+                decoding="async"
               >
             </div>
             <span class="absolute -bottom-1 -end-1 grid size-5 place-items-center rounded-full border-2 border-card bg-emerald-500">

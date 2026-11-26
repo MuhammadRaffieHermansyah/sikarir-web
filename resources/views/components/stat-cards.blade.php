@@ -1,9 +1,11 @@
+@props(['stats' => []])
+
 @php
-    $totalPeserta = \App\Models\Peserta::count();
-    $totalInstruktur = \App\Models\Instruktur::count();
-    $totalMitra = \App\Models\Mitra::count();
-    $totalPelatihan = \App\Models\DaftarPelatihan::count();
-    $totalSertifikat = \App\Models\Sertifikat::count();
+    $totalPeserta = $stats['peserta'] ?? 0;
+    $totalInstruktur = $stats['instruktur'] ?? 0;
+    $totalMitra = $stats['mitra'] ?? 0;
+    $totalPelatihan = $stats['pelatihan'] ?? 0;
+    $totalSertifikat = $stats['sertifikat'] ?? 0;
 @endphp
 
 <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">

@@ -104,7 +104,7 @@
                 </div>
               </div>
               <p id="hint-tgl-selesai" class="mt-1 hidden text-xs text-muted-foreground">
-                Dihitung otomatis — melewati Sabtu, Minggu &amp; libur nasional
+                Dihitung otomatis â€” melewati Sabtu, Minggu &amp; libur nasional
               </p>
               <x-ui.field-error :messages="$errors->get('tanggal_selesai')" />
             </x-ui.field>
@@ -381,7 +381,7 @@
         applyDurasiJam();
       }
 
-      // Terapkan durasiJamMenit ke jam_mulai saat ini → update jam_selesai
+      // Terapkan durasiJamMenit ke jam_mulai saat ini â†’ update jam_selesai
       function applyDurasiJam() {
         if (!durasiJamMenit) return;
         var parts      = (jamMulai.value || '07:00').split(':');
@@ -392,7 +392,7 @@
         jamSelesai.value = String(endH).padStart(2, '0') + ':' + String(endM).padStart(2, '0');
       }
 
-      // ---- 3. Pilih program → baca durasi ----
+      // ---- 3. Pilih program â†’ baca durasi ----
       selectPelatihan.addEventListener('change', function () {
         var opt  = this.options[this.selectedIndex];
         var hari = +(opt.getAttribute('data-hari') || 0);
@@ -402,7 +402,7 @@
           jumlahHariAktif = hari;
           jumlahJamTotal  = jam;
           var jph = (jam / hari % 1 === 0) ? (jam / hari) : (jam / hari).toFixed(1);
-          infoDurasiText.textContent = 'Durasi: ' + hari + ' Hari Kerja / ' + jam + ' Total Jam (' + jph + ' jam/hari) — Jam & tanggal selesai dihitung otomatis.';
+          infoDurasiText.textContent = 'Durasi: ' + hari + ' Hari Kerja / ' + jam + ' Total Jam (' + jph + ' jam/hari) â€” Jam & tanggal selesai dihitung otomatis.';
           infoDurasi.classList.remove('hidden');
           infoDurasi.classList.add('flex');
           hitungJamSelesai(hari, jam);
@@ -457,7 +457,7 @@
 
         if (kosong.length) {
           warnDataLibur.textContent = 'Data libur nasional tahun ' + kosong.join(', ') +
-            ' belum tersedia. Tanggal selesai hanya melewati Sabtu & Minggu — periksa manual.';
+            ' belum tersedia. Tanggal selesai hanya melewati Sabtu & Minggu â€” periksa manual.';
           warnDataLibur.classList.remove('hidden');
         } else {
           warnDataLibur.classList.add('hidden');

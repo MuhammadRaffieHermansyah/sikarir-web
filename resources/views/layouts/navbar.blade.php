@@ -8,12 +8,12 @@ $navLinks = [
 ];
 @endphp
 
-<header id="siteHeader" class="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-xl">
+<header id="siteHeader" class="sticky top-0 z-50 border-b border-border bg-background">
     <div class="site-container flex items-center justify-between gap-3 py-3 sm:gap-6">
 
         <a href="{{ url('/') }}" class="group flex min-w-0 shrink-0 items-center gap-2.5 sm:gap-3">
-            <span class="grid size-10 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm transition group-hover:scale-105">
-                <x-lucide-sparkles class="size-5" />
+            <span class="grid size-10 shrink-0 place-items-center text-primary-foreground transition group-hover:scale-105">
+                <x-app-logo class="size-10" role="img" aria-label="Logo siKarir" />
             </span>
             <div class="min-w-0 leading-none">
                 <span class="block text-base font-black tracking-[-.04em] text-foreground transition group-hover:text-primary">siKarir</span>
