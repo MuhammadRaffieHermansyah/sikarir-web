@@ -215,7 +215,7 @@
 
       <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-reveal-group>
         @foreach ([
-            ['icon' => 'user-round-check', 'title' => 'Pendaftaran online', 'desc' => 'Buat akun siKarir, lengkapi biodata dan pas foto, lalu pilih program pelatihan yang sedang dibuka.', 'href' => auth()->check() ? $dashboardUrl : route('register')],
+            ['icon' => 'user-round-check', 'title' => 'Pendaftaran lewat aplikasi', 'desc' => 'Pasang aplikasi siKarir di HP, buat akun, lengkapi biodata dan pas foto, lalu pilih program pelatihan yang sedang dibuka.', 'href' => auth()->check() ? $dashboardUrl : route('register')],
             ['icon' => 'book-open', 'title' => 'Program pelatihan kejuruan', 'desc' => 'Pelatihan berbasis kompetensi di workshop UPT BLK Jember, lengkap dengan jadwal, instruktur, dan silabus.', 'href' => route('pelatihan.katalog')],
             ['icon' => 'truck', 'title' => 'Mobile Training Unit (MTU)', 'desc' => 'Pelatihan keliling ke desa binaan. Masyarakat mengajukan kejuruan, lalu BLK melakukan survei lokasi.', 'href' => null],
             ['icon' => 'badge-check', 'title' => 'Uji kompetensi & sertifikasi', 'desc' => 'Peserta pelatihan difasilitasi uji kompetensi oleh lembaga sertifikasi profesi untuk memperoleh sertifikat.', 'href' => null],
@@ -321,7 +321,7 @@
 
                 @guest
                   <x-ui.button href="{{ route('register') }}" size="xs" class="flex-1">
-                    Daftar
+                    Daftar lewat aplikasi
                   </x-ui.button>
                 @else
                   <x-ui.button href="{{ $dashboardUrl }}" size="xs" class="flex-1">
@@ -482,7 +482,7 @@
 
     <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4" data-reveal-group>
       @foreach ([
-          ['title' => 'Buat akun', 'desc' => 'Daftarkan akun siKarir menggunakan NIK yang valid dan lengkapi profil.'],
+          ['title' => 'Pasang aplikasi', 'desc' => 'Pasang aplikasi siKarir di HP, daftar dengan NIK yang valid, dan lengkapi profil.'],
           ['title' => 'Pilih kejuruan', 'desc' => 'Cari program aktif yang sesuai minat, jadwal, dan kuota.'],
           ['title' => 'Ikuti seleksi', 'desc' => 'Jalani tes tertulis online dan verifikasi wawancara di workshop BLK.'],
           ['title' => 'Belajar & sertifikasi', 'desc' => 'Ikuti pelatihan hingga uji kompetensi resmi BNSP.'],
@@ -509,7 +509,7 @@
     <div class="mt-8 divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card" data-reveal>
       @foreach ([
           ['q' => 'Apakah pelatihan benar-benar gratis?', 'a' => 'Program reguler dibiayai APBD dan APBN, sehingga peserta tidak dipungut biaya pelatihan.'],
-          ['q' => 'Apa saja syarat untuk mendaftar?', 'a' => 'Buat akun siKarir dengan NIK yang valid, lengkapi profil, lalu ikuti tes tertulis online dan wawancara di workshop BLK.'],
+          ['q' => 'Apa saja syarat untuk mendaftar?', 'a' => 'Daftar lewat aplikasi siKarir dengan NIK yang valid, lengkapi profil, lalu ikuti tes tertulis online dan wawancara di workshop BLK.'],
           ['q' => 'Bagaimana cara mengecek keaslian sertifikat?', 'a' => 'Gunakan layanan verifikasi sertifikat yang tersedia di portal siKarir.'],
           ['q' => 'Apakah lowongan kerja hanya untuk alumni BLK?', 'a' => 'Tidak. Bursa kerja terbuka bagi alumni vokasi maupun pencari kerja umum.'],
       ] as $i => $faq)
@@ -554,7 +554,7 @@
           @guest
             <h2 class="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">Siap mulai langkah barumu?</h2>
             <p class="mt-3 text-sm leading-relaxed text-primary-foreground/75">
-              Daftar akun siKarir, temukan program yang cocok, dan siapkan diri untuk peluang berikutnya.
+              Daftar lewat aplikasi siKarir, temukan program yang cocok, dan siapkan diri untuk peluang berikutnya.
             </p>
           @else
             <h2 class="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">Lanjutkan langkahmu.</h2>
@@ -566,7 +566,7 @@
 
         @guest
           <x-ui.button href="{{ route('register') }}" size="lg" class="shrink-0 bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
-            Buat akun siKarir
+            Daftar lewat aplikasi
             <x-lucide-arrow-up-right />
           </x-ui.button>
         @else

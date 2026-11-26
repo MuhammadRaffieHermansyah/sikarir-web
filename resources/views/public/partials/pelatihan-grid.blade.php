@@ -39,7 +39,7 @@
 
     <div class="flex gap-2 px-5 pb-5">
       <x-ui.button href="{{ route('register') }}" class="w-full bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
-        Daftar <x-lucide-arrow-right />
+        <x-lucide-smartphone /> Daftar lewat aplikasi
       </x-ui.button>
     </div>
   </x-ui.card>

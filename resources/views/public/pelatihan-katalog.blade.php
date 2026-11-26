@@ -182,7 +182,7 @@
       <div class="grid gap-3 text-xs md:grid-cols-2">
         @foreach ([
             ['title' => 'Pilih program yang dibuka', 'desc' => 'Periksa status pendaftaran, tanggal, dan kuota pada katalog pelatihan.'],
-            ['title' => 'Buat atau masuk akun', 'desc' => 'Gunakan akun siKarir untuk melanjutkan pendaftaran program yang tersedia.'],
+            ['title' => 'Daftar lewat aplikasi', 'desc' => 'Pendaftaran program dilakukan di aplikasi siKarir dengan akun peserta.'],
             ['title' => 'Lengkapi data sesuai pengumuman', 'desc' => 'Siapkan berkas hanya sesuai syarat yang dicantumkan untuk program pilihan.'],
             ['title' => 'Ikuti tahapan seleksi', 'desc' => 'Seleksi atau verifikasi hanya dilakukan jika tercantum pada pengumuman program.'],
             ['title' => 'Pantau pengumuman', 'desc' => 'Jadwal dan hasil seleksi mengikuti informasi resmi dari penyelenggara.'],
@@ -207,8 +207,8 @@
         <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
           @foreach ([
               ['no' => '1', 'title' => 'Pilih Program', 'desc' => 'Pilih program dengan jadwal pendaftaran terbuka.'],
-              ['no' => '2', 'title' => 'Masuk Akun', 'desc' => 'Daftar atau masuk ke siKarir untuk melanjutkan.'],
-              ['no' => '3', 'title' => 'Daftar', 'desc' => 'Lengkapi data yang diminta pada program pilihan.'],
+              ['no' => '2', 'title' => 'Pasang Aplikasi', 'desc' => 'Daftar atau masuk di aplikasi siKarir.'],
+              ['no' => '3', 'title' => 'Daftar Program', 'desc' => 'Pilih program di aplikasi dan lengkapi data yang diminta.'],
               ['no' => '4', 'title' => 'Pantau Status', 'desc' => 'Ikuti pengumuman dari penyelenggara program.'],
           ] as $step)
             <div class="space-y-1 rounded-xl border border-border bg-muted/40 p-3">
