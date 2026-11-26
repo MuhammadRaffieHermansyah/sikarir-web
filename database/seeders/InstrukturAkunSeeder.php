@@ -10,13 +10,17 @@ use Illuminate\Support\Facades\Hash;
 
 class InstrukturAkunSeeder extends Seeder
 {
+    /** Instruktur yang ditautkan ke akun demo instruktur@sikarir.com. */
+    public const NAMA_INSTRUKTUR_DEMO = 'Dedi Susanto';
+
     /**
-     * Buat akun demo instruktur (instruktur@sikarir.com), tautkan ke instruktur pertama,
-     * lalu isi contoh modul & materi pada jadwal yang ia ampu.
+     * Buat akun demo instruktur (instruktur@sikarir.com), tautkan ke instruktur demo,
+     * lalu isi contoh modul & materi pada jadwal yang ia ampu (bila jadwal sudah ada).
      */
     public function run(): void
     {
-        $instruktur = Instruktur::query()->orderBy('id')->first();
+        $instruktur = Instruktur::where('nama', self::NAMA_INSTRUKTUR_DEMO)->first()
+            ?? Instruktur::query()->orderBy('id')->first();
 
         if ($instruktur === null) {
             return;
@@ -32,7 +36,10 @@ class InstrukturAkunSeeder extends Seeder
 
         $instruktur->update(['id_user' => $user->id]);
 
-        $jadwal = JadwalPelatihan::where('id_instruktur', $instruktur->id)->orderBy('id_jadwal')->first();
+        $jadwal = JadwalPelatihan::where('id_instruktur', $instruktur->id)
+            ->orderByRaw("CASE WHEN status = 'berlangsung' THEN 0 ELSE 1 END")
+            ->orderBy('id_jadwal')
+            ->first();
 
         if ($jadwal === null) {
             return;

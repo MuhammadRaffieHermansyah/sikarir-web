@@ -15,6 +15,7 @@ use App\Models\Mitra;
 use App\Models\Peserta;
 use App\Models\RuanganWorkshop;
 use App\Models\Sertifikat;
+use App\Models\SesiPresensi;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
@@ -33,6 +34,9 @@ class DatabaseSeeder extends Seeder
             DurasiPelatihanSeeder::class,
             InstrukturSeeder::class,
             RuanganWorkshopSeeder::class,
+            // Akun instruktur@sikarir.com ditautkan sejak awal agar seluruh
+            // pelatihan & jadwal miliknya langsung terhubung ke akun tersebut.
+            InstrukturAkunSeeder::class,
         ]);
 
         $durations = DurasiPelatihan::all();
@@ -76,7 +80,7 @@ class DatabaseSeeder extends Seeder
                 'nama' => 'HRD PT Midtrans Indonesia',
                 'nama_perusahaan' => 'PT Midtrans Indonesia',
                 'jenis_mitra' => 'Perusahaan Nasional',
-                'logo_perusahaan' => 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&auto=format&fit=crop&q=80',
+                'logo_perusahaan' => null,
                 'provinsi' => 'DKI Jakarta',
                 'kota' => 'Jakarta Selatan',
                 'alamat' => 'MidPlaza 2, Lt. 4, Jl. Jend. Sudirman Kav. 10-11',
@@ -84,6 +88,8 @@ class DatabaseSeeder extends Seeder
                 'no_izin' => 'SK-MITRA-001/BLK/2026',
                 'jabatan_pic' => 'Head of Talent Acquisition',
                 'bidang_usaha' => 'Financial Technology & Software Development',
+                'is_verified' => true,
+                'verified_at' => now(),
             ]
         );
 
@@ -92,28 +98,28 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'PT Astra Daihatsu Motor',
                 'email' => 'recruitment@daihatsu.astra.co.id',
-                'logo' => 'https://images.unsplash.com/photo-1549923746-c502d488b3ea?w=200&auto=format&fit=crop&q=80',
+                'logo' => null,
                 'kota' => 'Jakarta Utara',
                 'bidang' => 'Manufaktur Otomotif & Perakitan Kendaraan',
             ],
             [
                 'name' => 'PT Kalbe Farma Tbk',
                 'email' => 'hr@kalbe.co.id',
-                'logo' => 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=200&auto=format&fit=crop&q=80',
+                'logo' => null,
                 'kota' => 'Surabaya',
                 'bidang' => 'Farmasi, Logistik & Distribusi Medis',
             ],
             [
                 'name' => 'PT Telkom Indonesia (Persero) Tbk',
                 'email' => 'talent@telkom.co.id',
-                'logo' => 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=200&auto=format&fit=crop&q=80',
+                'logo' => null,
                 'kota' => 'Bandung',
                 'bidang' => 'Telekomunikasi, Cloud & Jaringan Digital',
             ],
             [
                 'name' => 'PT Komatsu Indonesia',
                 'email' => 'career@komatsu.co.id',
-                'logo' => 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=200&auto=format&fit=crop&q=80',
+                'logo' => null,
                 'kota' => 'Bekasi',
                 'bidang' => 'Alat Berat & Fabrikasi Pengelasan',
             ],
@@ -142,6 +148,8 @@ class DatabaseSeeder extends Seeder
                     'no_izin' => 'SK-MITRA-'.fake()->numerify('###').'/2026',
                     'jabatan_pic' => 'HR Manager',
                     'bidang_usaha' => $m['bidang'],
+                    'is_verified' => true,
+                    'verified_at' => now(),
                 ]
             );
             $mitras->push($mitraObj);
@@ -205,28 +213,51 @@ class DatabaseSeeder extends Seeder
         $pelatihanData = [
             [
                 'nama' => 'Desain Grafis & UI/UX Design',
+                'instruktur' => InstrukturAkunSeeder::NAMA_INSTRUKTUR_DEMO,
                 'deskripsi' => 'Penguasaan prinsip tata letak, typography, Adobe Illustrator, Figma, dan pembuatan design system siap industri.',
                 'kuota' => 20,
             ],
             [
                 'nama' => 'Junior Web & Mobile Developer',
+                'instruktur' => InstrukturAkunSeeder::NAMA_INSTRUKTUR_DEMO,
                 'deskripsi' => 'Pemrograman web modern dengan HTML, Tailwind CSS, JavaScript, Laravel REST API, dan Flutter dasar.',
                 'kuota' => 25,
             ],
             [
                 'nama' => 'Teknik Las Industri 3G/4G SMAW',
+                'instruktur' => 'Agus Prasetyo',
                 'deskripsi' => 'Spesialisasi pengelasan pelat posisi 3G & 4G bersertifikasi BNSP dan uji standar ASME fabrikasi berat.',
                 'kuota' => 16,
             ],
             [
                 'nama' => 'Teknisi Kendaraan Listrik (EV) & Injeksi',
+                'instruktur' => 'Hendra Gunawan',
                 'deskripsi' => 'Arsitektur baterai high-voltage motor & mobil listrik, kalibrasi ECU injeksi cerdas, dan diagnosa scanner.',
                 'kuota' => 20,
             ],
             [
                 'nama' => 'Digital Marketing & Social Media Specialist',
+                'instruktur' => 'Nurul Hidayah',
                 'deskripsi' => 'Penyusunan kampanye iklan Google Ads, Meta Ads, SEO on-page/off-page, dan analisis performa metrik digital.',
                 'kuota' => 30,
+            ],
+            [
+                'nama' => 'Administrasi Perkantoran & Akuntansi Dasar',
+                'instruktur' => 'Ahmad Fauzi',
+                'deskripsi' => 'Pengelolaan dokumen, Microsoft Office (Word, Excel, PowerPoint), korespondensi bisnis, dan pembukuan akuntansi dasar.',
+                'kuota' => 24,
+            ],
+            [
+                'nama' => 'Teknisi Jaringan Komputer & Fiber Optik',
+                'instruktur' => 'Siti Aminah',
+                'deskripsi' => 'Instalasi LAN/WAN, konfigurasi router Mikrotik, crimping kabel UTP, dan splicing fiber optik untuk jaringan internet.',
+                'kuota' => 20,
+            ],
+            [
+                'nama' => 'Teknisi Otomotif Kendaraan Ringan',
+                'instruktur' => 'Bambang Hermanto',
+                'deskripsi' => 'Servis berkala, tune-up mesin bensin, sistem rem & kelistrikan bodi, serta diagnosa kerusakan kendaraan ringan.',
+                'kuota' => 18,
             ],
         ];
 
@@ -236,6 +267,7 @@ class DatabaseSeeder extends Seeder
             $pelatihans->push(
                 DaftarPelatihan::create([
                     'id_admin' => $demoAdmin->id_admin,
+                    'id_instruktur' => ($instrukturs->firstWhere('nama', $item['instruktur']) ?? $instrukturs->first())->id,
                     'nama_pelatihan' => $item['nama'],
                     'deskripsi_pelatihan' => $item['deskripsi'],
                     'id_durasi' => $durasiItem->id_durasi,
@@ -258,7 +290,7 @@ class DatabaseSeeder extends Seeder
             'tanggal_selesai' => Carbon::now()->addDays(20)->format('Y-m-d'),
             'jam_mulai' => '08:00:00',
             'jam_selesai' => '15:00:00',
-            'id_instruktur' => $instrukturs->first()->id,
+            'id_instruktur' => $pelatihans[0]->id_instruktur,
             'id_ruangan_workshop' => $ruanganWorkshops->first()->id,
             'lokasi_latitude' => -8.1763,
             'lokasi_longitude' => 113.7007,
@@ -274,7 +306,7 @@ class DatabaseSeeder extends Seeder
             'tanggal_selesai' => Carbon::now()->subDays(15)->format('Y-m-d'),
             'jam_mulai' => '08:00:00',
             'jam_selesai' => '16:00:00',
-            'id_instruktur' => $instrukturs[1]->id ?? $instrukturs->first()->id,
+            'id_instruktur' => $pelatihans[1]->id_instruktur,
             'id_ruangan_workshop' => $ruanganWorkshops[1]->id ?? $ruanganWorkshops->first()->id,
             'lokasi_latitude' => -8.1763,
             'lokasi_longitude' => 113.7007,
@@ -292,7 +324,7 @@ class DatabaseSeeder extends Seeder
                     'tanggal_selesai' => Carbon::now()->addDays(45 + ($i * 7))->format('Y-m-d'),
                     'jam_mulai' => '08:30:00',
                     'jam_selesai' => '15:30:00',
-                    'id_instruktur' => $instrukturs[$i % $instrukturs->count()]->id,
+                    'id_instruktur' => $pelatihans[$i]->id_instruktur,
                     'id_ruangan_workshop' => $ruanganWorkshops[$i % $ruanganWorkshops->count()]->id,
                     'lokasi_latitude' => -8.1763,
                     'lokasi_longitude' => 113.7007,
@@ -343,42 +375,55 @@ class DatabaseSeeder extends Seeder
         | 6. RIWAYAT ABSENSI DENGAN GPS
         |--------------------------------------------------------------------------
         */
-        // Buat 5 hari riwayat absensi untuk peserta demo di kelas aktif
-        for ($day = 5; $day >= 1; $day--) {
-            $tgl = Carbon::now()->subDays($day)->format('Y-m-d');
-            Absen::firstOrCreate(
+        // Sesi presensi pertemuan 1-5 (sudah ditutup) milik instruktur pengampu,
+        // lalu absensi peserta kelas aktif ditautkan ke sesi tersebut.
+        // Hari ini sengaja dikosongkan: instruktur membuat & membuka sesi
+        // pertemuan 6, lalu peserta melakukan presensi dari akunnya.
+        $pesertaKelasAktif = KelasPelatihan::where('id_jadwal', $jadwalAktif->id_jadwal)->pluck('id_peserta');
+
+        for ($pertemuan = 1; $pertemuan <= 5; $pertemuan++) {
+            $tanggalSesi = Carbon::today()->subDays(6 - $pertemuan);
+
+            $sesi = SesiPresensi::firstOrCreate(
                 [
                     'id_jadwal' => $jadwalAktif->id_jadwal,
-                    'id_peserta' => $demoPeserta->id_peserta,
-                    'tanggal' => $tgl,
+                    'pertemuan_ke' => $pertemuan,
                 ],
                 [
-                    'jam_hadir' => '07:5'.rand(2, 8).':00',
-                    'status_kehadiran' => 'hadir',
-                    'latitude' => -8.1763120,
-                    'longitude' => 113.7007150,
-                    'jarak_meter' => rand(10, 35),
-                    'keterangan' => 'Presensi GPS tervalidasi di Lab Komputer BLK',
+                    'id_instruktur' => $jadwalAktif->id_instruktur,
+                    'tanggal' => $tanggalSesi->format('Y-m-d'),
+                    'jam_mulai' => '08:00',
+                    'jam_selesai' => '10:00',
+                    'lokasi_latitude' => -8.1763,
+                    'lokasi_longitude' => 113.7007,
+                    'radius_meter' => 100,
+                    'absen_dibuka' => false,
                 ]
             );
-        }
 
-        // Absensi hari ini untuk peserta demo
-        Absen::firstOrCreate(
-            [
-                'id_jadwal' => $jadwalAktif->id_jadwal,
-                'id_peserta' => $demoPeserta->id_peserta,
-                'tanggal' => Carbon::today()->format('Y-m-d'),
-            ],
-            [
-                'jam_hadir' => '07:58:30',
-                'status_kehadiran' => 'hadir',
-                'latitude' => -8.1762950,
-                'longitude' => 113.7006980,
-                'jarak_meter' => 18.5,
-                'keterangan' => 'Presensi hadir tepat waktu via SIKARIR Mobile',
-            ]
-        );
+            foreach ($pesertaKelasAktif as $idPeserta) {
+                $isDemoPeserta = $idPeserta === $demoPeserta->id_peserta;
+                $statusKehadiran = $isDemoPeserta ? 'hadir' : fake()->randomElement(['hadir', 'hadir', 'hadir', 'izin', 'sakit']);
+                $isHadir = $statusKehadiran === 'hadir';
+
+                Absen::firstOrCreate(
+                    [
+                        'id_jadwal' => $jadwalAktif->id_jadwal,
+                        'id_peserta' => $idPeserta,
+                        'tanggal' => $sesi->tanggal->format('Y-m-d'),
+                    ],
+                    [
+                        'id_sesi' => $isHadir ? $sesi->id_sesi : null,
+                        'jam_hadir' => $isHadir ? '07:5'.rand(2, 8).':00' : null,
+                        'status_kehadiran' => $statusKehadiran,
+                        'latitude' => $isHadir ? -8.1763120 : null,
+                        'longitude' => $isHadir ? 113.7007150 : null,
+                        'jarak_meter' => $isHadir ? rand(10, 35) : null,
+                        'keterangan' => $isHadir ? 'Presensi GPS tervalidasi di Lab Komputer BLK' : 'Pengajuan '.$statusKehadiran.' peserta',
+                    ]
+                );
+            }
+        }
 
         /*
         |--------------------------------------------------------------------------
@@ -398,7 +443,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // Akun demo instruktur + contoh modul & materi
+        // Contoh modul & materi untuk kelas yang diampu instruktur demo
         $this->call(InstrukturAkunSeeder::class);
 
         /*
@@ -441,6 +486,27 @@ class DatabaseSeeder extends Seeder
                 'lokasi' => 'Bekasi, Jawa Barat',
                 'deskripsi' => 'Pengerjaan pengelasan struktur baja alat berat berstandar ASME dan ISO 9001 di workshop manufaktur Komatsu.',
                 'kualifikasi' => 'Lulusan Teknik Las BLK, lolos uji visual weld test posisi 3G, siap bekerja shift dan penempatan Bekasi.',
+            ],
+            [
+                'id_mitra' => $demoMitra->id_mitra,
+                'judul' => 'Customer Service Payment Support',
+                'lokasi' => 'Jakarta Selatan (Onsite)',
+                'deskripsi' => 'Menangani pertanyaan merchant melalui email dan live chat serta mengeskalasi kendala transaksi ke tim teknis.',
+                'kualifikasi' => 'Lulusan SMA/SMK/D3 semua jurusan, komunikasi baik, teliti, dan bersedia bekerja dengan sistem shift.',
+            ],
+            [
+                'id_mitra' => $mitras[1]->id_mitra,
+                'judul' => 'Teknisi Otomotif Quality Control',
+                'lokasi' => 'Karawang, Jawa Barat',
+                'deskripsi' => 'Inspeksi kualitas hasil perakitan kendaraan, pengujian fungsi kelistrikan, dan pelaporan temuan ke lini produksi.',
+                'kualifikasi' => 'Lulusan Teknik Kendaraan Ringan BLK/SMK, memahami standar QC, dan siap penempatan di Karawang.',
+            ],
+            [
+                'id_mitra' => $mitras[2]->id_mitra,
+                'judul' => 'Digital Marketing Officer',
+                'lokasi' => 'Surabaya (Hybrid)',
+                'deskripsi' => 'Mengelola kampanye media sosial dan iklan digital untuk produk kesehatan serta melaporkan performa mingguan.',
+                'kualifikasi' => 'Alumni pelatihan Digital Marketing BLK, memahami Meta Ads dan Google Analytics, serta kreatif membuat konten.',
             ],
         ];
 
@@ -513,5 +579,8 @@ class DatabaseSeeder extends Seeder
                 );
             }
         }
+
+        // Gambar demo (pelatihan, lowongan, logo mitra, foto) -> storage publik
+        $this->call(GambarDemoSeeder::class);
     }
 }
