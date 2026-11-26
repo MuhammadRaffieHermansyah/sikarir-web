@@ -17,8 +17,9 @@ test('admin_blk can access admin only routes', function () {
         ->assertSee('Navigasi halaman');
 });
 
-test('peserta is redirected to dashboard with error when accessing admin only route', function () {
-    $user = User::factory()->create(['role' => 'peserta']);
+test('mitra is redirected to dashboard with error when accessing admin only route', function () {
+    $user = User::factory()->mitra()->create();
+    Mitra::factory()->create(['id_user' => $user->id, 'is_verified' => true]);
 
     $this->actingAs($user)
         ->get('/mitras')
@@ -45,26 +46,23 @@ test('unverified mitra is redirected to dashboard when accessing lowongan routes
         ->assertSessionHas('error', 'Akun mitra Anda masih menunggu verifikasi admin.');
 });
 
-test('peserta is redirected to dashboard when accessing lowongan routes', function () {
+test('peserta is logged out from web when accessing lowongan routes', function () {
     $user = User::factory()->create(['role' => 'peserta']);
 
     $this->actingAs($user)
         ->get('/lowongan')
-        ->assertRedirect(route('dashboard'))
-        ->assertSessionHas('error');
+        ->assertRedirect(route('login'));
+
+    $this->assertGuest();
 });
 
-test('peserta can access absen and sertifikat routes', function () {
-    $user = User::factory()->create(['role' => 'peserta']);
+test('peserta can not open absen and sertifikat pages on web', function (string $url) {
+    $this->actingAs(User::factory()->create(['role' => 'peserta']))
+        ->get($url)
+        ->assertRedirect(route('login'));
 
-    $this->actingAs($user)
-        ->get('/absen')
-        ->assertOk();
-
-    $this->actingAs($user)
-        ->get('/sertifikat')
-        ->assertOk();
-});
+    $this->assertGuest();
+})->with(['/absen', '/sertifikat']);
 
 test('mitra is redirected to dashboard when accessing absen routes', function () {
     $user = User::factory()->create(['role' => 'mitra']);

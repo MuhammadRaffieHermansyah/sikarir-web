@@ -64,7 +64,7 @@ test('selain admin tidak bisa mereset sandi orang lain', function () {
     $pesertaLain = Peserta::factory()->create();
     $hashLama = $pesertaLain->user->password;
 
-    $this->actingAs($this->peserta->user)
+    $this->actingAs(User::factory()->mitra()->create())
         ->patch(route('users.reset-password', $pesertaLain->user))
         ->assertRedirect(route('dashboard'));
 

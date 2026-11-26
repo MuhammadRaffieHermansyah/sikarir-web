@@ -101,6 +101,14 @@ class User extends Authenticatable
         return $profile;
     }
 
+    /**
+     * Website hanya dipakai admin BLK dan mitra; peserta dan instruktur memakai aplikasi mobile.
+     */
+    public function canAccessWeb(): bool
+    {
+        return in_array($this->role, ['admin_blk', 'mitra'], true);
+    }
+
     public function peserta()
     {
         return $this->hasOne(Peserta::class, 'id_user');

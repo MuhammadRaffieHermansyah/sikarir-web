@@ -4,8 +4,8 @@ use App\Models\Mitra;
 use App\Models\Peserta;
 use App\Models\User;
 
-test('registrasi peserta lewat web otomatis membuat profil peserta', function () {
-    $this->post('/register', [
+test('registrasi peserta lewat aplikasi otomatis membuat profil peserta', function () {
+    $this->postJson('/api/auth/register', [
         'name' => 'Siti Aminah',
         'email' => 'siti@example.com',
         'password' => 'password-kuat-123',
