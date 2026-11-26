@@ -15,10 +15,9 @@ class Absen extends Model
     protected $primaryKey = 'id_absen';
 
     protected $fillable = [
-        'id_jadwal', 'id_peserta', 'tanggal', 'jam_hadir',
+        'id_jadwal', 'id_sesi', 'id_peserta', 'tanggal', 'jam_hadir',
         'status_kehadiran', 'keterangan',
         'latitude', 'longitude', 'jarak_meter',
-        'jam_keluar', 'latitude_keluar', 'longitude_keluar', 'jarak_keluar_meter',
         'lampiran',
     ];
 
@@ -27,9 +26,6 @@ class Absen extends Model
         'latitude' => 'decimal:7',
         'longitude' => 'decimal:7',
         'jarak_meter' => 'decimal:2',
-        'latitude_keluar' => 'decimal:7',
-        'longitude_keluar' => 'decimal:7',
-        'jarak_keluar_meter' => 'decimal:2',
     ];
 
     /**

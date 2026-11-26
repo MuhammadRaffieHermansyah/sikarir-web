@@ -42,7 +42,6 @@ function absenHariIni(object $test, array $overrides = []): Absen
         'tanggal' => '2026-11-24',
         'jam_hadir' => '08:00',
         'status_kehadiran' => 'hadir',
-        'jam_keluar' => null,
         ...$overrides,
     ]);
 }
@@ -66,91 +65,6 @@ function postForm(object $test, string $uri, array $data): TestResponse
 {
     return $test->post($uri, $data, ['Accept' => 'application/json']);
 }
-
-describe('presensi pulang', function () {
-    it('mencatat jam keluar dari waktu server beserta jarak GPS', function () {
-        $absen = absenHariIni($this);
-
-        $this->postJson("/api/absen/{$absen->id_absen}/pulang", [
-            'latitude' => PUSAT_LAT + 0.0003, // ± 33 m dari pusat
-            'longitude' => PUSAT_LNG,
-        ])
-            ->assertOk()
-            ->assertJsonPath('data.id_absen', $absen->id_absen);
-
-        $absen->refresh();
-        expect($absen->jam_keluar)->toStartWith('09:30')
-            ->and((float) $absen->jarak_keluar_meter)->toBeGreaterThan(20)->toBeLessThan(50)
-            ->and((float) $absen->latitude_keluar)->toBe(round(PUSAT_LAT + 0.0003, 7));
-    });
-
-    it('menolak presensi pulang di luar radius lokasi', function () {
-        $absen = absenHariIni($this);
-
-        $this->postJson("/api/absen/{$absen->id_absen}/pulang", [
-            'latitude' => PUSAT_LAT + 0.01, // ± 1,1 km
-            'longitude' => PUSAT_LNG,
-        ])
-            ->assertForbidden()
-            ->assertJsonPath('radius_meter', 100);
-
-        expect($absen->fresh()->jam_keluar)->toBeNull();
-    });
-
-    it('menolak presensi pulang yang sudah tercatat', function () {
-        $absen = absenHariIni($this, ['jam_keluar' => '16:00']);
-
-        $this->postJson("/api/absen/{$absen->id_absen}/pulang", [
-            'latitude' => PUSAT_LAT,
-            'longitude' => PUSAT_LNG,
-        ])->assertUnprocessable();
-
-        expect($absen->fresh()->jam_keluar)->toStartWith('16:00');
-    });
-
-    it('menolak presensi pulang untuk status selain hadir', function () {
-        $absen = absenHariIni($this, ['status_kehadiran' => 'izin']);
-
-        $this->postJson("/api/absen/{$absen->id_absen}/pulang", [
-            'latitude' => PUSAT_LAT,
-            'longitude' => PUSAT_LNG,
-        ])->assertUnprocessable();
-    });
-
-    it('menolak presensi pulang untuk catatan hari lain', function () {
-        $absen = absenHariIni($this, ['tanggal' => '2026-11-23']);
-
-        $this->postJson("/api/absen/{$absen->id_absen}/pulang", [
-            'latitude' => PUSAT_LAT,
-            'longitude' => PUSAT_LNG,
-        ])->assertUnprocessable();
-    });
-
-    it('menolak presensi milik peserta lain', function () {
-        $absenLain = Absen::factory()->create([
-            'id_peserta' => Peserta::factory()->create()->id_peserta,
-            'id_jadwal' => $this->jadwal->id_jadwal,
-            'tanggal' => '2026-11-24',
-            'status_kehadiran' => 'hadir',
-            'jam_keluar' => null,
-        ]);
-
-        $this->postJson("/api/absen/{$absenLain->id_absen}/pulang", [
-            'latitude' => PUSAT_LAT,
-            'longitude' => PUSAT_LNG,
-        ])->assertForbidden();
-
-        expect($absenLain->fresh()->jam_keluar)->toBeNull();
-    });
-
-    it('mewajibkan koordinat GPS', function () {
-        $absen = absenHariIni($this);
-
-        $this->postJson("/api/absen/{$absen->id_absen}/pulang", [])
-            ->assertUnprocessable()
-            ->assertJsonValidationErrors(['latitude', 'longitude']);
-    });
-});
 
 describe('lampiran izin/sakit', function () {
     it('menyimpan lampiran dan mengembalikan lampiran_url', function () {

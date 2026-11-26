@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\ModulController;
 use App\Http\Controllers\Api\PesertaController;
 use App\Http\Controllers\Api\ProfilePasswordController;
 use App\Http\Controllers\Api\SertifikatController;
+use App\Http\Controllers\Api\SesiPresensiController;
 use App\Http\Controllers\Api\SwaggerTestController;
 use Illuminate\Support\Facades\Route;
 
@@ -69,6 +70,13 @@ Route::name('api.')->group(function () {
         Route::post('modul/{idModul}/materi', [MateriController::class, 'store'])->whereNumber('idModul')->name('modul.materi.store');
         Route::delete('materi/{idMateri}', [MateriController::class, 'destroy'])->whereNumber('idMateri')->name('materi.destroy');
 
+        // Sesi presensi dikontrol instruktur; `aktif` dipakai peserta.
+        Route::get('kelas-pelatihan/{idKelas}/sesi-presensi/aktif', [SesiPresensiController::class, 'aktif'])->whereNumber('idKelas')->name('kelas.sesi-presensi.aktif');
+        Route::get('kelas-pelatihan/{idKelas}/sesi-presensi', [SesiPresensiController::class, 'index'])->whereNumber('idKelas')->name('kelas.sesi-presensi.index');
+        Route::post('kelas-pelatihan/{idKelas}/sesi-presensi', [SesiPresensiController::class, 'store'])->whereNumber('idKelas')->name('kelas.sesi-presensi.store');
+        Route::patch('sesi-presensi/{idSesi}', [SesiPresensiController::class, 'update'])->whereNumber('idSesi')->name('sesi-presensi.update');
+        Route::delete('sesi-presensi/{idSesi}', [SesiPresensiController::class, 'destroy'])->whereNumber('idSesi')->name('sesi-presensi.destroy');
+
         Route::apiResource('instruktur', InstrukturController::class);
 
         // Peserta me & aliases (mendukung singular & plural)
@@ -106,8 +114,6 @@ Route::name('api.')->group(function () {
         Route::get('absen/rekap', [AbsenController::class, 'rekap'])->name('absen.rekap');
         Route::get('absensi/today', [AbsenController::class, 'today'])->name('absensi.today');
         Route::get('absensi/rekap', [AbsenController::class, 'rekap'])->name('absensi.rekap');
-        Route::post('absen/{id}/pulang', [AbsenController::class, 'pulang'])->whereNumber('id')->name('absen.pulang');
-        Route::post('absensi/{id}/pulang', [AbsenController::class, 'pulang'])->whereNumber('id')->name('absensi.pulang');
         Route::apiResource('absen', AbsenController::class);
         Route::apiResource('absensi', AbsenController::class);
 
