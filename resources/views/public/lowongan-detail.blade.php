@@ -131,15 +131,8 @@
           <h3 class="border-b border-border pb-2 text-xs font-bold text-foreground">Berminat? Hubungi Perusahaan</h3>
 
           <p class="text-xs leading-relaxed text-muted-foreground">
-            Lowongan ini bersifat informasi. Peserta BLK dapat melamar lewat aplikasi siKarir, atau hubungi perusahaan melalui kontak di bawah.
+            Lowongan ini bersifat informasi. Pendaftaran dilakukan langsung melalui kontak perusahaan di bawah.
           </p>
-
-          @guest
-            <x-ui.button href="{{ route('register') }}" variant="outline" class="w-full">
-              <x-lucide-smartphone />
-              Lamar lewat aplikasi
-            </x-ui.button>
-          @endguest
 
           <div class="space-y-2">
             @if ($wa)

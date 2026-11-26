@@ -2,7 +2,7 @@
     <x-auth-shell
         eyebrow="Pendaftaran Peserta"
         title="Daftar lewat aplikasi siKarir"
-        description="Pendaftaran akun peserta, pendaftaran pelatihan, presensi, sertifikat, dan lamaran kerja dilakukan di aplikasi mobile siKarir."
+        description="Pendaftaran akun peserta, pendaftaran pelatihan, presensi, dan sertifikat dilakukan di aplikasi mobile siKarir."
         hero-title="Bergabung Bersama Kami"
         hero-description="Pasang aplikasi siKarir di HP Anda untuk mendaftar pelatihan vokasi, sertifikasi kompetensi, dan peluang karir."
         icon="smartphone"
