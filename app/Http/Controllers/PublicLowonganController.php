@@ -28,15 +28,22 @@ class PublicLowonganController extends Controller
             $query->where('lokasi', $request->wilayah);
         }
 
-        $lowongan = $query->latest('id_lowongan')->paginate(7)->withQueryString();
+        $lowongan = $query->latest('id_lowongan')
+            ->paginate(3)
+            ->withQueryString()
+            ->fragment('daftar-lowongan');
 
-        // Isi dropdown wilayah dari data lowongan aktif
-        $daftarLokasi = Cache::remember('public.lowongan.lokasi', 120, fn () => DaftarLowongan::where('status', 'aktif')
+        // Cache hanya menyimpan array primitif agar tidak bergantung pada serialisasi Collection.
+        $daftarLokasi = Cache::remember('public.lowongan.lokasi.v3', 120, fn () => DaftarLowongan::where('status', 'aktif')
             ->whereNotNull('lokasi')
             ->where('lokasi', '!=', '')
-            ->distinct()
             ->orderBy('lokasi')
-            ->pluck('lokasi'));
+            ->pluck('lokasi')
+            ->map(fn ($lokasi) => trim((string) $lokasi))
+            ->filter()
+            ->unique()
+            ->values()
+            ->all());
 
         $totalMitra = Cache::remember('public.lowongan.total-mitra', 120, fn () => DaftarLowongan::where('status', 'aktif')->distinct()->count('id_mitra'));
 

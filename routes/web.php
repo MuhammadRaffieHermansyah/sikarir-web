@@ -36,6 +36,7 @@ Route::get('/', function () {
     return view('welcome', compact('pelatihans', 'lowongans'));
 });
 Route::get('/program-pelatihan', [PublicPelatihanController::class, 'index'])->name('pelatihan.katalog');
+Route::get('/program-pelatihan/hasil', [PublicPelatihanController::class, 'hasil'])->name('pelatihan.katalog.hasil');
 Route::get('/lowongan-kerja', [PublicLowonganController::class, 'index'])->name('lowongan.katalog');
 Route::get('/lowongan-kerja/{id}', [PublicLowonganController::class, 'show'])->whereNumber('id')->name('lowongan.detail');
 Route::view('/tentang-blk', 'public.tentang-blk')->name('tentang.index');
