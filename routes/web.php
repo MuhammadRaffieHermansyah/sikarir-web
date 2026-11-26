@@ -90,7 +90,7 @@ Route::middleware(['auth', 'akses.web'])->group(function () {
         Route::get('absen/export', [AbsenController::class, 'export'])->name('absen.export');
         Route::get('absen/cetak', [AbsenController::class, 'cetak'])->name('absen.cetak');
 
-        // Pusat laporan dan ekspor data (CSV).
+        // Pusat laporan dan ekspor data (Excel .xlsx).
         Route::prefix('laporan')->name('laporan.')->controller(LaporanController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('peserta', 'peserta')->name('peserta');

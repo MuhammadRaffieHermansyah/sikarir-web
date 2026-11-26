@@ -2,6 +2,7 @@
 
 use App\Models\KelasPelatihan;
 use App\Models\LamaranLowongan;
+use App\Models\Mitra;
 use App\Models\Peserta;
 use App\Models\Sertifikat;
 use App\Models\User;
@@ -18,11 +19,10 @@ test('admin bisa membuka halaman laporan', function () {
         ->assertSee(route('laporan.lamaran'));
 });
 
-test('selain admin tidak bisa membuka laporan atau mengunduh export', function (string $route) {
-    $peserta = Peserta::factory()->create();
-    $peserta->user->update(['role' => 'peserta']);
+test('mitra tidak bisa membuka laporan atau mengunduh export', function (string $route) {
+    $mitra = Mitra::factory()->create();
 
-    $this->actingAs($peserta->user)->get(route($route))->assertRedirect(route('dashboard'));
+    $this->actingAs($mitra->user)->get(route($route))->assertRedirect(route('dashboard'));
 })->with(['laporan.index', 'laporan.peserta', 'laporan.pendaftaran', 'laporan.sertifikat', 'laporan.lamaran']);
 
 test('export data peserta berisi peserta', function () {
