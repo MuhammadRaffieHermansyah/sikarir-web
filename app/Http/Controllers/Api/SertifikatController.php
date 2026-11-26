@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateSertifikatRequest;
 use App\Http\Resources\SertifikatResource;
 use App\Models\Sertifikat;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use OpenApi\Attributes as OA;
 
@@ -38,12 +39,12 @@ class SertifikatController extends Controller
             new OA\Response(response: 401, description: 'Unauthenticated'),
         ]
     )]
-    public function me(\Illuminate\Http\Request $request): JsonResponse
+    public function me(Request $request): JsonResponse
     {
         $user = $request->user();
         $peserta = $user->peserta ?? null;
 
-        if (!$peserta) {
+        if (! $peserta) {
             return response()->json(['message' => 'Data peserta tidak ditemukan.', 'data' => []], 200);
         }
 
@@ -54,7 +55,7 @@ class SertifikatController extends Controller
 
         return response()->json([
             'message' => 'Daftar sertifikat berhasil diambil',
-            'data'    => SertifikatResource::collection($sertifikats),
+            'data' => SertifikatResource::collection($sertifikats),
         ]);
     }
 
@@ -97,6 +98,7 @@ class SertifikatController extends Controller
             $data['file_sertifikat'] = $request->file('file_sertifikat')->store('sertifikat', 'public');
         }
         $item = Sertifikat::create($data);
+
         return (new SertifikatResource($item->load(['peserta.user', 'jadwal.pelatihan', 'admin.user'])))->response()->setStatusCode(201);
     }
 
@@ -106,16 +108,24 @@ class SertifikatController extends Controller
         tags: ['Sertifikat'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
             new OA\Response(response: 200, description: 'Detail sertifikat'),
             new OA\Response(response: 404, description: 'Sertifikat tidak ditemukan'),
         ]
     )]
-    public function show(int $id): JsonResponse
+    public function show(Request $request, int $id): JsonResponse
     {
-        return (new SertifikatResource(Sertifikat::with(['peserta.user', 'jadwal.pelatihan', 'admin.user'])->findOrFail($id)))->response();
+        $sertifikat = Sertifikat::with(['peserta.user', 'jadwal.pelatihan', 'admin.user'])->findOrFail($id);
+        $user = $request->user();
+        abort_unless(
+            $user->role === 'admin_blk' || (int) $sertifikat->id_peserta === (int) $user->peserta?->id_peserta,
+            403,
+            'Anda tidak memiliki akses ke sertifikat ini.'
+        );
+
+        return (new SertifikatResource($sertifikat))->response();
     }
 
     #[OA\Post(
@@ -124,7 +134,7 @@ class SertifikatController extends Controller
         tags: ['Sertifikat'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         requestBody: new OA\RequestBody(
             required: true,
@@ -161,10 +171,13 @@ class SertifikatController extends Controller
         }
 
         if ($request->hasFile('file_sertifikat')) {
-            if ($item->file_sertifikat) Storage::disk('public')->delete($item->file_sertifikat);
+            if ($item->file_sertifikat) {
+                Storage::disk('public')->delete($item->file_sertifikat);
+            }
             $data['file_sertifikat'] = $request->file('file_sertifikat')->store('sertifikat', 'public');
         }
         $item->update($data);
+
         return (new SertifikatResource($item->fresh()->load(['peserta.user', 'jadwal.pelatihan', 'admin.user'])))->response();
     }
 
@@ -174,7 +187,7 @@ class SertifikatController extends Controller
         tags: ['Sertifikat'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
             new OA\Response(response: 200, description: 'Sertifikat berhasil dihapus'),
@@ -184,8 +197,11 @@ class SertifikatController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $item = Sertifikat::findOrFail($id);
-        if ($item->file_sertifikat) Storage::disk('public')->delete($item->file_sertifikat);
+        if ($item->file_sertifikat) {
+            Storage::disk('public')->delete($item->file_sertifikat);
+        }
         $item->delete();
+
         return response()->json(['message' => 'Data berhasil dihapus']);
     }
 }

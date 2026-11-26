@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreKelasPelatihanRequest;
 use App\Http\Requests\UpdateKelasPelatihanRequest;
 use App\Http\Resources\KelasPelatihanResource;
-use App\Models\KelasPelatihan;
 use App\Models\JadwalPelatihan;
+use App\Models\KelasPelatihan;
+use App\Models\Peserta;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use OpenApi\Attributes as OA;
 
@@ -39,12 +41,12 @@ class KelasPelatihanController extends Controller
             new OA\Response(response: 401, description: 'Unauthenticated'),
         ]
     )]
-    public function myClasses(\Illuminate\Http\Request $request): JsonResponse
+    public function myClasses(Request $request): JsonResponse
     {
         $user = $request->user();
         $peserta = $user->peserta ?? null;
 
-        if (!$peserta) {
+        if (! $peserta) {
             return response()->json(['message' => 'Data peserta tidak ditemukan.', 'data' => []], 200);
         }
 
@@ -53,13 +55,13 @@ class KelasPelatihanController extends Controller
             'jadwal.instruktur',
             'jadwal.ruanganWorkshop',
         ])
-        ->where('id_peserta', $peserta->id_peserta)
-        ->latest('id_kelas')
-        ->get();
+            ->where('id_peserta', $peserta->id_peserta)
+            ->latest('id_kelas')
+            ->get();
 
         return response()->json([
             'message' => 'Daftar kelas pelatihan peserta berhasil diambil',
-            'data'    => KelasPelatihanResource::collection($kelas),
+            'data' => KelasPelatihanResource::collection($kelas),
         ]);
     }
 
@@ -87,20 +89,24 @@ class KelasPelatihanController extends Controller
     {
         $data = $request->validated();
 
-        // Jika id_peserta tidak disediakan di body, gunakan id_peserta user yang login
+        // Peserta selalu mendaftarkan dirinya sendiri; hanya admin yang boleh memilih id_peserta.
+        if ($request->user()->role === 'peserta') {
+            unset($data['id_peserta']);
+        }
+
         if (empty($data['id_peserta'])) {
             $user = $request->user();
             $peserta = $user?->peserta;
-            if (!$peserta) {
+            if (! $peserta) {
                 abort(422, 'Data peserta tidak ditemukan. Silakan lengkapi profil terlebih dahulu.');
             }
             $data['id_peserta'] = $peserta->id_peserta;
         } else {
-            $peserta = \App\Models\Peserta::find($data['id_peserta']);
+            $peserta = Peserta::find($data['id_peserta']);
         }
 
         // Validasi kelengkapan profil peserta
-        if (!$peserta || !$peserta->isProfileComplete()) {
+        if (! $peserta || ! $peserta->isProfileComplete()) {
             return response()->json([
                 'message' => 'Data diri Anda belum lengkap. Silakan lengkapi data diri Anda terlebih dahulu sebelum mendaftar pelatihan.',
                 'is_profile_complete' => false,
@@ -109,12 +115,20 @@ class KelasPelatihanController extends Controller
 
         $item = DB::transaction(function () use ($data) {
             $jadwal = JadwalPelatihan::with('pelatihan')->lockForUpdate()->findOrFail($data['id_jadwal']);
-            if ($jadwal->status !== 'tersedia') abort(422, 'Jadwal pelatihan tidak tersedia.');
-            if (KelasPelatihan::where('id_peserta', $data['id_peserta'])->where('id_jadwal', $data['id_jadwal'])->exists()) abort(422, 'Peserta sudah terdaftar pada jadwal ini.');
+            if ($jadwal->status !== 'tersedia') {
+                abort(422, 'Jadwal pelatihan tidak tersedia.');
+            }
+            if (KelasPelatihan::where('id_peserta', $data['id_peserta'])->where('id_jadwal', $data['id_jadwal'])->exists()) {
+                abort(422, 'Peserta sudah terdaftar pada jadwal ini.');
+            }
             $count = KelasPelatihan::where('id_jadwal', $data['id_jadwal'])->count();
-            if ($count >= $jadwal->pelatihan->kuota) abort(422, 'Kuota pelatihan sudah penuh.');
+            if ($count >= $jadwal->pelatihan->kuota) {
+                abort(422, 'Kuota pelatihan sudah penuh.');
+            }
+
             return KelasPelatihan::create($data);
         });
+
         return (new KelasPelatihanResource($item->load(['peserta.user', 'jadwal.pelatihan'])))->response()->setStatusCode(201);
     }
 
@@ -124,16 +138,24 @@ class KelasPelatihanController extends Controller
         tags: ['Kelas Pelatihan'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
             new OA\Response(response: 200, description: 'Detail kelas pelatihan'),
             new OA\Response(response: 404, description: 'Kelas tidak ditemukan'),
         ]
     )]
-    public function show(int $id): JsonResponse
+    public function show(Request $request, int $id): JsonResponse
     {
-        return (new KelasPelatihanResource(KelasPelatihan::with(['peserta.user', 'jadwal.pelatihan', 'jadwal.instruktur', 'jadwal.ruanganWorkshop'])->findOrFail($id)))->response();
+        $kelas = KelasPelatihan::with(['peserta.user', 'jadwal.pelatihan', 'jadwal.instruktur', 'jadwal.ruanganWorkshop'])->findOrFail($id);
+        $user = $request->user();
+
+        $bolehMelihat = $user->role === 'admin_blk'
+            || ($user->peserta !== null && (int) $kelas->id_peserta === (int) $user->peserta->id_peserta)
+            || ($kelas->jadwal !== null && $kelas->jadwal->diampuOleh($user));
+        abort_unless($bolehMelihat, 403, 'Anda tidak memiliki akses ke kelas ini.');
+
+        return (new KelasPelatihanResource($kelas))->response();
     }
 
     #[OA\Put(
@@ -142,7 +164,7 @@ class KelasPelatihanController extends Controller
         tags: ['Kelas Pelatihan'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         requestBody: new OA\RequestBody(
             required: true,
@@ -173,12 +195,17 @@ class KelasPelatihanController extends Controller
 
         if ($idJadwal != $item->id_jadwal) {
             $jadwal = JadwalPelatihan::with('pelatihan')->findOrFail($idJadwal);
-            if ($jadwal->status !== 'tersedia') abort(422, 'Jadwal pelatihan tujuan tidak tersedia.');
+            if ($jadwal->status !== 'tersedia') {
+                abort(422, 'Jadwal pelatihan tujuan tidak tersedia.');
+            }
             $count = KelasPelatihan::where('id_jadwal', $idJadwal)->count();
-            if ($jadwal->pelatihan && $count >= $jadwal->pelatihan->kuota) abort(422, 'Kuota pelatihan tujuan sudah penuh.');
+            if ($jadwal->pelatihan && $count >= $jadwal->pelatihan->kuota) {
+                abort(422, 'Kuota pelatihan tujuan sudah penuh.');
+            }
         }
 
         $item->update($data);
+
         return (new KelasPelatihanResource($item->fresh()->load(['peserta.user', 'jadwal.pelatihan'])))->response();
     }
 
@@ -188,7 +215,7 @@ class KelasPelatihanController extends Controller
         tags: ['Kelas Pelatihan'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
             new OA\Response(response: 200, description: 'Kelas berhasil dihapus'),
@@ -198,6 +225,7 @@ class KelasPelatihanController extends Controller
     public function destroy(int $id): JsonResponse
     {
         KelasPelatihan::findOrFail($id)->delete();
+
         return response()->json(['message' => 'Data berhasil dihapus']);
     }
 }

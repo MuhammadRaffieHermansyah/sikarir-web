@@ -57,11 +57,13 @@ class DaftarLowonganController extends Controller
     public function store(StoreDaftarLowonganRequest $request): JsonResponse
     {
         $data = $request->validated();
-        if (empty($data['id_mitra']) && auth()->user()?->mitra) {
+        // Mitra selalu memasang lowongan atas nama perusahaannya sendiri.
+        if (auth()->user()?->mitra) {
             $data['id_mitra'] = auth()->user()->mitra->id_mitra;
         }
 
         $lowongan = DaftarLowongan::create($data);
+
         return (new DaftarLowonganResource($lowongan))->response()->setStatusCode(201);
     }
 
@@ -71,7 +73,7 @@ class DaftarLowonganController extends Controller
         tags: ['Lowongan'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
             new OA\Response(response: 200, description: 'Detail lowongan'),
@@ -81,6 +83,7 @@ class DaftarLowonganController extends Controller
     public function show(int $id): JsonResponse
     {
         $lowongan = DaftarLowongan::with($this->relations())->findOrFail($id);
+
         return (new DaftarLowonganResource($lowongan))->response();
     }
 
@@ -90,7 +93,7 @@ class DaftarLowonganController extends Controller
         tags: ['Lowongan'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         requestBody: new OA\RequestBody(
             required: true,
@@ -114,7 +117,9 @@ class DaftarLowonganController extends Controller
     public function update(UpdateDaftarLowonganRequest $request, int $id): JsonResponse
     {
         $lowongan = DaftarLowongan::findOrFail($id);
+        $this->pastikanPemilikLowongan($lowongan);
         $lowongan->update($request->validated());
+
         return (new DaftarLowonganResource($lowongan->fresh()->load($this->relations())))->response();
     }
 
@@ -124,7 +129,7 @@ class DaftarLowonganController extends Controller
         tags: ['Lowongan'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
             new OA\Response(response: 200, description: 'Lowongan berhasil dihapus'),
@@ -134,7 +139,9 @@ class DaftarLowonganController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $lowongan = DaftarLowongan::findOrFail($id);
+        $this->pastikanPemilikLowongan($lowongan);
         $lowongan->delete();
+
         return response()->json(['message' => 'Data berhasil dihapus']);
     }
 
@@ -144,7 +151,7 @@ class DaftarLowonganController extends Controller
         tags: ['Lowongan'],
         security: [['sanctum' => []]],
         parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))
+            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
             new OA\Response(response: 201, description: 'Lamaran berhasil dikirim'),
@@ -156,13 +163,13 @@ class DaftarLowonganController extends Controller
         $user = $request->user();
         $peserta = $user?->peserta;
 
-        if (!$peserta) {
+        if (! $peserta) {
             return response()->json([
                 'message' => 'Akun Anda belum terdaftar sebagai peserta BLK.',
             ], 422);
         }
 
-        if (!$peserta->isProfileComplete()) {
+        if (! $peserta->isProfileComplete()) {
             return response()->json([
                 'message' => 'Profil Anda belum lengkap. Silakan lengkapi data diri Anda sebelum melamar lowongan pekerjaan.',
                 'need_profile_completion' => true,
@@ -188,17 +195,17 @@ class DaftarLowonganController extends Controller
         }
 
         $lamaran = LamaranLowongan::create([
-            'id_lowongan'     => $id,
-            'id_peserta'      => $peserta->id_peserta,
+            'id_lowongan' => $id,
+            'id_peserta' => $peserta->id_peserta,
             'tanggal_melamar' => now()->toDateString(),
-            'status'          => 'melamar',
+            'status' => 'melamar',
             'catatan_pelamar' => $request->input('catatan'),
-            'resume_url'      => $request->input('resume_url'),
+            'resume_url' => $request->input('resume_url'),
         ]);
 
         return response()->json([
             'message' => 'Lamaran Anda berhasil dikirim ke perusahaan.',
-            'data'    => $lamaran->load(['lowongan.mitra', 'peserta.user']),
+            'data' => $lamaran->load(['lowongan.mitra', 'peserta.user']),
         ], 201);
     }
 
@@ -216,24 +223,36 @@ class DaftarLowonganController extends Controller
         $user = $request->user();
         $peserta = $user?->peserta;
 
-        if (!$peserta) {
+        if (! $peserta) {
             return response()->json([
                 'message' => 'Data peserta tidak ditemukan.',
-                'data'    => [],
+                'data' => [],
             ], 200);
         }
 
         $lamarans = LamaranLowongan::with([
             'lowongan.mitra',
         ])
-        ->where('id_peserta', $peserta->id_peserta)
-        ->latest('id_lamaran')
-        ->get();
+            ->where('id_peserta', $peserta->id_peserta)
+            ->latest('id_lamaran')
+            ->get();
 
         return response()->json([
             'message' => 'Daftar riwayat lamaran peserta berhasil diambil.',
-            'data'    => $lamarans,
+            'data' => $lamarans,
         ], 200);
+    }
+
+    /**
+     * Mitra hanya boleh mengelola lowongan miliknya; admin BLK boleh semua.
+     */
+    private function pastikanPemilikLowongan(DaftarLowongan $lowongan): void
+    {
+        $user = auth()->user();
+
+        if ($user->role === 'mitra') {
+            abort_unless((int) $lowongan->id_mitra === (int) $user->mitra?->id_mitra, 403, 'Anda hanya dapat mengelola lowongan milik perusahaan Anda.');
+        }
     }
 
     protected function relations(): array

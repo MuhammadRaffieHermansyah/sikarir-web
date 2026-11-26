@@ -399,6 +399,12 @@ class AbsenController extends Controller
     public function show(int $id): JsonResponse
     {
         $absen = Absen::with($this->relations())->findOrFail($id);
+        $user = request()->user();
+        abort_unless(
+            $user->role === 'admin_blk' || (int) $absen->id_peserta === (int) $user->peserta?->id_peserta,
+            403,
+            'Anda tidak memiliki akses ke data presensi ini.'
+        );
 
         return (new AbsenResource($absen))->response();
     }
