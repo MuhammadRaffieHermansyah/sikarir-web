@@ -319,22 +319,19 @@
             Menghapus mitra ini akan mencabut seluruh data kemitraan dan lowongan yang terafiliasi dengan perusahaan ini.
           </p>
 
-          <form
-            action="{{ route('mitras.destroy', $mitra->id_mitra) }}"
-            method="POST"
-            onsubmit="return confirm('Apakah Anda yakin ingin menghapus data mitra ini?')"
-          >
-            @csrf
-            @method('DELETE')
-
-            <x-ui.button type="submit" variant="destructive" class="w-full">
+          <x-ui.button type="submit" form="form-hapus-mitra" variant="destructive" class="w-full">
               <x-lucide-trash-2 />
               Hapus Mitra DU/DI
             </x-ui.button>
-          </form>
         </x-ui.card-content>
       </x-ui.card>
     </div>
+  </form>
+
+  {{-- Form hapus di luar form simpan: form bersarang membuat Simpan ikut mengirim _method=DELETE. --}}
+  <form id="form-hapus-mitra" action="{{ route('mitras.destroy', $mitra->id_mitra) }}" method="POST" class="hidden" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data mitra ini?')">
+    @csrf
+    @method('DELETE')
   </form>
 @endsection
 
