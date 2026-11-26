@@ -26,6 +26,8 @@
     </x-slot:breadcrumb>
 
     <x-slot:actions>
+      <x-reset-sandi.tombol :user="$mitra->user" />
+
       <x-ui.button href="{{ route('mitras.index') }}" variant="outline">
         <x-lucide-arrow-left />
         Kembali
@@ -48,6 +50,8 @@
       @endunless
     </x-slot:actions>
   </x-ui.page-header>
+
+  <x-reset-sandi.hasil :user="$mitra->user" />
 
   <x-ui.card variant="sectioned">
     <div class="flex flex-col justify-between gap-6 sm:flex-row sm:items-center">

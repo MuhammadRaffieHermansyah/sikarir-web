@@ -582,5 +582,8 @@ class DatabaseSeeder extends Seeder
 
         // Gambar demo (pelatihan, lowongan, logo mitra, foto) -> storage publik
         $this->call(GambarDemoSeeder::class);
+
+        // File PDF untuk sertifikat demo -> storage publik
+        $this->call(SertifikatDemoSeeder::class);
     }
 }

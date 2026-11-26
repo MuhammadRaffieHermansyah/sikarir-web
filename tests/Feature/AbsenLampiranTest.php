@@ -4,6 +4,7 @@ use App\Models\Absen;
 use App\Models\HariLibur;
 use App\Models\JadwalPelatihan;
 use App\Models\Peserta;
+use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Testing\TestResponse;
@@ -131,6 +132,8 @@ describe('lampiran izin/sakit', function () {
         $path = Absen::findOrFail($pertama['id_absen'])->lampiran;
         Storage::disk('public')->assertExists($path);
 
+        // Menghapus presensi hanya boleh oleh admin BLK.
+        Sanctum::actingAs(User::factory()->adminBlk()->create());
         $this->deleteJson("/api/absen/{$pertama['id_absen']}")->assertOk();
         Storage::disk('public')->assertExists($path);
 

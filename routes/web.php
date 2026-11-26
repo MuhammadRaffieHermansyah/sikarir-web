@@ -15,6 +15,7 @@ use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicLowonganController;
 use App\Http\Controllers\PublicPelatihanController;
+use App\Http\Controllers\ResetSandiPenggunaController;
 use App\Http\Controllers\RuanganWorkshopController;
 use App\Http\Controllers\SertifikatController;
 use App\Models\DaftarLowongan;
@@ -67,6 +68,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role:admin_blk')->group(function () {
         Route::resource('mitras', MitraController::class);
         Route::patch('mitras/{mitra}/verify', [MitraController::class, 'verify'])->name('mitras.verify');
+        Route::patch('users/{user}/reset-password', ResetSandiPenggunaController::class)->name('users.reset-password');
         Route::get('mitras/{mitra}/documents/{document}', [MitraController::class, 'downloadDocument'])
             ->whereIn('document', ['legalitas', 'permohonan'])
             ->name('mitras.documents.download');

@@ -26,6 +26,8 @@
     </x-slot:breadcrumb>
 
     <x-slot:actions>
+      <x-reset-sandi.tombol :user="$instruktur->user" />
+
       <x-ui.button href="{{ route('instruktur.edit', $instruktur->id) }}" class="bg-sikarir-lime font-bold text-sikarir-ink hover:bg-[#e5ff83]">
         <x-lucide-pencil />
         Edit Instruktur
@@ -37,6 +39,8 @@
       </x-ui.button>
     </x-slot:actions>
   </x-ui.page-header>
+
+  <x-reset-sandi.hasil :user="$instruktur->user" />
 
   <x-ui.card class="border-primary/30 bg-gradient-to-br from-primary via-[#0d4335] to-[#0a2f26] text-primary-foreground">
     <div class="flex flex-col justify-between gap-4 md:flex-row">

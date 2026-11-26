@@ -74,9 +74,10 @@ const setupDeleteConfirmation = () => {
             lastTrigger = document.activeElement;
             const isLogout = form.dataset.confirmationType === 'logout';
             message.textContent = form.dataset.deleteConfirmationMessage;
-            title.textContent = isLogout ? 'Keluar dari akun?' : 'Hapus data ini?';
-            eyebrow.textContent = isLogout ? 'Konfirmasi sesi' : 'Tindakan permanen';
-            confirmButton.textContent = isLogout ? 'Ya, keluar' : 'Ya, hapus data';
+            // Form boleh memberi judul/tombol sendiri lewat data-confirm-title, -eyebrow, -button.
+            title.textContent = form.dataset.confirmTitle || (isLogout ? 'Keluar dari akun?' : 'Hapus data ini?');
+            eyebrow.textContent = form.dataset.confirmEyebrow || (isLogout ? 'Konfirmasi sesi' : 'Tindakan permanen');
+            confirmButton.textContent = form.dataset.confirmButton || (isLogout ? 'Ya, keluar' : 'Ya, hapus data');
             icon.innerHTML = isLogout ? logoutIcon : deleteIcon;
             confirmation.classList.toggle('is-logout', isLogout);
             confirmation.classList.add('is-open');
