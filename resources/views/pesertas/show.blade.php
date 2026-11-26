@@ -26,6 +26,8 @@
     </x-slot:breadcrumb>
 
     <x-slot:actions>
+      <x-reset-sandi.tombol :user="$peserta->user" />
+
       <x-ui.button href="{{ route('pesertas.index') }}" variant="outline">
         <x-lucide-arrow-left />
         Kembali
@@ -37,6 +39,8 @@
       </x-ui.button>
     </x-slot:actions>
   </x-ui.page-header>
+
+  <x-reset-sandi.hasil :user="$peserta->user" />
 
   <x-ui.card variant="sectioned">
     <div class="flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
