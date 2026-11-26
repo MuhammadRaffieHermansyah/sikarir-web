@@ -36,6 +36,10 @@ class MitraController extends Controller
             $query->where('jenis_mitra', $request->jenis_mitra);
         }
 
+        if ($request->input('verifikasi') === 'menunggu') {
+            $query->where('is_verified', false);
+        }
+
         // Ambil daftar jenis mitra unik untuk opsi dropdown filter
         $jenisMitraList = Mitra::distinct()->whereNotNull('jenis_mitra')->pluck('jenis_mitra');
 
