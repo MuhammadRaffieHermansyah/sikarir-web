@@ -111,22 +111,33 @@ class AbsenController extends Controller
 
         $records = $query->latest('tanggal')->get();
 
+        // Sesi yang sudah selesai tanpa catatan presensi dihitung alpha (id_jadwal => jumlah).
+        $alphaOtomatis = SesiPresensi::alphaTanpaCatatan([
+            'id_peserta' => $peserta->id_peserta,
+            'id_jadwal' => $request->filled('id_jadwal') ? (int) $request->id_jadwal : null,
+        ])->get($peserta->id_peserta, collect());
+
         $totalHadir = $records->where('status_kehadiran', 'hadir')->count();
         $totalIzin = $records->where('status_kehadiran', 'izin')->count();
         $totalSakit = $records->where('status_kehadiran', 'sakit')->count();
-        $totalAlpha = $records->whereIn('status_kehadiran', ['alpha', 'alpa'])->count();
-        $totalSesi = $records->count();
+        $totalAlpha = $records->whereIn('status_kehadiran', ['alpha', 'alpa'])->count() + $alphaOtomatis->sum();
+        $totalSesi = $records->count() + $alphaOtomatis->sum();
         $persentase = $totalSesi > 0 ? round(($totalHadir / $totalSesi) * 100, 1) : 0;
         $statusLulus = $persentase >= 80 ? 'Memenuhi Syarat Sertifikasi' : 'Kehadiran Belum Memenuhi Syarat';
 
-        $perJadwal = $records->groupBy('id_jadwal')->map(function ($items) {
-            $jadwal = $items->first()->jadwal;
+        $jadwals = JadwalPelatihan::with('pelatihan')
+            ->whereIn('id_jadwal', $records->pluck('id_jadwal')->merge($alphaOtomatis->keys())->unique())
+            ->get()
+            ->keyBy('id_jadwal');
+
+        $perJadwal = $jadwals->map(function (JadwalPelatihan $jadwal) use ($records, $alphaOtomatis) {
+            $items = $records->where('id_jadwal', $jadwal->id_jadwal);
             $hadir = $items->where('status_kehadiran', 'hadir')->count();
-            $total = $items->count();
+            $total = $items->count() + (int) $alphaOtomatis->get($jadwal->id_jadwal, 0);
             $pct = $total > 0 ? round(($hadir / $total) * 100, 1) : 0;
 
             return [
-                'id_jadwal' => $jadwal->id_jadwal ?? null,
+                'id_jadwal' => $jadwal->id_jadwal,
                 'nama_pelatihan' => $jadwal->pelatihan->nama_pelatihan ?? 'Pelatihan',
                 'total_hadir' => $hadir,
                 'total_sesi' => $total,
