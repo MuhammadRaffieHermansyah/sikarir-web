@@ -19,6 +19,7 @@
                 'items' => [
                     ['label' => 'Program Pelatihan', 'route' => 'pelatihan.index', 'active' => 'pelatihan.*', 'icon' => 'book'],
                     ['label' => 'Durasi Pelatihan', 'route' => 'durasi-pelatihan.index', 'active' => 'durasi-pelatihan.*', 'icon' => 'timer'],
+                    ['label' => 'Bidang Keahlian', 'route' => 'bidang-keahlian.index', 'active' => 'bidang-keahlian.*', 'icon' => 'tags'],
                     ['label' => 'Instruktur', 'route' => 'instruktur.index', 'active' => 'instruktur.*', 'icon' => 'user-check'],
                     ['label' => 'Ruangan Workshop', 'route' => 'ruangan-workshop.index', 'active' => 'ruangan-workshop.*', 'icon' => 'building-2'],
                     ['label' => 'Jadwal & Kelas', 'route' => 'jadwal-pelatihan.index', 'active' => 'jadwal-pelatihan.*', 'icon' => 'calendar-fold'],
@@ -37,6 +38,13 @@
                 'items' => [
                     ['label' => 'Mitra DU/DI', 'route' => 'mitras.index', 'active' => 'mitras.*', 'icon' => 'building-2'],
                     ['label' => 'Lowongan Kerja', 'route' => 'lowongan.index', 'active' => 'lowongan.*', 'icon' => 'briefcase-business'],
+                ],
+            ],
+            [
+                'label' => 'Laporan',
+                'items' => [
+                    ['label' => 'Laporan & Export', 'route' => 'laporan.index', 'active' => 'laporan.*', 'icon' => 'file-spreadsheet'],
+                    ['label' => 'Rekap Presensi', 'route' => 'absen.rekap', 'active' => 'absen.rekap', 'icon' => 'clipboard-list'],
                 ],
             ],
         ];

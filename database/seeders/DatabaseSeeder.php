@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
         */
         $this->call([
             DurasiPelatihanSeeder::class,
+            BidangKeahlianSeeder::class,
             InstrukturSeeder::class,
             RuanganWorkshopSeeder::class,
             // Akun instruktur@sikarir.com ditautkan sejak awal agar seluruh

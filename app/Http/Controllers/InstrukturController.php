@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BidangKeahlian;
 use App\Models\Instruktur;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,22 +31,23 @@ class InstrukturController extends Controller
 
     public function create(): View
     {
-        return view('instruktur.create');
+        $bidangKeahlians = BidangKeahlian::orderBy('nama')->get();
+
+        return view('instruktur.create', compact('bidangKeahlians'));
     }
 
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'nama' => 'required|string|max:150|regex:/^[\pL\s.,\x27\-]+$/u|unique:instruktur,nama',
-            'bidang_keahlian' => 'required|string|max:150|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
+            'bidang_keahlian' => 'required|string|exists:bidang_keahlian,nama',
         ], [
             'nama.required' => 'Nama instruktur wajib diisi.',
             'nama.max' => 'Nama instruktur maksimal 150 karakter.',
             'nama.regex' => 'Nama instruktur hanya boleh berisi huruf, spasi, dan tanda . , - \'.',
             'nama.unique' => 'Nama instruktur sudah terdaftar.',
-            'bidang_keahlian.required' => 'Bidang keahlian wajib diisi.',
-            'bidang_keahlian.max' => 'Bidang keahlian maksimal 150 karakter.',
-            'bidang_keahlian.regex' => 'Bidang keahlian hanya boleh berisi huruf, angka, spasi, dan tanda baca umum.',
+            'bidang_keahlian.required' => 'Bidang keahlian wajib dipilih.',
+            'bidang_keahlian.exists' => 'Pilih bidang keahlian dari daftar master data.',
         ]);
 
         Instruktur::create($validated);
@@ -63,8 +65,9 @@ class InstrukturController extends Controller
     public function edit(int $id): View
     {
         $instruktur = Instruktur::findOrFail($id);
+        $bidangKeahlians = BidangKeahlian::orderBy('nama')->get();
 
-        return view('instruktur.edit', compact('instruktur'));
+        return view('instruktur.edit', compact('instruktur', 'bidangKeahlians'));
     }
 
     public function update(Request $request, int $id): RedirectResponse
@@ -73,14 +76,13 @@ class InstrukturController extends Controller
 
         $validated = $request->validate([
             'nama' => 'required|string|max:150|regex:/^[\pL\s.,\x27\-]+$/u',
-            'bidang_keahlian' => 'required|string|max:150|regex:/^[\pL\pN\s().,&\x27\/+\-]+$/u',
+            'bidang_keahlian' => 'required|string|exists:bidang_keahlian,nama',
         ], [
             'nama.required' => 'Nama instruktur wajib diisi.',
             'nama.max' => 'Nama instruktur maksimal 150 karakter.',
             'nama.regex' => 'Nama instruktur hanya boleh berisi huruf, spasi, dan tanda . , - \'.',
-            'bidang_keahlian.required' => 'Bidang keahlian wajib diisi.',
-            'bidang_keahlian.max' => 'Bidang keahlian maksimal 150 karakter.',
-            'bidang_keahlian.regex' => 'Bidang keahlian hanya boleh berisi huruf, angka, spasi, dan tanda baca umum.',
+            'bidang_keahlian.required' => 'Bidang keahlian wajib dipilih.',
+            'bidang_keahlian.exists' => 'Pilih bidang keahlian dari daftar master data.',
         ]);
 
         $instruktur->update($validated);

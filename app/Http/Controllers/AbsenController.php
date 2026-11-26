@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\ExportsXlsx;
 use App\Models\Absen;
 use App\Models\DaftarPelatihan;
 use App\Models\JadwalPelatihan;
@@ -12,10 +13,12 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class AbsenController extends Controller
 {
+    use ExportsXlsx;
+
     public function index(Request $request): View
     {
         $query = Absen::with(['peserta:id_peserta,id_user,nama', 'peserta.user:id,email', 'jadwal:id_jadwal,id_pelatihan', 'jadwal.pelatihan:id_pelatihan,nama_pelatihan']);
@@ -67,36 +70,28 @@ class AbsenController extends Controller
     }
 
     /**
-     * Ekspor rekapitulasi kehadiran per peserta ke CSV (dapat dibuka di Excel).
+     * Ekspor rekapitulasi kehadiran per peserta ke file Excel (.xlsx) berformat tabel.
      */
-    public function export(Request $request): StreamedResponse
+    public function export(Request $request): BinaryFileResponse
     {
         $rekap = $this->buildRekap($this->validateRekapFilters($request));
-        $filename = 'rekap-absensi-'.now()->format('Ymd-His').'.csv';
+        $jadwal = $rekap['selectedJadwal'];
 
-        return response()->streamDownload(function () use ($rekap) {
-            $out = fopen('php://output', 'w');
-            fwrite($out, "\xEF\xBB\xBF");
-            fputcsv($out, ['No', 'No. Peserta', 'Nama Peserta', 'Email', 'Hadir', 'Izin', 'Sakit', 'Alpha', 'Total Sesi', 'Persentase Hadir (%)', 'Status Kelayakan']);
-
-            foreach ($rekap['rekapPeserta'] as $i => $rp) {
-                fputcsv($out, [
-                    $i + 1,
-                    $this->csvSafe((string) ($rp->peserta->nomor_peserta ?? '-')),
-                    $this->csvSafe((string) ($rp->peserta->nama ?? '-')),
-                    $this->csvSafe((string) ($rp->peserta->user->email ?? '-')),
-                    $rp->hadir,
-                    $rp->izin,
-                    $rp->sakit,
-                    $rp->alpha,
-                    $rp->total,
-                    $rp->persentase,
-                    $rp->status_lulus,
-                ]);
-            }
-
-            fclose($out);
-        }, $filename, ['Content-Type' => 'text/csv; charset=UTF-8']);
+        return $this->xlsx('rekap-absensi', 'Rekapitulasi Kehadiran Peserta', [
+            'No', 'No. Peserta', 'Nama Peserta', 'Email', 'Hadir', 'Izin', 'Sakit', 'Alpha', 'Total Sesi', 'Persentase Hadir (%)', 'Status Kelayakan',
+        ], $rekap['rekapPeserta']->map(fn ($rp, int $i): array => [
+            $i + 1,
+            $rp->peserta->nomor_peserta ?? '-',
+            $rp->peserta->nama ?? '-',
+            $rp->peserta->user->email ?? '-',
+            $rp->hadir,
+            $rp->izin,
+            $rp->sakit,
+            $rp->alpha,
+            $rp->total,
+            $rp->persentase,
+            $rp->status_lulus,
+        ])->all(), $jadwal ? 'Jadwal: '.($jadwal->pelatihan->nama_pelatihan ?? '-') : null);
     }
 
     /**
@@ -327,13 +322,5 @@ class AbsenController extends Controller
             'totalAlpha' => $rekapPeserta->sum('alpha'),
             'persenHadir' => $total > 0 ? round($totalHadir / $total * 100, 1) : 0,
         ];
-    }
-
-    /**
-     * Cegah formula injection saat CSV dibuka di Excel.
-     */
-    private function csvSafe(string $value): string
-    {
-        return preg_match('/^[=+\-@\t\r]/', $value) ? "'".$value : $value;
     }
 }

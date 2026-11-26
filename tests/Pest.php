@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 /*
@@ -47,4 +48,17 @@ expect()->extend('toBeOne', function () {
 function something()
 {
     // ..
+}
+
+/**
+ * Ambil isi XML lembar pertama dari respons unduhan .xlsx.
+ */
+function xlsxSheetXml(TestResponse $response): string
+{
+    $zip = new ZipArchive;
+    $zip->open($response->baseResponse->getFile()->getPathname());
+    $xml = $zip->getFromName('xl/worksheets/sheet1.xml');
+    $zip->close();
+
+    return (string) $xml;
 }
