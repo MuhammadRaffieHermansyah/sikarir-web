@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\BidangKeahlian;
 use App\Models\Mitra;
 use App\Models\Peserta;
 use App\Models\User;
@@ -20,6 +21,7 @@ test('registrasi peserta lewat web otomatis membuat profil peserta', function ()
 
 test('admin bisa menambah instruktur dengan gelar dan apostrof pada nama', function () {
     $admin = User::factory()->create(['role' => 'admin_blk']);
+    BidangKeahlian::factory()->create(['nama' => 'Teknik Listrik & Instalasi (K3)']);
 
     $this->actingAs($admin)
         ->post(route('instruktur.store'), [

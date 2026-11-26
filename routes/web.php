@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AbsenController;
 use App\Http\Controllers\AdminBlkController;
+use App\Http\Controllers\BidangKeahlianController;
 use App\Http\Controllers\DaftarLowonganController;
 use App\Http\Controllers\DaftarPelatihanController;
 use App\Http\Controllers\DashboardController;
@@ -73,6 +74,7 @@ Route::middleware('auth')->group(function () {
             ->whereIn('document', ['legalitas', 'permohonan'])
             ->name('mitras.documents.download');
         Route::resource('durasi-pelatihan', DurasiPelatihanController::class);
+        Route::resource('bidang-keahlian', BidangKeahlianController::class);
         Route::resource('instruktur', InstrukturController::class);
         Route::resource('pesertas', PesertaController::class);
         Route::resource('admin-blk', AdminBlkController::class);

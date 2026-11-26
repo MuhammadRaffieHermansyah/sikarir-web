@@ -80,16 +80,16 @@
 
             <x-ui.field data-invalid="{{ $errors->has('bidang_keahlian') ? 'true' : 'false' }}">
               <x-ui.field-label for="bidang_keahlian">Bidang Keahlian <span class="text-destructive">*</span></x-ui.field-label>
-              <x-ui.input
-                id="bidang_keahlian"
-                name="bidang_keahlian"
-                type="text"
-                :value="old('bidang_keahlian')"
-                maxlength="150"
-                placeholder="Contoh: Teknik Kendaraan Ringan"
-                required
-              />
-              <x-ui.field-description>Hanya huruf dan spasi, maksimal 150 karakter.</x-ui.field-description>
+              <x-ui.select name="bidang_keahlian" id="bidang_keahlian" native class="w-full" required>
+                <option value="">-- Pilih Bidang Keahlian --</option>
+                @foreach ($bidangKeahlians as $bidang)
+                  <option value="{{ $bidang->nama }}" @selected(old('bidang_keahlian') === $bidang->nama)>{{ $bidang->nama }}</option>
+                @endforeach
+              </x-ui.select>
+              <x-ui.field-description>
+                Belum ada di daftar?
+                <a href="{{ route('bidang-keahlian.create', ['from' => 'instruktur']) }}" class="font-semibold text-primary hover:underline">Tambah bidang keahlian baru</a>
+              </x-ui.field-description>
               <x-ui.field-error :messages="$errors->get('bidang_keahlian')" />
             </x-ui.field>
           </div>
