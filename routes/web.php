@@ -11,6 +11,7 @@ use App\Http\Controllers\HariLiburController;
 use App\Http\Controllers\InstrukturController;
 use App\Http\Controllers\JadwalPelatihanController;
 use App\Http\Controllers\KelasPelatihanController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\MitraController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\ProfileController;
@@ -87,6 +88,15 @@ Route::middleware('auth')->group(function () {
         Route::get('absen/rekap', [AbsenController::class, 'rekap'])->name('absen.rekap');
         Route::get('absen/export', [AbsenController::class, 'export'])->name('absen.export');
         Route::get('absen/cetak', [AbsenController::class, 'cetak'])->name('absen.cetak');
+
+        // Pusat laporan dan ekspor data (CSV).
+        Route::prefix('laporan')->name('laporan.')->controller(LaporanController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('peserta', 'peserta')->name('peserta');
+            Route::get('pendaftaran', 'pendaftaran')->name('pendaftaran');
+            Route::get('sertifikat', 'sertifikat')->name('sertifikat');
+            Route::get('lamaran', 'lamaran')->name('lamaran');
+        });
         Route::resource('pelatihan', DaftarPelatihanController::class)->except(['index', 'show']);
         Route::resource('absen', AbsenController::class)->except(['index', 'show']);
         Route::resource('sertifikat', SertifikatController::class)->except(['index', 'show']);

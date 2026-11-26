@@ -40,6 +40,13 @@
                     ['label' => 'Lowongan Kerja', 'route' => 'lowongan.index', 'active' => 'lowongan.*', 'icon' => 'briefcase-business'],
                 ],
             ],
+            [
+                'label' => 'Laporan',
+                'items' => [
+                    ['label' => 'Laporan & Export', 'route' => 'laporan.index', 'active' => 'laporan.*', 'icon' => 'file-spreadsheet'],
+                    ['label' => 'Rekap Presensi', 'route' => 'absen.rekap', 'active' => 'absen.rekap', 'icon' => 'clipboard-list'],
+                ],
+            ],
         ];
     } elseif ($isMitra) {
         $groups = [
