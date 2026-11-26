@@ -14,7 +14,7 @@
         <div class="pointer-events-none absolute -bottom-24 -right-20 size-64 rounded-full bg-emerald-400/10 blur-3xl"></div>
 
         <a href="{{ url('/') }}" class="relative z-10 flex w-fit items-center gap-3">
-            <img src="{{ asset('images/sikarir-logo.png') }}" alt="Logo siKarir BLK Jember" class="size-11 rounded-xl object-contain shadow-lg">
+            <x-app-logo class="size-11 shrink-0 rounded-xl shadow-lg" role="img" aria-label="Logo siKarir BLK Jember" />
             <span>
                 <span class="block text-lg font-black leading-none tracking-wider">SIKARIR</span>
                 <span class="mt-1 block text-[10px] font-semibold tracking-[0.18em] text-sikarir-lime">BLK PUSAT VOKASI</span>
@@ -35,7 +35,7 @@
         </div>
 
         <div class="relative z-10 border-t border-white/10 pt-6 text-center">
-            <p class="text-[11px] font-medium text-primary-foreground/55">Balai Latihan Kerja • Kementerian Ketenagakerjaan</p>
+            <p class="text-[11px] font-medium text-primary-foreground/55">Balai Latihan Kerja â€¢ Kementerian Ketenagakerjaan</p>
         </div>
     </div>
 
@@ -83,7 +83,7 @@
 <div class="mt-4 flex flex-col items-center justify-between gap-2 px-2 text-[11px] text-muted-foreground sm:flex-row">
     <div class="flex items-center gap-1.5">
         <x-lucide-lock class="size-3 text-primary" />
-        <span>Koneksi Terenkripsi SSL · SIKARIR BLK</span>
+        <span>Koneksi Terenkripsi SSL Â· SIKARIR BLK</span>
     </div>
     <div class="font-medium">&copy; {{ date('Y') }} SIKARIR Pusat Vokasi</div>
 </div>

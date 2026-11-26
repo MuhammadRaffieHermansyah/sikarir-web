@@ -89,6 +89,10 @@
                         src="{{ Storage::url($mitra->logo_perusahaan) }}"
                         alt="Logo {{ $mitra->nama_perusahaan }}"
                         class="size-full object-cover"
+                        width="44"
+                        height="44"
+                        loading="lazy"
+                        decoding="async"
                         onerror="this.style.display='none';"
                       >
                     </div>

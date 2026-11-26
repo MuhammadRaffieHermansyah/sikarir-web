@@ -3,9 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\DaftarLowongan;
+use App\Models\DaftarPelatihan;
+use App\Models\Instruktur;
 use App\Models\LamaranLowongan;
+use App\Models\Mitra;
+use App\Models\Peserta;
+use App\Models\Sertifikat;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -16,7 +22,21 @@ class DashboardController extends Controller
         $user = $request->user();
 
         if ($user->role !== 'mitra') {
-            return view('dashboard');
+            $stats = [];
+
+            if ($user->role === 'admin_blk') {
+                $stats = Cache::remember('dashboard-stat-cards', 300, function (): array {
+                    return [
+                        'peserta' => Peserta::count(),
+                        'instruktur' => Instruktur::count(),
+                        'mitra' => Mitra::count(),
+                        'pelatihan' => DaftarPelatihan::count(),
+                        'sertifikat' => Sertifikat::count(),
+                    ];
+                });
+            }
+
+            return view('dashboard', compact('stats'));
         }
 
         $mitra = $user->load('mitra')->mitra;

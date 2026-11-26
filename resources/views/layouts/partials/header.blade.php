@@ -8,7 +8,7 @@
     $initial = mb_strtoupper(mb_substr($user?->name ?? 'U', 0, 1));
 @endphp
 
-<header class="flex h-[var(--app-header-height)] shrink-0 items-center gap-3 border-b border-border bg-background/95 px-4 backdrop-blur sm:px-6 lg:px-8">
+<header class="flex h-[var(--app-header-height)] shrink-0 items-center gap-3 border-b border-border bg-background px-4 sm:px-6 lg:px-8">
     <x-ui.sidebar-trigger label="Buka atau tutup menu navigasi"
         class="size-9 shrink-0 rounded-lg border border-border bg-background text-muted-foreground shadow-xs hover:bg-muted hover:text-foreground md:size-8" />
 

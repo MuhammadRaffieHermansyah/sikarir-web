@@ -50,7 +50,7 @@
   </section>
 
   {{-- STAT STRIP --}}
-  <section class="site-container relative z-10 -mt-8 mb-8"  >
+  <section class="site-container relative z-10 -mt-8 mb-8">
     <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
       @foreach ([
           ['icon' => 'cpu', 'value' => (string) \App\Models\DaftarPelatihan::count(), 'label' => 'Kejuruan aktif'],

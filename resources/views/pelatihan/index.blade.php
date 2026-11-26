@@ -117,6 +117,10 @@
                       src="{{ $pelatihan->gambar_thumb_url }}"
                       alt="{{ $pelatihan->nama_pelatihan }}"
                       class="size-10 shrink-0 rounded-lg border border-border object-cover"
+                      width="40"
+                      height="40"
+                      loading="lazy"
+                      decoding="async"
                     >
                   @else
                     <span class="grid size-10 shrink-0 place-items-center rounded-lg border border-border bg-accent text-accent-foreground">
