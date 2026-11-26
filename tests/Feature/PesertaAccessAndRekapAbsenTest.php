@@ -19,11 +19,11 @@ test('peserta tidak bisa membuat, mengubah, atau menghapus absensi', function ()
     $absen = Absen::factory()->create(['id_peserta' => $this->peserta->id_peserta]);
     $this->actingAs($this->peserta->user);
 
-    $this->get(route('absen.create'))->assertRedirect(route('dashboard'));
-    $this->post(route('absen.store'), [])->assertRedirect(route('dashboard'));
-    $this->get(route('absen.edit', $absen->id_absen))->assertRedirect(route('dashboard'));
-    $this->delete(route('absen.destroy', $absen->id_absen))->assertRedirect(route('dashboard'));
-    $this->get(route('absen.rekap'))->assertRedirect(route('dashboard'));
+    $this->get(route('absen.create'))->assertRedirect(route('login'));
+    $this->post(route('absen.store'), [])->assertRedirect(route('login'));
+    $this->get(route('absen.edit', $absen->id_absen))->assertRedirect(route('login'));
+    $this->delete(route('absen.destroy', $absen->id_absen))->assertRedirect(route('login'));
+    $this->get(route('absen.rekap'))->assertRedirect(route('login'));
 
     expect(Absen::find($absen->id_absen))->not->toBeNull();
 });
@@ -33,40 +33,23 @@ test('peserta tidak bisa mengelola sertifikat dan program pelatihan', function (
     $pelatihan = DaftarPelatihan::factory()->create();
     $this->actingAs($this->peserta->user);
 
-    $this->delete(route('sertifikat.destroy', $sertifikat->id_sertifikat))->assertRedirect(route('dashboard'));
-    $this->get(route('sertifikat.create'))->assertRedirect(route('dashboard'));
-    $this->delete(route('pelatihan.destroy', $pelatihan->id_pelatihan))->assertRedirect(route('dashboard'));
-    $this->get(route('pelatihan.create'))->assertRedirect(route('dashboard'));
+    $this->delete(route('sertifikat.destroy', $sertifikat->id_sertifikat))->assertRedirect(route('login'));
+    $this->get(route('sertifikat.create'))->assertRedirect(route('login'));
+    $this->delete(route('pelatihan.destroy', $pelatihan->id_pelatihan))->assertRedirect(route('login'));
+    $this->get(route('pelatihan.create'))->assertRedirect(route('login'));
 
     expect(Sertifikat::find($sertifikat->id_sertifikat))->not->toBeNull()
         ->and(DaftarPelatihan::find($pelatihan->id_pelatihan))->not->toBeNull();
 });
 
-test('peserta hanya melihat absensi miliknya sendiri', function () {
-    $milik = Absen::factory()->create(['id_peserta' => $this->peserta->id_peserta]);
-    $orangLain = Absen::factory()->create(['id_peserta' => $this->pesertaLain->id_peserta]);
-    $this->actingAs($this->peserta->user);
+test('peserta melihat presensi dan sertifikatnya lewat aplikasi, bukan web', function () {
+    Absen::factory()->create(['id_peserta' => $this->peserta->id_peserta]);
+    Sertifikat::factory()->create(['id_peserta' => $this->peserta->id_peserta]);
 
-    $this->get(route('absen.index'))
-        ->assertOk()
-        ->assertSee(route('absen.show', $milik->id_absen))
-        ->assertDontSee(route('absen.show', $orangLain->id_absen));
-
-    $this->get(route('absen.show', $milik->id_absen))->assertOk();
-    $this->get(route('absen.show', $orangLain->id_absen))->assertNotFound();
-});
-
-test('peserta hanya melihat sertifikat miliknya sendiri', function () {
-    $milik = Sertifikat::factory()->create(['id_peserta' => $this->peserta->id_peserta]);
-    $orangLain = Sertifikat::factory()->create(['id_peserta' => $this->pesertaLain->id_peserta]);
-    $this->actingAs($this->peserta->user);
-
-    $this->get(route('sertifikat.index'))
-        ->assertOk()
-        ->assertSee($milik->no_sertifikat)
-        ->assertDontSee($orangLain->no_sertifikat);
-
-    $this->get(route('sertifikat.show', $orangLain->id_sertifikat))->assertNotFound();
+    foreach ([route('absen.index'), route('sertifikat.index'), route('pelatihan.index')] as $url) {
+        $this->actingAs($this->peserta->user)->get($url)->assertRedirect(route('login'));
+        $this->assertGuest();
+    }
 });
 
 test('admin bisa membuka halaman rekap absensi dengan statistik yang benar', function () {
@@ -107,16 +90,6 @@ test('admin bisa export csv dan membuka halaman cetak', function () {
         ->and($csv->streamedContent())->toContain($this->peserta->user->name);
 
     $this->actingAs($this->admin)->get(route('absen.cetak'))->assertOk();
-});
-
-test('dashboard peserta hanya menampilkan modul yang boleh diakses', function () {
-    $this->actingAs($this->peserta->user)
-        ->get(route('dashboard'))
-        ->assertOk()
-        ->assertDontSee(route('admin-blk.index'))
-        ->assertDontSee(route('mitras.index'))
-        ->assertSee(route('absen.index'))
-        ->assertSee(route('sertifikat.index'));
 });
 
 test('validasi menerima alamat dan nama pelatihan dengan angka serta tanda baca', function () {

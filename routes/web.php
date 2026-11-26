@@ -56,10 +56,10 @@ Route::get('/internal/pelatihan/{id}/durasi', function ($id) {
 })->name('pelatihan.durasi')->middleware('auth');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'akses.web', 'verified'])
     ->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'akses.web'])->group(function () {
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -95,12 +95,12 @@ Route::middleware('auth')->group(function () {
         Route::resource('lowongan', DaftarLowonganController::class);
     });
 
-    Route::middleware('role:admin_blk,mitra,peserta')->group(function () {
+    Route::middleware('role:admin_blk,mitra')->group(function () {
         Route::resource('pelatihan', DaftarPelatihanController::class)->only(['index', 'show']);
     });
 
-    // Peserta hanya boleh membaca absensi dan sertifikat miliknya sendiri.
-    Route::middleware('role:admin_blk,peserta')->group(function () {
+    // Peserta melihat presensi dan sertifikatnya lewat aplikasi mobile.
+    Route::middleware('role:admin_blk')->group(function () {
         Route::resource('absen', AbsenController::class)->only(['index', 'show']);
         Route::resource('sertifikat', SertifikatController::class)->only(['index', 'show']);
     });
