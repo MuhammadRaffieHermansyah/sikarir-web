@@ -7,6 +7,7 @@ use App\Models\Absen;
 use App\Models\DaftarPelatihan;
 use App\Models\JadwalPelatihan;
 use App\Models\Peserta;
+use App\Models\SesiPresensi;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -284,24 +285,35 @@ class AbsenController extends Controller
                 SUM(CASE WHEN status_kehadiran = 'sakit' THEN 1 ELSE 0 END) AS sakit,
                 SUM(CASE WHEN status_kehadiran IN {$alpha} THEN 1 ELSE 0 END) AS alpha")
             ->groupBy('id_peserta')
-            ->get();
-
-        $pesertas = Peserta::with('user:id,email')
-            ->whereIn('id_peserta', $rows->pluck('id_peserta'))
             ->get()
             ->keyBy('id_peserta');
 
-        $rekapPeserta = $rows->map(function ($row) use ($pesertas) {
-            $hadir = (int) $row->hadir;
-            $total = (int) $row->total;
+        // Sesi yang sudah selesai tanpa catatan presensi dihitung alpha (tidak berlaku saat
+        // memfilter status hadir/izin/sakit).
+        $alphaOtomatis = in_array($filters['status'], [null, 'alpha'], true)
+            ? SesiPresensi::alphaTanpaCatatan($filters)->map(fn ($perJadwal): int => (int) $perJadwal->sum())
+            : collect();
+
+        $idPesertas = $rows->keys()->merge($alphaOtomatis->keys())->unique();
+
+        $pesertas = Peserta::with('user:id,email')
+            ->whereIn('id_peserta', $idPesertas)
+            ->get()
+            ->keyBy('id_peserta');
+
+        $rekapPeserta = $idPesertas->map(function ($idPeserta) use ($rows, $pesertas, $alphaOtomatis) {
+            $row = $rows->get($idPeserta);
+            $tambahanAlpha = (int) $alphaOtomatis->get($idPeserta, 0);
+            $hadir = (int) ($row->hadir ?? 0);
+            $total = (int) ($row->total ?? 0) + $tambahanAlpha;
             $persentase = $total > 0 ? round($hadir / $total * 100, 1) : 0;
 
             return (object) [
-                'peserta' => $pesertas->get($row->id_peserta),
+                'peserta' => $pesertas->get($idPeserta),
                 'hadir' => $hadir,
-                'izin' => (int) $row->izin,
-                'sakit' => (int) $row->sakit,
-                'alpha' => (int) $row->alpha,
+                'izin' => (int) ($row->izin ?? 0),
+                'sakit' => (int) ($row->sakit ?? 0),
+                'alpha' => (int) ($row->alpha ?? 0) + $tambahanAlpha,
                 'total' => $total,
                 'persentase' => $persentase,
                 'status_lulus' => $persentase >= 80 ? 'Memenuhi Syarat' : 'Perlu Perhatian',
