@@ -20,6 +20,8 @@ class StoreAbsenRequest extends FormRequest
         return [
             'id_jadwal' => 'nullable',
             'id_peserta' => 'nullable',
+            // Sesi presensi yang dibuka instruktur (khusus hadir)
+            'id_sesi' => 'nullable|integer',
             'tanggal' => 'required|date',
             'jam_hadir' => 'nullable|string',
             'status_kehadiran' => 'required|in:hadir,izin,sakit,alpha,alpa',

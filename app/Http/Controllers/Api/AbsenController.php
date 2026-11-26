@@ -11,6 +11,7 @@ use App\Models\HariLibur;
 use App\Models\JadwalPelatihan;
 use App\Models\KelasPelatihan;
 use App\Models\Peserta;
+use App\Models\SesiPresensi;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\JsonResponse;
@@ -233,6 +234,9 @@ class AbsenController extends Controller
         // Rentang tanggal & berkas bukan kolom langsung; tangani terpisah.
         $tanggalSelesai = $data['tanggal_selesai'] ?? null;
         unset($data['tanggal_selesai'], $data['lampiran']);
+        if ($data['status_kehadiran'] !== 'hadir') {
+            unset($data['id_sesi']); // izin/sakit tidak terikat sesi
+        }
 
         if ($tanggalSelesai !== null
             && Carbon::parse($tanggalSelesai)->toDateString() !== Carbon::parse($data['tanggal'])->toDateString()) {
@@ -253,7 +257,14 @@ class AbsenController extends Controller
 
         // 6. Validasi lokasi GPS jika status "hadir"
         if ($data['status_kehadiran'] === 'hadir') {
-            $locationResult = $this->validateLocation($data);
+            // 6a. Sesi presensi yang dibuka instruktur
+            $sesi = $this->resolveSesi($data);
+            if ($sesi instanceof JsonResponse) {
+                return $sesi;
+            }
+            $data['id_sesi'] = $sesi?->id_sesi;
+
+            $locationResult = $this->validateLocation($data, $sesi);
             if ($locationResult['error']) {
                 return response()->json([
                     'message' => $locationResult['message'],
@@ -372,80 +383,6 @@ class AbsenController extends Controller
         return $hari;
     }
 
-    #[OA\Post(
-        path: '/api/absen/{id}/pulang',
-        summary: 'Catat presensi pulang (jam keluar memakai waktu server, lokasi GPS divalidasi)',
-        tags: ['Absen'],
-        security: [['sanctum' => []]],
-        parameters: [
-            new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
-        ],
-        requestBody: new OA\RequestBody(
-            required: true,
-            content: new OA\JsonContent(
-                required: ['latitude', 'longitude'],
-                properties: [
-                    new OA\Property(property: 'latitude', type: 'number', format: 'float', example: -8.1763),
-                    new OA\Property(property: 'longitude', type: 'number', format: 'float', example: 113.7007),
-                ]
-            )
-        ),
-        responses: [
-            new OA\Response(response: 200, description: 'Presensi pulang berhasil dicatat'),
-            new OA\Response(response: 403, description: 'Bukan presensi milik peserta, atau lokasi di luar radius'),
-            new OA\Response(response: 422, description: 'Status bukan hadir, bukan hari ini, atau sudah pulang'),
-        ]
-    )]
-    public function pulang(Request $request, int $id): JsonResponse
-    {
-        $absen = Absen::findOrFail($id);
-        $peserta = $request->user()?->peserta;
-
-        if (! $peserta || (int) $absen->id_peserta !== (int) $peserta->id_peserta) {
-            return response()->json(['message' => 'Anda tidak berhak mengubah presensi ini.'], 403);
-        }
-
-        $validated = $request->validate([
-            'latitude' => 'required|numeric|between:-90,90',
-            'longitude' => 'required|numeric|between:-180,180',
-        ]);
-
-        if ($absen->status_kehadiran !== 'hadir') {
-            return response()->json(['message' => 'Presensi pulang hanya untuk presensi berstatus hadir.'], 422);
-        }
-
-        if (! $absen->tanggal->isToday()) {
-            return response()->json(['message' => 'Presensi pulang hanya dapat dilakukan pada hari yang sama.'], 422);
-        }
-
-        if ($absen->jam_keluar !== null) {
-            return response()->json(['message' => 'Presensi pulang sudah tercatat.'], 422);
-        }
-
-        $locationResult = $this->validateLocation([
-            'latitude' => $validated['latitude'],
-            'longitude' => $validated['longitude'],
-            'id_jadwal' => $absen->id_jadwal,
-        ]);
-
-        if ($locationResult['error']) {
-            return response()->json([
-                'message' => $locationResult['message'],
-                'jarak_meter' => $locationResult['jarak_meter'] ?? null,
-                'radius_meter' => $locationResult['radius_meter'] ?? null,
-            ], 403);
-        }
-
-        $absen->update([
-            'jam_keluar' => now()->format('H:i'),
-            'latitude_keluar' => $validated['latitude'],
-            'longitude_keluar' => $validated['longitude'],
-            'jarak_keluar_meter' => $locationResult['jarak_meter'],
-        ]);
-
-        return (new AbsenResource($absen->fresh()->load($this->relations())))->response();
-    }
-
     #[OA\Get(
         path: '/api/absen/{id}',
         summary: 'Ambil detail absensi berdasarkan ID',
@@ -555,7 +492,7 @@ class AbsenController extends Controller
      *
      * @return array{error: bool, message: string, jarak_meter: ?float, radius_meter: ?int}
      */
-    private function validateLocation(array $data): array
+    private function validateLocation(array $data, ?SesiPresensi $sesi = null): array
     {
         $lat = $data['latitude'] ?? null;
         $lng = $data['longitude'] ?? null;
@@ -569,18 +506,20 @@ class AbsenController extends Controller
             ];
         }
 
+        // Titik acuan: lokasi sesi bila diatur, selain itu lokasi jadwal.
         $jadwal = JadwalPelatihan::find($data['id_jadwal']);
+        $titik = ($sesi && $sesi->lokasi_latitude !== null && $sesi->lokasi_longitude !== null) ? $sesi : $jadwal;
 
-        if (! $jadwal || $jadwal->lokasi_latitude === null || $jadwal->lokasi_longitude === null) {
+        if (! $titik || $titik->lokasi_latitude === null || $titik->lokasi_longitude === null) {
             return ['error' => false, 'message' => 'OK', 'jarak_meter' => null, 'radius_meter' => null];
         }
 
         $jarakMeter = $this->hitungJarak(
             (float) $lat, (float) $lng,
-            (float) $jadwal->lokasi_latitude, (float) $jadwal->lokasi_longitude
+            (float) $titik->lokasi_latitude, (float) $titik->lokasi_longitude
         );
 
-        $radiusMeter = $jadwal->radius_meter ?? self::DEFAULT_RADIUS;
+        $radiusMeter = $sesi?->radius_meter ?? $jadwal?->radius_meter ?? self::DEFAULT_RADIUS;
 
         if ($jarakMeter > $radiusMeter) {
             return [
@@ -601,6 +540,42 @@ class AbsenController extends Controller
             'jarak_meter' => round($jarakMeter, 2),
             'radius_meter' => $radiusMeter,
         ];
+    }
+
+    /**
+     * Sesi presensi untuk presensi hadir. Jika jadwal sudah memakai sesi
+     * presensi, hadir wajib menyertakan id_sesi yang sedang dibuka. Jadwal yang
+     * belum punya sesi sama sekali tetap memakai perilaku lama (null).
+     */
+    private function resolveSesi(array $data): SesiPresensi|JsonResponse|null
+    {
+        $idSesi = $data['id_sesi'] ?? null;
+
+        if ($idSesi === null) {
+            if (! SesiPresensi::where('id_jadwal', $data['id_jadwal'])->exists()) {
+                return null;
+            }
+            $pesan = 'Sesi presensi wajib disertakan untuk presensi hadir.';
+
+            return response()->json(['message' => $pesan, 'errors' => ['id_sesi' => [$pesan]]], 422);
+        }
+
+        $sesi = SesiPresensi::find($idSesi);
+        if (! $sesi || (int) $sesi->id_jadwal !== (int) $data['id_jadwal']) {
+            $pesan = 'Sesi presensi tidak valid untuk kelas ini.';
+
+            return response()->json(['message' => $pesan, 'errors' => ['id_sesi' => [$pesan]]], 422);
+        }
+
+        if (! $sesi->sedangDibuka()) {
+            return response()->json(['message' => 'Presensi belum dibuka oleh instruktur.'], 403);
+        }
+
+        if (Absen::where('id_peserta', $data['id_peserta'])->where('id_sesi', $sesi->id_sesi)->exists()) {
+            return response()->json(['message' => 'Anda sudah presensi pada sesi ini.'], 422);
+        }
+
+        return $sesi;
     }
 
     /**

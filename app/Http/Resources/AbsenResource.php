@@ -20,11 +20,6 @@ class AbsenResource extends JsonResource
             'latitude' => $this->latitude ? (float) $this->latitude : null,
             'longitude' => $this->longitude ? (float) $this->longitude : null,
             'jarak_meter' => $this->jarak_meter ? (float) $this->jarak_meter : null,
-            // Presensi pulang
-            'jam_keluar' => $this->jam_keluar,
-            'latitude_keluar' => $this->latitude_keluar ? (float) $this->latitude_keluar : null,
-            'longitude_keluar' => $this->longitude_keluar ? (float) $this->longitude_keluar : null,
-            'jarak_keluar_meter' => $this->jarak_keluar_meter ? (float) $this->jarak_keluar_meter : null,
             // Lampiran izin/sakit
             'lampiran_url' => $this->lampiran_url,
             // Relasi
