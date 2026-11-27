@@ -48,6 +48,62 @@ class SesiPresensi extends Model
         return $this->absen_dibuka && $this->tanggal->isToday();
     }
 
+    /** Padanan scope sudahSelesai untuk satu sesi. */
+    public function sudahSelesai(): bool
+    {
+        if ($this->tanggal->lt(today())) {
+            return true;
+        }
+
+        return $this->tanggal->isToday()
+            && ! $this->absen_dibuka
+            && substr((string) $this->jam_selesai, 0, 8) <= now()->format('H:i:s');
+    }
+
+    /**
+     * Status setiap peserta kelas pada sesi ini.
+     *
+     * Catatan diambil dari presensi dengan id_sesi ini, atau presensi (izin/sakit/catatan admin)
+     * pada jadwal dan tanggal yang sama. Tanpa catatan: `alpha` bila sesi sudah selesai,
+     * selain itu `belum`.
+     *
+     * @return Collection<int, array{id_peserta: int, nama: string, status: string, jam_hadir: ?string, keterangan: ?string}>
+     */
+    public function statusPeserta(): Collection
+    {
+        $kelas = KelasPelatihan::with('peserta:id_peserta,nama')
+            ->where('id_jadwal', $this->id_jadwal)
+            ->get(['id_kelas', 'id_peserta', 'id_jadwal']);
+
+        $catatan = Absen::query()
+            ->where('id_jadwal', $this->id_jadwal)
+            ->whereIn('id_peserta', $kelas->pluck('id_peserta'))
+            ->where(fn (Builder $q) => $q->where('id_sesi', $this->id_sesi)
+                ->orWhere(fn (Builder $tanpaSesi) => $tanpaSesi->whereNull('id_sesi')
+                    ->whereDate('tanggal', $this->tanggal->toDateString())))
+            ->orderByRaw('id_sesi is null')
+            ->get()
+            ->unique('id_peserta')
+            ->keyBy('id_peserta');
+
+        $tanpaCatatan = $this->sudahSelesai() ? 'alpha' : 'belum';
+
+        return $kelas
+            ->map(function (KelasPelatihan $k) use ($catatan, $tanpaCatatan): array {
+                $absen = $catatan->get($k->id_peserta);
+
+                return [
+                    'id_peserta' => $k->id_peserta,
+                    'nama' => $k->peserta?->nama ?? 'Peserta',
+                    'status' => $absen?->status_kehadiran ?? $tanpaCatatan,
+                    'jam_hadir' => $absen?->jam_hadir ? substr((string) $absen->jam_hadir, 0, 5) : null,
+                    'keterangan' => $absen?->keterangan,
+                ];
+            })
+            ->sortBy('nama', SORT_NATURAL | SORT_FLAG_CASE)
+            ->values();
+    }
+
     /**
      * Sesi yang sudah lewat: tanggalnya sebelum hari ini, atau hari ini dengan presensi
      * tertutup dan jam selesai sudah terlewati.

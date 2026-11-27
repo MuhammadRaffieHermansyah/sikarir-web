@@ -8,6 +8,7 @@ use App\Models\KelasPelatihan;
 use App\Models\SesiPresensi;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
 
 /**
@@ -27,7 +28,24 @@ class SesiPresensiController extends Controller
             ->get();
 
         return response()->json([
-            'data' => $sesi->map(fn (SesiPresensi $item) => self::format($item, $idKelas))->values(),
+            'data' => $sesi->map(fn (SesiPresensi $item) => self::format($item, $idKelas, $item->statusPeserta()))->values(),
+        ]);
+    }
+
+    /** Daftar peserta kelas beserta status kehadirannya pada satu sesi (rekap instruktur). */
+    public function peserta(Request $request, int $idSesi): JsonResponse
+    {
+        $sesi = SesiPresensi::with('jadwal')->findOrFail($idSesi);
+        abort_unless($sesi->jadwal->diampuOleh($request->user()), 403, 'Hanya instruktur pengampu yang dapat melihat rekap sesi.');
+
+        $status = $sesi->statusPeserta();
+        $sesi->loadCount(['absensi as jumlah_hadir' => fn ($q) => $q->where('status_kehadiran', 'hadir')]);
+
+        return response()->json([
+            'data' => [
+                'sesi' => self::format($sesi, KelasPelatihan::where('id_jadwal', $sesi->id_jadwal)->min('id_kelas'), $status),
+                'peserta' => $status,
+            ],
         ]);
     }
 
@@ -87,7 +105,7 @@ class SesiPresensiController extends Controller
 
         return response()->json([
             'message' => $sesi->absen_dibuka ? 'Presensi dibuka' : 'Presensi ditutup',
-            'data' => self::format($sesi, KelasPelatihan::where('id_jadwal', $sesi->id_jadwal)->min('id_kelas')),
+            'data' => self::format($sesi, KelasPelatihan::where('id_jadwal', $sesi->id_jadwal)->min('id_kelas'), $sesi->statusPeserta()),
         ]);
     }
 
@@ -133,8 +151,20 @@ class SesiPresensiController extends Controller
     /**
      * @return array<string, mixed>
      */
-    public static function format(SesiPresensi $sesi, ?int $idKelas): array
+    public static function format(SesiPresensi $sesi, ?int $idKelas, ?Collection $statusPeserta = null): array
     {
+        $rekap = [];
+        if ($statusPeserta !== null) {
+            $jumlah = $statusPeserta->countBy('status');
+            $rekap = [
+                'jumlah_peserta' => $statusPeserta->count(),
+                'jumlah_izin' => (int) ($jumlah['izin'] ?? 0),
+                'jumlah_sakit' => (int) ($jumlah['sakit'] ?? 0),
+                'jumlah_alpha' => (int) ($jumlah['alpha'] ?? 0),
+                'jumlah_belum' => (int) ($jumlah['belum'] ?? 0),
+            ];
+        }
+
         return [
             'id_sesi' => $sesi->id_sesi,
             'id_kelas' => $idKelas,
@@ -148,6 +178,7 @@ class SesiPresensiController extends Controller
             'radius_meter' => $sesi->radius_meter,
             'absen_dibuka' => (bool) $sesi->absen_dibuka,
             'jumlah_hadir' => (int) ($sesi->jumlah_hadir ?? 0),
+            ...$rekap,
         ];
     }
 }
