@@ -77,6 +77,7 @@ Route::name('api.')->group(function () {
         Route::get('kelas-pelatihan/{idKelas}/sesi-presensi/aktif', [SesiPresensiController::class, 'aktif'])->whereNumber('idKelas')->name('kelas.sesi-presensi.aktif');
         Route::get('kelas-pelatihan/{idKelas}/sesi-presensi', [SesiPresensiController::class, 'index'])->whereNumber('idKelas')->name('kelas.sesi-presensi.index');
         Route::post('kelas-pelatihan/{idKelas}/sesi-presensi', [SesiPresensiController::class, 'store'])->whereNumber('idKelas')->name('kelas.sesi-presensi.store');
+        Route::get('sesi-presensi/{idSesi}/peserta', [SesiPresensiController::class, 'peserta'])->whereNumber('idSesi')->name('sesi-presensi.peserta');
         Route::patch('sesi-presensi/{idSesi}', [SesiPresensiController::class, 'update'])->whereNumber('idSesi')->name('sesi-presensi.update');
         Route::delete('sesi-presensi/{idSesi}', [SesiPresensiController::class, 'destroy'])->whereNumber('idSesi')->name('sesi-presensi.destroy');
 
